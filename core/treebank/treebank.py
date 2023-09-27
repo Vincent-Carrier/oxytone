@@ -6,7 +6,7 @@ from typing import (Generic, Iterator, Literal, NamedTuple, Optional, Protocol,
 
 from slugify import slugify
 
-from constants import BUILD
+from core.constants import BUILD
 from core.ref import Ref, T
 from core.token import FT, Token
 from core.word import Word

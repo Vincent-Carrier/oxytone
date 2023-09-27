@@ -2,7 +2,7 @@ import stat
 
 from flask import Blueprint
 
-from constants import NODE_MODULES
+from core.constants import NODE_MODULES
 
 from .corpus import bp as corpus
 

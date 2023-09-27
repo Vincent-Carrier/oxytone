@@ -1,12 +1,13 @@
 import re
 from copy import copy
 from pathlib import Path
+import shelve
 from typing import Iterator, Self, Type, cast, final
 
 from lxml import etree
 from pyCTS import CTS_URN
 
-from constants import LSJ, PUNCTUATION
+from core.constants import LSJ, PUNCTUATION
 from core.ref import Ref, T
 from core.token import FT, Token
 from core.treebank import Treebank
@@ -130,4 +131,4 @@ class PerseusTB(Treebank[T]):
         )
 
 
-lsj = LSJ()
+lsj = shelve.open(str(LSJ), 'r')

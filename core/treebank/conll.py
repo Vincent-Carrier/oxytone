@@ -1,17 +1,18 @@
 from pathlib import Path
+import shelve
 from typing import Generic, Iterator, Type
 
 import pyconll
 from pyconll.unit.conll import Conll
 from pyconll.unit.token import Token as ConllToken
 
-from constants import LSJ
+from core.constants import LSJ
 from core.ref import Ref, T
 from core.token import FT, Token
 from core.treebank import Treebank
 from core.word import POS, Case, Word
 
-lsj = LSJ()
+lsj = shelve.open(str(LSJ), 'r')
 
 
 class ConllTB(Generic[T], Treebank[T]):

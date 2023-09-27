@@ -1,4 +1,4 @@
-from constants import AG
+from core.constants import DATA
 from core.ref import BCV, CV, Line
 from core.treebank import GntTB, Metadata, PerseusTB
 
@@ -65,6 +65,6 @@ corpus = {
             lang="ag",
             title="New Testament",
         ),
-        lambda meta: GntTB(AG / "new-testament.conllu", meta=meta),
+        lambda meta: GntTB(DATA / "ag/new-testament.conllu", meta=meta),
     ),
 }
