@@ -1,3 +1,4 @@
+import os
 import re
 from copy import copy
 from pathlib import Path
@@ -23,7 +24,7 @@ class PerseusTB(Treebank[T]):
 
     def __init__(
         self,
-        f: Path,
+        f: os.PathLike[str],
         ref_cls: Type[T],
         gorman: bool = False,
         **kwargs,

@@ -56,6 +56,7 @@ class Treebank(Generic[T], metaclass=ABCMeta):
         self.meta = meta
         self.ref_cls = ref_cls
         self.chunker = chunker or WholeChunker(self)
+        self.chunker.tb = self # type: ignore
 
     def chunks(self) -> Iterator["Treebank"]:
         return self.chunker()
@@ -103,3 +104,16 @@ class WholeChunker(NamedTuple):
 
     def __call__(self) -> Iterator[Treebank]:
         return iter([self.tb])
+
+
+class BookChunker():
+    tb: Treebank
+    n: int
+
+    def __init__(self, n: int) -> None:
+        self.n = n
+
+    def __call__(self) -> Iterator[Treebank]:
+        for i in range(self.n):
+            ref = str(i+1)
+            yield self.tb[ref]

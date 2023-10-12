@@ -1,21 +1,22 @@
 from core.constants import DATA
 from core.ref import BCV, CV, Line
 from core.treebank import GntTB, Metadata, PerseusTB
+from core.treebank.treebank import BookChunker
 
 from .corpus_entry import CorpusEntry, DocId
 
 corpus = {
-    # DocId("iliad"): CorpusEntry(
-    #     Metadata(
-    #         lang="ag",
-    #         title="Iliad",
-    #         author="Homer",
-    #         writing_style="verse",
-    #     ),
-    #     lambda meta: PerseusTB(
-    #         AG / "perseus/2.1/iliad.xml", ref_cls=CV, meta=meta
-    #     ),
-    # ),
+    DocId("iliad"): CorpusEntry(
+        Metadata(
+            lang="ag",
+            title="Iliad",
+            author="Homer",
+            writing_style="verse",
+        ),
+        lambda meta: PerseusTB(
+            DATA / "ag/perseus/2.1/iliad.xml", ref_cls=CV, meta=meta, chunker=BookChunker(24)
+        ),
+    ),
     # DocId("persians"): CorpusEntry(
     #     Metadata(
     #         lang="ag",
@@ -60,11 +61,11 @@ corpus = {
     #         meta=meta,
     #     ),
     # ),
-    DocId("nt"): CorpusEntry(
-        Metadata(
-            lang="ag",
-            title="New Testament",
-        ),
-        lambda meta: GntTB(DATA / "ag/new-testament.conllu", meta=meta),
-    ),
+    # DocId("nt"): CorpusEntry(
+    #     Metadata(
+    #         lang="ag",
+    #         title="New Testament",
+    #     ),
+    #     lambda meta: GntTB(DATA / "ag/new-testament.conllu", meta=meta),
+    # ),
 }
