@@ -1,7 +1,6 @@
 from core.constants import DATA
 from core.ref import BCV, CV, Line
 from core.treebank import GntTB, Metadata, PerseusTB
-from core.treebank.treebank import BookChunker
 
 from .corpus_entry import CorpusEntry, DocId
 
@@ -14,7 +13,7 @@ corpus = {
             writing_style="verse",
         ),
         lambda meta: PerseusTB(
-            DATA / "ag/perseus/2.1/iliad.xml", ref_cls=CV, meta=meta, chunker=BookChunker(24)
+            AG / "perseus/2.1/iliad.xml", ref_cls=CV, meta=meta
         ),
     ),
     # DocId("persians"): CorpusEntry(

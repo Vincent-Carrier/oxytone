@@ -16,95 +16,54 @@ class RefPoint(metaclass=ABCMeta):
     def __str__(self) -> str:
         return ".".join(str(x) for x in self if x is not None)
 
-    def __contains__(self, ref: object) -> bool:
-        if not isinstance(ref, RefPoint):
-            raise TypeError(f"Cannot check if {ref} is in {self}")
-        for a, b in zip(self, ref):
-            if a is None and b is not None:
-                return True
-            if a != b:
-                return False
-        return True
+    # def __contains__(self, ref: object) -> bool:
+    #     if not isinstance(ref, RefPoint):
+    #         raise TypeError(f"Cannot check if {ref} is in {self}")
+    #     for a, b in zip(self, ref):
+    #         if a is None and b is not None:
+    #             return True
+    #         if a != b:
+    #             return False
+    #     return True
 
 
 T = TypeVar("T", bound=RefPoint)
 
 
-@final
-@dataclass(order=True, frozen=True, slots=True)
-class RefRange(Generic[T]):
-    start: T
-    end: T
-
-    def __post_init__(self) -> None:
-        assert self.start <= self.end
-
-    @classmethod
-    def parse(cls, ref_cls: Type[T], ref: str) -> Self:
-        start, end = ref.split("-")
-        return cls(ref_cls.parse(start), ref_cls.parse(end))
-
-    def __str__(self) -> str:
-        return f"{self.start}-{self.end}"
-
-    def __contains__(self, obj: object) -> bool:
-        match obj:
-            case RefRange():
-                return self.start <= obj.start <= obj.end <= self.end
-            case RefPoint():
-                return self.start <= obj <= self.end
-            case _:
-                raise TypeError(f"Cannot check if {obj} is in {self}")
-
-
 @total_ordering
 @dataclass(frozen=True, slots=True)
 class Ref(Generic[T]):
-    value: T | RefRange[T]
+    a: T
+    b: T | None = None
+
+    # def __post_init__(self) -> None:
+    #     assert self.start <= self.end, f"got {self.start} - {self.end}"
 
     @property
     def start(self) -> T:
-        return self.value.start if isinstance(self.value, RefRange) else self.value
+        return self.a
 
     @property
     def end(self) -> T:
-        return self.value.end if isinstance(self.value, RefRange) else self.value
+        return self.b or self.a
 
-    def __eq__(self, other: object) -> bool:
-        match other:
-            case Ref():
-                return self.value == other.value
-            case RefPoint() | RefRange():
-                return self.value == other
-        return False
+    @property
+    def is_range(self) -> bool:
+        return self.b is not None
 
-    def __lt__(self, other: Self | T | RefRange[T] | None) -> bool:
-        a: RefPoint = self.start
-        b: RefPoint
-        match other:
-            case Ref() as r:
-                b = r.start
-            case RefPoint() as rp:
-                b = rp
-            case RefRange() as rr:
-                b = rr.start
-            case _:
-                return False
-        return a < b
-
-    def __contains__(self, r: Self) -> bool:
-        return self.start <= r.start <= r.end <= self.end
+    def __lt__(self, other: "Ref[T]") -> bool:
+        return self.a < other.a
 
     def __str__(self) -> str:
-        return str(self.value)
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.value})"
+        return f"{self.start}-{self.end}" if self.is_range else str(self.a)
 
     @staticmethod
     def parse(ref_cls: Type[T], string: str) -> "Ref[T]":
-        r = RefRange.parse(ref_cls, string) if "-" in string else ref_cls.parse(string)
-        return Ref(r)  # type: ignore
+        if "-" in string:
+            start, end = string.split("-")
+            return Ref(ref_cls.parse(start), ref_cls.parse(end))
+        else:
+            return Ref(ref_cls.parse(string))
 
 
 @final
