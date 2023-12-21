@@ -1,73 +1,65 @@
 from abc import ABCMeta, abstractmethod
-from dataclasses import dataclass
-from pathlib import Path
-from typing import (Generic, Iterator, Literal, NamedTuple, Optional, Protocol,
-                    Self, Type)
+from typing import (
+    Generic,
+    Iterator,
+    Literal,
+    NotRequired,
+    Optional,
+    Protocol,
+    Type,
+    TypeAlias,
+    TypedDict,
+    Unpack,
+)
 
-from slugify import slugify
+from lxml import etree
 
-from core.constants import BUILD
 from core.ref import Ref, T
 from core.token import FT, Token
 from core.word import Word
 
 WritingStyle = Literal["prose", "verse"]
+Sentence: TypeAlias = etree._Element
 
 
-@dataclass(slots=True, frozen=True)
-class Metadata:
+class Metadata(TypedDict):
     lang: str
     title: str
-    author: str | None = None
-    ref: str | None = None
-    urn: str | bytes | None = None
-    eng_urn: str | bytes | None = None
-    writing_style: WritingStyle = "prose"
+    author: NotRequired[str]
+    ref: NotRequired[str]
+    urn: NotRequired[str | bytes]
+    eng_urn: NotRequired[str | bytes]
+    # writing_style: WritingStyle
 
-    @property
-    def authorship(self) -> str:
-        return self.author or "unknown"
+    # @property
+    # def authorship(self) -> str:
+    #     return self.author or "unknown"
 
-    @property
-    def slug(self) -> str:
-        return slugify(self.title)
+    # @property
+    # def slug(self) -> str:
+    #     return slugify(self.title)
 
-    @property
-    def partial_path(self) -> Path:
-        folder = BUILD / self.lang / slugify(self.authorship)
-        if self.ref:
-            return folder / self.slug / f"{self.ref}.html"
-        else:
-            return folder / self.slug / "index.html"
+    # @property
+    # def partial_path(self) -> Path:
+    #     folder = BUILD / self.lang / slugify(self.authorship)
+    #     if self.ref:
+    #         return folder / self.slug / f"{self.ref}.html"
+    #     else:
+    #         return folder / self.slug / "index.html"
 
 
 class Treebank(Generic[T], metaclass=ABCMeta):
-    meta: Metadata
+    meta: Metadata = {"lang": "ag", "title": ""}
     ref_cls: Type[T]
-    ref: Ref | None = None
-    chunker: "Chunker"
+    # ref: Ref | None = None
 
     def __init__(
         self,
-        meta: Metadata,
         ref_cls: Type[T],
-        chunker: Optional["Chunker"] = None,
+        **meta: Unpack[Metadata],
     ) -> None:
         self.meta = meta
         self.ref_cls = ref_cls
-        self.chunker = chunker or WholeChunker(self)
-        self.chunker.tb = self # type: ignore
-
-    def chunks(self) -> Iterator["Treebank"]:
-        return self.chunker()
-
-    @abstractmethod
-    def __getitem__(self, ref: Ref | str) -> Self:
-        ...
-
-    @abstractmethod
-    def __contains__(self, ref: Ref) -> bool:
-        ...
 
     @abstractmethod
     def __iter__(self) -> Iterator[Token]:
@@ -87,33 +79,10 @@ class Treebank(Generic[T], metaclass=ABCMeta):
 
         return "".join(render(t) for t in iter(self))
 
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} title='{self.meta.title}' ref={self.ref}>"
+    # def __repr__(self) -> str:
+    #     return (
+    #         f"<{self.__class__.__name__} title='{self.meta['title']}' ref={self.ref}>"
+    #     )
 
-    def parse_ref(self, ref: str) -> Ref[T]:
-        return Ref.parse(self.ref_cls, ref)
-
-
-class Chunker(Protocol):
-    def __call__(self) -> Iterator[Treebank]:
-        ...
-
-
-class WholeChunker(NamedTuple):
-    tb: Treebank
-
-    def __call__(self) -> Iterator[Treebank]:
-        return iter([self.tb])
-
-
-class BookChunker():
-    tb: Treebank
-    n: int
-
-    def __init__(self, n: int) -> None:
-        self.n = n
-
-    def __call__(self) -> Iterator[Treebank]:
-        for i in range(self.n):
-            ref = str(i+1)
-            yield self.tb[ref]
+    def parse_ref(self, ref: str | bytes) -> Ref[T]:
+        return Ref.parse(self.ref_cls, str(ref))

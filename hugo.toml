@@ -1,8 +1,0 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
-theme = 'paper'
-
-[taxonomies]
-	books = 'books'
-	author = 'authors'

@@ -1,18 +1,28 @@
-import os
 import re
-from copy import copy
 from pathlib import Path
 import shelve
-from typing import Iterator, Self, Type, cast, final
+from typing import (
+    Callable,
+    Iterator,
+    NamedTuple,
+    Protocol,
+    Type,
+    Unpack,
+    cast,
+    final,
+    TypeAlias,
+)
 
 from lxml import etree
-from pyCTS import CTS_URN
+from more_itertools import split_when
+
+# from pyCTS import CTS_URN
 
 from core.constants import LSJ, PUNCTUATION
-from core.ref import Ref, T
+from core.ref import CV, Ref, T
 from core.token import FT, Token
-from core.treebank import Treebank
-from core.utils import at, eprint, parse_int
+from core.treebank.treebank import Metadata, Sentence, Treebank
+from core.utils import at, parse_int
 from core.word import POS, Case, Word
 
 
@@ -20,66 +30,32 @@ from core.word import POS, Case, Word
 class PerseusTB(Treebank[T]):
     body: etree._Element
     gorman: bool
-    refs: list[Ref] = []
+    chunker: "Chunker"
+    # refs: list[Ref] = []
 
     def __init__(
         self,
-        f: os.PathLike[str],
+        f: Path,
         ref_cls: Type[T],
+        chunker: "Chunker",
         gorman: bool = False,
-        **kwargs,
+        **meta: Unpack[Metadata],
     ) -> None:
-        super().__init__(ref_cls=ref_cls, **kwargs)
+        super().__init__(ref_cls=ref_cls, **meta)
         self.gorman = gorman
-
-        if not self.ref:
-            tree = etree.parse(f)
-            root = tree.getroot()
-            if gorman:
-                self.body = root
-            else:
-                self.body = cast(etree._Element, root.find(".//body"))
-
-            self.refs = [
-                self.parse_ref(r)
-                for sentence in self.body.findall("./sentence")
-                if (r := sentence.get("subdoc")) is not None
-            ]
-
-    def __getitem__(self, ref: Ref | str) -> Self:
-        if isinstance(ref, str):
-            return self[self.parse_ref(ref)]
-        if ref not in self:
-            raise KeyError(f"Cannot find {ref} in {self!r}")
-        nearest = self.nearest(ref)
-        if nearest != ref:
-            eprint(f"Warning: {ref} not found, using {nearest}")
-        tb = copy(self)
-        tb.ref = nearest
-        return tb
-
-    def __contains__(self, r: Ref) -> bool:
-        return any(r in ref for ref in self.refs)
-
-    def nearest(self, r: Ref) -> Ref:
-        return next(ref for ref in self.refs if r in ref)
-
-    def sentences(self) -> Iterator[etree._Element]:
-        if self.ref:
-            nearest = self.nearest(self.ref)
-            el = self.body.find(f"./sentence[@subdoc='{nearest}']")
-            if el is None:
-                raise KeyError(
-                    f"Could not find ./sentence[@subdoc='{nearest}' in {self!r}]"
-                )
-            yield el
-            path = f"./sentence[@subdoc='{nearest}']/following-sibling::sentence"
-            for sentence in cast(Iterator[etree._Element], self.body.xpath(path)):
-                if self.parse_ref(sentence.attrib["subdoc"]) > self.ref.end:  # type: ignore
-                    return
-                yield sentence
+        self.chunker = chunker or whole_chunk
+        tree = etree.parse(f)
+        root = tree.getroot()
+        if gorman:
+            self.body = root
         else:
-            yield from self.body.findall("./sentence")
+            self.body = cast(etree._Element, root.find(".//body"))
+
+    def sentences(self) -> Iterator[Sentence]:
+        yield from self.body.findall("./sentence")
+
+    def chunks(self) -> Iterator[list[Sentence]]:
+        return self.chunker(self)
 
     def __iter__(self) -> Iterator[Token]:
         prev_ref: Ref | None = None
@@ -91,8 +67,8 @@ class PerseusTB(Treebank[T]):
                 # TODO: yield paragraph tokens
                 if word:
                     if word.ref and word.ref > prev_ref:
-                        if self.meta.writing_style == "prose":
-                            yield FT.LINE_BREAK
+                        # if self.meta.writing_style == "prose":
+                        #     yield FT.LINE_BREAK
                         prev_ref = word.ref
                     if prev_form and (prev_form not in PUNCTUATION):
                         yield FT.SPACE
@@ -113,12 +89,12 @@ class PerseusTB(Treebank[T]):
         if lemma:
             lemma = re.sub(r"\d+$", "", lemma)
         ref = None
-        cite = attr.get("cite")
-        if cite:
-            first = cite.split(" ")[0]
-            urn = CTS_URN(first)
-            ref_str = cast(str, urn.passage_component)
-            ref = Ref(self.ref_cls.parse(ref_str))
+        # cite = attr.get("cite")
+        # if cite:
+        #     first = cite.split(" ")[0]
+        #     urn = CTS_URN(first)
+        #     ref_str = cast(str, urn.passage_component)
+        #     ref = Ref(self.ref_cls.parse(ref_str))
         return Word(
             id=parse_int(attr.get("id")),
             head=parse_int(attr.get("head")),
@@ -132,4 +108,19 @@ class PerseusTB(Treebank[T]):
         )
 
 
-lsj = shelve.open(str(LSJ), 'r')
+Chunker: TypeAlias = Callable[[PerseusTB], Iterator[list[Sentence]]]
+
+
+def whole_chunk(tb: PerseusTB) -> Iterator[list[Sentence]]:
+    yield list(tb.sentences())
+
+
+def chapter_chunks(tb: PerseusTB) -> Iterator[list[Sentence]]:
+    def same_chapter(a: Sentence, b: Sentence):
+        a_ref, b_ref = (tb.parse_ref(x.attrib["subdoc"]).start.chapter for x in (a, b))
+        return a_ref != b_ref
+
+    return split_when(tb.sentences(), same_chapter)
+
+
+lsj = shelve.open(str(LSJ), "r")

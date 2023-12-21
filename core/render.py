@@ -75,11 +75,3 @@ class HtmlPartialRenderer(NamedTuple):
 
     def render(self) -> str:
         return self.body().render()
-    
-    def render_hugo_page(self):
-        return (f"+++"
-                f"title = '{self.tb.meta.ref}'"
-                f"+++"
-                f"{self.body.render()}"
-                )
-        
