@@ -3,10 +3,20 @@
 <script src="/index.js" type="module"></script>
 {% endblock %} {% block content %}
 <header>
-	<img src="/greek_heroes.webp" alt="" />
+	<!-- <img src="/greek_heroes.webp" alt="" /> -->
 	<div class="title">
 		<h1>Oxytone</h1>
 		<p>The Bleeding Edge of Ancient Language</p>
+	</div>
+	<div class="index">
+		{% for slug, entry in index.items() %}
+			<h2>{{ entry['title'] }}, by {{ entry['author'] }}</h2>
+			<ul>
+				{% for span in entry['spans'] %}
+					<li><a href="/{{slug}}/{{span}}">{{span}}</a></li>
+				{% endfor %}
+			</ul>	
+		{% endfor %}
 	</div>
 </header>
 {% endblock %}

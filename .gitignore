@@ -166,3 +166,5 @@ app/static/*.css
 app/static/*.css.map
 
 data/out/**
+
+node_modules/

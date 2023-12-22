@@ -1,22 +1,23 @@
 from functools import singledispatch
-from typing import NamedTuple, assert_never
+from typing import Any, NamedTuple, assert_never
 
 import dominate.tags as h
 
+from dominate.util import raw
 from core.ref import Ref
 from core.token import FT
-from core.treebank import Treebank
+from core.treebank.treebank import Treebank
 from core.utils import cx
 from core.word import POS, Word
 
 
 @singledispatch
-def render(obj) -> h.html_tag:
+def render(obj) -> Any:
     ...
 
 
 @render.register(Word)
-def _(word: Word) -> h.html_tag:
+def _(word: Word) -> Any:
     return h.span(
         word.form,
         cls=cx(word.case, word.pos == POS.verb and word.pos),
@@ -29,9 +30,7 @@ def _(word: Word) -> h.html_tag:
 
 
 @render.register(Ref)
-def _(ref: Ref) -> h.html_tag:
-    if hasattr(ref.value, "render"):  # TODO: use __str__
-        return ref.value.render()  # type: ignore
+def _(ref: Ref) -> Any:
     return h.span(str(ref), cls="ref")
 
 
@@ -50,7 +49,7 @@ class HtmlPartialRenderer(NamedTuple):
                 case Word() | Ref():
                     sentence += render(t)
                 case FT.SPACE:
-                    sentence += " "
+                    sentence += raw("&nbsp;")
                 case FT.PARAGRAPH_START:
                     paragraph = h.p()
                 case FT.SENTENCE_START:
@@ -74,4 +73,4 @@ class HtmlPartialRenderer(NamedTuple):
         return container
 
     def render(self) -> str:
-        return self.body().render()
+        return self.body().render(pretty=False)

@@ -3,7 +3,7 @@ lexicons := data/ag/lsj.db
 static := app/static
 partials = $(wildcard build/**.html)
 scss = $(wildcard $(static)/**.scss)
-css = $(scss:.scss=.css)
+css = $(scss:%.scss=%.css)
 
 .PHONY: default app partials css lexicons export test format clean chunks
 
@@ -21,8 +21,7 @@ app: $(lexicons)
 partials:
 	$(py) -m scripts.partials
 
-css: $(css)
-$(css): $(scss)
+css:
 	npx sass -Istyles -Inode_modules $(static):$(static)
 
 test:
@@ -44,6 +43,7 @@ assets_clean:
 lexicons: $(lexicons)
 
 chunks:
+	rm -rf data/out/**
 	$(py) -m scripts.chunkup
 
 $(lexicons):

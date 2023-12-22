@@ -1,11 +1,11 @@
+from importlib import import_module
 import re
 from pathlib import Path
 import shelve
 from typing import (
     Callable,
     Iterator,
-    NamedTuple,
-    Protocol,
+    Self,
     Type,
     Unpack,
     cast,
@@ -16,7 +16,7 @@ from typing import (
 from lxml import etree
 from more_itertools import split_when
 
-# from pyCTS import CTS_URN
+from pyCTS import CTS_URN
 
 from core.constants import LSJ, PUNCTUATION
 from core.ref import CV, Ref, T
@@ -30,26 +30,42 @@ from core.word import POS, Case, Word
 class PerseusTB(Treebank[T]):
     body: etree._Element
     gorman: bool
+    is_verse: bool
     chunker: "Chunker"
-    # refs: list[Ref] = []
 
     def __init__(
         self,
         f: Path,
         ref_cls: Type[T],
         chunker: "Chunker",
+        is_verse,
         gorman: bool = False,
         **meta: Unpack[Metadata],
     ) -> None:
         super().__init__(ref_cls=ref_cls, **meta)
         self.gorman = gorman
-        self.chunker = chunker or whole_chunk
+        self.chunker = chunker
+        self.is_verse = is_verse
         tree = etree.parse(f)
         root = tree.getroot()
-        if gorman:
+        if gorman or (self.chunker is None):
             self.body = root
         else:
             self.body = cast(etree._Element, root.find(".//body"))
+        if self.ref_cls is None:
+            self.ref_cls = getattr(
+                import_module("core.ref"), str(self.body.attrib["refcls"])
+            )
+        if self.is_verse is None:
+            self.is_verse = self.body.attrib["isverse"] == "True"
+
+    @classmethod
+    def from_chunk(cls, f: Path) -> Self:
+        ...
+
+    @classmethod
+    def from_agldt(cls, f: Path) -> Self:
+        ...
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")
@@ -58,22 +74,22 @@ class PerseusTB(Treebank[T]):
         return self.chunker(self)
 
     def __iter__(self) -> Iterator[Token]:
+        prev: Word | None = None
         prev_ref: Ref | None = None
-        prev_form: str = ""
         for sentence in self.sentences():
             yield FT.SENTENCE_START
             for el in sentence.findall("./word"):
                 word = self.word(el.attrib)
                 # TODO: yield paragraph tokens
                 if word:
-                    if word.ref and word.ref > prev_ref:
-                        # if self.meta.writing_style == "prose":
-                        #     yield FT.LINE_BREAK
-                        prev_ref = word.ref
-                    if prev_form and (prev_form not in PUNCTUATION):
+                    if word.form not in PUNCTUATION:
                         yield FT.SPACE
-                    prev_form = word.form
+                    if self.is_verse and word.ref and prev_ref and word.ref > prev_ref:
+                        yield FT.LINE_BREAK
                     yield word
+                    prev = word
+                    if word.ref:
+                        prev_ref = word.ref
             yield FT.SENTENCE_END
 
     def normalize_urn(self, urn: str | bytes) -> str:
@@ -89,12 +105,12 @@ class PerseusTB(Treebank[T]):
         if lemma:
             lemma = re.sub(r"\d+$", "", lemma)
         ref = None
-        # cite = attr.get("cite")
-        # if cite:
-        #     first = cite.split(" ")[0]
-        #     urn = CTS_URN(first)
-        #     ref_str = cast(str, urn.passage_component)
-        #     ref = Ref(self.ref_cls.parse(ref_str))
+        cite = attr.get("cite")
+        if cite:
+            first = cite.split(" ")[0]
+            urn = CTS_URN(first)
+            ref_str = cast(str, urn.passage_component)
+            ref = Ref(self.ref_cls.parse(ref_str))
         return Word(
             id=parse_int(attr.get("id")),
             head=parse_int(attr.get("head")),

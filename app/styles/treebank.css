@@ -1,0 +1,56 @@
+@tailwind components;
+@tailwind utilities;
+
+.syntax {
+  & .nominative { @apply text-emerald-600; }
+  & .accusative { @apply text-sky-600; }
+  & .dative { @apply text-rose-600; }
+  & .genitive { @apply text-violet-600; }
+  & .vocative { @apply text-amber-600; }
+
+  & .verb { @apply font-bold; }
+}
+
+.greek {
+  @apply font-serif text-xl text-teal-800 mt-6;
+  & .highlight { @apply bg-yellow-200; }
+
+  & .subdoc {
+	@apply text-sm text-teal-700 pr-3;
+  }
+}
+
+.prose {
+  @apply flex flex-col gap-y-4 leading-8;
+
+  & p .sentence:not(:last-child) {
+	&::after { content: '  —   '; }
+  }
+}
+
+.tippy-content {
+  @apply text-teal-50 bg-teal-700 font-serif text-sm rounded-md border border-teal-700 shadow-xl;
+}
+.tippy-arrow {
+  @apply text-teal-700;
+}
+
+[data-popper-arrow] {
+  &,
+  &::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  & {
+    visibility: hidden;
+  }
+
+  &::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+}

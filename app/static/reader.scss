@@ -37,8 +37,8 @@
     @include text(gray(500), sm);
 }
 
-.sentence:not(:last-child)::after {
-    content: "—";
-    @include box($px: 2);
-    @include text(gray(500));
-}
+// .sentence:not(:last-child)::after {
+//     content: "—";
+//     @include box($px: 2);
+//     @include text(gray(500));
+// }
