@@ -1,40 +1,55 @@
-@use 'foundation' as *;
+@use "foundation" as *;
 
 .verb {
-    @include font($wght: 700);
+	@include font($wght: 700);
 }
 
 .nominative {
-    @include text(emerald(600));
+	@include text(emerald(600));
 }
 
 .accusative {
-    @include text(sky(600));
+	@include text(sky(600));
 }
 
 .dative {
-    @include text(pink(600));
+	@include text(pink(600));
 }
 
 .genitive {
-    @include text(violet(600));
+	@include text(violet(600));
 }
 
 .vocative {
-    @include text(teal(600));
+	@include text(teal(600));
 }
 
-.highlight {
-    @include surface(yellow(200));
+.hl {
+	text-decoration: underline;
+	@include surface($rounded: md);
+	&.subj {
+		@include surface(emerald(100));
+		text-decoration-color: emerald(600);
+	}
+	&.dobj {
+		@include surface(sky(100));
+		text-decoration-color: sky(600);
+	}
+	&.iobj {
+		text-decoration-color: pink(600);
+	}
+}
+.hovered {
+	text-decoration: underline;
 }
 
 .subdoc {
-    padding-right: len(2);
+	padding-right: len(2);
 }
 
 .verse {
-    padding-right: len(2);
-    @include text(gray(500), sm);
+	padding-right: len(2);
+	@include text(gray(500), sm);
 }
 
 // .sentence:not(:last-child)::after {

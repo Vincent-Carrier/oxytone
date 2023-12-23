@@ -25,6 +25,7 @@ def _(word: Word) -> Any:
         data_head=str(word.head),
         data_lemma=word.lemma,
         data_flags=word.flags,
+        data_role=word.role,
         data_def=word.definition,
     )
 

@@ -105,6 +105,7 @@ class Word:
     lemma: str | None
     pos: POS | None
     case: Case | None
+    role: str | None
     flags: str | None = None
     definition: str | None = None
     ref: Ref | None = None

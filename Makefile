@@ -4,16 +4,20 @@ static := app/static
 partials = $(wildcard build/**.html)
 scss = $(wildcard $(static)/**.scss)
 css = $(scss:%.scss=%.css)
+sass = npx sass -Istyles -Inode_modules $(static):$(static)
+esbuild = npx esbuild app/static/reader.ts --outfile=app/static/reader.js --bundle --target=es2020 --minify --sourcemap
 
 .PHONY: default app partials css lexicons export test format clean chunks
 
-default:
-	poetry install
-	npm install
 
 watch:
-	npx sass -Istyles -Inode_modules $(static):$(static) --watch &
-	$(MAKE) app
+	$(sass) --watch &
+	$(esbuild) --watch
+
+install:
+	poetry install
+	npm install
+	$(MAKE) lexicons chunks
 
 app: $(lexicons)
 	$(py) -m app.main
@@ -22,7 +26,10 @@ partials:
 	$(py) -m scripts.partials
 
 css:
-	npx sass -Istyles -Inode_modules $(static):$(static)
+	$(sass)
+
+js:
+	$(esbuild)
 
 test:
 	poetry run pytest

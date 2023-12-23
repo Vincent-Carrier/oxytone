@@ -82,7 +82,7 @@ class PerseusTB(Treebank[T]):
                 word = self.word(el.attrib)
                 # TODO: yield paragraph tokens
                 if word:
-                    if word.form not in PUNCTUATION:
+                    if prev and word.form not in PUNCTUATION:
                         yield FT.SPACE
                     if self.is_verse and word.ref and prev_ref and word.ref > prev_ref:
                         yield FT.LINE_BREAK
@@ -119,6 +119,7 @@ class PerseusTB(Treebank[T]):
             pos=pos,
             case=case,
             flags=tags,
+            role=attr.get("relation"),
             definition=lsj.get(lemma) if lemma else None,
             ref=ref,
         )
