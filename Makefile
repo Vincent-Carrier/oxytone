@@ -12,7 +12,8 @@ esbuild = npx esbuild app/static/reader.ts --outfile=app/static/reader.js --bund
 
 watch:
 	$(sass) --watch &
-	$(esbuild) --watch
+	$(esbuild) --watch &
+	$(MAKE) app
 
 install:
 	poetry install

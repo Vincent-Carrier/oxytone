@@ -44,11 +44,11 @@ tippy("[data-lemma]", {
 	trigger: "click",
 	content: span => {
 		const { dataset: d } = span
-		return `<a style="color: white;" href="https://logeion.uchicago.edu/${
+		return `<a class="lemma" style="color: white;" href="https://logeion.uchicago.edu/${
 			d.lemma
-		}" target="_blank">${d.lemma}</a><br />
-    ${d.def ? `${d.def}<br />` : ""}
-    ${d.flags ? `<div>${flagsToString(d.flags)}</div>` : ""}`
+		}" target="_blank">${d.lemma}</a>
+				${d.def ? `<div class="def">${d.def}</div>` : ""}
+    			${d.flags ? `<div class="flags">${flagsToString(d.flags)}</div>` : ""}`
 	},
 	allowHTML: true,
 	interactive: true,

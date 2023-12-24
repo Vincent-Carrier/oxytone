@@ -41,6 +41,7 @@ class HtmlPartialRenderer(NamedTuple):
     tb: Treebank
 
     def body(self) -> h.html_tag:
+        is_verse = self.tb.is_verse  # type: ignore
         sentence = h.span(cls="sentence")
         paragraph = h.p()
         container = h.div(cls="treebank syntax")
@@ -63,6 +64,9 @@ class HtmlPartialRenderer(NamedTuple):
                         paragraph += sentence
                 case FT.LINE_BREAK:
                     sentence += h.br()
+                case int():
+                    visible = "visible" if t % 5 == 0 else ""
+                    sentence += h.span(t, cls=f"ln {visible}")
                 case None:
                     pass
                 case _:

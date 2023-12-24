@@ -1,6 +1,6 @@
 from core.constants import DATA
-from core.ref import CV
-from core.treebank.perseus import PerseusTB, chapter_chunks
+from core.ref import CV, Line
+from core.treebank.perseus import PerseusTB, chapter_chunks, whole_chunk
 
 
 docs = {
@@ -10,7 +10,8 @@ docs = {
         chapter_chunks,
         is_verse=True,
         lang="ag",
-        title="Iliad",
+        title="The Iliad",
+        original_title="Ἰλιάς",
         author="Homer",
     ),
     "odyssey": PerseusTB(
@@ -19,7 +20,18 @@ docs = {
         chapter_chunks,
         is_verse=True,
         lang="ag",
-        title="Odyssey",
+        title="The Odyssey",
+        original_title="Ὀδύσσεια",
         author="Homer",
+    ),
+    "agamemnon": PerseusTB(
+        DATA / "ag/perseus/2.1/agamemnon.xml",
+        Line,
+        whole_chunk,
+        is_verse=True,
+        lang="ag",
+        title="Agamemnon",
+        original_title="Ἀγαμέμνων",
+        author="Aeschylus",
     ),
 }

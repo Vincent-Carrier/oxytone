@@ -14,7 +14,7 @@ from typing import (
 )
 
 from lxml import etree
-from more_itertools import split_when
+from more_itertools import first, split_when
 
 from pyCTS import CTS_URN
 
@@ -76,8 +76,10 @@ class PerseusTB(Treebank[T]):
     def __iter__(self) -> Iterator[Token]:
         prev: Word | None = None
         prev_ref: Ref | None = None
+        first_word = self.word(next(self.sentences()).find("./word").attrib)
+        yield first_word.ref.start.verse  # type: ignore
+        print(first_word.ref.start.verse)
         for sentence in self.sentences():
-            yield FT.SENTENCE_START
             for el in sentence.findall("./word"):
                 word = self.word(el.attrib)
                 # TODO: yield paragraph tokens
@@ -86,11 +88,13 @@ class PerseusTB(Treebank[T]):
                         yield FT.SPACE
                     if self.is_verse and word.ref and prev_ref and word.ref > prev_ref:
                         yield FT.LINE_BREAK
+                        yield prev_ref.start.verse + 1
                     yield word
                     prev = word
                     if word.ref:
                         prev_ref = word.ref
             yield FT.SENTENCE_END
+            yield FT.SENTENCE_START
 
     def normalize_urn(self, urn: str | bytes) -> str:
         return re.search(r"^(urn:cts:greekLit:tlg\d{4}.tlg\d{3}).*", str(urn)).group(1)  # type: ignore

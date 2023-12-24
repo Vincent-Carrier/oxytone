@@ -16,6 +16,10 @@ class RefPoint(metaclass=ABCMeta):
     def __str__(self) -> str:
         return ".".join(str(x) for x in self if x is not None)
 
+    @property
+    def verse(self) -> int:
+        return list(self)[-1]
+
     # def __contains__(self, ref: object) -> bool:
     #     if not isinstance(ref, RefPoint):
     #         raise TypeError(f"Cannot check if {ref} is in {self}")
@@ -70,15 +74,15 @@ class Ref(Generic[T]):
 @dataclass(order=True, frozen=True, slots=True)
 class BCV(RefPoint):
     book: int
-    chapter: int | None = None
-    verse: int | None = None
+    chapter: int
+    verse: int
 
 
 @final
 @dataclass(order=True, frozen=True, slots=True)
 class CV(RefPoint):
     chapter: int
-    verse: int | None = None
+    verse: int
 
 
 @final

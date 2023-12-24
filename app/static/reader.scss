@@ -1,5 +1,30 @@
 @use "foundation" as *;
 
+h1 {
+	@include text($size: xl, $track: wide);
+	@include box($pl: 8, $my: 8);
+}
+
+.tippy-content {
+	@include text(teal(50), sm);
+	@include box($px: 2, $py: 2);
+	@include surface(teal(700), $border: teal(700), $rounded: sm, $shadow: xl);
+
+	& .lemma {
+		@include text(teal(50), md);
+		@include font($wght: bold);
+	}
+	& .def {
+		@include text(teal(100), sm);
+	}
+	& .flags {
+		@include text(teal(100), xs);
+	}
+}
+.tippy-arrow {
+	color: teal(700);
+}
+
 .verb {
 	@include font($wght: 700);
 }
@@ -21,7 +46,7 @@
 }
 
 .vocative {
-	@include text(teal(600));
+	@include text(yellow(600));
 }
 
 .hl {
@@ -50,6 +75,18 @@
 .verse {
 	padding-right: len(2);
 	@include text(gray(500), sm);
+}
+
+.ln {
+	display: inline-block;
+	text-align: right;
+	padding-right: len(2);
+	width: len(8);
+	color: transparent;
+}
+
+.ln.visible {
+	color: gray(600);
 }
 
 // .sentence:not(:last-child)::after {

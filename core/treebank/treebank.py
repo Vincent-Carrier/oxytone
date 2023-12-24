@@ -25,6 +25,7 @@ Sentence: TypeAlias = etree._Element
 class Metadata(TypedDict):
     lang: str
     title: str
+    original_title: str
     author: NotRequired[str]
     ref: NotRequired[str]
     urn: NotRequired[str | bytes]
