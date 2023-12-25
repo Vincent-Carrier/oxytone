@@ -1,33 +1,31 @@
-@use 'theme' as *;
-@use "@fontsource/alegreya-sc/scss/mixins" as AlegreyaSansSc;
-@use "@fontsource/cormorant/scss/mixins" as Cormorant;
+@use "theme" as *;
 
+@import "@fontsource/alegreya/400.css";
+@import "@fontsource/alegreya/700.css";
+@import "@fontsource/alegreya-sans/400.css";
+@import "@fontsource/alegreya-sans/700.css";
+@import "@fontsource/alegreya-sc/400.css";
+@import "@fontsource/alegreya-sc/700.css";
+@import "@fontsource/cormorant-sc/400.css";
+@import "@fontsource/cormorant-sc/700.css";
 @import "foundation/preflight";
 
-@include Cormorant.faces(
-	$directory: '/fonts/cormorant/files',
-    $weights: (
-        500,
-        600,
-    )
-);
-
 html {
-    font-synthesis: none;
-    @include surface(stone(50));
-    @include text(gray(), xl);
+	font-synthesis: none;
+	@include surface(stone(50));
+	@include text(gray(), xl);
 	@include font(serif);
 }
 
 main {
-    display: grid;
-    grid-template-columns: 1fr min(65ch, 100%) 1fr;
+	display: grid;
+	grid-template-columns: 1fr min(65ch, 100%) 1fr;
 }
 main > * {
-    grid-column: 2;
+	grid-column: 2;
 }
 
 .full-bleed {
-    width: 100%;
-    grid-column: 1 / -1;
+	width: 100%;
+	grid-column: 1 / -1;
 }

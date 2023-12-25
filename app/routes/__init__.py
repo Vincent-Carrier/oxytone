@@ -10,7 +10,7 @@ fonts = Blueprint(
     "fonts",
     __name__,
     static_folder=str(NODE_MODULES / "@fontsource/"),
-    static_url_path="/fonts",
+    static_url_path="/@fontsource",
 )
 shoelace = Blueprint(
     "shoelace",

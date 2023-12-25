@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='/reader.css') }}">
-<script src="{{ url_for('static', filename='/reader.js') }}" type="module"></script>
-{% endblock %}
-
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='/reader.css') }}" />
+    <script src="{{ url_for('static', filename='/reader.js') }}" type="module"></script>
+{% endblock head %}
+{% block body_start %}
+    <div class="bottom-bar"></div>
+{% endblock body_start %}
 {% block content %}
-<h1>{{ title }}</h1>
-<div class="treebank">
-	{{ body }}
-</div>
-{% endblock %}
+    <h1>{{ title }}</h1>
+    <div class="treebank">{{ body }}</div>
+{% endblock content %}

@@ -5,10 +5,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Python: Module",
+			"name": "App",
 			"type": "python",
 			"request": "launch",
 			"module": "app.main",
+			"justMyCode": true
+		},
+		{
+			"name": "Chunk Up",
+			"type": "python",
+			"request": "launch",
+			"module": "scripts.chunkup",
 			"justMyCode": true
 		}
 	]

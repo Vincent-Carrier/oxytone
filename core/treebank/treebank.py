@@ -24,6 +24,7 @@ Sentence: TypeAlias = etree._Element
 
 class Metadata(TypedDict):
     lang: str
+    slug: str
     title: str
     original_title: str
     author: NotRequired[str]
@@ -86,4 +87,4 @@ class Treebank(Generic[T], metaclass=ABCMeta):
     #     )
 
     def parse_ref(self, ref: str | bytes) -> Ref[T]:
-        return Ref.parse(self.ref_cls, str(ref))
+        return Ref.parse(str(ref), self.ref_cls)

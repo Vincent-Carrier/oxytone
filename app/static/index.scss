@@ -1,4 +1,4 @@
-@use 'theme' as *;
+@use "theme" as *;
 
 header {
 	img {
@@ -6,16 +6,46 @@ header {
 		@include box($mt: 4, $mb: 8);
 	}
 
-    .title {
-        @include text($align: center, $transform: uppercase);
+	.title {
+		@include text($align: center);
+		@include box($my: 12);
+
 		h1 {
-			@include text(amber(950), 4xl, widest);
+			@include text(slate(950), 4xl, widest, $transform: uppercase);
 			@include font(display, 600);
 		}
 		p {
-			@include text(amber(900), lg, wider);
-			@include font(display, 500);
+			@include text(slate(600), md, wider);
+			@include font(sans, 600);
 		}
-    }
+	}
+}
 
+section {
+	@include font(sans, 400);
+	@include box($w: 96, $mx: auto);
+
+	h2 {
+		@include text($size: lg, $track: widest, $align: center);
+		@include font(smallcaps, bold);
+		@include box($mb: 2);
+	}
+}
+
+.entries {
+	@include flex-y(4);
+}
+
+.entry {
+	@include flex-x(4);
+	& h3 {
+		@include font($wght: bold);
+		@include layout(inline-block);
+		flex-grow: 1;
+	}
+	& select.nav {
+		// @include layout(inline-block);
+		@include surface($border: gray(500), $rounded: md);
+		@include box($px: 4);
+	}
 }

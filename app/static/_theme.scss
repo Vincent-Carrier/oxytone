@@ -1,7 +1,9 @@
-@forward 'foundation' with(
-	$font-families: (
-		display: "'Cormorant', serif",
-		sans: "'Alegreya Sans SC', sans-serif",
-		serif: "'Alegreya', serif",
-	)
-);
+@forward "foundation"
+	with(
+		$font-families: (
+			display: "'Cormorant SC', serif",
+			sans: "'Alegreya Sans', sans-serif",
+			smallcaps: "'Alegreya Sans SC', sans-serif",
+			serif: "'Alegreya', serif",
+		)
+	);

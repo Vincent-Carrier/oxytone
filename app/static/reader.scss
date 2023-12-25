@@ -5,6 +5,13 @@ h1 {
 	@include box($pl: 8, $my: 8);
 }
 
+.bottom-bar {
+	@include inset($b: 0, $x: 0);
+	@include box($h: 12);
+	@include surface(stone(100));
+	border-top: 2px solid stone(200);
+}
+
 .tippy-content {
 	@include text(teal(50), sm);
 	@include box($px: 2, $py: 2);

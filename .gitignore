@@ -164,6 +164,8 @@ scratch.ipynb
 
 app/static/*.css
 app/static/*.css.map
+app/static/*.js
+app/static/*.js.map
 
 data/out/**
 

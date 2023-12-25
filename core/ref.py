@@ -1,6 +1,9 @@
 from abc import ABCMeta
+from copy import deepcopy
+import copy
 from dataclasses import astuple, dataclass
 from functools import total_ordering
+import re
 from typing import Generic, Self, Type, TypeVar, final
 
 
@@ -62,12 +65,28 @@ class Ref(Generic[T]):
         return f"{self.start}-{self.end}" if self.is_range else str(self.a)
 
     @staticmethod
-    def parse(ref_cls: Type[T], string: str) -> "Ref[T]":
+    def parse(string: str, ref_cls: Type[T] | None = None) -> "Ref":
+        prs = ref_cls.parse if ref_cls else Ref.guess_parse
         if "-" in string:
             start, end = string.split("-")
-            return Ref(ref_cls.parse(start), ref_cls.parse(end))
+            if re.match(r"^\d+\.\d+", start) and re.match(r"^\d+$", end):
+                a = prs(start)
+                b = CV(a.chapter, int(end))  # type: ignore
+                return Ref(a, b)  # type: ignore
+            return Ref(prs(start), prs(end))
         else:
-            return Ref(ref_cls.parse(string))
+            return Ref(prs(string))
+
+    @staticmethod
+    def guess_parse(string: str) -> "RefPoint":
+        if re.match(r"^\d+\.\d+\.\d+$", string):
+            return BCV.parse(string)
+        elif re.match(r"^\d+\.\d+$", string):
+            return CV.parse(string)
+        elif re.match(r"^\d+$", string):
+            return Line.parse(string)
+        else:
+            raise ValueError(f"tried to parse {string}")
 
 
 @final

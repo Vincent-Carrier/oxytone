@@ -6,6 +6,7 @@ scss = $(wildcard $(static)/**.scss)
 css = $(scss:%.scss=%.css)
 sass = npx sass -Istyles -Inode_modules $(static):$(static)
 esbuild = npx esbuild app/static/reader.ts --outfile=app/static/reader.js --bundle --target=es2020 --minify --sourcemap
+browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/**
 
 .PHONY: default app partials css lexicons export test format clean chunks
 
@@ -13,7 +14,8 @@ esbuild = npx esbuild app/static/reader.ts --outfile=app/static/reader.js --bund
 watch:
 	$(sass) --watch &
 	$(esbuild) --watch &
-	$(MAKE) app
+	$(MAKE) app &
+	$(browsersync)
 
 install:
 	poetry install
