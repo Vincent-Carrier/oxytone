@@ -1,10 +1,9 @@
-import stat
-
 from flask import Blueprint
 
 from core.constants import NODE_MODULES
 
 from .corpus import bp as corpus
+from .flashcards import bp as flashcards
 
 fonts = Blueprint(
     "fonts",

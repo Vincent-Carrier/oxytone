@@ -16,6 +16,7 @@ app.debug = True
 
 
 app.register_blueprint(routes.corpus)
+app.register_blueprint(routes.flashcards)
 app.register_blueprint(routes.fonts)
 app.register_blueprint(routes.shoelace)
 

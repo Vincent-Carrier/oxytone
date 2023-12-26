@@ -1,8 +1,15 @@
-@use "foundation" as *;
+@use 'theme' as *;
 
-h1 {
-	@include text($size: xl, $track: wide);
+header {
 	@include box($pl: 8, $my: 8);
+	h1 {
+		@include font(smallcaps, bold);
+		@include text(stone(900), $size: xl, $track: wide);
+	}
+	p {
+		@include font(smallcaps, bold);
+		@include text(stone(800), $size: lg, $transform: lowercase);
+	}
 }
 
 .bottom-bar {
@@ -10,26 +17,50 @@ h1 {
 	@include box($h: 12);
 	@include surface(stone(100));
 	border-top: 2px solid stone(200);
+	display: grid;
+	grid-template-columns: 1fr min(65ch, 100%) 1fr;
+	& #center {
+		grid-column: 2;
+		@include flex-x(4);
+		justify-content: space-between;
+	}
 }
 
-.tippy-content {
-	@include text(teal(50), sm);
-	@include box($px: 2, $py: 2);
-	@include surface(teal(700), $border: teal(700), $rounded: sm, $shadow: xl);
-
-	& .lemma {
-		@include text(teal(50), md);
+.help {
+	@include box($pl: 8, $pr: 2, $py: 1);
+	line-height: 1;
+	& #lemma {
+		display: inline-block;
+		@include box($pr: 1);
+		@include text(stone(700), md);
 		@include font($wght: bold);
 	}
-	& .def {
-		@include text(teal(100), sm);
+	& #flags {
+		@include font($style: italic);
+		@include text(stone(500), xs);
 	}
-	& .flags {
-		@include text(teal(100), xs);
+	& #def {
+		@include text(stone(600), sm);
 	}
 }
-.tippy-arrow {
-	color: teal(700);
+
+.selected-words {
+	@include flex-x(4, flex-end, baseline);
+
+	& #selected-count {
+		@include font(sans);
+		@include text(stone(700), $size: sm);
+	}
+	& button#export {
+		@include font(sans, bold);
+		@include text($size: sm);
+		@include box($px: 2, $py: 1, $my: 2);
+		@include surface(stone(300), stone(400), $rounded: md);
+	}
+}
+
+.article {
+	@include text(stone(700));
 }
 
 .verb {
@@ -71,7 +102,8 @@ h1 {
 		text-decoration-color: pink(600);
 	}
 }
-.hovered {
+.hovered,
+.selected {
 	text-decoration: underline;
 }
 
@@ -94,6 +126,10 @@ h1 {
 
 .ln.visible {
 	color: gray(600);
+}
+
+[data-lemma] {
+	cursor: pointer;
 }
 
 // .sentence:not(:last-child)::after {

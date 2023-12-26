@@ -1,5 +1,5 @@
-@use "theme" as *;
-@use "sass:map";
+@use 'theme' as *;
+@use 'sass:map';
 
 @mixin text($color: null, $size: null, $track: null, $align: null, $transform: null) {
 	color: $color;
@@ -61,10 +61,12 @@
 	@include shadow($shadow);
 }
 
-@mixin flex-x($gap) {
+@mixin flex-x($gap, $justify-content: null, $align-items: null) {
 	display: flex;
 	flex-direction: row;
 	column-gap: len($gap);
+	justify-content: $justify-content;
+	align-items: $align-items;
 }
 
 @mixin flex-y($gap) {
