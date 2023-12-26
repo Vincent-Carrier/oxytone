@@ -46,20 +46,23 @@ header {
 
 .selected-words {
 	@include flex-x(4, flex-end, baseline);
-
 	& #selected-count {
-		@include font(sans);
+		@include font(smallcaps);
 		@include text(stone(700), $size: sm);
 	}
 	& button#export {
-		@include font(sans, bold);
+		@include font(smallcaps, bold);
 		@include text($size: sm);
 		@include box($px: 2, $py: 1, $my: 2);
-		@include surface(stone(300), stone(400), $rounded: md);
+		@include surface(stone(300), 2px stone(400) solid, $rounded: md);
+		&:disabled {
+			@include text(stone(500));
+			border: 2px transparent solid;
+		}
 	}
 }
 
-.article {
+article {
 	@include text(stone(700));
 }
 
@@ -88,18 +91,15 @@ header {
 }
 
 .hl {
-	text-decoration: underline;
 	@include surface($rounded: md);
 	&.subj {
 		@include surface(emerald(100));
-		text-decoration-color: emerald(600);
 	}
 	&.dobj {
 		@include surface(sky(100));
-		text-decoration-color: sky(600);
 	}
 	&.iobj {
-		text-decoration-color: pink(600);
+		@include surface(pink(100));
 	}
 }
 .hovered,

@@ -5,6 +5,7 @@ const $def = document.getElementById('def')!
 const $flags = document.getElementById('flags')!
 const $lemma = document.getElementById('lemma')!
 
+const $export = document.getElementById('export')! as HTMLButtonElement
 const $selectedCount = document.getElementById('selected-count')!
 
 let selectedCount = 0
@@ -27,6 +28,7 @@ document.querySelectorAll('[data-lemma]').forEach(el => {
 		span.classList.toggle('selected')
 		selectedCount = document.querySelectorAll('.selected').length
 		$selectedCount.innerText = selectedCount > 0 ? `${selectedCount} selected` : ''
+		$export.disabled = selectedCount <= 0
 	})
 })
 
@@ -34,11 +36,12 @@ function $$<E extends Element>(selector: string) {
 	return Array.from(document.querySelectorAll<E>(selector))
 }
 
-async function exportFlashcards() {
+$export.onclick = async function exportFlashcards() {
 	const words = $$<HTMLSpanElement>('.selected').map(el => ({
 		lemma: el.dataset.lemma,
-		definition: el.dataset.def,
+		definition: el.dataset.def ?? '',
 	}))
-	const res = await ky.post('/flashcards', { json: { words } })
+	const title = document.getElementById('title')!.innerText
+	const res: any = await ky.post('/flashcards', { json: { title, words } }).json()
+	window.location.href = `/flashcards/${res.filename}`
 }
-document.getElementById('export')!.onclick = exportFlashcards

@@ -5,17 +5,17 @@ partials = $(wildcard build/**.html)
 scss = $(wildcard $(static)/**.scss)
 css = $(scss:%.scss=%.css)
 sass = npx sass -Istyles -Inode_modules $(static):$(static)
-esbuild = npx esbuild app/static/reader.ts --outfile=app/static/reader.js --bundle --target=es2020 --sourcemap
-browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/**
+esbuild = npx esbuild app/static/reader.ts --outdir=app/static --bundle --target=es2020 --sourcemap
+browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/** --no-open
 
 .PHONY: default app partials css lexicons export test format clean chunks
 
 
 watch:
 	$(sass) --watch &
-	$(esbuild) --watch &
-	$(MAKE) app &
-	$(browsersync)
+	$(esbuild) --watch=forever &
+	$(browsersync) &
+	$(MAKE) app
 
 install:
 	poetry install

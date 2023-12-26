@@ -1,7 +1,10 @@
-from flask import Flask, render_template
+from flask import Blueprint, Flask
 from rich import traceback
+from app.routes.flashcards import bp as flashcards_bp
+from app.routes.read import bp as read_bp
 
-from . import routes
+from core.constants import NODE_MODULES
+
 
 traceback.install()
 
@@ -15,9 +18,15 @@ app.jinja_options.update(
 app.debug = True
 
 
-app.register_blueprint(routes.corpus)
-app.register_blueprint(routes.flashcards)
-app.register_blueprint(routes.fonts)
-app.register_blueprint(routes.shoelace)
+app.register_blueprint(read_bp)
+app.register_blueprint(flashcards_bp)
+app.register_blueprint(
+    Blueprint(
+        "fonts",
+        __name__,
+        static_folder=str(NODE_MODULES / "@fontsource/"),
+        static_url_path="/@fontsource",
+    )
+)
 
 app.run()

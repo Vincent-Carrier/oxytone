@@ -12,7 +12,7 @@ from core.render import HtmlPartialRenderer
 from core.treebank.perseus import PerseusTB
 from core.treebank.treebank import Metadata
 
-bp = Blueprint("corpus", __name__, url_prefix="/")
+bp = Blueprint("read", __name__, url_prefix="/")
 
 
 class Doc(NamedTuple):
@@ -35,7 +35,7 @@ def get_index():
     return render_template("index.html", homer=homer, oresteia=oresteia)
 
 
-@bp.route("/<slug>/<span>")
+@bp.route("/read/<slug>/<span>")
 def get_treebank(slug: str, span: str):
     f = DATA / "out" / slug / f"{span}.xml"
     if not f.exists():
@@ -43,4 +43,4 @@ def get_treebank(slug: str, span: str):
     tb = PerseusTB(f, None, None, None)  # type: ignore
     body = HtmlPartialRenderer(tb).render()
     meta = Box(index[slug])
-    return render_template("treebank.html", body=body, **meta)
+    return render_template("reader.html", body=body, **meta)

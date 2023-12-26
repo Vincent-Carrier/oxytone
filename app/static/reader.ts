@@ -1,4 +1,5 @@
 import { some } from 'lodash-es'
+import './flashcards'
 
 function highlightGroup(role: string, className: string) {
 	let hlGroup: HTMLSpanElement[] = []

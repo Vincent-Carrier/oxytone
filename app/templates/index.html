@@ -1,33 +1,29 @@
-{% extends "base.html" %}
-{% block head %}
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='/index.css') }}" />
-    <script src="/index.js" type="module"></script>
-{% endblock head %}
-{% block content %}
-    <header>
-        <img src="/greek_heroes.png" alt="" />
-        <div class="title">
-            <h1>Oxytone</h1>
-            <p>The Bleeding Edge of Ancient Language</p>
-        </div>
-    </header>
-    <section class="homer">
-        <h2>Homer</h2>
-        <div class="entries">
-            {% for entry in homer %}
-                <div class="entry">
-                    <h3>{{ entry.title }}</h3>
-                    <select class="nav" onchange="location.href = this.value">
-                        <option selected value="#">...</option>
-                        {% for span in entry.spans %}
-                            <option value="/{{ entry.slug }}/{{ span }}">{{ span.start.chapter }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            {% endfor %}
-        </div>
-    </section>
-    <section class="oresteia">
-    </section>
+{% extends "base.html" %} {% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/index.css') }}" />
+<script src="/index.js" type="module"></script>
+{% endblock head %} {% block content %}
+<header>
+	<img src="/greek_heroes.png" alt="" />
+	<div class="title">
+		<h1>Oxytone</h1>
+		<p>The Bleeding Edge of Ancient Language</p>
+	</div>
+</header>
+<section class="homer">
+	<h2>Homer</h2>
+	<div class="entries">
+		{% for entry in homer %}
+		<div class="entry">
+			<h3>{{ entry.title }}</h3>
+			<select class="nav" onchange="location.href = this.value">
+				<option selected value="#">...</option>
+				{% for span in entry.spans %}
+				<option value="/read/{{ entry.slug }}/{{ span }}">{{ span.start.chapter }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		{% endfor %}
+	</div>
+</section>
+<section class="oresteia"></section>
 {% endblock content %}

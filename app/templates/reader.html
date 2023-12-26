@@ -14,14 +14,16 @@
             </div>
             <div class="selected-words">
                 <div id="selected-count"></div>
-                <button id="export">Export</button>
+                <button id="export" disabled>Export</button>
             </div>
         </div>
     </div>
 {% endblock body_start %}
 {% block content %}
     <header>
-        <h1>{{ title }} &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title }}</h1>
+        <h1>
+            <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title }}
+        </h1>
         <p>{{ author }}</p>
     </header>
     <article class="treebank">{{ body }}</article>
