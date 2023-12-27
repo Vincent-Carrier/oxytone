@@ -43,7 +43,8 @@ format:
 clean:
 	rm -f $(lexicons)
 	rm -rf $(static)/**.{css,css.map,js,js.map}
-	rm -rf chunks/**
+	rm -rf data/treebanks/chunks/**
+	rm -rf data/treebanks/index.json
 	rm -rf tmp/**
 
 
@@ -53,6 +54,6 @@ $(lexicons):
 	$(py) -m scripts.seed
 
 chunks:
-	rm -rf chunks/**
+	rm -rf data/treebanks/chunks/**
 	$(py) -m scripts.chunkup
 

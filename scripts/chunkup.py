@@ -1,7 +1,7 @@
 from json import JSONEncoder
 
 from box import Box
-from core.constants import CHUNKS
+from core.constants import CHUNKS, TREEBANKS
 from core.corpus import corpus
 from lxml.builder import E
 from lxml import etree
@@ -37,5 +37,5 @@ for slug, tb in corpus.items():
     index[slug].chunks = sorted(chunk_labels)
 
 
-with (CHUNKS / "index.json").open("w") as f:
+with (TREEBANKS / "index.json").open("w") as f:
     f.write(JSONEncoder().encode(index))

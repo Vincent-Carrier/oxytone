@@ -4,12 +4,11 @@ from typing import NamedTuple
 from box import Box
 from flask import Blueprint, render_template
 from slugify import slugify
-from core.constants import CHUNKS
-from core.ref import Ref
+from core.constants import TREEBANKS
 
 bp = Blueprint("index", __name__, "/")
 
-json_str = (CHUNKS / "index.json").read_text()
+json_str = (TREEBANKS / "index.json").read_text()
 index = Box(JSONDecoder().decode(json_str))
 
 
