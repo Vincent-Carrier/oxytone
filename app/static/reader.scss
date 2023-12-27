@@ -3,7 +3,7 @@
 nav {
 	@include box($pl: 8, $my: 4);
 	@include font(smallcaps, bold);
-	@include text(stone(600));
+	@include text(stone(500));
 }
 
 header {
@@ -12,9 +12,13 @@ header {
 		@include font(smallcaps, bold);
 		@include text(stone(900), $size: xl, $track: wide);
 	}
-	p {
+	#author {
 		@include font(smallcaps, bold);
 		@include text(stone(800), $size: lg, $transform: lowercase);
+	}
+	#chunk-title {
+		@include font(sans, bold);
+		@include text(stone(700), $size: sm);
 	}
 }
 

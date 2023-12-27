@@ -1,48 +1,24 @@
-{% extends "base.html" %} {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='/index.css') }}" />
-<script src="/index.js" type="module"></script>
-{% endblock head %} {% block content %}
-<header>
-	<img src="/greek_heroes.png" alt="" />
-	<div class="title">
-		<h1>Oxytone</h1>
-		<p>The Bleeding Edge of Ancient Language</p>
-	</div>
-</header>
-<section id="homer">
-	<h2>Homer</h2>
-	<div class="entries">
-		{% for entry in homer %}
-		<div class="entry">
-			<h3>
-				{{ entry.title }} &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ entry.original_title }}
-			</h3>
-			<select class="nav" onchange="location.href = this.value">
-				<option selected value="#">...</option>
-				{% for span in entry.spans %}
-				<option value="{{ url_for('read.get_chunk', slug=entry.slug, span=span) }}">
-					{{ entry.get_book(span) }}
-				</option>
-				{% endfor %}
-			</select>
-		</div>
-		{% endfor %}
-		<hr />
-	</div>
-</section>
-<section id="aeschylus">
-	<h2>Aeschylus</h2>
-	<div class="entries">
-		{% for entry in aeschylus %}
-		<div class="entry">
-			<h3>
-				<a href="{{ url_for('read.get_treebank', slug=entry.slug) }}"
-					>{{ entry.title }} &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ entry.original_title
-					}}</a
-				>
-			</h3>
-		</div>
-		{% endfor %}
-	</div>
-</section>
+{% extends "base.html" %}
+{% import '_entry.html' as entries %}
+{% block head %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='/index.css') }}" />
+    <script src="/index.js" type="module"></script>
+{% endblock head %}
+{% block content %}
+    <header>
+        <img src="/greek_heroes.webp" alt="" />
+        <div class="title">
+            <h1>Oxytone</h1>
+            <p>The Bleeding Edge of Ancient Language</p>
+        </div>
+    </header>
+    {% for author in authors %}
+        <section id="{{ author.slug }}">
+            <h2>{{ author.name }}</h2>
+            <div class="entries">
+                {% for doc in author.corpus.values() %}{{ entries.entry(doc) }}{% endfor %}
+            </div>
+        </section>
+    {% endfor %}
 {% endblock content %}

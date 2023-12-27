@@ -11,11 +11,11 @@ header {
 		@include box($my: 12);
 
 		h1 {
-			@include text(slate(950), 4xl, widest, $transform: uppercase);
+			@include text(stone(950), 4xl, widest, $transform: uppercase);
 			@include font(display, 600);
 		}
 		p {
-			@include text(slate(600), md, wider);
+			@include text(stone(600), md, wider);
 			@include font(sans, 600);
 		}
 	}
@@ -28,11 +28,15 @@ main {
 section {
 	@include font(sans, 400);
 	@include box($w: 96, $mx: auto);
+	@include box($py: 8);
 
 	h2 {
 		@include text($size: lg, $track: widest, $align: center);
 		@include font(smallcaps, bold);
 		@include box($mb: 2);
+	}
+	& + section {
+		border-top: 1px stone(300) solid;
 	}
 }
 
@@ -46,11 +50,13 @@ hr {
 }
 
 .entry {
-	@include flex-x(4);
-	& h3 {
+	@include flex-x(4, space-between);
+	& .title {
 		@include font($wght: bold);
-		@include layout(inline-block);
-		flex-grow: 1;
+	}
+	& .original-title {
+		@include text(stone(600));
+		@include font(serif, bold);
 	}
 	& select.nav {
 		// @include layout(inline-block);

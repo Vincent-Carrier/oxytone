@@ -28,7 +28,8 @@
             <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title
             }}
         </h1>
-        <p>{{ author }}</p>
+        <p id="author">{{ author }}</p>
+        {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
     </header>
     <article class="treebank">{{ body }}</article>
 {% endblock content %}
