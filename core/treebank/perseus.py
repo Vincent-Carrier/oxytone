@@ -3,23 +3,21 @@ import re
 from pathlib import Path
 import shelve
 from typing import (
-    Callable,
     Iterator,
     Type,
     Unpack,
     cast,
     final,
-    TypeAlias,
 )
 
 from lxml import etree
-from more_itertools import split_when
 
 from pyCTS import CTS_URN
 
 from core.constants import LSJ, PUNCTUATION
 from core.ref import Ref, T
 from core.token import FT, Token
+from core.treebank.chunker import Chunker
 from core.treebank.treebank import Metadata, Sentence, Treebank
 from core.utils import at, parse_int
 from core.word import POS, Case, Word
@@ -59,14 +57,15 @@ class PerseusTB(Treebank[T]):
         yield from self.body.findall("./sentence")
 
     def chunks(self) -> Iterator[list[Sentence]]:
-        return self.chunker(self)  # type: ignore
+        if self.chunker is None:
+            raise ValueError("called .chunks() without chunker")
+        return self.chunker.chunks(self)
 
     def __iter__(self) -> Iterator[Token]:
         prev: Word | None = None
         prev_ref: Ref | None = None
-        first_word = self.word(next(self.sentences()).find("./word").attrib)
+        first_word = self.word(next(self.sentences()).find("./word").attrib)  # type: ignore
         yield first_word.ref.start.verse  # type: ignore
-        print(first_word.ref.start.verse)
         for sentence in self.sentences():
             for el in sentence.findall("./word"):
                 word = self.word(el.attrib)
@@ -115,17 +114,6 @@ class PerseusTB(Treebank[T]):
             definition=lsj.get(lemma) if lemma else None,
             ref=ref,
         )
-
-
-Chunker: TypeAlias = Callable[[PerseusTB], Iterator[list[Sentence]]]
-
-
-def chapter_chunks(tb: PerseusTB) -> Iterator[list[Sentence]]:
-    def same_chapter(a: Sentence, b: Sentence):
-        a_ref, b_ref = (tb.parse_ref(x.attrib["subdoc"]).start.chapter for x in (a, b))
-        return a_ref != b_ref
-
-    return split_when(tb.sentences(), same_chapter)
 
 
 lsj = shelve.open(str(LSJ), "r")

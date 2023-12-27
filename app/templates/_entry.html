@@ -1,18 +1,18 @@
 {% macro entry(doc) %}
     <div class="entry">
         <h3 class="title">
-            {% if doc.spans %}
+            {% if doc.chunks %}
                 {{ doc.title }}
             {% else %}
                 <a href="/read/{{ doc.slug }}">{{ doc.title }}</a>
             {% endif %}
         </h3>
         <p class="original-title">{{ doc.original_title }}</p>
-        {% if doc.spans %}
+        {% if doc.chunks %}
             <select class="nav" onchange="location.href = this.value">
                 <option selected value="#">...</option>
-                {% for span in doc.spans %}
-                    <option value="{{ url_for('read.get_chunk', slug=doc.slug, span=span) }}">{{ doc.get_book(span) }}</option>
+                {% for chunk in doc.chunks %}
+                    <option value="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</option>
                 {% endfor %}
             </select>
         {% endif %}

@@ -2,6 +2,7 @@ from flask import Blueprint, Flask
 from rich import traceback
 from app.routes.flashcards import bp as flashcards_bp
 from app.routes.read import bp as read_bp
+from app.routes.index import bp as index_bp
 
 from core.constants import NODE_MODULES
 
@@ -17,7 +18,7 @@ app.jinja_options.update(
 )
 app.debug = True
 
-
+app.register_blueprint(index_bp)
 app.register_blueprint(read_bp)
 app.register_blueprint(flashcards_bp)
 app.register_blueprint(
