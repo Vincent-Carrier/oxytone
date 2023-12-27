@@ -9,7 +9,7 @@ TRAILING_REGEX = re.compile(r"(\s|\.|,|;)+$")
 
 
 print("Seeding LSJ...")
-with open(DATA / "ag/LSJ_shortdefs.tsv") as f:
+with open(DATA / "LSJ_shortdefs.tsv") as f:
     with shelve.open(str(LSJ)) as db:
         for [lemma, definition] in csv.reader(f, dialect="excel-tab"):
             db[lemma] = definition  # TODO: normalize

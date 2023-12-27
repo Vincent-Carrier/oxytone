@@ -1,11 +1,11 @@
 py := poetry run python
-lexicons := data/ag/lsj.db
+lexicons := data/lsj.db
 static := app/static
 partials = $(wildcard build/**.html)
 scss = $(wildcard $(static)/**.scss)
 css = $(scss:%.scss=%.css)
 sass = npx sass -Istyles -Inode_modules $(static):$(static)
-esbuild = npx esbuild app/static/reader.ts --outdir=app/static --bundle --target=es2020 --sourcemap
+esbuild = npx esbuild app/static/{index,reader}.ts --outdir=app/static --bundle --target=es2020 --sourcemap
 browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/** --no-open
 
 .PHONY: default app partials css lexicons export test format clean chunks
@@ -40,21 +40,19 @@ test:
 format:
 	poetry run black .
 
-db_clean:
+clean:
 	rm -f $(lexicons)
-
-partials_clean:
-	rm -rf build/
-
-assets_clean:
-	rm -rf $(static)/**.map $(static)/**.css
+	rm -rf $(static)/**.{css,css.map,js,js.map}
+	rm -rf chunks/**
+	rm -rf tmp/**
 
 
 lexicons: $(lexicons)
 
-chunks:
-	rm -rf data/out/**
-	$(py) -m scripts.chunkup
-
 $(lexicons):
 	$(py) -m scripts.seed
+
+chunks:
+	rm -rf chunks/**
+	$(py) -m scripts.chunkup
+

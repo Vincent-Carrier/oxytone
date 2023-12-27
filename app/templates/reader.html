@@ -20,9 +20,13 @@
     </div>
 {% endblock body_start %}
 {% block content %}
+    <nav>
+        <a href="/">⬅ &nbsp; Go Back</a>
+    </nav>
     <header>
         <h1>
-            <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title }}
+            <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title
+            }}
         </h1>
         <p>{{ author }}</p>
     </header>

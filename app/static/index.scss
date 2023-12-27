@@ -1,4 +1,4 @@
-@use "theme" as *;
+@use 'theme' as *;
 
 header {
 	img {
@@ -21,6 +21,10 @@ header {
 	}
 }
 
+main {
+	@include box($mb: 16);
+}
+
 section {
 	@include font(sans, 400);
 	@include box($w: 96, $mx: auto);
@@ -30,6 +34,11 @@ section {
 		@include font(smallcaps, bold);
 		@include box($mb: 2);
 	}
+}
+
+hr {
+	border: 1px stone(300) solid;
+	@include box($mx: 16, $my: 6);
 }
 
 .entries {

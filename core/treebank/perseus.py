@@ -5,7 +5,6 @@ import shelve
 from typing import (
     Callable,
     Iterator,
-    Self,
     Type,
     Unpack,
     cast,
@@ -14,12 +13,12 @@ from typing import (
 )
 
 from lxml import etree
-from more_itertools import first, split_when
+from more_itertools import split_when
 
 from pyCTS import CTS_URN
 
 from core.constants import LSJ, PUNCTUATION
-from core.ref import CV, Ref, T
+from core.ref import Ref, T
 from core.token import FT, Token
 from core.treebank.treebank import Metadata, Sentence, Treebank
 from core.utils import at, parse_int
@@ -28,50 +27,39 @@ from core.word import POS, Case, Word
 
 @final
 class PerseusTB(Treebank[T]):
+    filepath: Path
     body: etree._Element
     gorman: bool
     is_verse: bool
-    chunker: "Chunker"
+    chunker: "Chunker | None"
 
     def __init__(
         self,
         f: Path,
         ref_cls: Type[T],
-        chunker: "Chunker",
-        is_verse,
-        gorman: bool = False,
+        is_verse: bool,
+        chunker=None,
+        gorman=False,
         **meta: Unpack[Metadata],
     ) -> None:
         super().__init__(ref_cls=ref_cls, **meta)
+        self.filepath = f
         self.gorman = gorman
         self.chunker = chunker
         self.is_verse = is_verse
         tree = etree.parse(f)
         root = tree.getroot()
-        if gorman or (self.chunker is None):
-            self.body = root
-        else:
-            self.body = cast(etree._Element, root.find(".//body"))
-        if self.ref_cls is None:
-            self.ref_cls = getattr(
-                import_module("core.ref"), str(self.body.attrib["refcls"])
-            )
-        if self.is_verse is None:
-            self.is_verse = self.body.attrib["isverse"] == "True"
-
-    @classmethod
-    def from_chunk(cls, f: Path) -> Self:
-        ...
-
-    @classmethod
-    def from_agldt(cls, f: Path) -> Self:
-        ...
+        self.body = root if gorman else cast(etree._Element, root.find(".//body"))
+        self.ref_cls = self.ref_cls or getattr(
+            import_module("core.ref"), str(root.attrib["refcls"])
+        )
+        self.is_verse = self.is_verse or root.attrib["isverse"] == "True"
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")
 
     def chunks(self) -> Iterator[list[Sentence]]:
-        return self.chunker(self)
+        return self.chunker(self)  # type: ignore
 
     def __iter__(self) -> Iterator[Token]:
         prev: Word | None = None
@@ -130,10 +118,6 @@ class PerseusTB(Treebank[T]):
 
 
 Chunker: TypeAlias = Callable[[PerseusTB], Iterator[list[Sentence]]]
-
-
-def whole_chunk(tb: PerseusTB) -> Iterator[list[Sentence]]:
-    yield list(tb.sentences())
 
 
 def chapter_chunks(tb: PerseusTB) -> Iterator[list[Sentence]]:

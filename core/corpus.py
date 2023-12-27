@@ -1,14 +1,15 @@
-from core.constants import DATA
+from core.constants import TREEBANKS
 from core.ref import CV, Line
-from core.treebank.perseus import PerseusTB, chapter_chunks, whole_chunk
+from core.treebank.perseus import PerseusTB, chapter_chunks
 
+PERSEUS2 = TREEBANKS / "perseus/2.1"
 
-docs = {
+corpus: dict[str, PerseusTB] = {
     "iliad": PerseusTB(
-        DATA / "ag/perseus/2.1/iliad.xml",
+        PERSEUS2 / "iliad.xml",
         CV,
-        chapter_chunks,
         is_verse=True,
+        chunker=chapter_chunks,
         lang="ag",
         slug="iliad",
         title="The Iliad",
@@ -16,10 +17,10 @@ docs = {
         author="Homer",
     ),
     "odyssey": PerseusTB(
-        DATA / "ag/perseus/2.1/odyssey.xml",
+        PERSEUS2 / "odyssey.xml",
         CV,
-        chapter_chunks,
         is_verse=True,
+        chunker=chapter_chunks,
         lang="ag",
         slug="odyssey",
         title="The Odyssey",
@@ -27,9 +28,8 @@ docs = {
         author="Homer",
     ),
     "agamemnon": PerseusTB(
-        DATA / "ag/perseus/2.1/agamemnon.xml",
+        PERSEUS2 / "agamemnon.xml",
         Line,
-        whole_chunk,
         is_verse=True,
         lang="ag",
         slug="agamemnon",
@@ -38,9 +38,8 @@ docs = {
         author="Aeschylus",
     ),
     "libationbearers": PerseusTB(
-        DATA / "ag/perseus/2.1/libationbearers.xml",
+        PERSEUS2 / "libationbearers.xml",
         Line,
-        whole_chunk,
         is_verse=True,
         lang="ag",
         slug="libationbearers",
@@ -49,9 +48,8 @@ docs = {
         author="Aeschylus",
     ),
     "eumenides": PerseusTB(
-        DATA / "ag/perseus/2.1/eumenides.xml",
+        PERSEUS2 / "eumenides.xml",
         Line,
-        whole_chunk,
         is_verse=True,
         lang="ag",
         slug="eumenides",

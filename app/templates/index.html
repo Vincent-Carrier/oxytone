@@ -9,21 +9,40 @@
 		<p>The Bleeding Edge of Ancient Language</p>
 	</div>
 </header>
-<section class="homer">
+<section id="homer">
 	<h2>Homer</h2>
 	<div class="entries">
 		{% for entry in homer %}
 		<div class="entry">
-			<h3>{{ entry.title }}</h3>
+			<h3>
+				{{ entry.title }} &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ entry.original_title }}
+			</h3>
 			<select class="nav" onchange="location.href = this.value">
 				<option selected value="#">...</option>
 				{% for span in entry.spans %}
-				<option value="/read/{{ entry.slug }}/{{ span }}">{{ span.start.chapter }}</option>
+				<option value="{{ url_for('read.get_chunk', slug=entry.slug, span=span) }}">
+					{{ entry.get_book(span) }}
+				</option>
 				{% endfor %}
 			</select>
 		</div>
 		{% endfor %}
+		<hr />
 	</div>
 </section>
-<section class="oresteia"></section>
+<section id="aeschylus">
+	<h2>Aeschylus</h2>
+	<div class="entries">
+		{% for entry in aeschylus %}
+		<div class="entry">
+			<h3>
+				<a href="{{ url_for('read.get_treebank', slug=entry.slug) }}"
+					>{{ entry.title }} &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ entry.original_title
+					}}</a
+				>
+			</h3>
+		</div>
+		{% endfor %}
+	</div>
+</section>
 {% endblock content %}

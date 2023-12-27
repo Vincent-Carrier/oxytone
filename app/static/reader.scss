@@ -1,7 +1,13 @@
 @use 'theme' as *;
 
+nav {
+	@include box($pl: 8, $my: 4);
+	@include font(smallcaps, bold);
+	@include text(stone(600));
+}
+
 header {
-	@include box($pl: 8, $my: 8);
+	@include box($pl: 8, $mb: 8);
 	h1 {
 		@include font(smallcaps, bold);
 		@include text(stone(900), $size: xl, $track: wide);

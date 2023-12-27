@@ -167,6 +167,8 @@ app/static/*.css.map
 app/static/*.js
 app/static/*.js.map
 
-data/out/**
+chunks/**
 
 node_modules/
+
+tmp/
