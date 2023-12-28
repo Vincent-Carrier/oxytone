@@ -54,13 +54,15 @@ hr {
 	& .title {
 		@include font($wght: bold);
 	}
-	& .original-title {
-		@include text(stone(600));
-		@include font(serif, bold);
-	}
 	& select.nav {
-		// @include layout(inline-block);
 		@include surface($border: gray(500), $rounded: md);
 		@include box($px: 4);
+	}
+	& .completeness {
+		@include font($style: italic);
+		@include text(stone(600));
+	}
+	& :last-child {
+		justify-self: flex-end;
 	}
 }

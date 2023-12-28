@@ -38,4 +38,4 @@ for slug, tb in corpus.items():
 
 
 with (TREEBANKS / "index.json").open("w") as f:
-    f.write(JSONEncoder().encode(index))
+    f.write(JSONEncoder(indent=4).encode(index))

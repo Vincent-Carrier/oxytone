@@ -10,20 +10,17 @@ browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/** --no-
 
 .PHONY: default app partials css lexicons export test format clean chunks
 
+app: $(lexicons)
+	$(py) -m app.main
 
 watch:
 	$(sass) --watch &
 	$(esbuild) --watch=forever &
-	$(browsersync) &
-	$(MAKE) app
+	$(browsersync)
 
 install:
-	poetry install
-	npm install
+	poetry install & npm install
 	$(MAKE) lexicons chunks
-
-app: $(lexicons)
-	$(py) -m app.main
 
 partials:
 	$(py) -m scripts.partials
@@ -40,20 +37,19 @@ test:
 format:
 	poetry run black .
 
-clean:
-	rm -f $(lexicons)
-	rm -rf $(static)/**.{css,css.map,js,js.map}
-	rm -rf data/treebanks/chunks/**
-	rm -rf data/treebanks/index.json
-	rm -rf tmp/**
-
-
 lexicons: $(lexicons)
 
 $(lexicons):
 	$(py) -m scripts.seed
 
 chunks:
+	rm -rf data/treebanks/index.json
 	rm -rf data/treebanks/chunks/**
 	$(py) -m scripts.chunkup
 
+clean:
+	rm -f $(lexicons)
+	rm -rf $(static)/**.{css,css.map,js,js.map}
+	rm -rf data/treebanks/chunks/**
+	rm -rf data/treebanks/index.json
+	rm -rf tmp/**

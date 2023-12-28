@@ -6,8 +6,9 @@
             {% else %}
                 <a href="/read/{{ doc.slug }}">{{ doc.title }}</a>
             {% endif %}
+            &nbsp;&nbsp;/&nbsp;&nbsp;
+            <span class="original-title">{{ doc.original_title }}</span>
         </h3>
-        <p class="original-title">{{ doc.original_title }}</p>
         {% if doc.chunks %}
             <select class="nav" onchange="location.href = this.value">
                 <option selected value="#">...</option>
@@ -15,6 +16,8 @@
                     <option value="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</option>
                 {% endfor %}
             </select>
+        {% else %}
+            <div class="completeness">Complete Work</div>
         {% endif %}
     </div>
 {% endmacro %}

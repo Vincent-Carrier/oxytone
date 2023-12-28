@@ -51,7 +51,9 @@ class PerseusTB(Treebank[T]):
         self.ref_cls = self.ref_cls or getattr(
             import_module("core.ref"), str(root.attrib["refcls"])
         )
-        self.is_verse = self.is_verse or root.attrib["isverse"] == "True"
+        self.is_verse = self.is_verse
+        if self.is_verse is None:
+            self.is_verse = root.attrib["isverse"] == "True"
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")

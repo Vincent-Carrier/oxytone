@@ -23,9 +23,21 @@ def author_corpus(author: str) -> AuthorCorpus:
     return AuthorCorpus(author, slugify(author), Box(corpus))
 
 
-homer = author_corpus("Homer")
-aeschylus = author_corpus("Aeschylus")
-authors = [homer, aeschylus]
+authors = [
+    corpus := author_corpus(author)
+    for author in [
+        "Homer",
+        "Hesiod",
+        "Homeric Hymns",
+        "Aeschylus",
+        "Sophocles",
+        "Euripides",
+        "Herodotus",
+        "Thucydides",
+        "Xenophon",
+    ]
+]
+authors = filter(lambda a: len(a.corpus), authors)
 
 
 @bp.route("/")

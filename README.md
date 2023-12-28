@@ -1,25 +1,18 @@
 # Pyrrho
 
-Pyrrho is a tool for generating dynamic, syntax-highlighted texts, focusing at the moment on Ancient Greek. You can see it in action [here](https://vcar.dev/read/xenophon/anabasis/111/).
-
-Annotated texts can come from different sources. At the moment, only the [AGLD Treebank format](https://perseusdl.github.io/treebank_data/) and [ConLL](https://universaldependencies.org/format.html) are supported, but there are plans to support arbitrary text via [CLTK](https://github.com/cltk/cltk).
+Pyrrho is a tool for generating syntax-highlighted texts for ancient languages. It uses treebanks (XML files containing morphological and syntactical annotations) [from the PerseusDL project](https://perseusdl.github.io/treebank_data/). Additionally, it lets you quickly create [Anki flashcards](https://apps.ankiweb.net/) from the text so you can remember new vocabulary.
 
 ## Getting started
 
-```
-# install python dependencies, build lexicon DB
-make
-```
+First off, you'll need `poetry`, and `npm` installed.
 
-### REST API
+-   [Install Poetry](https://python-poetry.org/docs/#installation)
+-   Depending on your distro, you may also need [PyEnv](https://github.com/pyenv/pyenv) to [get the right Python version running](https://python-poetry.org/docs/managing-environments/)
 
-Run `make app`, then go to `/docs` or try `/corpus/ag/nt?ref=JOHN_1`.
+Now, run `make install` to install all dependencies.
 
-### CLI
+## Running the server
 
-```
-./pyrrho ls
-./pyrrho cat ag nt JOHN_1
-```
+Run `make` to start the Flask server. To auto-reload the browser window and recompile assets on change, run `make watch` in a separate window.
 
-[![asciicast](https://asciinema.org/a/G6V0jSt3hPaiBPeJ0A0YJQJhR.svg)](https://asciinema.org/a/G6V0jSt3hPaiBPeJ0A0YJQJhR)
+If you modify `core/corpus.py`, you'll need to run `make chunks` to see your changes reflected.

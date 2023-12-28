@@ -1,5 +1,5 @@
 from core.constants import TREEBANKS
-from core.ref import CV, Line
+from core.ref import BCV, CV, Line
 from core.treebank.chunker import ChapterChunker
 from core.treebank.perseus import PerseusTB
 
@@ -57,5 +57,15 @@ corpus: dict[str, PerseusTB] = {
         title="The Eumenides",
         original_title="Εὐμενίδες",
         author="Aeschylus",
+    ),
+    "histories": PerseusTB(
+        PERSEUS2 / "herodotus.xml",
+        CV,
+        is_verse=False,
+        lang="ag",
+        slug="histories",
+        title="The Histories",
+        original_title="Ἱστορίαι",
+        author="Herodotus",
     ),
 }
