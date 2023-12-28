@@ -1,4 +1,4 @@
-import { some } from 'lodash-es'
+import some from 'lodash-es/some'
 import './flashcards'
 
 function highlightGroup(role: string, className: string) {

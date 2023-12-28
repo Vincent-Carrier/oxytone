@@ -54,6 +54,9 @@ hr {
 	& .title {
 		@include font($wght: bold);
 	}
+	& h3 {
+		display: inline;
+	}
 	& select.nav {
 		@include surface($border: gray(500), $rounded: md);
 		@include box($px: 4);
@@ -62,7 +65,11 @@ hr {
 		@include font($style: italic);
 		@include text(stone(600));
 	}
-	& :last-child {
-		justify-self: flex-end;
+	& .chunks {
+		width: len(40);
+		@include font(sans, $style: italic);
+		@include text(sky(700));
+		& a {
+		}
 	}
 }

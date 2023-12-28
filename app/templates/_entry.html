@@ -1,22 +1,23 @@
 {% macro entry(doc) %}
     <div class="entry">
-        <h3 class="title">
-            {% if doc.chunks %}
-                {{ doc.title }}
-            {% else %}
-                <a href="/read/{{ doc.slug }}">{{ doc.title }}</a>
-            {% endif %}
-            &nbsp;&nbsp;/&nbsp;&nbsp;
-            <span class="original-title">{{ doc.original_title }}</span>
-        </h3>
         {% if doc.chunks %}
-            <select class="nav" onchange="location.href = this.value">
-                <option selected value="#">...</option>
+            <div class="title">
+                <h3>{{ doc.title }}</h3>
+                <div class="original-title">{{ doc.original_title }}</div>
+            </div>
+            <div class="chunks">
                 {% for chunk in doc.chunks %}
-                    <option value="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</option>
+                    <a href="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</a>
                 {% endfor %}
-            </select>
+            </div>
         {% else %}
+            <div class="title">
+                <a href="/read/{{ doc.slug }}">
+                    <h3>{{ doc.title }}</h3>
+                    &nbsp;&nbsp;/&nbsp;&nbsp;
+                    <span class="original-title">{{ doc.original_title }}</span>
+                </a>
+            </div>
             <div class="completeness">Complete Work</div>
         {% endif %}
     </div>

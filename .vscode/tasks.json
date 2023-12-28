@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Dev",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": [
+				"Server",
+				"Watch"
+			],
+		},
+		{
+			"label": "Server",
+			"command": "make",
+		},
+		{
+			"label": "Watch",
+			"command": "make",
+			"args": [
+				"watch"
+			],
+		}
+	]
+}

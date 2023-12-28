@@ -27,17 +27,16 @@ authors = [
     corpus := author_corpus(author)
     for author in [
         "Homer",
-        "Hesiod",
-        "Homeric Hymns",
+        # "Hesiod",
+        # "Homeric Hymns",
         "Aeschylus",
-        "Sophocles",
-        "Euripides",
+        # "Sophocles",
+        # "Euripides",
         "Herodotus",
-        "Thucydides",
-        "Xenophon",
+        # "Thucydides",
+        # "Xenophon",
     ]
 ]
-authors = filter(lambda a: len(a.corpus), authors)
 
 
 @bp.route("/")
