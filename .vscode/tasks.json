@@ -3,10 +3,6 @@
 	"tasks": [
 		{
 			"label": "Dev",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
 			"dependsOn": [
 				"Server",
 				"Watch"
@@ -14,7 +10,14 @@
 		},
 		{
 			"label": "Server",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"command": "make",
+			"icon": {
+				"id": "server-process"
+			}
 		},
 		{
 			"label": "Watch",
@@ -22,6 +25,9 @@
 			"args": [
 				"watch"
 			],
+			"icon": {
+				"id": "eye-watch"
+			}
 		}
 	]
 }

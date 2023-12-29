@@ -4,6 +4,7 @@ from typing import Any, NamedTuple, assert_never
 import dominate.tags as h
 
 from dominate.util import raw
+from core.constants import PUNCTUATION
 from core.ref import Ref
 from core.token import FT
 from core.treebank.treebank import Treebank
@@ -20,7 +21,11 @@ def render(obj) -> Any:
 def _(word: Word) -> Any:
     return h.span(
         word.form,
-        cls=cx(word.case, word.pos == POS.verb and word.pos),
+        cls=cx(
+            word.case,
+            word.pos == POS.verb and word.pos,
+            word.lemma in PUNCTUATION and "punct",
+        ),
         data_id=str(word.id),
         data_head=str(word.head),
         data_lemma=word.lemma,
@@ -32,7 +37,7 @@ def _(word: Word) -> Any:
 
 @render.register(Ref)
 def _(ref: Ref) -> Any:
-    return h.span(str(ref), cls="ref")
+    return h.a(f"[{ref.start}]", cls="ref", id=str(ref.start), href=f"#{ref.start}")
 
 
 class HtmlPartialRenderer(NamedTuple):
@@ -51,7 +56,7 @@ class HtmlPartialRenderer(NamedTuple):
                 case Word() | Ref():
                     sentence += render(t)
                 case FT.SPACE:
-                    sentence += raw("&nbsp;")
+                    sentence += raw("&nbsp;") if is_verse else " "
                 case FT.PARAGRAPH_START:
                     paragraph = h.p()
                 case FT.SENTENCE_START:
@@ -64,7 +69,7 @@ class HtmlPartialRenderer(NamedTuple):
                         paragraph += sentence
                 case FT.LINE_BREAK:
                     sentence += h.br()
-                case int():
+                case int():  # verse line numbers
                     visible = "visible" if t % 5 == 0 else ""
                     sentence += h.span(t, cls=f"ln {visible}")
                 case None:

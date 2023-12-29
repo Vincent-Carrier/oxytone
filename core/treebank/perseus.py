@@ -66,12 +66,13 @@ class PerseusTB(Treebank[T]):
     def __iter__(self) -> Iterator[Token]:
         prev: Word | None = None
         prev_ref: Ref | None = None
-        first_word = self.word(next(self.sentences()).find("./word").attrib)  # type: ignore
-        yield first_word.ref.start.verse  # type: ignore
         for sentence in self.sentences():
+            if not self.is_verse:
+                sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
+                if sentence_ref > prev_ref:
+                    yield sentence_ref
             for el in sentence.findall("./word"):
                 word = self.word(el.attrib)
-                # TODO: yield paragraph tokens
                 if word:
                     if prev and word.form not in PUNCTUATION:
                         yield FT.SPACE
@@ -80,8 +81,10 @@ class PerseusTB(Treebank[T]):
                         yield prev_ref.start.verse + 1
                     yield word
                     prev = word
-                    if word.ref:
+                    if self.is_verse and word.ref:
                         prev_ref = word.ref
+            if not self.is_verse:
+                prev_ref = sentence_ref  # type: ignore
             yield FT.SENTENCE_END
             yield FT.SENTENCE_START
 

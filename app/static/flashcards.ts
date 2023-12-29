@@ -12,15 +12,16 @@ let selectedCount = 0
 
 document.querySelectorAll('[data-lemma]').forEach(el => {
 	el.addEventListener('mouseenter', ev => {
-		const { dataset: d } = ev.target as HTMLSpanElement
-		const flags = flagsToString(d.flags)
-		if (flags == 'punct.') return
+		const el = ev.target as HTMLSpanElement
+		const { dataset: d } = el
+		if (el.classList.contains('punct')) return
 		$def.innerHTML = d.def ?? ''
-		$flags.innerHTML = flags
+		$flags.innerHTML = flagsToString(d.flags)
 		$lemma.innerHTML = d.lemma ?? ''
 	})
 	el.addEventListener('mouseleave', ev => {
 		const span = ev.target as HTMLSpanElement
+		// TODO
 	})
 
 	el.addEventListener('mousedown', ev => {

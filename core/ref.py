@@ -17,21 +17,7 @@ class RefPoint(metaclass=ABCMeta):
         yield from astuple(self)
 
     def __str__(self) -> str:
-        return ".".join(str(x) for x in self if x is not None)
-
-    @property
-    def verse(self) -> int:
-        return list(self)[-1]
-
-    # def __contains__(self, ref: object) -> bool:
-    #     if not isinstance(ref, RefPoint):
-    #         raise TypeError(f"Cannot check if {ref} is in {self}")
-    #     for a, b in zip(self, ref):
-    #         if a is None and b is not None:
-    #             return True
-    #         if a != b:
-    #             return False
-    #     return True
+        return ".".join(str(x) for x in self if x != 0)
 
 
 T = TypeVar("T", bound=RefPoint)
@@ -58,7 +44,9 @@ class Ref(Generic[T]):
     def is_range(self) -> bool:
         return self.b is not None
 
-    def __lt__(self, other: "Ref[T]") -> bool:
+    def __lt__(self, other: "Ref[T] | None") -> bool:
+        if other is None:
+            return False
         return self.a < other.a
 
     def __str__(self) -> str:
@@ -84,16 +72,13 @@ class Ref(Generic[T]):
         elif re.match(r"^\d+\.\d+$", string):
             return CV.parse(string)
         elif re.match(r"^\d+$", string):
-            return Line.parse(string)
+            return Verse.parse(string)
         else:
             raise ValueError(f"tried to parse {string}")
 
 
-@final
 @dataclass(order=True, frozen=True, slots=True)
-class BCV(RefPoint):
-    book: int
-    chapter: int
+class Verse(RefPoint):
     verse: int
 
 
@@ -106,5 +91,7 @@ class CV(RefPoint):
 
 @final
 @dataclass(order=True, frozen=True, slots=True)
-class Line(RefPoint):
-    line: int
+class BCV(RefPoint):
+    book: int
+    chapter: int
+    verse: int = 0

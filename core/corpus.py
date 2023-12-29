@@ -1,5 +1,5 @@
 from core.constants import TREEBANKS
-from core.ref import BCV, CV, Line
+from core.ref import BCV, CV, Verse
 from core.treebank.chunker import ChapterChunker
 from core.treebank.perseus import PerseusTB
 
@@ -30,7 +30,7 @@ corpus: dict[str, PerseusTB] = {
     ),
     "agamemnon": PerseusTB(
         PERSEUS2 / "agamemnon.xml",
-        Line,
+        Verse,
         is_verse=True,
         lang="ag",
         slug="agamemnon",
@@ -40,7 +40,7 @@ corpus: dict[str, PerseusTB] = {
     ),
     "libationbearers": PerseusTB(
         PERSEUS2 / "libationbearers.xml",
-        Line,
+        Verse,
         is_verse=True,
         lang="ag",
         slug="libationbearers",
@@ -50,7 +50,7 @@ corpus: dict[str, PerseusTB] = {
     ),
     "eumenides": PerseusTB(
         PERSEUS2 / "eumenides.xml",
-        Line,
+        Verse,
         is_verse=True,
         lang="ag",
         slug="eumenides",
@@ -60,7 +60,7 @@ corpus: dict[str, PerseusTB] = {
     ),
     "histories": PerseusTB(
         PERSEUS2 / "herodotus.xml",
-        CV,
+        BCV,
         is_verse=False,
         lang="ag",
         slug="histories",

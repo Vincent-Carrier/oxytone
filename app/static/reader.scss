@@ -74,76 +74,81 @@ header {
 
 article {
 	@include text(stone(700));
-}
 
-.verb {
-	@include font($wght: 700);
-}
-
-.nominative {
-	@include text(emerald(600));
-}
-
-.accusative {
-	@include text(sky(600));
-}
-
-.dative {
-	@include text(pink(600));
-}
-
-.genitive {
-	@include text(violet(600));
-}
-
-.vocative {
-	@include text(yellow(600));
-}
-
-.hl {
-	@include surface($rounded: md);
-	&.subj {
-		@include surface(emerald(100));
+	.ref {
+		display: inline-block;
+		@include box($pr: 1);
+		@include text(stone(500), sm);
+		@include font(sans);
 	}
-	&.dobj {
-		@include surface(sky(100));
+	.punct + .ref,
+	.ref:first-child {
+		@include box($pl: 1);
 	}
-	&.iobj {
-		@include surface(pink(100));
+
+	.verb {
+		@include font($wght: 700);
+	}
+
+	.nominative {
+		@include text(emerald(600));
+	}
+
+	.accusative {
+		@include text(sky(600));
+	}
+
+	.dative {
+		@include text(pink(600));
+	}
+
+	.genitive {
+		@include text(violet(600));
+	}
+
+	.vocative {
+		@include text(yellow(600));
+	}
+
+	.hl {
+		@include surface($rounded: md);
+		&.subj {
+			@include surface(emerald(100));
+		}
+		&.dobj {
+			@include surface(sky(100));
+		}
+		&.iobj {
+			@include surface(pink(100));
+		}
+	}
+	.hovered,
+	.selected {
+		text-decoration: underline;
+	}
+
+	.subdoc {
+		padding-right: len(2);
+	}
+
+	.verse {
+		padding-right: len(2);
+		@include text(gray(500), sm);
+	}
+
+	.ln {
+		display: inline-block;
+		text-align: right;
+		padding-right: len(2);
+		width: len(8);
+		color: transparent;
+	}
+
+	.ln.visible {
+		color: gray(600);
+	}
+
+	[data-lemma] {
+		cursor: pointer;
 	}
 }
-.hovered,
-.selected {
-	text-decoration: underline;
-}
-
-.subdoc {
-	padding-right: len(2);
-}
-
-.verse {
-	padding-right: len(2);
-	@include text(gray(500), sm);
-}
-
-.ln {
-	display: inline-block;
-	text-align: right;
-	padding-right: len(2);
-	width: len(8);
-	color: transparent;
-}
-
-.ln.visible {
-	color: gray(600);
-}
-
-[data-lemma] {
-	cursor: pointer;
-}
-
-// .sentence:not(:last-child)::after {
-//     content: "—";
-//     @include box($px: 2);
-//     @include text(gray(500));
-// }
