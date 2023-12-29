@@ -12,4 +12,5 @@ TMP = ROOT / "tmp"
 CHUNKS = TREEBANKS / "chunks"
 NODE_MODULES = ROOT / "node_modules"
 LSJ = DATA / "lsj.db"
-PUNCTUATION = [".", ",", ";", ":", "·", "]", ")"]
+RIGHT_PUNCT = (".", ",", ";", ":", "·", "]", ")")
+LEFT_PUNCT = ("[", "(")

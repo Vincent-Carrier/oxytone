@@ -9,7 +9,7 @@ First off, you'll need `poetry`, and `npm` installed.
 -   [Install Poetry](https://python-poetry.org/docs/#installation)
 -   Depending on your distro, you may also need [PyEnv](https://github.com/pyenv/pyenv) to [get the right Python version running](https://python-poetry.org/docs/managing-environments/)
 
-Now, run `make install` to install all dependencies.
+Now, run `make deps` to install all dependencies.
 
 ## Running the server
 

@@ -18,7 +18,7 @@ watch:
 	$(esbuild) --watch=forever &
 	$(browsersync)
 
-install:
+deps:
 	poetry install & npm install
 	$(MAKE) lexicons chunks
 

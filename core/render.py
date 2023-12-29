@@ -4,7 +4,7 @@ from typing import Any, NamedTuple, assert_never, TypeAlias, no_type_check
 
 import dominate.tags as h
 from dominate.util import raw
-from core.constants import PUNCTUATION
+from core.constants import RIGHT_PUNCT
 from core.ref import Ref
 from core.treebank.treebank import Treebank
 from core.utils import cx
@@ -23,7 +23,7 @@ def _(word: Word) -> Any:
         cls=cx(
             word.case,
             word.pos == POS.verb and word.pos,
-            word.lemma in PUNCTUATION and "punct",
+            word.lemma in RIGHT_PUNCT and "punct",
         ),
         data_id=str(word.id),
         data_head=str(word.head),
@@ -47,8 +47,9 @@ class HtmlPartialRenderer(NamedTuple):
     @no_type_check
     def body(self):
         is_verse = self.tb.is_verse
+        verse_cls = "verse" if is_verse else "prose"
         sentence = h.span(cls="sentence")
-        container = h.div(cls="treebank syntax")
+        container = h.div(cls=f"syntax {verse_cls}")
 
         for t in iter(self.tb):
             match t:

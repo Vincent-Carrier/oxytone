@@ -1,4 +1,5 @@
 from importlib import import_module
+from itertools import pairwise
 import re
 from pathlib import Path
 import shelve
@@ -14,7 +15,7 @@ from lxml import etree
 
 from pyCTS import CTS_URN
 
-from core.constants import LSJ, PUNCTUATION
+from core.constants import LEFT_PUNCT, LSJ, RIGHT_PUNCT
 from core.ref import Ref, T
 from core.render import FT, Token
 from core.treebank.chunker import Chunker
@@ -67,46 +68,42 @@ class PerseusTB(Treebank[T]):
         return self._iter_verse() if self.is_verse else self._iter_prose()
 
     def _iter_prose(self) -> Iterator[Token]:
-        prev: Word | None = None
         prev_ref: Ref | None = None
         for sentence in self.sentences():
             sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
             if sentence_ref > prev_ref:
                 yield sentence_ref
-            for el in sentence.findall("./word"):
-                word = self.word(el.attrib)
-                if not word:
+            for word, next in pairwise(sentence.findall("./word")):
+                w, n = (self.word(el) for el in (word, next))
+                if not w:
                     continue
-                if prev and word.form not in PUNCTUATION:
+                yield w
+                if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
                     yield FT.SPACE
-                yield word
-                prev = word
             prev_ref = sentence_ref
             yield FT.SENTENCE_END
 
     def _iter_verse(self) -> Iterator[Token]:
-        prev: Word | None = None
         prev_ref: Ref | None = None
         yield 1
         for sentence in self.sentences():
-            for el in sentence.findall("./word"):
-                word = self.word(el.attrib)
-                if not word:
+            for word, next in pairwise(sentence.findall("./word")):
+                w, n = (self.word(el) for el in (word, next))
+                if not w:
                     continue
-                if prev and word.form not in PUNCTUATION:
-                    yield FT.SPACE
-                if word.ref and prev_ref and word.ref > prev_ref:
+                if w.ref and prev_ref and w.ref > prev_ref:
                     yield FT.LINE_BREAK
                     yield prev_ref.start.verse + 1
-                yield word
-                prev = word
-                prev_ref = word.ref or prev_ref
+                yield w
+                if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
+                    yield FT.SPACE
+                prev_ref = w.ref or prev_ref
             yield FT.SENTENCE_END
 
-    def normalize_urn(self, urn: str | bytes) -> str:
-        return re.search(r"^(urn:cts:greekLit:tlg\d{4}.tlg\d{3}).*", str(urn)).group(1)  # type: ignore
-
-    def word(self, attr) -> Word | None:
+    def word(self, el) -> Word | None:
+        if el is None:
+            return None
+        attr = el.attrib
         if attr.get("insertion_id") is not None:  # TODO
             return None
         tags = attr.get("postag")

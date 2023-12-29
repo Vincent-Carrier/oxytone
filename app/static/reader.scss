@@ -34,46 +34,57 @@ header {
 		@include flex-x(4);
 		justify-content: space-between;
 	}
-}
 
-.help {
-	@include box($pl: 8, $pr: 2, $py: 1);
-	line-height: 1;
-	& #lemma {
-		display: inline-block;
-		@include box($pr: 1);
-		@include text(stone(700), md);
-		@include font($wght: bold);
+	.help {
+		@include box($px: 8, $py: 1);
+		line-height: 1;
+		& #lemma {
+			display: inline-block;
+			@include box($pr: 1);
+			@include text(stone(700), md);
+			@include font($wght: bold);
+		}
+		& #flags {
+			@include font($style: italic);
+			@include text(stone(500), xs);
+		}
+		& #def {
+			@include text(stone(600), sm);
+		}
 	}
-	& #flags {
-		@include font($style: italic);
-		@include text(stone(500), xs);
-	}
-	& #def {
-		@include text(stone(600), sm);
-	}
-}
 
-.selected-words {
-	@include flex-x(4, flex-end, baseline);
-	& #selected-count {
-		@include font(smallcaps);
-		@include text(stone(700), $size: sm);
-	}
-	& button#export {
-		@include font(smallcaps, bold);
-		@include text($size: sm);
-		@include box($px: 2, $py: 1, $my: 2);
-		@include surface(stone(300), 2px stone(400) solid, $rounded: md);
-		&:disabled {
-			@include text(stone(500));
-			border: 2px transparent solid;
+	.selected-words {
+		@include flex-x(4, flex-end, baseline);
+		& #selected-count {
+			@include font(smallcaps);
+			@include text(stone(700), $size: sm);
+		}
+		& button#export {
+			@include font(smallcaps, bold);
+			@include text($size: sm);
+			@include box($px: 2, $py: 1, $my: 2);
+			@include surface(stone(300), 2px stone(400) solid, $rounded: md);
+			&:disabled {
+				@include text(stone(500));
+				border: 2px transparent solid;
+			}
 		}
 	}
 }
 
 article {
 	@include text(stone(700));
+	@include box($pb: 20);
+
+	> .prose {
+		@include box($px: 8);
+		text-align: justify;
+	}
+
+	.sentence {
+		display: inline;
+		@include box($pr: 1);
+	}
 
 	.ref {
 		display: inline-block;
@@ -129,11 +140,6 @@ article {
 
 	.subdoc {
 		padding-right: len(2);
-	}
-
-	.verse {
-		padding-right: len(2);
-		@include text(gray(500), sm);
 	}
 
 	.ln {
