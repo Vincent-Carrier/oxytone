@@ -16,7 +16,7 @@ from pyCTS import CTS_URN
 
 from core.constants import LSJ, PUNCTUATION
 from core.ref import Ref, T
-from core.token import FT, Token
+from core.render import FT, Token
 from core.treebank.chunker import Chunker
 from core.treebank.treebank import Metadata, Sentence, Treebank
 from core.utils import at, parse_int
@@ -64,29 +64,44 @@ class PerseusTB(Treebank[T]):
         return self.chunker.chunks(self)
 
     def __iter__(self) -> Iterator[Token]:
+        return self._iter_verse() if self.is_verse else self._iter_prose()
+
+    def _iter_prose(self) -> Iterator[Token]:
         prev: Word | None = None
         prev_ref: Ref | None = None
         for sentence in self.sentences():
-            if not self.is_verse:
-                sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
-                if sentence_ref > prev_ref:
-                    yield sentence_ref
+            sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
+            if sentence_ref > prev_ref:
+                yield sentence_ref
             for el in sentence.findall("./word"):
                 word = self.word(el.attrib)
-                if word:
-                    if prev and word.form not in PUNCTUATION:
-                        yield FT.SPACE
-                    if self.is_verse and word.ref and prev_ref and word.ref > prev_ref:
-                        yield FT.LINE_BREAK
-                        yield prev_ref.start.verse + 1
-                    yield word
-                    prev = word
-                    if self.is_verse and word.ref:
-                        prev_ref = word.ref
-            if not self.is_verse:
-                prev_ref = sentence_ref  # type: ignore
+                if not word:
+                    continue
+                if prev and word.form not in PUNCTUATION:
+                    yield FT.SPACE
+                yield word
+                prev = word
+            prev_ref = sentence_ref
             yield FT.SENTENCE_END
-            yield FT.SENTENCE_START
+
+    def _iter_verse(self) -> Iterator[Token]:
+        prev: Word | None = None
+        prev_ref: Ref | None = None
+        yield 1
+        for sentence in self.sentences():
+            for el in sentence.findall("./word"):
+                word = self.word(el.attrib)
+                if not word:
+                    continue
+                if prev and word.form not in PUNCTUATION:
+                    yield FT.SPACE
+                if word.ref and prev_ref and word.ref > prev_ref:
+                    yield FT.LINE_BREAK
+                    yield prev_ref.start.verse + 1
+                yield word
+                prev = word
+                prev_ref = word.ref or prev_ref
+            yield FT.SENTENCE_END
 
     def normalize_urn(self, urn: str | bytes) -> str:
         return re.search(r"^(urn:cts:greekLit:tlg\d{4}.tlg\d{3}).*", str(urn)).group(1)  # type: ignore

@@ -1,12 +1,11 @@
+from enum import Enum, auto
 from functools import singledispatch
-from typing import Any, NamedTuple, assert_never
+from typing import Any, NamedTuple, assert_never, TypeAlias, no_type_check
 
 import dominate.tags as h
-
 from dominate.util import raw
 from core.constants import PUNCTUATION
 from core.ref import Ref
-from core.token import FT
 from core.treebank.treebank import Treebank
 from core.utils import cx
 from core.word import POS, Word
@@ -45,10 +44,10 @@ class HtmlPartialRenderer(NamedTuple):
 
     tb: Treebank
 
-    def body(self) -> h.html_tag:
-        is_verse = self.tb.is_verse  # type: ignore
+    @no_type_check
+    def body(self):
+        is_verse = self.tb.is_verse
         sentence = h.span(cls="sentence")
-        paragraph = h.p()
         container = h.div(cls="treebank syntax")
 
         for t in iter(self.tb):
@@ -57,16 +56,9 @@ class HtmlPartialRenderer(NamedTuple):
                     sentence += render(t)
                 case FT.SPACE:
                     sentence += raw("&nbsp;") if is_verse else " "
-                case FT.PARAGRAPH_START:
-                    paragraph = h.p()
-                case FT.SENTENCE_START:
-                    sentence = h.span(cls="sentence")
-                case FT.PARAGRAPH_END:
-                    if len(paragraph):
-                        container += paragraph
                 case FT.SENTENCE_END:
-                    if len(sentence):
-                        paragraph += sentence
+                    container += sentence
+                    sentence = h.span(cls="sentence")
                 case FT.LINE_BREAK:
                     sentence += h.br()
                 case int():  # verse line numbers
@@ -77,10 +69,20 @@ class HtmlPartialRenderer(NamedTuple):
                 case _:
                     assert_never(t)
         if len(sentence):
-            paragraph += sentence
-        if len(paragraph):
-            container += paragraph
+            container += sentence
         return container
 
     def render(self) -> str:
         return self.body().render(pretty=False)
+
+
+class FT(Enum):  # Formatting Token
+    SPACE = auto()
+    SENTENCE_START = auto()
+    SENTENCE_END = auto()
+    PARAGRAPH_START = auto()
+    PARAGRAPH_END = auto()
+    LINE_BREAK = auto()
+
+
+Token: TypeAlias = Word | Ref | int | FT
