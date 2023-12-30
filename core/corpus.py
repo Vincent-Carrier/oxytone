@@ -1,6 +1,5 @@
 from core.constants import TREEBANKS
 from core.ref import BCV, CV, Verse
-from core.treebank.chunker import ChapterChunker
 from core.treebank.perseus import PerseusTB
 
 PERSEUS2 = TREEBANKS / "perseus/2.1"
@@ -10,7 +9,7 @@ corpus: dict[str, PerseusTB] = {
         PERSEUS2 / "iliad.xml",
         ref_cls=CV,
         is_verse=True,
-        chunker=ChapterChunker,
+        chunker="ChapterChunker",
         lang="ag",
         slug="iliad",
         title="The Iliad",
@@ -22,7 +21,7 @@ corpus: dict[str, PerseusTB] = {
         PERSEUS2 / "odyssey.xml",
         ref_cls=CV,
         is_verse=True,
-        chunker=ChapterChunker,
+        chunker="ChapterChunker",
         lang="ag",
         slug="odyssey",
         title="The Odyssey",

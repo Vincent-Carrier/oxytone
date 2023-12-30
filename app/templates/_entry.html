@@ -13,10 +13,12 @@
             </div>
             <div class="genre">{{ doc.genre }}</div>
         </div>
-        <div class="chunks">
-            {% for chunk in doc.chunks %}
-                <a href="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</a>
-            {% endfor %}
-        </div>
+        {% if doc.chunks %}
+            <div class="chunks">
+                {% for chunk in doc.chunks %}
+                    <a href="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
     </article>
 {% endmacro %}

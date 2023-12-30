@@ -27,6 +27,7 @@ class Metadata(TypedDict):
     original_title: str
     author: NotRequired[str]
     genre: NotRequired[str]
+    chunker: NotRequired[str]
     span: NotRequired[str]
     ref: NotRequired[str]
     urn: NotRequired[str | bytes]

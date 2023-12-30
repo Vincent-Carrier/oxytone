@@ -1,7 +1,4 @@
-from json import JSONEncoder
-
-from box import Box
-from core.constants import CHUNKS, TREEBANKS
+from core.constants import CHUNKS
 from core.corpus import corpus
 from lxml.builder import E
 from lxml import etree
@@ -9,12 +6,10 @@ from lxml import etree
 from core.ref import Ref
 
 
-index = Box({})
 for slug, tb in corpus.items():
-    index[slug] = tb.meta
-    if not tb.chunker:
+    if not tb.meta.get("chunker"):
         continue
-    index[slug].chunker = tb.chunker.__name__
+    assert tb.chunker
     outdir = CHUNKS / slug
     chunk_labels = []
     for chunk in tb.chunks():
@@ -34,8 +29,3 @@ for slug, tb in corpus.items():
         print(f"{outpath}")
         with outpath.open("w") as f:
             f.write(etree.tostring(root, encoding="unicode", pretty_print=True))  # type: ignore
-    index[slug].chunks = sorted(chunk_labels)
-
-
-with (TREEBANKS / "index.json").open("w") as f:
-    f.write(JSONEncoder(indent=4, ensure_ascii=False).encode(index))

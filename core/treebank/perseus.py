@@ -36,12 +36,10 @@ class PerseusTB(Treebank[T]):
         f: Path,
         ref_cls: Type[T] | None,
         is_verse: bool,
-        chunker=None,
         **meta: Unpack[Metadata],
     ) -> None:
         super().__init__(ref_cls=ref_cls, **meta)
         self.filepath = f
-        self.chunker = chunker
         self.is_verse = is_verse
         tree = etree.parse(f)
         root = tree.getroot()
@@ -53,6 +51,8 @@ class PerseusTB(Treebank[T]):
             self.ref_cls = getattr(import_module("core.ref"), str(refcls))
         if self.is_verse is None:
             self.is_verse = root.attrib["isverse"] == "True"
+        if chunker := meta.get("chunker"):
+            self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")
@@ -129,7 +129,7 @@ class PerseusTB(Treebank[T]):
             case=case,
             flags=tags,
             role=attr.get("relation"),
-            definition=lsj.get(lemma) if lemma else None,
+            definition=lsj.get(lemma),
             ref=ref,
         )
 
