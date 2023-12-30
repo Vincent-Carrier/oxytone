@@ -2,18 +2,18 @@
 
 nav {
 	@include box($pl: 8, $my: 4);
-	@include font(smallcaps, bold);
+	@include font(sans, bold);
 	@include text(stone(500));
 }
 
 header {
 	@include box($pl: 8, $mb: 8);
 	h1 {
-		@include font(smallcaps, bold);
+		@include font(sans, bold);
 		@include text(stone(900), $size: xl, $track: wide);
 	}
 	#author {
-		@include font(smallcaps, bold);
+		@include font(sans, bold);
 		@include text(stone(800), $size: lg, $transform: lowercase);
 	}
 	#chunk-title {
@@ -58,11 +58,11 @@ header {
 		}
 		@include flex-x(4, flex-end, baseline);
 		& #selected-count {
-			@include font(smallcaps);
+			@include font(sans);
 			@include text(stone(700), $size: sm);
 		}
 		& button#export {
-			@include font(smallcaps, bold);
+			@include font(sans, bold);
 			@include text($size: sm);
 			@include box($px: 2, $py: 1, $my: 2);
 			@include surface(stone(300), 2px stone(400) solid, $rounded: md);

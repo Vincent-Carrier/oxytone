@@ -1,17 +1,14 @@
 @use 'theme' as *;
 
-@import '@fontsource/alegreya/400.css';
-@import '@fontsource/alegreya/400-italic.css';
-@import '@fontsource/alegreya/700.css';
-@import '@fontsource/alegreya/700-italic.css';
-@import '@fontsource/alegreya-sans/400.css';
+@import 'foundation/preflight';
+@import '@fontsource/alegreya-sans';
 @import '@fontsource/alegreya-sans/400-italic.css';
 @import '@fontsource/alegreya-sans/700.css';
-@import '@fontsource/alegreya-sc/400.css';
-@import '@fontsource/alegreya-sc/700.css';
-@import '@fontsource/cormorant-sc/400.css';
+@import '@fontsource/alegreya-sans/700-italic.css';
+@import '@fontsource/alegreya';
+@import '@fontsource/alegreya/400-italic.css';
+@import '@fontsource/alegreya/700.css';
 @import '@fontsource/cormorant-sc/700.css';
-@import 'foundation/preflight';
 
 html {
 	font-synthesis: none;
