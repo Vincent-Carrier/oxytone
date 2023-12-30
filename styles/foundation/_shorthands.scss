@@ -26,6 +26,10 @@
 	$w: null,
 	$h: null,
 	$mx: null,
+	$min-w: null,
+	$min-h: null,
+	$max-w: null,
+	$max-h: null,
 	$my: null,
 	$mt: null,
 	$mr: null,
@@ -40,6 +44,10 @@
 ) {
 	width: len($w);
 	height: len($h);
+	min-width: len($min-w);
+	min-height: len($min-h);
+	max-width: len($max-w);
+	max-height: len($max-h);
 	margin-inline: len($mx);
 	margin-block: len($my);
 	margin-top: len($mt);

@@ -1,4 +1,4 @@
-@forward "foundation"
+@forward 'foundation'
 	with(
 		$font-families: (
 			display: "'Cormorant SC', serif",
@@ -7,3 +7,17 @@
 			serif: "'Alegreya', serif",
 		)
 	);
+
+.main-grid {
+	display: grid;
+	grid-template-columns: 1fr min(65ch, 95vw) 1fr;
+}
+
+.full-bleed {
+	width: 100%;
+	grid-column: 1 / -1;
+}
+
+.grid-center {
+	grid-column: 2;
+}

@@ -1,14 +1,15 @@
 @use 'theme' as *;
 
-header {
-	img {
-		filter: saturate(40%) hue-rotate(80deg) sepia(20%);
-		@include box($mt: 4, $mb: 8);
-	}
+img.heroes {
+	filter: saturate(40%) hue-rotate(80deg) sepia(20%);
+	@include box($max-w: 40rem, $mt: 4, $mb: 8, $mx: auto);
+	@extend .full-bleed;
+}
 
+header {
 	.title {
 		@include text($align: center);
-		@include box($my: 12);
+		@include box($mt: 16);
 
 		h1 {
 			@include text(stone(950), 4xl, widest, $transform: uppercase);
@@ -27,8 +28,7 @@ main {
 
 section {
 	@include font(sans, 400);
-	@include box($w: 96, $mx: auto);
-	@include box($py: 8);
+	@include box($w: full, $max-w: 96, $mx: auto, $py: 8);
 
 	h2 {
 		@include text(stone(950), 2xl, $track: widest, $align: center, $transform: lowercase);
@@ -44,6 +44,9 @@ section {
 	}
 	.entries {
 		@include flex-y(4);
+		&:has(.chunks) {
+			@include flex-y(8);
+		}
 	}
 }
 
@@ -63,17 +66,19 @@ section {
 		}
 	}
 	& .chunks {
-		@include box($mb: 2);
+		@include box($mt: 2);
 		@include font(sans);
 		@include text(sky(700));
 		@include layout(grid);
-		column-gap: len(4);
+		border-right: 2px sky(700) solid;
+		line-height: 1;
+		row-gap: len(2);
 		grid-template-columns: repeat(12, 1fr);
 	}
 }
 
 footer {
-	@include box($my: 16, $px: 32, $mx: auto);
+	@include box($w: 72, $mt: 16, $mx: auto);
 	h2 {
 		@include text(stone(800), xl, $track: widest, $align: center, $transform: lowercase);
 		@include font(display, bold);

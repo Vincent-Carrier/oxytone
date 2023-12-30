@@ -18,17 +18,15 @@ html {
 	@include surface(stone(50));
 	@include text(stone(700), xl);
 	@include font(serif);
+
+	@include media(sm) {
+		font-size: 90%;
+	}
 }
 
 main {
-	display: grid;
-	grid-template-columns: 1fr min(65ch, 100%) 1fr;
+	@extend .main-grid;
 }
 main > * {
-	grid-column: 2;
-}
-
-.full-bleed {
-	width: 100%;
-	grid-column: 1 / -1;
+	@extend .grid-center;
 }

@@ -26,13 +26,12 @@ header {
 	@include inset($b: 0, $x: 0);
 	@include box($h: 12);
 	@include surface(stone(100));
+	@extend .main-grid;
 	border-top: 2px solid stone(200);
-	display: grid;
-	grid-template-columns: 1fr min(65ch, 100%) 1fr;
 	& #center {
 		@include box($pr: 8);
 		@include flex-x(4, space-between);
-		grid-column: 2;
+		@extend .grid-center;
 	}
 
 	.help {
@@ -54,6 +53,9 @@ header {
 	}
 
 	.selected-words {
+		@include media(sm) {
+			display: none;
+		}
 		@include flex-x(4, flex-end, baseline);
 		& #selected-count {
 			@include font(smallcaps);
@@ -75,6 +77,10 @@ header {
 article {
 	@include text(stone(700));
 	@include box($pb: 20);
+	@include media(sm) {
+		@include text($size: sm);
+		line-height: 1.7;
+	}
 
 	> .prose {
 		@include box($px: 8);

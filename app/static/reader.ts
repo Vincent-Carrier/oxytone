@@ -4,7 +4,7 @@ import './flashcards'
 function highlightGroup(role: string, className: string) {
 	let hlGroup: HTMLSpanElement[] = []
 	document.querySelectorAll('[data-head]').forEach(el => {
-		el.addEventListener('mouseenter', ev => {
+		el.addEventListener('pointerenter', ev => {
 			const span = ev.target as HTMLSpanElement
 			span.classList.add('hovered')
 			if (some(['PRED', 'ADV', 'ATR'], role => span.dataset.role?.startsWith(role))) {

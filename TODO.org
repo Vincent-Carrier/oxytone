@@ -1,0 +1,6 @@
+* TODO Graft segmentation data for tragedies
+* TODO Add more works
+* TODO Add span data to index
+* TODO Make mobile-friendly
+* TODO Extract styles lib
+* TODO Refine highlighting of verb complements

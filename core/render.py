@@ -56,7 +56,7 @@ class HtmlPartialRenderer(NamedTuple):
                 case Word() | Ref():
                     sentence += render(t)
                 case FT.SPACE:
-                    sentence += raw("&nbsp;") if is_verse else " "
+                    sentence += " "
                 case FT.SENTENCE_END:
                     container += sentence
                     sentence = h.span(cls="sentence")

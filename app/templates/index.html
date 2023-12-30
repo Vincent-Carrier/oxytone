@@ -7,12 +7,12 @@
 {% endblock head %}
 {% block content %}
     <header>
-        <img src="/greek_heroes.webp" alt="" width="" height="" />
         <div class="title">
             <h1>Oxytone</h1>
             <p>The Bleeding Edge of Ancient Language</p>
         </div>
     </header>
+    <img src="/greek_heroes.webp" class="heroes" alt="" width="" height="" />
     {% for author in authors %}
         <section id="{{ author.slug }}">
             <h2>{{ author.name }}</h2>
