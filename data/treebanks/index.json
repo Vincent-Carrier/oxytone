@@ -3,8 +3,9 @@
         "lang": "ag",
         "slug": "iliad",
         "title": "The Iliad",
-        "original_title": "\u1f38\u03bb\u03b9\u03ac\u03c2",
+        "original_title": "Ἰλιάς",
         "author": "Homer",
+        "genre": "Epic",
         "chunker": "ChapterChunker",
         "chunks": [
             1,
@@ -37,8 +38,9 @@
         "lang": "ag",
         "slug": "odyssey",
         "title": "The Odyssey",
-        "original_title": "\u1f48\u03b4\u03cd\u03c3\u03c3\u03b5\u03b9\u03b1",
+        "original_title": "Ὀδύσσεια",
         "author": "Homer",
+        "genre": "Epic",
         "chunker": "ChapterChunker",
         "chunks": [
             1,
@@ -71,28 +73,41 @@
         "lang": "ag",
         "slug": "agamemnon",
         "title": "Agamemnon",
-        "original_title": "\u1f08\u03b3\u03b1\u03bc\u03ad\u03bc\u03bd\u03c9\u03bd",
-        "author": "Aeschylus"
+        "original_title": "Ἀγαμέμνων",
+        "author": "Aeschylus",
+        "genre": "Tragedy"
     },
     "libationbearers": {
         "lang": "ag",
         "slug": "libationbearers",
         "title": "Libation Bearers",
-        "original_title": "\u03a7\u03bf\u03b7\u03c6\u03cc\u03c1\u03bf\u03b9",
-        "author": "Aeschylus"
+        "original_title": "Χοηφόροι",
+        "author": "Aeschylus",
+        "genre": "Tragedy"
     },
     "eumenides": {
         "lang": "ag",
         "slug": "eumenides",
         "title": "The Eumenides",
-        "original_title": "\u0395\u1f50\u03bc\u03b5\u03bd\u03af\u03b4\u03b5\u03c2",
-        "author": "Aeschylus"
+        "original_title": "Εὐμενίδες",
+        "author": "Aeschylus",
+        "genre": "Tragedy"
     },
     "histories": {
         "lang": "ag",
         "slug": "histories",
         "title": "The Histories",
-        "original_title": "\u1f39\u03c3\u03c4\u03bf\u03c1\u03af\u03b1\u03b9",
-        "author": "Herodotus"
+        "original_title": "Ἱστορίαι",
+        "author": "Herodotus",
+        "span": "Book 1",
+        "genre": "History"
+    },
+    "eutyphro": {
+        "lang": "ag",
+        "slug": "eutyphro",
+        "title": "Eutyphro",
+        "original_title": "Εὐθύφρων",
+        "author": "Plato",
+        "genre": "Philosophy"
     }
 }

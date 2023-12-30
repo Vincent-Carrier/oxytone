@@ -31,45 +31,61 @@ section {
 	@include box($py: 8);
 
 	h2 {
-		@include text($size: lg, $track: widest, $align: center);
-		@include font(smallcaps, bold);
-		@include box($mb: 2);
+		@include text(stone(950), 2xl, $track: widest, $align: center, $transform: lowercase);
+		@include font(display, bold);
+		@include box($mb: 6);
 	}
 	& + section {
 		border-top: 1px stone(300) solid;
 	}
-}
-
-hr {
-	border: 1px stone(300) solid;
-	@include box($mx: 16, $my: 6);
-}
-
-.entries {
-	@include flex-y(4);
+	hr {
+		border: 1px stone(300) solid;
+		@include box($mx: 16, $my: 6);
+	}
+	.entries {
+		@include flex-y(4);
+	}
 }
 
 .entry {
-	@include flex-x(4, space-between);
-	& .title {
-		@include font($wght: bold);
-	}
-	& h3 {
-		display: inline;
-	}
-	& select.nav {
-		@include surface($border: gray(500), $rounded: md);
-		@include box($px: 4);
-	}
-	& .completeness {
-		@include font($style: italic);
-		@include text(stone(600));
+	.top {
+		@include flex-x(4, space-between);
+
+		& .title {
+			@include font($wght: bold);
+		}
+		& h3 {
+			display: inline;
+		}
+		& .genre {
+			@include font($style: italic);
+			@include text(stone(600));
+		}
 	}
 	& .chunks {
-		width: len(40);
-		@include font(sans, $style: italic);
+		@include box($mb: 2);
+		@include font(sans);
 		@include text(sky(700));
-		& a {
-		}
+		@include layout(grid);
+		column-gap: len(4);
+		grid-template-columns: repeat(12, 1fr);
+	}
+}
+
+footer {
+	@include box($my: 16, $px: 32, $mx: auto);
+	h2 {
+		@include text(stone(800), xl, $track: widest, $align: center, $transform: lowercase);
+		@include font(display, bold);
+		@include box($mb: 2);
+	}
+	p {
+		@include font(sans, $style: italic);
+		@include text(stone(600), sm, $align: center);
+	}
+	a {
+		@include text(slate(700));
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
 	}
 }

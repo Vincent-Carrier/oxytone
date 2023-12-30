@@ -26,6 +26,8 @@ class Metadata(TypedDict):
     title: str
     original_title: str
     author: NotRequired[str]
+    genre: NotRequired[str]
+    span: NotRequired[str]
     ref: NotRequired[str]
     urn: NotRequired[str | bytes]
     eng_urn: NotRequired[str | bytes]
@@ -33,11 +35,11 @@ class Metadata(TypedDict):
 
 class Treebank(Generic[T], metaclass=ABCMeta):
     meta: Metadata
-    ref_cls: Type[T]
+    ref_cls: Type[T] | None
 
     def __init__(
         self,
-        ref_cls: Type[T],
+        ref_cls: Type[T] | None,
         **meta: Unpack[Metadata],
     ) -> None:
         self.meta = meta

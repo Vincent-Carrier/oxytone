@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from greek_accentuation.characters import breathing, SMOOTH, strip_breathing
 from enum import StrEnum, auto
 from typing import Optional
 
@@ -97,7 +98,7 @@ class Case(StrEnum):
         return pairings.get(case)
 
 
-@dataclass(slots=True, frozen=True)
+@dataclass(slots=True)
 class Word:
     form: str
     id: int | None
@@ -109,6 +110,10 @@ class Word:
     flags: str | None = None
     definition: str | None = None
     ref: Ref | None = None
+
+    def __post_init__(self):
+        if breathing(self.form) == SMOOTH:
+            self.form = strip_breathing(self.form)
 
     def __str__(self) -> str:
         return self.form

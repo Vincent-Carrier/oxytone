@@ -28,31 +28,29 @@ from core.word import POS, Case, Word
 class PerseusTB(Treebank[T]):
     filepath: Path
     body: etree._Element
-    gorman: bool
     is_verse: bool
     chunker: "Chunker | None"
 
     def __init__(
         self,
         f: Path,
-        ref_cls: Type[T],
+        ref_cls: Type[T] | None,
         is_verse: bool,
         chunker=None,
-        gorman=False,
         **meta: Unpack[Metadata],
     ) -> None:
         super().__init__(ref_cls=ref_cls, **meta)
         self.filepath = f
-        self.gorman = gorman
         self.chunker = chunker
         self.is_verse = is_verse
         tree = etree.parse(f)
         root = tree.getroot()
-        self.body = root if gorman else cast(etree._Element, root.find(".//body"))
-        self.ref_cls = self.ref_cls or getattr(
-            import_module("core.ref"), str(root.attrib["refcls"])
-        )
-        self.is_verse = self.is_verse
+        self.body = root.find(".//body")  # type: ignore
+        if self.body is None:
+            self.body = root
+        self.ref_cls = ref_cls
+        if refcls := root.attrib.get("refcls"):
+            self.ref_cls = getattr(import_module("core.ref"), str(refcls))
         if self.is_verse is None:
             self.is_verse = root.attrib["isverse"] == "True"
 
@@ -70,9 +68,10 @@ class PerseusTB(Treebank[T]):
     def _iter_prose(self) -> Iterator[Token]:
         prev_ref: Ref | None = None
         for sentence in self.sentences():
-            sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
-            if sentence_ref > prev_ref:
-                yield sentence_ref
+            if self.ref_cls:
+                sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
+                if sentence_ref > prev_ref:
+                    yield sentence_ref
             for word, next in pairwise(sentence.findall("./word")):
                 w, n = (self.word(el) for el in (word, next))
                 if not w:
@@ -80,7 +79,8 @@ class PerseusTB(Treebank[T]):
                 yield w
                 if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
                     yield FT.SPACE
-            prev_ref = sentence_ref
+            if self.ref_cls:
+                prev_ref = sentence_ref  # type: ignore
             yield FT.SENTENCE_END
 
     def _iter_verse(self) -> Iterator[Token]:
@@ -118,7 +118,8 @@ class PerseusTB(Treebank[T]):
             first = cite.split(" ")[0]
             urn = CTS_URN(first)
             ref_str = cast(str, urn.passage_component)
-            ref = Ref(self.ref_cls.parse(ref_str))
+            if self.ref_cls:
+                ref = Ref(self.ref_cls.parse(ref_str))
         return Word(
             id=parse_int(attr.get("id")),
             head=parse_int(attr.get("head")),

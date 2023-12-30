@@ -1,24 +1,22 @@
 {% macro entry(doc) %}
-    <div class="entry">
-        {% if doc.chunks %}
+    <article class="entry">
+        <div class="top">
             <div class="title">
-                <h3>{{ doc.title }}</h3>
-                <div class="original-title">{{ doc.original_title }}</div>
-            </div>
-            <div class="chunks">
-                {% for chunk in doc.chunks %}
-                    <a href="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</a>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="title">
-                <a href="/read/{{ doc.slug }}">
+                <a href=" {{ url_for('read.get_treebank', slug=doc.slug) }}">
                     <h3>{{ doc.title }}</h3>
                     &nbsp;&nbsp;/&nbsp;&nbsp;
                     <span class="original-title">{{ doc.original_title }}</span>
                 </a>
             </div>
-            <div class="completeness">Complete Work</div>
-        {% endif %}
-    </div>
+            <div hidden class="completeness">
+                {% if doc.span %}{{ doc.span }}{% endif %}
+            </div>
+            <div class="genre">{{ doc.genre }}</div>
+        </div>
+        <div class="chunks">
+            {% for chunk in doc.chunks %}
+                <a href="{{ url_for('read.get_chunk', slug=doc.slug, chunk=chunk) }}">{{ chunk }}</a>
+            {% endfor %}
+        </div>
+    </article>
 {% endmacro %}

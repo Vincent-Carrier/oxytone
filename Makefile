@@ -6,7 +6,7 @@ scss = $(wildcard $(static)/**.scss)
 css = $(scss:%.scss=%.css)
 sass = npx sass -Istyles -Inode_modules $(static):$(static)
 esbuild = npx esbuild app/static/{index,reader}.ts --outdir=app/static --bundle --target=es2020 --sourcemap
-browsersync = npx browser-sync start --proxy 'localhost:5000' -w -f app/** --no-open
+browsersync = npx browser-sync start --proxy 'localhost:5000' --host '0.0.0.0' -w -f app/** --no-open
 
 .PHONY: default app partials css lexicons export test format clean chunks
 

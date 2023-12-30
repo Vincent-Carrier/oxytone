@@ -29,13 +29,5 @@ app.register_blueprint(
         static_url_path="/@fontsource",
     )
 )
-app.register_blueprint(
-    Blueprint(
-        "shoelace",
-        __name__,
-        static_folder=NODE_MODULES / "@shoelace-style/shoelace/dist/",
-        static_url_path="/shoelace",
-    )
-)
 
 app.run()

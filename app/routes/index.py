@@ -34,6 +34,7 @@ authors = [
         # "Euripides",
         "Herodotus",
         # "Thucydides",
+        "Plato",
         # "Xenophon",
     ]
 ]

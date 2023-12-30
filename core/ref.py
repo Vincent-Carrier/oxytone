@@ -11,7 +11,10 @@ from typing import Generic, Self, Type, TypeVar, final
 class RefPoint(metaclass=ABCMeta):
     @classmethod
     def parse(cls, ref: str) -> Self:
-        return cls(*(int(x) for x in ref.split(".")))
+        try:
+            return cls(*(int(x) for x in ref.split(".")))
+        except:
+            raise ValueError(f"Unable to parse {ref} as {cls}")
 
     def __iter__(self):
         yield from astuple(self)

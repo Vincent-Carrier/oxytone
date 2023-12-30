@@ -7,7 +7,7 @@
 {% endblock head %}
 {% block content %}
     <header>
-        <img src="/greek_heroes.webp" alt="" />
+        <img src="/greek_heroes.webp" alt="" width="" height="" />
         <div class="title">
             <h1>Oxytone</h1>
             <p>The Bleeding Edge of Ancient Language</p>
@@ -21,4 +21,13 @@
             </div>
         </section>
     {% endfor %}
+    <footer>
+        <h2>About</h2>
+        <p>
+            Pyrrho is a tool for generating syntax-highlighted texts for ancient
+            languages. It also lets you quickly create <a href="https://apps.ankiweb.net/">Anki flashcards</a> from the text so
+            you can remember new vocabulary. It uses data <a href="https://perseusdl.github.io/treebank_data/">from the PerseusDL
+            project</a>. The source code is available on <a href="https://github.com/Vincent-Carrier/pyrrho">GitHub</a>.
+        </p>
+    </footer>
 {% endblock content %}
