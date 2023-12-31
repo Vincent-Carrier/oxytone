@@ -12,7 +12,7 @@ class RefPoint(metaclass=ABCMeta):
     @classmethod
     def parse(cls, ref: str) -> Self:
         try:
-            return cls(*(int(x) for x in ref.split(".")))
+            return cls(*(int(re.sub(r"[a-z]$", "", x)) for x in ref.split(".")))
         except:
             raise ValueError(f"Unable to parse {ref} as {cls}")
 
