@@ -48,6 +48,7 @@ header {
 			@include text(stone(500), xs);
 		}
 		& #def {
+			@include font(sans);
 			@include text(stone(600), sm);
 		}
 	}
@@ -140,6 +141,10 @@ article {
 		&.selected {
 			text-decoration: underline;
 		}
+
+		&.head {
+			text-decoration: underline;
+		}
 	}
 
 	.subdoc {
@@ -148,15 +153,26 @@ article {
 
 	.ln {
 		display: inline-block;
-		text-align: right;
-		padding-right: len(2);
-		width: len(8);
-		color: transparent;
+		@include text(transparent, xs, $align: right);
+		@include font(sans);
+		@include box($w: 8, $pr: 4);
+		@include media(sm) {
+			@include box($pr: 2);
+		}
 		&.visible {
-			color: gray(600);
+			color: gray(400);
 		}
 	}
 	&.selection .ln {
 		visibility: hidden;
+	}
+
+	&#eutyphro {
+		.sentence + .sentence::after {
+			content: '—';
+			display: inline-block;
+			@include box($px: 2);
+			@include text(stone(300));
+		}
 	}
 }

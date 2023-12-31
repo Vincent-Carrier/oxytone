@@ -31,5 +31,5 @@
         <p id="author">{{ author }}</p>
         {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
     </header>
-    <article class="treebank">{{ body }}</article>
+    <article class="treebank" id="{{ slug }}">{{ body }}</article>
 {% endblock content %}

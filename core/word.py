@@ -113,7 +113,7 @@ class Word:
 
     def __post_init__(self):
         if ga.breathing(self.form) == ga.SMOOTH:
-            self.form = ga.debreath(self.form)
+            self.form = ga.debreath(self.form).lstrip("h")
 
     def __str__(self) -> str:
         return self.form

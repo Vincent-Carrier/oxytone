@@ -66,7 +66,7 @@ class HtmlPartialRenderer(NamedTuple):
                     sentence += h.br()
                 case int():  # verse line numbers
                     visible = "visible" if t % 5 == 0 else ""
-                    sentence += h.span(t, cls=f"ln {visible}")
+                    sentence += h.a(t, cls=f"ln {visible}", id=str(t), href=f"#{t}")
                 case None:
                     pass
                 case _:

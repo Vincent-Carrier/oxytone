@@ -5,16 +5,22 @@ function highlightGroup(role: string, className: string) {
 	let hlGroup: HTMLSpanElement[] = []
 	document.querySelectorAll('[data-head]').forEach(el => {
 		el.addEventListener('pointerenter', ev => {
-			const span = ev.target as HTMLSpanElement
-			span.classList.add('hovered')
-			if (some(['PRED', 'ADV', 'ATR'], role => span.dataset.role?.startsWith(role))) {
-				hlGroup = [...deps(span, role)]
+			const $span = ev.target as HTMLSpanElement
+			const { dataset: d } = $span
+			const $head = $span.closest('.sentence')?.querySelector(`[data-head="${d.id}"]`)
+			$head?.classList.add('head')
+			$span.classList.add('hovered')
+			if (some(['PRED', 'ADV', 'ATR'], role => d.role?.startsWith(role))) {
+				hlGroup = [...deps($span, role)]
 				hlGroup.forEach(el => el.classList.add('hl', className))
 			}
 		})
 		el.addEventListener('mouseleave', ev => {
-			const span = ev.target as HTMLSpanElement
-			span.classList.remove('hovered')
+			const $span = ev.target as HTMLSpanElement
+			const { dataset: d } = $span
+			$span.classList.remove('hovered')
+			const $head = $span.closest('.sentence')?.querySelector(`[data-head="${d.id}"]`)
+			$head?.classList.remove('head')
 			hlGroup.forEach(el => el.classList.remove('hl', className))
 		})
 	})
