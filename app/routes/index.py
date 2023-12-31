@@ -40,7 +40,7 @@ authors = [
         # "Hesiod",
         # "Homeric Hymns",
         "Aeschylus",
-        # "Sophocles",
+        "Sophocles",
         # "Euripides",
         "Herodotus",
         # "Thucydides",

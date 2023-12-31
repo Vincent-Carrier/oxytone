@@ -2,6 +2,7 @@ from core.constants import TREEBANKS
 from core.ref import BCV, CV, Verse
 from core.treebank.perseus import PerseusTB
 
+PERSEUS1 = TREEBANKS / "perseus/1.6"
 PERSEUS2 = TREEBANKS / "perseus/2.1"
 
 corpus: dict[str, PerseusTB] = {
@@ -104,6 +105,17 @@ corpus: dict[str, PerseusTB] = {
         title="Prometheus Bound",
         original_title="Προμηθεὺς Δεσμώτης",
         author="Aeschylus",
+        genre="Tragedy",
+    ),
+    "ajax": PerseusTB(
+        PERSEUS1 / "sophocles-ajax-perseus-grc1.xml",
+        ref_cls=Verse,
+        is_verse=True,
+        lang="ag",
+        slug="ajax",
+        title="Ajax",
+        original_title="Αἴας",
+        author="Sophocles",
         genre="Tragedy",
     ),
     "histories": PerseusTB(

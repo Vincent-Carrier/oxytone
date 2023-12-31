@@ -8,17 +8,19 @@ nav {
 
 header {
 	@include box($pl: 8, $mb: 8);
+	line-height: 1;
+	#author {
+		@include font(sans);
+		@include text(stone(900), $size: sm, $track: wider, $transform: uppercase);
+	}
 	h1 {
 		@include font(sans, bold);
 		@include text(stone(900), $size: xl, $track: wide);
-	}
-	#author {
-		@include font(sans, bold);
-		@include text(stone(800), $size: md, $transform: uppercase);
+		@include box($mb: 2);
 	}
 	#chunk-title {
 		@include font(sans, bold);
-		@include text(stone(700), $size: sm);
+		@include text(stone(600), $size: sm);
 	}
 }
 
@@ -105,7 +107,13 @@ article {
 	}
 
 	[data-id] {
+		@include surface($rounded: sm);
 		cursor: pointer;
+
+		&:hover {
+			@include surface(slate(100));
+			outline: 4px slate(100) solid;
+		}
 		&.verb {
 			@include font($wght: 700);
 		}
@@ -126,22 +134,24 @@ article {
 		}
 
 		&.hl {
-			@include surface($rounded: md);
+			outline-style: solid;
+			outline-width: 4px;
 			&.subj {
 				@include surface(emerald(100));
+				outline-color: emerald(100);
 			}
 			&.dobj {
 				@include surface(sky(100));
+				outline-color: sky(100);
 			}
 			&.iobj {
 				@include surface(pink(100));
+				outline-color: pink(100);
 			}
 		}
-		&.hovered,
 		&.selected {
 			text-decoration: underline;
 		}
-
 		&.head {
 			text-decoration: underline;
 		}

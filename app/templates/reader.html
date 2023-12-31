@@ -24,11 +24,11 @@
         <a href="/">⬅ &nbsp; Go Back</a>
     </nav>
     <header>
+        <p id="author">{{ author }}</p>
         <h1>
             <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title
             }}
         </h1>
-        <p id="author">{{ author }}</p>
         {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
     </header>
     <article class="treebank" id="{{ slug }}">{{ body }}</article>
