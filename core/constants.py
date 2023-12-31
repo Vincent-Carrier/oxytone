@@ -1,5 +1,4 @@
 import os
-import shelve
 from pathlib import Path
 
 from box import Box

@@ -30,6 +30,7 @@ more-itertools = "^10.1.0"
 genanki = "^0.13.1"
 beautifulsoup4 = "^4.12.2"
 greek-accentuation = "^1.2.0"
+greek-normalisation = "^0.5.1"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.3.0"

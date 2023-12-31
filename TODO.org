@@ -4,3 +4,5 @@
 * TODO Fix word definitions on mobile
 * TODO Extract styles lib
 * TODO Refine highlighting of verb complements
+* TODO Highlight head on hover
+* TODO Add ref and POS tags on Anki notes

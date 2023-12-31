@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from greek_accentuation.characters import breathing, SMOOTH, strip_breathing
+import greek_accentuation.syllabify as ga
 from enum import StrEnum, auto
 from typing import Optional
 
@@ -112,8 +112,8 @@ class Word:
     ref: Ref | None = None
 
     def __post_init__(self):
-        if breathing(self.form) == SMOOTH:
-            self.form = strip_breathing(self.form)
+        if ga.breathing(self.form) == ga.SMOOTH:
+            self.form = ga.debreath(self.form)
 
     def __str__(self) -> str:
         return self.form

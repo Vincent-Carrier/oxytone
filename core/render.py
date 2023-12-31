@@ -18,6 +18,8 @@ def render(obj) -> Any:
 
 @render.register(Word)
 def _(word: Word) -> Any:
+    if word.form == '"':
+        return ""
     return h.span(
         word.form,
         cls=cx(

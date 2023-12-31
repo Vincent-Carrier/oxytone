@@ -70,7 +70,7 @@ section {
 		@include font(sans);
 		@include text(sky(700));
 		@include layout(grid);
-		border-right: 2px sky(700) solid;
+		border-right: 4px sky(700, 0.8) solid;
 		line-height: 1;
 		row-gap: len(2);
 		grid-template-columns: repeat(12, 1fr);

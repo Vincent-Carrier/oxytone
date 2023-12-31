@@ -407,6 +407,17 @@ files = [
 ]
 
 [[package]]
+name = "greek-normalisation"
+version = "0.5.1"
+description = "Python 3 utilities for validating and normalising Ancient Greek text"
+optional = false
+python-versions = "*"
+files = [
+    {file = "greek-normalisation-0.5.1.tar.gz", hash = "sha256:d4475c049c7fdef504cbecf803c146128ee8dab0ebd15c0c329f2eeca195a311"},
+    {file = "greek_normalisation-0.5.1-py3-none-any.whl", hash = "sha256:1414ac584a18a4b422813d80d68cdbf91fbed3118c4ce1d975e1cf0eb9476052"},
+]
+
+[[package]]
 name = "html-tag-names"
 version = "0.1.2"
 description = "List of known HTML tag names"
@@ -1762,4 +1773,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "2ed0517eead288242a66d5c2303e47aa9def1471ef9b5cd53197852086fd63d6"
+content-hash = "fdec741fc9c17e0902f40b1d2fbb527f6b615c2d45eeb95dda56bbe90718fe3e"
