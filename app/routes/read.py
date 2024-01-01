@@ -4,10 +4,8 @@ from flask import Blueprint, render_template
 from werkzeug.exceptions import NotFound
 
 from core.constants import CHUNKS
-from core.ref import Ref
 from core.render import HtmlPartialRenderer
 from core.treebank.perseus import PerseusTB
-from core.treebank.treebank import Treebank
 from core.corpus import corpus
 from .index import corpus_index
 
