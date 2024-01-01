@@ -9,18 +9,18 @@ from core.render import HtmlPartialRenderer
 from core.treebank.perseus import PerseusTB
 from core.treebank.treebank import Treebank
 from core.corpus import corpus
-from .index import index
+from .index import corpus_index
 
 bp = Blueprint("read", __name__, url_prefix="/read")
 
 
 def render_reader(tb: PerseusTB, slug: str, chunk_title: str | None = None):
     body = HtmlPartialRenderer(tb).render()
-    meta = Box(index[slug])
+    meta = Box(corpus_index[slug])
     return render_template("reader.html", body=body, chunk_title=chunk_title, **meta)
 
 
-@bp.route("/<slug>")
+@bp.get("/<slug>")
 def get_treebank(slug: str):
     try:
         tb = corpus[slug]
@@ -29,12 +29,14 @@ def get_treebank(slug: str):
     return render_reader(tb, slug)
 
 
-@bp.route("/<slug>/<chunk>")
+@bp.get("/<slug>/<chunk>")
 def get_chunk(slug: str, chunk: str):
     f = CHUNKS / slug / f"{chunk}.xml"
     if not f.exists():
         raise NotFound(f"Unknown document {slug}/{chunk}")
     tb = PerseusTB(f, None, None)  # type: ignore
-    chunker = getattr(import_module("core.treebank.chunker"), index[slug].chunker)
+    chunker = getattr(
+        import_module("core.treebank.chunker"), corpus_index[slug].chunker
+    )
     chunk_title = chunker.label(chunk)
     return render_reader(tb, slug, chunk_title)

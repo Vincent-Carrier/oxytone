@@ -21,7 +21,7 @@
 {% endblock body_start %}
 {% block content %}
     <nav>
-        <a href="/">⬅ &nbsp; Go Back</a>
+        <a href="{{ url_for("index.get_index") }}">⬅ &nbsp; Go Back</a>
     </nav>
     <header>
         <p id="author">{{ author }}</p>

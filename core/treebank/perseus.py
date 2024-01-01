@@ -119,7 +119,10 @@ class PerseusTB(Treebank[T]):
             urn = CTS_URN(first)
             ref_str = cast(str, urn.passage_component)
             if self.ref_cls:
-                ref = Ref(self.ref_cls.parse(ref_str))
+                try:
+                    ref = Ref(self.ref_cls.parse(ref_str))
+                except ValueError:
+                    ...
         return Word(
             id=parse_int(attr.get("id")),
             head=parse_int(attr.get("head")),

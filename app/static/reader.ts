@@ -28,7 +28,6 @@ function highlightGroup(role: string, className: string) {
 
 highlightGroup('SBJ', 'subj')
 highlightGroup('OBJ', 'dobj')
-// highlightGroup("OBJ", "iobj");
 
 function* deps(word: HTMLSpanElement, role?: string): Iterable<HTMLSpanElement> {
 	const ds: HTMLSpanElement[] = Array.from(

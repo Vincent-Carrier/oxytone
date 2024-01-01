@@ -1739,6 +1739,9 @@ files = [
     {file = "watchdog-3.0.0.tar.gz", hash = "sha256:4d98a320595da7a7c5a18fc48cb633c2e73cda78f93cac2ef42d42bf609a33f9"},
 ]
 
+[package.dependencies]
+PyYAML = {version = ">=3.10", optional = true, markers = "extra == \"watchmedo\""}
+
 [package.extras]
 watchmedo = ["PyYAML (>=3.10)"]
 
@@ -1773,4 +1776,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "fdec741fc9c17e0902f40b1d2fbb527f6b615c2d45eeb95dda56bbe90718fe3e"
+content-hash = "d72eda2a1d2f490b5e78c52750576546ec0129c1dab4a212a7786045c575160a"

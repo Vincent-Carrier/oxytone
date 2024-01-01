@@ -1,5 +1,10 @@
 * TODO Graft segmentation data for tragedies
 * TODO Add more works
+** Thucydides
+** Lysias
+** Hymn to Demeter
+** Plutarch
+** Xenophon
 * TODO Add span data to index
 * TODO Fix word definitions on mobile
 * TODO Extract styles lib
@@ -8,3 +13,4 @@
 * DONE Add ref and POS tags on Anki notes
 * TODO Fix broken verse numbering
 ** Od. 1.270
+** Theogony: Tolerant CV parsing

@@ -2,22 +2,12 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Dev",
-			"dependsOn": [
-				"Server",
-				"Watch"
-			],
-		},
-		{
 			"label": "Server",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
+			"group": "build",
 			"command": "make",
 			"icon": {
 				"id": "server-process"
-			}
+			},
 		},
 		{
 			"label": "Watch",
@@ -27,6 +17,10 @@
 			],
 			"icon": {
 				"id": "eye-watch"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			}
 		}
 	]

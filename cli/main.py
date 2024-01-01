@@ -25,7 +25,7 @@ def ls(lang: LangOpt = None) -> None:
     table.add_column("author")
     if lang is None:
         table.add_column("lang")
-    for slug, meta in corpus.index(lang).items():
+    for slug, meta in corpus.corpus_index(lang).items():
         table.add_row(slug, meta.title, meta.author, *filter(None, [meta.lang]))
     console.print(table)
 

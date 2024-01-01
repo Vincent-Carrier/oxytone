@@ -11,8 +11,4 @@ First off, you'll need `poetry`, and `npm` installed.
 
 Now, run `make deps` to install all dependencies.
 
-## Running the server
-
-Run `make` to start the Flask server. To auto-reload the browser window and recompile assets on change, run `make watch` in a separate window.
-
-If you modify `core/corpus.py`, you'll need to run `make chunks` to see your changes reflected.
+Run `make watch` to start the development server.

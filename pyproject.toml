@@ -39,6 +39,7 @@ types-python-slugify = "^8.0.0.2"
 lxml-stubs = "^0.4.0"
 ipykernel = "^6.27.1"
 djlint = "^1.34.1"
+watchdog = {extras = ["watchmedo"], version = "^3.0.0"}
 
 [build-system]
 requires = ["poetry-core"]
