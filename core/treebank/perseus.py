@@ -20,7 +20,7 @@ from core.ref import Ref, T
 from core.render import FT, Token
 from core.treebank.chunker import Chunker
 from core.treebank.treebank import Metadata, Sentence, Treebank
-from core.utils import at, parse_int
+from core.utils import parse_int, safelist
 from core.word import POS, Case, Word
 
 
@@ -43,9 +43,8 @@ class PerseusTB(Treebank[T]):
         self.is_verse = is_verse
         tree = etree.parse(f)
         root = tree.getroot()
-        self.body = root.find(".//body")  # type: ignore
-        if self.body is None:
-            self.body = root
+        urn = root.attrib.get("cts")
+        self.body = body if (body := root.find(".//body")) is not None else root
         self.ref_cls = ref_cls
         if refcls := root.attrib.get("refcls"):
             self.ref_cls = getattr(import_module("core.ref"), str(refcls))
@@ -53,6 +52,7 @@ class PerseusTB(Treebank[T]):
             self.is_verse = root.attrib["isverse"] == "True"
         if chunker := meta.get("chunker"):
             self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
+        self.meta["urn"] = str(urn) or next(self.sentences()).attrib.get("document_id")
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")
@@ -106,9 +106,9 @@ class PerseusTB(Treebank[T]):
         attr = el.attrib
         if attr.get("insertion_id") is not None:  # TODO
             return None
-        tags = attr.get("postag")
-        pos = POS.parse_agldt(at(tags, 0))
-        case = Case.parse_agldt(at(tags, 7))
+        tags = safelist(attr.get("postag"))
+        pos = POS.parse_agldt(tags.get(0))
+        case = Case.parse_agldt(tags.get(7))
         lemma = attr.get("lemma")
         if lemma:
             lemma = re.sub(r"\d+$", "", lemma)

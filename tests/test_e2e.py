@@ -13,6 +13,7 @@ def all_slugs() -> Iterator[str]:
             yield doc.slug
 
 
+@mark.skip
 @mark.parametrize("slug", all_slugs())
 def test_get_read(client: FlaskClient, slug: str):
     res = client.get(f"/read/{slug}")

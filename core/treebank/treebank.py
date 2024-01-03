@@ -30,8 +30,8 @@ class Metadata(TypedDict):
     chunker: NotRequired[str]
     span: NotRequired[str]
     ref: NotRequired[str]
-    urn: NotRequired[str | bytes]
-    eng_urn: NotRequired[str | bytes]
+    urn: NotRequired[str | None]
+    eng_urn: NotRequired[str]
 
 
 class Treebank(Generic[T], metaclass=ABCMeta):

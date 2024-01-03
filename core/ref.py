@@ -6,15 +6,18 @@ from functools import total_ordering
 import re
 from typing import Generic, Self, Type, TypeVar, final
 
+from core.utils import safelist
+
 
 @dataclass(order=True, frozen=True, slots=True)
 class RefPoint(metaclass=ABCMeta):
     @classmethod
-    def parse(cls, ref: str) -> Self:
+    def parse(cls, s: str) -> Self:
         try:
-            return cls(*(int(re.sub(r"[a-z]$", "", x)) for x in ref.split(".")))
+            num, letter = safelist(re.split(r"([a-z])$", s))
+            return cls(*(int(n) for n in num.split(".")), letter=letter or "")  # type: ignore
         except:
-            raise ValueError(f"Unable to parse {ref} as {cls}")
+            raise ValueError(f"Unable to parse {s} as {cls}")
 
     def __iter__(self):
         yield from astuple(self)
@@ -83,6 +86,7 @@ class Ref(Generic[T]):
 @dataclass(order=True, frozen=True, slots=True)
 class Verse(RefPoint):
     verse: int
+    letter: str = ""
 
 
 @final
@@ -90,6 +94,7 @@ class Verse(RefPoint):
 class CV(RefPoint):
     chapter: int
     verse: int
+    letter: str = ""
 
 
 @final
@@ -98,3 +103,4 @@ class BCV(RefPoint):
     book: int
     chapter: int
     verse: int = 0
+    letter: str = ""

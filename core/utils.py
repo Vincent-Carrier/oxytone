@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 import sys
 from typing import Any, TypeVar
 
@@ -5,10 +6,16 @@ T = TypeVar("T")
 U = TypeVar("U")
 
 
-def at(l: list[T] | None, i: int) -> T | None:
-    if l is None:
-        return None
-    return l[i] if len(l) > i else None
+class safelist[T](list[T]):
+    def get(self, i: int, default: T | None = None) -> T | None:
+        try:
+            return self[i]
+        except IndexError:
+            return default
+
+    def __iter__(self) -> Iterator[T | None]:
+        yield from super().__iter__()
+        yield None
 
 
 def filter_none(d: dict) -> dict:
@@ -27,5 +34,5 @@ def invert(d: dict[T, U]) -> dict[U, T]:
     return {v: k for k, v in d.items()}
 
 
-def eprint(*args: Any) -> None:
+def errprint(*args: Any) -> None:
     print(*args, file=sys.stderr)

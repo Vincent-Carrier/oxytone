@@ -40,20 +40,20 @@ class Milestone(NamedTuple):
     speaker: str
 
 
-class AugmentedXmlRenderer(NamedTuple):
+class TreebankAugmenter(NamedTuple):
     tb: PerseusTB
     canonical: Element
 
     def get_milestones(self) -> Iterator[Milestone]:
-        ns = {"tei": "http://www.tei-c.org/ns/1.0"}
-        body = self.canonical.find(".//tei:text/tei:body", namespaces=ns)
+        ns = cast(dict[str, str], {None: "http://www.tei-c.org/ns/1.0"})
+        kwargs = {"namespaces": ns}
+        body = self.canonical.find(".//text/body", **kwargs)
         assert body is not None
-        milestones = body.findall(".//tei:milestone", namespaces=ns)
-        for m in milestones:
+        for m in body.findall(".//milestone", **kwargs):
             line = m.attrib.get("n")
             if line is None:
                 continue
-            speaker = m.find("../tei:sp/tei:speaker", namespaces=ns)
+            speaker = (next := m.getnext()) and next.find(".//speaker", **kwargs)
             if speaker is None:
                 continue
             yield Milestone(int(line), speaker.text)  # type: ignore
@@ -63,6 +63,7 @@ class AugmentedXmlRenderer(NamedTuple):
         body = []
         sentence = []
         milestones = {n: spk for n, spk in self.get_milestones()}
+        print(self.tb.meta["slug"], len(milestones))
         for t in iter(self.tb):
             match t:
                 case Word() | Ref():

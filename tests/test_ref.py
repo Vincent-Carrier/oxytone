@@ -19,3 +19,4 @@ def test_lt_ref(a: RefPoint, b: RefPoint, expected: bool):
 def test_parse():
     assert BCV.parse("1.1.1") == BCV(1, 1, 1)
     assert CV.parse("1.1") == CV(1, 1)
+    assert CV.parse("1.12b") == CV(1, 12, "b")

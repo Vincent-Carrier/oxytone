@@ -2,11 +2,11 @@
     <article class="entry">
         <div class="top">
             <div class="title">
-                <a href=" {{ url_for('read.get_treebank', slug=doc.slug) }}">
+                {% if not doc.chunks %}<a href=" {{ url_for('read.get_treebank', slug=doc.slug) }}">{% endif %}
                     <h3>{{ doc.title }}</h3>
                     &nbsp;&nbsp;/&nbsp;&nbsp;
                     <span class="original-title">{{ doc.original_title }}</span>
-                </a>
+                    {% if not doc.chunks %}</a>{% endif %}
             </div>
             <div hidden class="completeness">
                 {% if doc.span %}{{ doc.span }}{% endif %}

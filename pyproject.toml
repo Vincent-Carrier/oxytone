@@ -13,9 +13,6 @@ flask = "^2.3.2"
 watchdog = "^3.0.0"
 tornado = "~6.2"
 
-# cli
-typer = "^0.9.0"
-
 # lib
 dominate = "^2.7.0"
 pyconll = "^3.1.0"
@@ -30,8 +27,6 @@ more-itertools = "^10.1.0"
 genanki = "^0.13.1"
 beautifulsoup4 = "^4.12.2"
 greek-accentuation = "^1.2.0"
-greek-normalisation = "^0.5.1"
-grecy = "^1.0"
 spacy = "^3.7.2"
 
 [tool.poetry.group.dev.dependencies]
