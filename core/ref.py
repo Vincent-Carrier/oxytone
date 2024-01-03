@@ -14,8 +14,8 @@ class RefPoint(metaclass=ABCMeta):
     @classmethod
     def parse(cls, s: str) -> Self:
         try:
-            num, letter = safelist(re.split(r"([a-z])$", s))
-            return cls(*(int(n) for n in num.split(".")), letter=letter or "")  # type: ignore
+            parts = safelist(re.split(r"([a-z])$", s))
+            return cls(*(int(n) for n in parts[0].split(".")), letter=parts.get(1, ""))  # type: ignore
         except:
             raise ValueError(f"Unable to parse {s} as {cls}")
 

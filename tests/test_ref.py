@@ -8,6 +8,10 @@ lt_tests = [
     (BCV(1, 1, 1), BCV(1, 2, 1), True),
     (BCV(1, 1, 1), BCV(2, 1, 1), True),
     (BCV(1, 1, 1), BCV(1, 1, 2), True),
+    (CV(1, 2), CV(1, 2, "a"), True),
+    (CV(1, 2, "a"), CV(1, 2, "b"), True),
+    (CV(1, 2, "a"), CV(1, 3), True),
+    (CV(1, 2), CV(1, 3, "a"), True),
 ]
 
 

@@ -13,10 +13,6 @@ class safelist[T](list[T]):
         except IndexError:
             return default
 
-    def __iter__(self) -> Iterator[T | None]:
-        yield from super().__iter__()
-        yield None
-
 
 def filter_none(d: dict) -> dict:
     return {k: v for k, v in d.items() if v is not None}
