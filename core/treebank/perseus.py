@@ -26,7 +26,6 @@ from core.word import POS, Case, Word
 
 @final
 class PerseusTB(Treebank[T]):
-    filepath: Path
     body: etree._Element
     is_verse: bool
     chunker: "Chunker | None"
@@ -38,9 +37,7 @@ class PerseusTB(Treebank[T]):
         is_verse: bool,
         **meta: Unpack[Metadata],
     ) -> None:
-        super().__init__(ref_cls=ref_cls, **meta)
-        self.filepath = f
-        self.is_verse = is_verse
+        super().__init__(ref_cls=ref_cls, is_verse=is_verse, **meta)
         tree = etree.parse(f)
         root = tree.getroot()
         urn = root.attrib.get("cts")
@@ -130,7 +127,7 @@ class PerseusTB(Treebank[T]):
             lemma=lemma,
             pos=pos,
             case=case,
-            flags=tags,
+            flags=attr.get("postag"),
             role=attr.get("relation"),
             definition=lsj.get(lemma),
             ref=ref,

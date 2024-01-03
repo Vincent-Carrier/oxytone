@@ -2,16 +2,8 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Server",
-			"group": "build",
-			"command": "make",
-			"icon": {
-				"id": "server-process"
-			},
-		},
-		{
 			"label": "Watch",
-			"command": "make",
+			"command": "./tasks",
 			"args": [
 				"watch"
 			],

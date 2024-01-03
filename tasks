@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -eu
+
+py="poetry run python -m"
+pr="poetry run"
+static=app/static
+
+set -x
+
+css() {
+	npx sass -Istyles -Inode_modules ${static}:${static} "$@"
+}
+
+js() {
+	npx esbuild ${static}/reader.ts --outdir=${static} \
+		--bundle --target=es2020 --sourcemap "$@"
+}
+
+browsersync() {
+	npx browser-sync start -w -f app/** \
+		--proxy 'localhost:5000' --no-open "$@"
+}
+
+app() {
+	$py app.main "$@"
+}
+
+watch() {
+	css --watch &
+	# poetry run watchmedo shell-command -p "*.ts" -c js -W $(static) &
+	js --watch=forever & jspid=$!
+	browsersync & bspid=$!
+	app "$@"
+	kill $jspid $bspid
+}
+
+test() {
+	$pr pytest "$@"
+}
+
+format() {
+	$pr black . "$@"
+}
+
+deps() {
+	poetry install & npm install
+	script seed
+	script chunkup
+}
+
+static() {
+	wget -r -nH -P build --page-requisites --html-extension \
+		localhost:5000 "$@"
+}
+
+test_e2e() {
+	static --spider -nd --quiet
+}
+
+script() {
+	$py scripts."$1"
+}
+
+clean() {
+	rm -f data/lsj.db
+	rm -rf ${static}/**.{css,css.map,js,js.map}
+	rm -rf data/treebanks/chunks/**
+	rm -rf tmp/**
+	rm -rf build/**
+}
+
+
+"${@:-watch}"
