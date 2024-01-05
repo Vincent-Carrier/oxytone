@@ -1,5 +1,3 @@
-from collections.abc import Iterator
-import sys
 from typing import Any, TypeVar
 
 T = TypeVar("T")
@@ -14,21 +12,9 @@ class safelist[T](list[T]):
             return default
 
 
-def filter_none(d: dict) -> dict:
+def filter_none(d: dict[T, U | None]) -> dict[T, U]:
     return {k: v for k, v in d.items() if v is not None}
-
-
-def parse_int(s: str | None) -> int | None:
-    return int(s) if s else None
 
 
 def cx(*args: Any) -> str | None:
     return " ".join(str(a) for a in args if a) or None
-
-
-def invert(d: dict[T, U]) -> dict[U, T]:
-    return {v: k for k, v in d.items()}
-
-
-def errprint(*args: Any) -> None:
-    print(*args, file=sys.stderr)

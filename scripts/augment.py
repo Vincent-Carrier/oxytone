@@ -6,7 +6,7 @@ from core.corpus import corpus
 from lxml import etree
 
 for tb in corpus.values():
-    slug, genre, urn = tb.meta["slug"], tb.meta.get("genre"), tb.meta.get("urn")
+    slug, genre, urn = tb.meta.slug, tb.meta.get("genre"), tb.meta.get("urn")
     if genre != "Tragedy":
         continue
     if urn is None:

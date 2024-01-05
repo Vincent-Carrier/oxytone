@@ -4,11 +4,8 @@ Pyrrho is a tool for generating syntax-highlighted texts for ancient languages. 
 
 ## Getting started
 
-First off, you'll need `poetry`, and `npm` installed.
+First off, you'll need `npm` installed. Depending on your OS, you may also need [PyEnv](https://github.com/pyenv/pyenv) to get the right Python version running. **This project requires `3.12` or greater** (use `python -V` to make sure).
 
--   [Install Poetry](https://python-poetry.org/docs/#installation)
--   Depending on your distro, you may also need [PyEnv](https://github.com/pyenv/pyenv) to [get the right Python version running](https://python-poetry.org/docs/managing-environments/)
+Now, run `./tasks deps` to create your virtual env and install all dependencies.
 
-Now, run `make deps` to install all dependencies.
-
-Run `make watch` to start the development server.
+Run `./tasks watch` to start the development server.

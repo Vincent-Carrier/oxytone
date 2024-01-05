@@ -8,8 +8,20 @@ static=app/static
 
 set -x
 
+if [[ -d .venv ]]; then
+	. .venv/bin/activate
+fi
+
+deps() {
+	python -m venv .venv
+	. .venv/bin/activate
+	pip install -r requirements.txt & npm install & wait
+	script seed
+	script chunkup
+}
+
 css() {
-	npx sass -Istyles -Inode_modules ${static}:${static} "$@"
+	npx sass -Inode_modules ${static}:${static} "$@"
 }
 
 js() {
@@ -43,19 +55,13 @@ format() {
 	$pr black . "$@"
 }
 
-deps() {
-	poetry install & npm install
-	script seed
-	script chunkup
-}
-
-static() {
+export_static() {
 	wget -r -nH -P build --page-requisites --html-extension \
 		localhost:5000 "$@"
 }
 
 test_e2e() {
-	static --spider -nd --quiet
+	export_static --spider -nd --quiet
 }
 
 script() {

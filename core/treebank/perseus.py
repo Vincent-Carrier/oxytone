@@ -12,7 +12,6 @@ from typing import (
 )
 
 from lxml import etree
-
 from pyCTS import CTS_URN
 
 from core.constants import LEFT_PUNCT, LSJ, RIGHT_PUNCT
@@ -20,7 +19,7 @@ from core.ref import Ref, T
 from core.render import FT, Token
 from core.treebank.chunker import Chunker
 from core.treebank.treebank import Metadata, Sentence, Treebank
-from core.utils import parse_int, safelist
+from core.utils import safelist
 from core.word import POS, Case, Word
 
 
@@ -49,7 +48,7 @@ class PerseusTB(Treebank[T]):
             self.is_verse = root.attrib["isverse"] == "True"
         if chunker := meta.get("chunker"):
             self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
-        self.meta["urn"] = str(urn) or next(self.sentences()).attrib.get("document_id")
+        self.meta.urn = str(urn) or next(self.sentences()).attrib.get("document_id")
 
     def sentences(self) -> Iterator[Sentence]:
         yield from self.body.findall("./sentence")
@@ -103,12 +102,8 @@ class PerseusTB(Treebank[T]):
         attr = el.attrib
         if attr.get("insertion_id") is not None:  # TODO
             return None
-        tags = safelist(attr.get("postag"))
-        pos = POS.parse_agldt(tags.get(0))
-        case = Case.parse_agldt(tags.get(7))
-        lemma = attr.get("lemma")
-        if lemma:
-            lemma = re.sub(r"\d+$", "", lemma)
+        tags = safelist(flags := attr.get("postag"))
+        lemma = re.sub(r"\d+$", "", s) if (s := attr.get("lemma")) else None
         ref = None
         cite = attr.get("cite")
         if cite:
@@ -121,15 +116,15 @@ class PerseusTB(Treebank[T]):
                 except ValueError:
                     ...
         return Word(
-            id=parse_int(attr.get("id")),
-            head=parse_int(attr.get("head")),
+            id=int(n) if (n := attr.get("id")) else None,
+            head=int(n) if (n := attr.get("head")) else None,
             form=attr["form"],
             lemma=lemma,
-            pos=pos,
-            case=case,
-            flags=attr.get("postag"),
+            pos=POS.parse_agldt(tags.get(0)),
+            case=Case.parse_agldt(tags.get(7)),
+            flags=flags,
             role=attr.get("relation"),
-            definition=lsj.get(lemma),
+            definition=lsj.get(lemma) if lemma else None,
             ref=ref,
         )
 

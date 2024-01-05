@@ -12,14 +12,14 @@ bp = Blueprint("index", __name__, "/")
 class AuthorCorpus(NamedTuple):
     name: str
     slug: str
-    corpus: Box
+    corpus: dict[str, Box]
 
 
 def _author_corpus(author: str) -> AuthorCorpus:
     corpus = {
         slug: meta for slug, meta in corpus_index.items() if meta.author == author
     }
-    return AuthorCorpus(author, slugify(author), Box(corpus))
+    return AuthorCorpus(author, slugify(author), corpus)
 
 
 authors = [

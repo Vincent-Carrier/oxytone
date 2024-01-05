@@ -1,4 +1,4 @@
-@forward 'foundation'
+@use '@vincentcarrier/zephyr' as *
 	with(
 		$font-families: (
 			display: "'Cormorant SC', serif",
@@ -6,6 +6,7 @@
 			serif: "'Alegreya', serif",
 		)
 	);
+@forward '@vincentcarrier/zephyr';
 
 .main-grid {
 	display: grid;
@@ -19,4 +20,47 @@
 
 .grid-center {
 	grid-column: 2;
+}
+
+@mixin highlight($color) {
+	@include surface($color);
+	outline: $color solid 4px;
+}
+
+.color-coding {
+	@include surface($rounded: sm);
+	&:hover {
+		@include surface(slate(100));
+		outline: 4px slate(100) solid;
+	}
+	&.verb {
+		@include font($wght: 700);
+	}
+	&.nominative {
+		@include text(emerald(600));
+	}
+	&.accusative {
+		@include text(sky(600));
+	}
+	&.dative {
+		@include text(pink(600));
+	}
+	&.genitive {
+		@include text(violet(600));
+	}
+	&.vocative {
+		@include text(yellow(600));
+	}
+	&.subj {
+		@include highlight(emerald(100));
+	}
+	&.dobj {
+		@include highlight(sky(100));
+	}
+	&.selected {
+		text-decoration: underline;
+	}
+	&.head {
+		text-decoration: underline;
+	}
 }

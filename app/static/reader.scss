@@ -107,54 +107,9 @@ article {
 	}
 
 	[data-id] {
-		@include surface($rounded: sm);
 		cursor: pointer;
-
-		&:hover {
-			@include surface(slate(100));
-			outline: 4px slate(100) solid;
-		}
-		&.verb {
-			@include font($wght: 700);
-		}
-		&.nominative {
-			@include text(emerald(600));
-		}
-		&.accusative {
-			@include text(sky(600));
-		}
-		&.dative {
-			@include text(pink(600));
-		}
-		&.genitive {
-			@include text(violet(600));
-		}
-		&.vocative {
-			@include text(yellow(600));
-		}
-
-		&.hl {
-			outline-style: solid;
-			outline-width: 4px;
-			&.subj {
-				@include surface(emerald(100));
-				outline-color: emerald(100);
-			}
-			&.dobj {
-				@include surface(sky(100));
-				outline-color: sky(100);
-			}
-			&.iobj {
-				@include surface(pink(100));
-				outline-color: pink(100);
-			}
-		}
-		&.selected {
-			text-decoration: underline;
-		}
-		&.head {
-			text-decoration: underline;
-		}
+		@include surface($rounded: sm);
+		@extend .color-coding;
 	}
 
 	.subdoc {

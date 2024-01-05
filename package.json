@@ -1,34 +1,21 @@
 {
-  "name": "pyrrho",
+  "name": "oxytone",
   "version": "1.0.0",
-  "description": "Pyrrho is a tool for generating dynamic, syntax-highlighted texts, focusing at the moment on Ancient Greek. You can see it in action [here](https://vcar.dev/read/xenophon/anabasis/111/).",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "author": "Vincent Carrier",
   "license": "ISC",
   "devDependencies": {
+    "@fontsource/alegreya": "^5.0.2",
+    "@fontsource/alegreya-sans": "^5.0.8",
+    "@fontsource/cormorant-sc": "^5.0.18",
     "@types/lodash-es": "^4.17.12",
     "browser-sync": "^2.29.3",
     "esbuild": "^0.17.19",
     "sass": "^1.62.1"
   },
   "dependencies": {
-    "@fontsource/alegreya": "^5.0.2",
-    "@fontsource/alegreya-sans": "^5.0.8",
-    "@fontsource/alegreya-sc": "^5.0.2",
-    "@fontsource/cormorant": "^5.0.2",
-    "@fontsource/cormorant-sc": "^5.0.18",
-    "@popperjs/core": "^2.11.8",
-    "@shoelace-style/shoelace": "^2.4.0",
-    "cash-dom": "^8.1.5",
+    "@vincentcarrier/zephyr": "^1.0.0",
     "clsx": "^1.2.1",
     "ky": "^0.33.3",
-    "lodash-es": "^4.17.21",
-    "tippy.js": "^6.3.7"
+    "lodash-es": "^4.17.21"
   }
 }

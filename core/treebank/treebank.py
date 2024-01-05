@@ -9,6 +9,7 @@ from typing import (
     TypedDict,
     Unpack,
 )
+from box import Box
 
 from lxml import etree
 
@@ -35,7 +36,7 @@ class Metadata(TypedDict):
 
 
 class Treebank(Generic[T], metaclass=ABCMeta):
-    meta: Metadata
+    meta: Box
     ref_cls: Type[T] | None
     is_verse: bool
 
@@ -45,7 +46,7 @@ class Treebank(Generic[T], metaclass=ABCMeta):
         ref_cls: Type[T] | None,
         **meta: Unpack[Metadata],
     ) -> None:
-        self.meta = meta
+        self.meta = Box(meta)
         self.ref_cls = ref_cls
         self.is_verse = is_verse
 

@@ -7,10 +7,10 @@
 ** Xenophon
 * TODO Add span data to index
 * TODO Fix word definitions on mobile
-* TODO Extract styles lib
+* DONE Extract styles lib
 * TODO Refine highlighting of verb complements
 * DONE Highlight head on hover
 * DONE Add ref and POS tags on Anki notes
-* TODO Fix broken verse numbering
+* DONE Fix broken verse numbering
 ** Od. 1.270
 ** Theogony: Tolerant CV parsing

@@ -6,6 +6,7 @@ from core.treebank.perseus import PerseusTB
 from lxml.builder import E
 from lxml import etree
 from lxml.etree import _Element as Element
+from core.utils import filter_none
 
 from core.word import Word
 
@@ -27,7 +28,7 @@ def _(word: Word) -> Any:
         role=word.role,
         definition=word.definition,
     )
-    return E.word(word.form, **{k: v for k, v in data.items() if v is not None})
+    return E.word(word.form, **filter_none(data))
 
 
 @render.register(Ref)
@@ -63,7 +64,7 @@ class TreebankAugmenter(NamedTuple):
         body = []
         sentence = []
         milestones = {n: spk for n, spk in self.get_milestones()}
-        print(self.tb.meta["slug"], len(milestones))
+        print(self.tb.meta.slug, len(milestones))
         for t in iter(self.tb):
             match t:
                 case Word() | Ref():
