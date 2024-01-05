@@ -2,15 +2,14 @@
 
 set -eu
 
-py="poetry run python -m"
-pr="poetry run"
 static=app/static
 
-set -x
 
 if [[ -d .venv ]]; then
 	. .venv/bin/activate
 fi
+
+set -x
 
 deps() {
 	python -m venv .venv
@@ -21,11 +20,11 @@ deps() {
 }
 
 css() {
-	npx sass -Inode_modules ${static}:${static} "$@"
+	npx sass -Inode_modules $static:$static "$@"
 }
 
 js() {
-	npx esbuild ${static}/reader.ts --outdir=${static} \
+	npx esbuild $static/reader.ts --outdir=$static \
 		--bundle --target=es2020 --sourcemap "$@"
 }
 
@@ -35,12 +34,12 @@ browsersync() {
 }
 
 app() {
-	$py app.main "$@"
+	python -m app.main "$@"
 }
 
 watch() {
 	css --watch &
-	# poetry run watchmedo shell-command -p "*.ts" -c js -W $(static) &
+	# watchmedo shell-command -p "*.ts" -c js -W $static &
 	js --watch=forever & jspid=$!
 	browsersync & bspid=$!
 	app "$@"
@@ -48,11 +47,11 @@ watch() {
 }
 
 test() {
-	$pr pytest "$@"
+	pytest "$@"
 }
 
 format() {
-	$pr black . "$@"
+	black . "$@"
 }
 
 export_static() {
@@ -65,7 +64,7 @@ test_e2e() {
 }
 
 script() {
-	$py scripts."$1"
+	python -m scripts."$1"
 }
 
 clean() {
