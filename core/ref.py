@@ -1,6 +1,4 @@
 from abc import ABCMeta
-from copy import deepcopy
-import copy
 from dataclasses import astuple, dataclass
 from functools import total_ordering
 import re
@@ -15,7 +13,8 @@ class RefPoint(metaclass=ABCMeta):
     def parse(cls, s: str) -> Self:
         try:
             parts = safelist(re.split(r"([a-z])$", s))
-            return cls(*(int(n) for n in parts[0].split(".")), letter=parts.get(1, ""))  # type: ignore
+            nums = [int(n) for n in parts[0].split(".")]
+            return cls(*nums, letter=parts.get(1, ""))  # type: ignore
         except:
             raise ValueError(f"Unable to parse {s} as {cls}")
 
@@ -23,7 +22,8 @@ class RefPoint(metaclass=ABCMeta):
         yield from astuple(self)
 
     def __str__(self) -> str:
-        return ".".join(str(x) for x in self if x != 0)
+        nums = [str(x) for x in list(self)[:-1] if x != 0]
+        return f"{'.'.join(nums)}{self.letter}"  # type: ignore
 
 
 T = TypeVar("T", bound=RefPoint)

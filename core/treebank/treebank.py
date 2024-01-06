@@ -7,7 +7,6 @@ from typing import (
     Type,
     TypeAlias,
     TypedDict,
-    Unpack,
 )
 from box import Box
 
@@ -44,7 +43,7 @@ class Treebank(Generic[T], metaclass=ABCMeta):
         self,
         is_verse: bool,
         ref_cls: Type[T] | None,
-        **meta: Unpack[Metadata],
+        **meta,
     ) -> None:
         self.meta = Box(meta)
         self.ref_cls = ref_cls

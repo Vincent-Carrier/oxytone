@@ -5,16 +5,18 @@ set -eu
 static=app/static
 
 
-if [[ -d .venv ]]; then
-	. .venv/bin/activate
+if [[ "$VIRTUAL_ENV" != "" ]]; then
+	pipenv shell
 fi
 
 set -x
 
-deps() {
-	python -m venv .venv
-	. .venv/bin/activate
-	pip install -r requirements.txt & npm install & wait
+install_deps() {
+	pipenv install -r requirements.txt & npm install & wait
+}
+
+init() {
+	install_deps
 	script seed
 	script chunkup
 }
@@ -40,10 +42,9 @@ app() {
 watch() {
 	css --watch &
 	# watchmedo shell-command -p "*.ts" -c js -W $static &
-	js --watch=forever & jspid=$!
-	browsersync & bspid=$!
+	js --watch=forever &
+	browsersync &
 	app "$@"
-	kill $jspid $bspid
 }
 
 test() {
@@ -67,6 +68,16 @@ script() {
 	python -m scripts."$1"
 }
 
+sync_fs() {
+	rsync -aP --delete --exclude-from=.rsyncignore \
+		./ oxytone:oxytone
+}
+
+deploy() {
+	install_deps
+	app
+}
+
 clean() {
 	rm -f data/lsj.db
 	rm -rf ${static}/**.{css,css.map,js,js.map}
@@ -75,5 +86,8 @@ clean() {
 	rm -rf build/**
 }
 
+help() {
+	compgen -A function
+}
 
 "${@:-watch}"

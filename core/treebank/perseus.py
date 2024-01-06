@@ -6,7 +6,6 @@ import shelve
 from typing import (
     Iterator,
     Type,
-    Unpack,
     cast,
     final,
 )
@@ -18,7 +17,7 @@ from core.constants import LEFT_PUNCT, LSJ, RIGHT_PUNCT
 from core.ref import Ref, T
 from core.render import FT, Token
 from core.treebank.chunker import Chunker
-from core.treebank.treebank import Metadata, Sentence, Treebank
+from core.treebank.treebank import Sentence, Treebank
 from core.utils import safelist
 from core.word import POS, Case, Word
 
@@ -34,7 +33,7 @@ class PerseusTB(Treebank[T]):
         f: Path,
         ref_cls: Type[T] | None,
         is_verse: bool,
-        **meta: Unpack[Metadata],
+        **meta,
     ) -> None:
         super().__init__(ref_cls=ref_cls, is_verse=is_verse, **meta)
         tree = etree.parse(f)
