@@ -1,28 +1,30 @@
 #!/bin/bash
 
-set -eu
 
 static=app/static
-
+port=8000
 
 if [[ "$VIRTUAL_ENV" != "" ]]; then
 	pipenv shell
 fi
 
-set -x
+if [[ oxytone != `basename $PWD` ]]; then
+	exit 1
+fi
+
+set -eux
 
 install_deps() {
-	pipenv install -r requirements.txt & npm install & wait
+	pipenv install & npm install & wait
 }
 
 init() {
-	install_deps
-	script seed
-	script chunkup
+	install_deps &&
+	script seed & script chunkup & wait
 }
 
 css() {
-	npx sass -Inode_modules $static:$static "$@"
+	npx sass -Inode_modules $static:$static --update "$@"
 }
 
 js() {
@@ -32,11 +34,11 @@ js() {
 
 browsersync() {
 	npx browser-sync start -w -f app/** \
-		--proxy 'localhost:5000' --no-open "$@"
+		--proxy "localhost:$port" --no-open "$@"
 }
 
 app() {
-	python -m app.main "$@"
+	sanic app.main "$@"
 }
 
 watch() {
@@ -57,7 +59,7 @@ format() {
 
 export_static() {
 	wget -r -nH -P build --page-requisites --html-extension \
-		localhost:5000 "$@"
+		localhost:$port "$@"
 }
 
 test_e2e() {
@@ -70,7 +72,7 @@ script() {
 
 sync_fs() {
 	rsync -aP --delete --exclude-from=.rsyncignore \
-		./ oxytone:oxytone
+		./ oxy:oxytone
 }
 
 deploy() {

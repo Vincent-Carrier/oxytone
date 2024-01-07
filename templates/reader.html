@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block head %}
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='/reader.css') }}" />
-    <script src="{{ url_for('static', filename='/reader.js') }}" type="module"></script>
+          href="{{ url_for('assets', filename='/reader.css') }}" />
+    <script src="{{ url_for('assets', filename='/reader.js') }}" type="module"></script>
 {% endblock head %}
 {% block body_start %}
     <div class="bottom-bar">
@@ -31,5 +31,5 @@
         </h1>
         {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
     </header>
-    <article class="treebank" id="{{ slug }}">{{ body }}</article>
+    <article class="treebank" id="{{ slug }}">{{ body|safe }}</article>
 {% endblock content %}

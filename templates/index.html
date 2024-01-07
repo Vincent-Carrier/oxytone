@@ -2,7 +2,7 @@
 {% import '_entry.html' as entries %}
 {% block head %}
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='/index.css') }}" />
+          href="{{ url_for('assets', filename='/index.css') }}" />
 {% endblock head %}
 {% block content %}
     <header>
@@ -11,7 +11,11 @@
             <p>The Bleeding Edge of Ancient Language</p>
         </div>
     </header>
-    <img src="/greek_heroes.webp" class="heroes" alt="" width="" height="" />
+    <img src="{{ url_for('assets', filename='/greek_heroes@0.5x.webp') }}"
+         class="heroes"
+         alt=""
+         width="1489"
+         height="749" />
     {% for author in authors %}
         <section id="{{ author.slug }}">
             <h2>{{ author.name }}</h2>

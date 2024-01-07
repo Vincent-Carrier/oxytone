@@ -1,21 +1,20 @@
-from datetime import datetime
-from time import sleep
+from time import time
 from typing import cast
 from box import Box
-from flask import Blueprint, Response, request, send_file
+from sanic import Blueprint, Request, json, file
 from genanki import Note, Deck, BASIC_MODEL
 
 from core.constants import TMP
 from core.word import Word
 
-bp = Blueprint("flashcards", __name__, url_prefix="/flashcards")
+bp = Blueprint("flashcards", url_prefix="/flashcards")
 
 
 @bp.post("/")
-def flashcards():
-    req = Box(request.json)
-    deck = Deck(hash(req.title), name=req.title)
-    words = cast(list[Word], req.words)
+async def flashcards(req: Request):
+    r = Box(req.json)
+    deck = Deck(hash(r.title), name=r.title)
+    words = cast(list[Word], r.words)
     for word in words:
         note = Note(
             BASIC_MODEL,
@@ -23,11 +22,11 @@ def flashcards():
             tags=[word.pos],
         )
         deck.add_note(note)
-    f = f"{datetime.now().microsecond}.apkg"
+    f = f"{r.slug}-{time():8}.apkg"
     deck.write_to_file(TMP / f)
-    return {"filename": f}
+    return json({"filename": f})
 
 
 @bp.get("/<f>")
-def download_deck(f: str):
-    return send_file(TMP / f, as_attachment=True, download_name=f)
+async def download_deck(req: Request, f: str):
+    return file(TMP / f, filename=f)

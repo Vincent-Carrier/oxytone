@@ -1,0 +1,9 @@
+localhost {
+	route {
+		file_server /assets {
+			root ./app/static
+			pass_thru
+		}
+		reverse_proxy localhost:8000
+	}
+}

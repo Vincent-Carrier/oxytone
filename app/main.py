@@ -1,35 +1,22 @@
-from flask import Blueprint, Flask
-from rich import traceback
-from app.routes.flashcards import bp as flashcards_bp
-from app.routes.read import bp as read_bp
-from app.routes.index import bp as index_bp
+from os import environ
+from sanic import Sanic
 
-from core.constants import NODE_MODULES
+from core.constants import STATIC
 
 
-def create_app() -> Flask:
-    app = Flask(__name__, static_url_path="/")
-    app.jinja_options.update(
-        autoescape=False,
-        lstrip_blocks=True,
-        trim_blocks=True,
-    )
-    app.debug = True
-    app.register_blueprint(index_bp)
-    app.register_blueprint(read_bp)
-    app.register_blueprint(flashcards_bp)
-    app.register_blueprint(
-        Blueprint(
-            "fonts",
-            __name__,
-            static_folder=NODE_MODULES / "@fontsource/",
-            static_url_path="/@fontsource",
-        )
-    )
+def create_app(dev: bool) -> Sanic:
+    app = Sanic("oxytone")
+    app.auto_reload = dev
+    from app.routes.flashcards import bp as flashcards_bp
+    from app.routes.read import bp as read_bp
+    from app.routes.index import bp as index_bp
+
+    app.blueprint(index_bp)
+    app.blueprint(read_bp)
+    app.blueprint(flashcards_bp)
+    if dev:
+        app.static("/", STATIC, name="assets")
     return app
 
 
-if __name__ == "__main__":
-    traceback.install()
-    app = create_app()
-    app.run()
+app = create_app(dev=environ.get("ENV") == "development")

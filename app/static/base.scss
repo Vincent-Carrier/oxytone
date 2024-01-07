@@ -1,14 +1,7 @@
 @use 'theme' as *;
 
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,700;1,400&family=Alegreya:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@700&display=swap');
 @import '@vincentcarrier/zephyr/preflight';
-@import '@fontsource/alegreya-sans/400.css';
-@import '@fontsource/alegreya-sans/400-italic.css';
-@import '@fontsource/alegreya-sans/700.css';
-@import '@fontsource/alegreya-sans/700-italic.css';
-@import '@fontsource/alegreya/400.css';
-@import '@fontsource/alegreya/400-italic.css';
-@import '@fontsource/alegreya/700.css';
-@import '@fontsource/cormorant-sc/700.css';
 
 html {
 	font-synthesis: none;

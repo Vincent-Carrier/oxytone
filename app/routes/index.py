@@ -1,12 +1,12 @@
 from typing import NamedTuple
 
 from box import Box
-from flask import Blueprint, render_template
+from sanic import Blueprint, Request, Sanic
 from slugify import slugify
 from core.corpus import corpus_index
-from more_itertools import unique_everseen
 
-bp = Blueprint("index", __name__, "/")
+bp = Blueprint("index", "/")
+app = Sanic.get_app("oxytone")
 
 
 class AuthorCorpus(NamedTuple):
@@ -29,5 +29,6 @@ authors = [
 
 
 @bp.get("/")
-def get_index():
-    return render_template("index.html", authors=authors)
+@app.ext.template("index.html")
+async def get_index(req: Request):
+    return dict(authors=authors)

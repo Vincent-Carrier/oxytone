@@ -4,7 +4,7 @@ T = TypeVar("T")
 U = TypeVar("U")
 
 
-class safelist[T](list[T]):
+class safelist(list[T]):
     def get(self, i: int, default: T | None = None) -> T | None:
         try:
             return self[i]

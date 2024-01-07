@@ -1,34 +1,35 @@
 from importlib import import_module
 from box import Box
-from flask import Blueprint, render_template
-from werkzeug.exceptions import NotFound
+from sanic import Blueprint, NotFound, Request, Sanic
 
 from core.constants import CHUNKS
 from core.render import HtmlPartialRenderer
 from core.treebank.perseus import PerseusTB
-from core.corpus import corpus
-from .index import corpus_index
+from core.corpus import corpus_index, corpus
 
-bp = Blueprint("read", __name__, url_prefix="/read")
+bp = Blueprint("read", url_prefix="/read")
+app = Sanic.get_app("oxytone")
 
 
-def render_reader(tb: PerseusTB, slug: str, chunk_title: str | None = None):
+def treebank(tb: PerseusTB, slug: str, chunk_title: str | None = None):
     body = HtmlPartialRenderer(tb).render()
     meta = Box(corpus_index[slug])
-    return render_template("reader.html", body=body, chunk_title=chunk_title, **meta)
+    return dict(body=body, chunk_title=chunk_title, **meta)
 
 
 @bp.get("/<slug>")
-def get_treebank(slug: str):
+@app.ext.template("reader.html")
+async def get_treebank(req: Request, slug: str):
     try:
         tb = corpus[slug]
     except KeyError:
         raise NotFound(f"Unknown document {slug}")
-    return render_reader(tb, slug)
+    return treebank(tb, slug)
 
 
 @bp.get("/<slug>/<chunk>")
-def get_chunk(slug: str, chunk: str):
+@app.ext.template("reader.html")
+async def get_chunk(req: Request, slug: str, chunk: str):
     f = CHUNKS / slug / f"{chunk}.xml"
     if not f.exists():
         raise NotFound(f"Unknown document {slug}/{chunk}")
@@ -37,4 +38,4 @@ def get_chunk(slug: str, chunk: str):
         import_module("core.treebank.chunker"), corpus_index[slug].chunker
     )
     chunk_title = chunker.label(chunk)
-    return render_reader(tb, slug, chunk_title)
+    return treebank(tb, slug, chunk_title)

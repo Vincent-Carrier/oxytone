@@ -5,6 +5,7 @@ from box import Box
 
 ENV = Box(os.environ)
 ROOT = Path(__file__).parent.parent
+STATIC = ROOT / "app/static"
 DATA = ROOT / "data"
 TREEBANKS = DATA / "treebanks"
 CANONICAL = ROOT.parent / "canonical-greekLit/data"

@@ -43,6 +43,7 @@ $export.onclick = async function exportFlashcards() {
 		definition: el.dataset.def ?? '',
 	}))
 	const title = document.getElementById('title')!.innerText
+	// const slug = ...
 	const res: any = await ky.post('/flashcards', { json: { title, words } }).json()
 	window.location.href = `/flashcards/${res.filename}`
 }
