@@ -37,17 +37,12 @@ class Metadata(TypedDict):
 class Treebank(Generic[T], metaclass=ABCMeta):
     meta: Box
     ref_cls: Type[T] | None
-    is_verse: bool
 
     def __init__(
         self,
-        is_verse: bool,
-        ref_cls: Type[T] | None,
         **meta,
     ) -> None:
         self.meta = Box(meta)
-        self.ref_cls = ref_cls
-        self.is_verse = is_verse
 
     @abstractmethod
     def __iter__(self) -> Iterator["Token"]:

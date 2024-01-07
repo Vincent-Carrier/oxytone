@@ -24,27 +24,23 @@ from core.word import POS, Case, Word
 
 @final
 class PerseusTB(Treebank[T]):
-    body: etree._Element
     is_verse: bool
+    ref_cls: Type[T]
     chunker: "Chunker | None"
     filepath: Path
 
     def __init__(
         self,
         f: Path,
-        ref_cls: Type[T] | None,
-        is_verse: bool,
         **meta,
     ) -> None:
-        super().__init__(ref_cls=ref_cls, is_verse=is_verse, **meta)
+        super().__init__(**meta)
         self.filepath = f
+        self.is_verse = self.meta.is_verse
+        self.ref_cls = self.meta.ref_cls
         for _, el in etree.iterparse(f, events=("start",)):
             if el.tag == "treebank" and (urn := el.attrib.get("cts")):
-                self.meta["urn"] = str(urn)
-                if refcls := el.attrib.get("refcls"):
-                    self.ref_cls = getattr(import_module("core.ref"), str(refcls))
-                if self.is_verse is None:
-                    self.is_verse = el.attrib["isverse"] == "True"
+                self.meta.urn = str(urn)
                 if urn is not None:
                     break
             if el.tag == "sentence":
@@ -52,12 +48,13 @@ class PerseusTB(Treebank[T]):
                 break
         if chunker := meta.get("chunker"):
             self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
+        print(self.meta.slug, self.is_verse, self.ref_cls)
 
     def sentences(self) -> Iterator[Sentence]:
         tree = etree.parse(self.filepath)
         root = tree.getroot()
-        self.body = body if (body := root.find(".//body")) is not None else root
-        yield from self.body.findall("./sentence")
+        body = body if (body := root.find(".//body")) is not None else root
+        yield from body.findall("./sentence")
 
     def chunks(self) -> Iterator[list[Sentence]]:
         if self.chunker is None:

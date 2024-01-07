@@ -33,7 +33,8 @@ async def get_chunk(req: Request, slug: str, chunk: str):
     f = CHUNKS / slug / f"{chunk}.xml"
     if not f.exists():
         raise NotFound(f"Unknown document {slug}/{chunk}")
-    tb = PerseusTB(f, None, None)  # type: ignore
+    meta = corpus_index[slug]
+    tb = PerseusTB(f, **meta)
     chunker = getattr(
         import_module("core.treebank.chunker"), corpus_index[slug].chunker
     )

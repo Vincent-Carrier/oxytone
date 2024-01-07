@@ -3,7 +3,6 @@ from functools import singledispatch
 from typing import Any, NamedTuple, assert_never, TypeAlias, no_type_check
 
 import dominate.tags as h
-from dominate.util import raw
 from core.constants import RIGHT_PUNCT
 from core.ref import Ref
 from core.treebank.treebank import Treebank
