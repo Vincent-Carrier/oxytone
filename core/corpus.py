@@ -1,3 +1,4 @@
+from time import time
 from box import Box
 from core.constants import CHUNKS, TREEBANKS
 from core.ref import BCV, CV, Verse
@@ -5,6 +6,8 @@ from core.treebank.perseus import PerseusTB
 
 PERSEUS1 = TREEBANKS / "perseus/1.6"
 PERSEUS2 = TREEBANKS / "perseus/2.1"
+
+start = time()
 
 corpus: dict[str, PerseusTB] = {
     # Homer
@@ -213,6 +216,8 @@ corpus: dict[str, PerseusTB] = {
         genre="Philosophy",
     ),
 }
+
+print(f"init corpus took {time() - start}s")
 
 
 def _get_chunks(slug: str) -> list[int]:
