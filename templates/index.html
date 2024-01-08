@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% import '_entry.html' as entries %}
+{% block title %}
+    Oxytone
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{{ url_for('assets', filename='/index.css') }}" />
@@ -8,7 +11,7 @@
     <header>
         <div class="title">
             <h1>Oxytone</h1>
-            <p>The Bleeding Edge of Ancient Language</p>
+            <p>The Cutting Edge of Ancient Language</p>
         </div>
     </header>
     <img src="{{ url_for('assets', filename='/greek_heroes@0.5x.webp') }}"

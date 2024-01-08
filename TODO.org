@@ -12,5 +12,5 @@
 * DONE Highlight head on hover
 * DONE Add ref and POS tags on Anki notes
 * DONE Fix broken verse numbering
-** Od. 1.270
-** Theogony: Tolerant CV parsing
+* TODO Pin dependencies
+* TODO Memorization mode

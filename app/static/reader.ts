@@ -44,7 +44,7 @@ function* deps(word: HTMLSpanElement, role?: string): Iterable<HTMLSpanElement> 
 	}
 }
 
-const $treebank = document.querySelector('article.treebank')!
+const $treebank = document.querySelector('article.treebank')! as HTMLDivElement
 document.addEventListener('selectionchange', () => {
 	const selection = document.getSelection()
 	if (!selection!.isCollapsed) $treebank.classList.add('selection')

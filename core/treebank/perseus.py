@@ -48,7 +48,6 @@ class PerseusTB(Treebank[T]):
                 break
         if chunker := meta.get("chunker"):
             self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
-        print(self.meta.slug, self.is_verse, self.ref_cls)
 
     def sentences(self) -> Iterator[Sentence]:
         tree = etree.parse(self.filepath)

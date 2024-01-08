@@ -223,12 +223,7 @@ def _get_chunks(slug: str) -> list[int]:
 
 corpus_index = {
     slug: Box(
-        tb.meta
-        | {
-            "chunks": _get_chunks(slug) if tb.meta.get("chunker") else None,
-            # "is_verse": tb.is_verse,
-            # "ref_cls": tb.ref_cls,
-        }
+        tb.meta | {"chunks": _get_chunks(slug) if tb.meta.get("chunker") else None}
     )
     for slug, tb in corpus.items()
 }

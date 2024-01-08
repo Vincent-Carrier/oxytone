@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% block title %}
+    {{ title }}
+    {% if chunk_title %}
+        - {{ chunk_title }}
+    {% else %}
+    {% endif %}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{{ url_for('assets', filename='/reader.css') }}" />

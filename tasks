@@ -8,7 +8,7 @@ if [[ "$VIRTUAL_ENV" != "" ]]; then
 	pipenv shell
 fi
 
-if [[ oxytone != `basename $PWD` ]]; then
+if [[ oxytone != $(basename "$PWD") ]]; then
 	exit 1
 fi
 
@@ -21,6 +21,10 @@ install_deps() {
 init() {
 	install_deps &&
 	script seed & script chunkup & wait
+}
+
+assets() {
+	css & js & wait
 }
 
 css() {
@@ -43,10 +47,9 @@ app() {
 
 watch() {
 	css --watch &
-	# watchmedo shell-command -p "*.ts" -c js -W $static &
-	js --watch=forever &
+	watchmedo shell-command -p "*.ts" -c './tasks js' -W $static &
 	browsersync &
-	app "$@"
+	app --debug "$@"
 }
 
 test() {
@@ -77,6 +80,7 @@ sync_fs() {
 
 deploy() {
 	install_deps
+	assets
 	app
 }
 

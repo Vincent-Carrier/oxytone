@@ -5,6 +5,7 @@ node_modules/
 .git/
 .pytest_cache/
 __pycache__/
+.mypy_cache/
 .vscode/
 tests/
 data/treebanks/augmented/*
@@ -18,4 +19,3 @@ scratch.ipynb
 .shellcheckrc
 .prettierrc
 .tank.fish
-.rsyncignore

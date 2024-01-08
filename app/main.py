@@ -14,8 +14,7 @@ def create_app(dev: bool) -> Sanic:
     app.blueprint(index_bp)
     app.blueprint(read_bp)
     app.blueprint(flashcards_bp)
-    if dev:
-        app.static("/", STATIC, name="assets")
+    app.static("/", STATIC, name="assets")
     return app
 
 

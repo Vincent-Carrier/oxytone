@@ -1,16 +1,18 @@
 import ky from 'ky'
 import flagsToString from './flagsToString'
+import { $, $$, $id } from './utils'
 
-const $def = document.getElementById('def')!
-const $flags = document.getElementById('flags')!
-const $lemma = document.getElementById('lemma')!
-
-const $export = document.getElementById('export')! as HTMLButtonElement
-const $selectedCount = document.getElementById('selected-count')!
+const $def = $id('def'),
+	$flags = $id('flags'),
+	$lemma = $id('lemma'),
+	$export = $id<HTMLButtonElement>('export'),
+	$selectedCount = $id('selected-count'),
+	$treebank = $('article.treebank'),
+	slug = $treebank.id
 
 let selectedCount = 0
 
-document.querySelectorAll('[data-lemma]').forEach(el => {
+$$('[data-lemma]').forEach(el => {
 	el.addEventListener('mouseenter', ev => {
 		const el = ev.target as HTMLSpanElement
 		const { dataset: d } = el
@@ -19,31 +21,21 @@ document.querySelectorAll('[data-lemma]').forEach(el => {
 		$flags.innerHTML = flagsToString(d.flags)
 		$lemma.innerHTML = d.lemma ?? ''
 	})
-	el.addEventListener('mouseleave', ev => {
-		const span = ev.target as HTMLSpanElement
-		// TODO
-	})
-
 	el.addEventListener('mousedown', ev => {
 		const span = ev.target as HTMLSpanElement
 		span.classList.toggle('selected')
-		selectedCount = document.querySelectorAll('.selected').length
+		selectedCount = $$('.selected').length
 		$selectedCount.innerText = selectedCount > 0 ? `${selectedCount} selected` : ''
 		$export.disabled = selectedCount <= 0
 	})
 })
-
-function $$<E extends Element>(selector: string) {
-	return Array.from(document.querySelectorAll<E>(selector))
-}
 
 $export.onclick = async function exportFlashcards() {
 	const words = $$<HTMLSpanElement>('.selected').map(el => ({
 		lemma: el.dataset.lemma,
 		definition: el.dataset.def ?? '',
 	}))
-	const title = document.getElementById('title')!.innerText
-	// const slug = ...
-	const res: any = await ky.post('/flashcards', { json: { title, words } }).json()
-	window.location.href = `/flashcards/${res.filename}`
+	const title = $id('title')!.innerText
+	const res = await ky.post('/flashcards', { json: { title, slug, words } })
+	location.href = res.headers.get('Location')!
 }

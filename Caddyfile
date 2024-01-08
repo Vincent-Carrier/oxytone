@@ -1,4 +1,14 @@
-localhost {
+{
+	order cache before rewrite
+	cache
+}
+
+:80, oxytone.xyz {
+	encode gzip
+	cache {
+		ttl 28800s # 8 hours
+	}
+
 	route {
 		file_server /assets {
 			root ./app/static
@@ -6,4 +16,8 @@ localhost {
 		}
 		reverse_proxy localhost:8000
 	}
+}
+
+oxytone.xyz {
+	tls vincentcarrier@icloud.com
 }

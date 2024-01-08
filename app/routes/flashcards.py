@@ -1,7 +1,7 @@
 from time import time
 from typing import cast
 from box import Box
-from sanic import Blueprint, Request, json, file
+from sanic import Blueprint, HTTPResponse, Request, json, file
 from genanki import Note, Deck, BASIC_MODEL
 
 from core.constants import TMP
@@ -19,14 +19,13 @@ async def flashcards(req: Request):
         note = Note(
             BASIC_MODEL,
             fields=[word.lemma, word.definition],
-            tags=[word.pos],
         )
         deck.add_note(note)
-    f = f"{r.slug}-{time():8}.apkg"
+    f = f"{r.slug}-{time()}.apkg"
     deck.write_to_file(TMP / f)
-    return json({"filename": f})
+    return HTTPResponse(status=201, headers={"Location": f"/flashcards/{f}"})
 
 
 @bp.get("/<f>")
 async def download_deck(req: Request, f: str):
-    return file(TMP / f, filename=f)
+    return await file(TMP / f, filename=f)
