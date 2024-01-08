@@ -3,10 +3,7 @@
 
 static=app/static
 port=8000
-
-if [[ "$VIRTUAL_ENV" != "" ]]; then
-	pipenv shell
-fi
+py="pipenv run"
 
 if [[ oxytone != $(basename "$PWD") ]]; then
 	exit 1
@@ -42,22 +39,22 @@ browsersync() {
 }
 
 app() {
-	sanic app.main "$@"
+	$py sanic app.main "$@"
 }
 
 watch() {
 	css --watch &
-	watchmedo shell-command -p "*.ts" -c './tasks js' -W $static &
+	$py watchmedo shell-command -p "*.ts" -c './tasks js' -W $static &
 	browsersync &
 	app --debug "$@"
 }
 
 test() {
-	pytest "$@"
+	$py pytest "$@"
 }
 
 format() {
-	black . "$@"
+	$py black . "$@"
 }
 
 export_static() {
@@ -70,7 +67,7 @@ test_e2e() {
 }
 
 script() {
-	python -m scripts."$1"
+	$py python -m scripts."$1"
 }
 
 sync_fs() {

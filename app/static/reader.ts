@@ -19,7 +19,7 @@ function highlightGroup(role: string, className: string) {
 			$el.classList.add('hovered')
 			if (some(['PRED', 'ADV', 'ATR'], role => data.role?.startsWith(role))) {
 				hlGroup = [...deps($el, role)]
-				hlGroup.forEach(el => el.classList.add('hl', className))
+				hlGroup.forEach($el => $el.classList.add('hl', className))
 			}
 		},
 		mouseleave($el) {
@@ -27,7 +27,7 @@ function highlightGroup(role: string, className: string) {
 				$head = $el.closest('.sentence')?.querySelector(`[data-head="${data.id}"]`)
 			$el.classList.remove('hovered')
 			$head?.classList.remove('head')
-			hlGroup.forEach(el => el.classList.remove('hl', className))
+			hlGroup.forEach($el => $el.classList.remove('hl', className))
 		},
 	})
 }

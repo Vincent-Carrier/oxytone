@@ -30,9 +30,9 @@ $$on('[data-lemma]', {
 })
 
 $export.onclick = async function exportFlashcards() {
-	const words = $$('.selected').map(el => ({
-		lemma: el.dataset.lemma,
-		definition: el.dataset.def ?? '',
+	const words = $$('.selected').map($el => ({
+		lemma: $el.dataset.lemma,
+		definition: $el.dataset.def ?? '',
 	}))
 	const res = await ky.post('/flashcards', { json: { title, slug, words } })
 	location.href = res.headers.get('Location')!

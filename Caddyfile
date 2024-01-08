@@ -3,7 +3,8 @@
 	cache
 }
 
-:80, oxytone.xyz {
+oxytone.xyz {
+	tls vincentcarrier@icloud.com
 	encode gzip
 	cache {
 		ttl 28800s # 8 hours
@@ -16,8 +17,4 @@
 		}
 		reverse_proxy localhost:8000
 	}
-}
-
-oxytone.xyz {
-	tls vincentcarrier@icloud.com
 }
