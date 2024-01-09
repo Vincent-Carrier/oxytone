@@ -1,6 +1,6 @@
-import { some } from 'lodash-es'
 import { $, $$on } from './_dom.ts'
-import { deps } from './_select.ts'
+import { argument, head, isVerb } from './_selectWords.ts'
+import { Span } from './_types.ts'
 
 import './flashcards.ts'
 import './memorize.ts'
@@ -13,28 +13,25 @@ document.addEventListener('selectionchange', () => {
 	else $treebank.classList.remove('selection')
 })
 
-function highlightGroup(role: string, className: string) {
-	let hlGroup: HTMLSpanElement[] = []
-	$$on('[data-head]', {
-		pointerenter($el) {
-			const data = $el.dataset,
-				$head = $el.closest('.sentence')?.querySelector(`[data-head="${data.id}"]`)
-			$head?.classList.add('head')
-			$el.classList.add('hovered')
-			if (some(['PRED', 'ADV', 'ATR'], role => data.role?.startsWith(role))) {
-				hlGroup = [...deps($el, role)]
-				hlGroup.forEach($el => $el.classList.add('hl', className))
-			}
-		},
-		mouseleave($el) {
-			const data = $el.dataset,
-				$head = $el.closest('.sentence')?.querySelector(`[data-head="${data.id}"]`)
-			$el.classList.remove('hovered')
-			$head?.classList.remove('head')
-			hlGroup.forEach($el => $el.classList.remove('hl', className))
-		},
-	})
-}
+$$on('[data-id]', {
+	pointerenter($w) {
+		const $head = head($w)
+		$head?.classList.add('head')
+		if (isVerb($w)) {
+			this.dobjOff = highlightArguments($w, 'dobj', 'OBJ')
+			this.subjOff = highlightArguments($w, 'subj', 'SBJ')
+		}
+	},
+	mouseleave($w) {
+		const $head = head($w)
+		$head?.classList.remove('head')
+		this.subjOff?.()
+		this.dobjOff?.()
+	},
+})
 
-highlightGroup('SBJ', 'subj')
-highlightGroup('OBJ', 'dobj')
+function highlightArguments($verb: Span, className: string, ...roles: string[]) {
+	const $args = Array.from(argument($verb, className, ...roles))
+	$args.forEach($a => $a.classList.add('hl', className))
+	return () => $args.forEach($a => $a.classList.remove('hl', className))
+}

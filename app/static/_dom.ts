@@ -1,22 +1,19 @@
-export function $id<E extends HTMLElement = HTMLDivElement>(id: string): E {
+export function $id<E extends HTMLElement = Div>(id: string): E {
 	return document.getElementById(id) as E
 }
 
-export function $<E extends HTMLElement = HTMLDivElement>(
-	selector: string,
-	root: ParentNode = document
-): E {
+export function $<E extends HTMLElement = Div>(selector: string, root: ParentNode = document): E {
 	return root.querySelector<E>(selector)!
 }
 
-export function $$<E extends HTMLElement = HTMLDivElement>(
+export function $$<E extends HTMLElement = Div>(
 	selector: string,
 	root: ParentNode = document
 ): E[] {
 	return Array.from(root.querySelectorAll<E>(selector))
 }
 
-export function $$on<E extends HTMLElement = HTMLDivElement>(
+export function $$on<E extends HTMLElement = Div>(
 	selector: string,
 	listeners: Record<string, (el: E) => void>,
 	root: ParentNode = document

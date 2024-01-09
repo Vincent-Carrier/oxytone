@@ -43,13 +43,13 @@
 		@include text(sky(600));
 	}
 	&.dative {
-		@include text(pink(600));
+		@include text(yellow(600));
 	}
 	&.genitive {
 		@include text(violet(600));
 	}
 	&.vocative {
-		@include text(yellow(600));
+		@include text(pink(600));
 	}
 	&.subj {
 		@include highlight(emerald(100));
