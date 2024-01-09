@@ -1,0 +1,40 @@
+@use 'theme' as *;
+
+button,
+.button {
+	@include flex-x(1, $align-items: center);
+	@include font(sans, bold);
+	@include text($size: xs);
+	@include box($px: 2, $py: 1);
+	@include surface(stone(300), 1px stone(500) solid, $rounded: md);
+
+	@include media(sm) {
+		label,
+		.label {
+			display: none;
+		}
+	}
+
+	* {
+		cursor: pointer;
+	}
+	&:hover:not(:disabled) {
+		@include surface(stone(200));
+		border-color: stone(400);
+	}
+	&:active {
+		@include surface(stone(400));
+	}
+	&:disabled {
+		@include text(stone(500));
+		border: 1px transparent solid;
+	}
+	svg {
+		@include box(4, 4);
+	}
+
+	&.ghost {
+		border: none;
+		@include surface(transparent);
+	}
+}

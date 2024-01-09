@@ -3,7 +3,7 @@
 	cache
 }
 
-oxytone.xyz {
+oxytone.xyz, www.oxytone.xyz {
 	tls vincentcarrier@icloud.com
 	encode gzip
 	cache {

@@ -1,13 +1,9 @@
 @use 'theme' as *;
-
-nav {
-	@include box($pl: 8, $my: 4);
-	@include font(sans, bold);
-	@include text(stone(500));
-}
+@use 'components';
+@use './bars';
 
 header {
-	@include box($pl: 8, $mb: 8);
+	@include box($pl: 8, $mt: 4, $mb: 6);
 	line-height: 1;
 	#author {
 		@include font(sans);
@@ -58,7 +54,6 @@ article {
 		@include surface($rounded: sm);
 		@extend .color-coding;
 	}
-
 	.subdoc {
 		padding-right: len(2);
 	}
@@ -85,60 +80,6 @@ article {
 			display: inline-block;
 			@include box($px: 2);
 			@include text(stone(300));
-		}
-	}
-}
-
-.bottom-bar {
-	@include inset($b: 0, $x: 0);
-	@include box($h: 12);
-	@include surface(stone(100));
-	@extend .main-grid;
-	border-top: 2px solid stone(200);
-	& #center {
-		@include box($pr: 8);
-		@include flex-x(4, space-between);
-		@extend .grid-center;
-	}
-
-	.help {
-		@include box($px: 8, $py: 1);
-		line-height: 1;
-		& #lemma {
-			display: inline-block;
-			@include box($pr: 1);
-			@include text(stone(700), md);
-			@include font($wght: bold);
-		}
-		& #flags {
-			@include font($style: italic);
-			@include text(stone(500), xs);
-		}
-		& #def {
-			@include font(sans);
-			@include text(stone(600), sm);
-		}
-	}
-
-	.selected-words {
-		@include media(sm) {
-			display: none;
-		}
-		@include flex-x(4, flex-end, baseline);
-		& #selected-count {
-			@include font(sans);
-			@include text(stone(700), $size: sm);
-			white-space: nowrap;
-		}
-		& button#export {
-			@include font(sans, bold);
-			@include text($size: sm);
-			@include box($px: 2, $py: 1, $my: 2);
-			@include surface(stone(300), 2px stone(400) solid, $rounded: md);
-			&:disabled {
-				@include text(stone(500));
-				border: 2px transparent solid;
-			}
 		}
 	}
 }

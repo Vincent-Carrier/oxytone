@@ -12,24 +12,40 @@
     <script src="{{ url_for('assets', filename='/reader.js') }}" type="module"></script>
 {% endblock head %}
 {% block body_start %}
+    <div class="top-bar">
+        <div class="center">
+            <nav>
+                <a class="button ghost"
+                   id="back"
+                   href="{{ url_for("index.get_index") }}">
+                    {% include "icons/heroicons:arrow-long-left-16-solid.svg" %}
+                    <span class="label">Go Back</span>
+                </a>
+            </nav>
+            <div class="flashcards">
+                <button id="export" disabled>
+                    {% include "icons/heroicons:arrow-down-circle.svg" %}
+                    <label>Flashcards</label>
+                    <span id="selected-count" />
+                </button>
+            </div>
+            <button id="memorize">
+                {% include "icons/heroicons:academic-cap.svg" %}
+                <label>Memorize</label>
+            </button>
+        </div>
+    </div>
     <div class="bottom-bar">
-        <div id="center">
+        <div class="center">
             <div class="help">
                 <span id="lemma"></span>
                 <span id="flags"></span>
                 <div id="def"></div>
             </div>
-            <div class="selected-words">
-                <div id="selected-count"></div>
-                <button id="export" disabled>Export</button>
-            </div>
         </div>
     </div>
 {% endblock body_start %}
 {% block content %}
-    <nav>
-        <a href="{{ url_for("index.get_index") }}">⬅ &nbsp; Go Back</a>
-    </nav>
     <header>
         <p id="author">{{ author }}</p>
         <h1>

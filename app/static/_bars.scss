@@ -1,0 +1,63 @@
+@use 'theme' as *;
+
+.top-bar,
+.bottom-bar {
+	@include inset($x: 0);
+	@include surface(stone(100));
+	@extend .main-grid;
+	& > .center {
+		@include box($px: 8);
+		@include flex-x(4, $align-items: center);
+		@extend .grid-center;
+	}
+}
+
+.top-bar {
+	@include inset($t: 0);
+	@include box($h: 10);
+	border-bottom: 2px solid stone(200);
+	position: sticky;
+
+	nav {
+		#back.button {
+			@include box($pl: 0);
+			@include font(sans, bold);
+			@include text(stone(500), md);
+			white-space: nowrap;
+			svg {
+				padding-bottom: 2px;
+			}
+		}
+	}
+	.flashcards {
+		@include flex-x(4, flex-end, baseline);
+		flex-grow: 1;
+		justify-self: end;
+	}
+}
+
+.bottom-bar {
+	@include inset($b: 0);
+	@include box($h: 12);
+	@extend .main-grid;
+	border-top: 2px solid stone(200);
+
+	.help {
+		@include box($h: 10);
+		line-height: 1;
+		& #lemma {
+			display: inline-block;
+			@include box($pr: 1);
+			@include text(stone(700), md);
+			@include font($wght: bold);
+		}
+		& #flags {
+			@include font($style: italic);
+			@include text(stone(500), xs);
+		}
+		& #def {
+			@include font(sans);
+			@include text(stone(600), sm);
+		}
+	}
+}

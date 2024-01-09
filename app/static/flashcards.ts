@@ -1,6 +1,6 @@
 import ky from 'ky'
-import flagsToString from './flagsToString'
-import { $, $$, $$on, $id } from './utils'
+import { $, $$, $$on, $id } from './_dom'
+import flagsToString from './_flagsToString'
 
 const $def = $id('def'),
 	$flags = $id('flags'),
@@ -24,7 +24,7 @@ $$on('[data-lemma]', {
 	mousedown(el) {
 		el.classList.toggle('selected')
 		selectedCount = $$('.selected').length
-		$selectedCount.innerText = selectedCount > 0 ? `${selectedCount} selected` : ''
+		$selectedCount.innerText = selectedCount > 0 ? `(${selectedCount})` : ''
 		$export.disabled = selectedCount <= 0
 	},
 })

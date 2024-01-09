@@ -1,8 +1,12 @@
-import some from 'lodash-es/some'
-import './flashcards'
-import { $, $$on } from './utils'
+import { some } from 'lodash-es'
+import { $, $$on } from './_dom.ts'
+import { deps } from './_select.ts'
+
+import './flashcards.ts'
+import './memorize.ts'
 
 const $treebank = $('article.treebank')
+
 document.addEventListener('selectionchange', () => {
 	const selection = document.getSelection()
 	if (!selection!.isCollapsed) $treebank.classList.add('selection')
@@ -34,18 +38,3 @@ function highlightGroup(role: string, className: string) {
 
 highlightGroup('SBJ', 'subj')
 highlightGroup('OBJ', 'dobj')
-
-function* deps(word: HTMLSpanElement, role?: string): Iterable<HTMLSpanElement> {
-	const ds: HTMLSpanElement[] = Array.from(
-		word.closest('.sentence')!.querySelectorAll(`[data-head="${word.dataset.id}"]`)
-	)
-	for (let d of ds) {
-		if (d.role == 'COORD') {
-			yield* deps(d, role)
-		}
-		if (role ? d.dataset.role?.startsWith(role) : true) {
-			yield d
-			yield* deps(d)
-		}
-	}
-}
