@@ -75,9 +75,17 @@ export class Token extends Base(HTMLElement) {
 		return some(roles, r => this.role?.startsWith(r))
 	}
 
+	toggleMemorize(show: boolean) {
+		const first = this.innerText[0],
+			rest = this.innerText.slice(1)
+		if (show) this.innerHTML = this.innerText
+		else this.innerHTML = `<span>${first}</span><span style="color: transparent">${rest}</span>`
+	}
+
 	get isVerb(): boolean {
 		return this.isRole('PRED', 'ATR', 'ADV')
 	}
+
 	get morphology(): string {
 		return decodeFlags(this.flags)
 	}

@@ -1,3 +1,4 @@
+import { Token } from '@/components/word.ts'
 import decodeFlags from '@/lib/flags.ts'
 import { Div } from '@/lib/types.ts'
 import { Base } from './baseElement.ts'
@@ -7,7 +8,7 @@ export class BottomBar extends Base(HTMLElement) {
 	$def: Div
 	$flags: Div
 
-	set word(w) {
+	set word(w: Token) {
 		this.$lemma.innerText = w.lemma
 		this.$def.innerText = w.def
 		this.$flags.innerHTML = decodeFlags(w.flags)
