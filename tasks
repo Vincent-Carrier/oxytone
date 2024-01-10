@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+src=app/src
 static=app/static
 port=8000
 py="pipenv run"
@@ -25,16 +25,16 @@ assets() {
 }
 
 css() {
-	npx sass -Inode_modules $static:$static --update "$@"
+	npx sass -Inode_modules $src:$static --update "$@"
 }
 
 js() {
-	npx esbuild $static/reader.ts --outdir=$static \
+	npx esbuild $src/reader.ts --outdir=$static \
 		--bundle --target=es2020 --sourcemap "$@"
 }
 
 browsersync() {
-	npx browser-sync start -w -f app/** \
+	npx browser-sync start -w -f app/static/** templates/** \
 		--proxy "localhost:$port" --no-open "$@"
 }
 
@@ -44,7 +44,7 @@ app() {
 
 watch() {
 	css --watch &
-	$py watchmedo shell-command -p "*.ts" -c './tasks js' -W $static &
+	$py watchmedo shell-command -p "*.ts" -c './tasks js' -W $src &
 	browsersync &
 	app --debug "$@"
 }

@@ -1,7 +1,7 @@
 @use 'theme' as *;
 
 .top-bar,
-.bottom-bar {
+bottom-bar {
 	@include inset($x: 0);
 	@include surface(stone(100));
 	@extend .main-grid;
@@ -36,7 +36,7 @@
 	}
 }
 
-.bottom-bar {
+bottom-bar {
 	@include inset($b: 0);
 	@include box($h: 12);
 	@extend .main-grid;

@@ -24,14 +24,13 @@
 
 @mixin highlight($color) {
 	@include surface($color);
-	outline: $color solid 4px;
+	box-shadow: 0 0 0 2px $color;
 }
 
 .color-coding {
-	@include surface($rounded: sm);
-	&:hover {
-		@include surface(slate(100));
-		outline: 4px slate(100) solid;
+	&:hover,
+	&.hl {
+		@include highlight(stone(200, 0.8));
 	}
 	&.verb {
 		@include font($wght: 700);
@@ -56,6 +55,9 @@
 	}
 	&.dobj {
 		@include highlight(sky(100));
+		&.dative {
+			@include highlight(yellow(100));
+		}
 	}
 	&.selected {
 		text-decoration: underline;

@@ -1,28 +1,23 @@
+import { BottomBar } from '@/components/bottomBar.ts'
+import { $, $$, $id, $on } from '@/lib/dom.ts'
 import ky from 'ky'
-import { $, $$, $$on, $id } from './_dom'
-import flagsToString from './_flagsToString'
 
-const $def = $id('def'),
-	$flags = $id('flags'),
-	$lemma = $id('lemma'),
-	$export = $id<HTMLButtonElement>('export'),
+const $export = $id<HTMLButtonElement>('export'),
 	$selectedCount = $id('selected-count'),
 	$treebank = $('article.treebank'),
+	$bottomBar = $<BottomBar>('bottom-bar'),
 	title = $id('title')!.innerText,
 	slug = $treebank.id
 
 let selectedCount = 0
 
-$$on('[data-lemma]', {
-	mouseenter(el) {
-		const data = el.dataset
-		if (el.classList.contains('punct')) return
-		$def.innerHTML = data.def ?? ''
-		$flags.innerHTML = flagsToString(data.flags)
-		$lemma.innerHTML = data.lemma ?? ''
+$on('[data-lemma]', {
+	mouseenter($el) {
+		if ($el.classList.contains('punct')) return
+		$bottomBar.word = $el.dataset
 	},
-	mousedown(el) {
-		el.classList.toggle('selected')
+	mousedown($el) {
+		$el.classList.toggle('selected')
 		selectedCount = $$('.selected').length
 		$selectedCount.innerText = selectedCount > 0 ? `(${selectedCount})` : ''
 		$export.disabled = selectedCount <= 0

@@ -1,6 +1,6 @@
+import { $inVerticalView } from '@/lib/dom.ts'
+import { Span } from '@/lib/types.ts'
 import { some } from 'lodash-es'
-import { $inVerticalView } from './_dom.ts'
-import { Span } from './_types.ts'
 
 export function* wordsInView() {
 	let prevInView: boolean | undefined
@@ -18,11 +18,11 @@ export function head($w: Span): Span | null | undefined {
 	return $head ? $sentence?.querySelector(`[data-id="${$head}"]`) : null
 }
 
-export function* ancestors($w: Span): Iterable<Span> {
+export function* headUp($w: Span): Iterable<Span> {
 	const $head = head($w)
 	if (!$head) return
 	yield $head
-	yield* ancestors($head)
+	yield* headUp($head)
 }
 
 export function* children($w: Span, opts?: { include?: string[]; exclude?: string[] }) {
@@ -35,7 +35,7 @@ export function* children($w: Span, opts?: { include?: string[]; exclude?: strin
 	}
 }
 
-export function* descendants(
+export function* dependents(
 	$w: Span,
 	opts?: { include?: string[]; exclude?: string[] }
 ): Iterable<Span> {
@@ -43,12 +43,12 @@ export function* descendants(
 		if (opts?.exclude && isRole($child, ...opts.exclude)) continue
 		if (opts?.include && !isRole($child, ...opts.include)) continue
 		yield $child
-		yield* descendants($child)
+		yield* dependents($child)
 	}
 }
 
 export function verb($w: Span): Span | undefined {
-	for (const $a of ancestors($w)) {
+	for (const $a of headUp($w)) {
 		if (isVerb($w)) return $a
 	}
 }
