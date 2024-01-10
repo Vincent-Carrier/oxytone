@@ -44,7 +44,7 @@ app() {
 
 watch() {
 	css --watch &
-	$py watchmedo shell-command -p "*.ts" -c './tasks js' -W $src &
+	js --watch=forever &
 	browsersync &
 	app --debug "$@"
 }
@@ -83,7 +83,7 @@ deploy() {
 
 clean() {
 	rm -f data/lsj.db
-	rm -rf ${static}/**.{css,css.map,js,js.map}
+	rm -rf $static/**.{css,css.map,js,js.map}
 	rm -rf data/treebanks/chunks/**
 	rm -rf tmp/**
 	rm -rf build/**

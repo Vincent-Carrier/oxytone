@@ -6,7 +6,9 @@
 				"./*"
 			]
 		},
+		"moduleResolution": "NodeNext",
 		"allowImportingTsExtensions": true,
-		"noEmit": true
+		"noEmit": true,
+		"target": "ES2022"
 	}
 }

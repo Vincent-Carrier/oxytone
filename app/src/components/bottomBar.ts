@@ -1,7 +1,8 @@
-import { Div } from '@/lib/types'
-import { BaseElement } from './baseElement'
+import decodeFlags from '@/lib/flags.ts'
+import { Div } from '@/lib/types.ts'
+import { Base } from './baseElement.ts'
 
-export class BottomBar extends BaseElement {
+export class BottomBar extends Base(HTMLElement) {
 	$lemma: Div
 	$def: Div
 	$flags: Div
@@ -9,6 +10,7 @@ export class BottomBar extends BaseElement {
 	set word(w) {
 		this.$lemma.innerText = w.lemma
 		this.$def.innerText = w.def
+		this.$flags.innerHTML = decodeFlags(w.flags)
 	}
 
 	connectedCallback() {
