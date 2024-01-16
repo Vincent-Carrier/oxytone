@@ -32,11 +32,6 @@ bottom-bar {
 			}
 		}
 	}
-	flashcards {
-		@include flex-x(4, flex-end, baseline);
-		flex-grow: 1;
-		justify-self: end;
-	}
 }
 
 bottom-bar {

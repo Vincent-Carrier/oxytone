@@ -91,25 +91,4 @@ footer {
 			@include box($mt: 2);
 		}
 	}
-	a {
-		@include text(slate(700));
-		text-decoration: underline;
-		text-decoration-thickness: 1px;
-	}
-	.legend {
-		@include box($my: 2);
-		@include font(sans);
-		@include text(stone(600), sm, $align: center);
-		.cases {
-			@include flex-x(2, center);
-		}
-		.roles {
-			@include box($mt: 2);
-			@include flex-x(4, center);
-		}
-		flex-wrap: wrap;
-		* {
-			@extend .color-coding;
-		}
-	}
 }

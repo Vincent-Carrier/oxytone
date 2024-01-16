@@ -1,9 +1,10 @@
-import { BaseElement, attr, register } from '@/components/baseElement.js'
-import { BottomBar } from '@/components/bottomBar.js'
+import BottomBar from '@/components/bottomBar.js'
+import FlashcardsButton from '@/components/flashcardsButton.js'
+import { CustomElement, attr, register } from '@/lib/baseElement.js'
 import { $, $$, $id, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
-const $export = $id<HTMLButtonElement>('export'),
+const $flashcards = $<FlashcardsButton>('[is=flashcards-btn]'),
 	$selectedCount = $id('selected-count'),
 	$bottomBar = $<BottomBar>('bottom-bar')
 
@@ -11,7 +12,7 @@ let selectedCount = 0,
 	timeout
 
 @register('w-token')
-export class Token extends BaseElement(HTMLElement) {
+export default class Token extends CustomElement {
 	@attr(Number) accessor n: number
 	@attr(Number) accessor head: number
 	@attr() accessor definition: string
@@ -21,16 +22,11 @@ export class Token extends BaseElement(HTMLElement) {
 	@attr() accessor case: string
 	off: { [k: string]: () => void } = {}
 
-	$onmousedown() {
+	$onpointerdown() {
 		this.classList.toggle('selected')
 		selectedCount = $$('.selected').length
 		$selectedCount.innerText = selectedCount > 0 ? `(${selectedCount})` : ''
-		$export.disabled = selectedCount <= 0
-	}
-
-	$onmouseenter() {
-		if (this.classList.contains('punct')) return
-		$bottomBar.word = this
+		$flashcards.disabled = selectedCount <= 0
 	}
 
 	$pointerenter() {
@@ -42,6 +38,9 @@ export class Token extends BaseElement(HTMLElement) {
 			}
 			this.off.dependents = highlight(this.dependents(), 'hl')
 		}, 100)
+
+		if (this.classList.contains('punct')) return
+		$bottomBar.word = this
 	}
 
 	$pointerleave() {

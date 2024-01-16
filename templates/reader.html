@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 {% block title %}
     {{ title }}
-    {% if chunk_title %}
-        - {{ chunk_title }}
-    {% else %}
-    {% endif %}
+    {{ "- %s" % chunk_title if chunk_title }}
 {% endblock title %}
 {% block head %}
     <link rel="stylesheet"
@@ -13,43 +10,7 @@
             type="module"></script>
 {% endblock head %}
 {% block body_start %}
-    <div class="top-bar">
-        <div class="center">
-            <nav>
-                <a class="button ghost"
-                   id="back"
-                   href="{{ url_for("index.get_index") }}">
-                    {% include "icons/heroicons:arrow-long-left-16-solid.svg" %}
-                    <span class="label">Go Back</span>
-                </a>
-            </nav>
-            <div class="grow"></div>
-            <flashcards-button class="button" disabled>
-            {% include "icons/heroicons:arrow-down-circle.svg" %}
-            <label>Flashcards</label>
-            <span id="selected-count" />
-            </flashcards-button>
-            <memorize-button class="button">
-            {% include "icons/heroicons:academic-cap.svg" %}
-            <label>Memorize</label>
-            </memorize-button>
-        </div>
-    </div>
-    <bottom-bar>
-    <div class="center">
-        <div class="left">
-            <span id="lemma"></span>
-            <span id="flags"></span>
-            <div id="def"></div>
-        </div>
-        <div class="right">
-            <a id="lsj" class="button ghost" target="_blank">
-                {% include "icons/heroicons:arrow-top-right-on-square-16-solid.svg" %}
-                <span class="label">LSJ</span>
-            </a>
-        </div>
-    </div>
-    </bottom-bar>
+    {% include "_toolbars.html" %}
 {% endblock body_start %}
 {% block content %}
     <header>

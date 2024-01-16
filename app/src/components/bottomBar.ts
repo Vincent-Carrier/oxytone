@@ -1,9 +1,9 @@
-import { Token } from '@/components/token.js'
+import Token from '@/components/token.js'
+import { CustomElement, register, select } from '@/lib/baseElement.js'
 import decodeFlags from '@/lib/flags.js'
-import { BaseElement, register, select } from './baseElement.js'
 
 @register('bottom-bar')
-export class BottomBar extends BaseElement(HTMLElement) {
+export default class BottomBar extends CustomElement {
 	@select('#lemma') accessor $lemma: HTMLDivElement
 	@select('#def') accessor $def: HTMLDivElement
 	@select('#flags') accessor $flags: HTMLDivElement

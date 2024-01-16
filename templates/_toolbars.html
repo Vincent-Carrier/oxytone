@@ -1,0 +1,37 @@
+<div class="top-bar">
+    <div class="center">
+        <nav>
+            <a class="button ghost"
+               id="back"
+               href="{{ url_for("index.get_index") }}">
+                {% include "icons/heroicons:arrow-long-left-16-solid.svg" %}
+                <span class="label">Go Back</span>
+            </a>
+        </nav>
+        <div class="grow"></div>
+        <button is="flashcards-btn" disabled>
+            {% include "icons/heroicons:arrow-down-circle.svg" %}
+            <label>Flashcards</label>
+            <span id="selected-count" />
+        </button>
+        <button is="memorize-btn">
+            {% include "icons/heroicons:academic-cap.svg" %}
+            <label>Memorize</label>
+        </button>
+    </div>
+</div>
+<bottom-bar>
+<div class="center">
+    <div class="left">
+        <span id="lemma"></span>
+        <span id="flags"></span>
+        <div id="def"></div>
+    </div>
+    <div class="right">
+        <a id="lsj" class="button ghost" target="_blank">
+            {% include "icons/heroicons:arrow-top-right-on-square-16-solid.svg" %}
+            <span class="label">LSJ</span>
+        </a>
+    </div>
+</div>
+</bottom-bar>
