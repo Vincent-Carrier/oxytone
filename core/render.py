@@ -24,8 +24,10 @@ def _(w: Word) -> _Element | str:
     el = Element(
         "w-token",
         filter_none(
-            token_id=str(w.id),
-            head=str(w.head),
+            **{
+                "token-id": str(w.id),
+                "head-id": str(w.head),
+            },
             lemma=w.lemma,
             flags=w.flags,
             role=w.role,

@@ -1,3 +1,4 @@
+import { identity, kebabCase } from 'lodash-es';
 export function BaseElement(superClass) {
     return class extends superClass {
         connectedCallback() {
@@ -12,19 +13,23 @@ export function BaseElement(superClass) {
         $$(selector) {
             return Array.from(this.querySelectorAll(selector));
         }
-        on(listeners) {
-            for (const event in listeners) {
-                this.addEventListener(event, ev => listeners[event](ev.target));
-            }
-        }
     };
 }
 export function register(name) {
     return (target, ctx) => {
         ctx.addInitializer(function () {
-            //@ts-ignore
             customElements.define(name, this);
         });
+    };
+}
+export function attr(convert = identity) {
+    return function (val, ctx) {
+        const key = kebabCase(ctx.name);
+        return {
+            get() {
+                return convert(this.attributes[key]?.value);
+            },
+        };
     };
 }
 //# sourceMappingURL=baseElement.js.map

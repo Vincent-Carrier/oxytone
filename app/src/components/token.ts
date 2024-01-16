@@ -1,4 +1,4 @@
-import { BaseElement, register } from '@/components/baseElement.js'
+import { BaseElement, attr, register } from '@/components/baseElement.js'
 import { $$, $id, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 import { some } from 'lodash-es'
@@ -11,13 +11,13 @@ let selectedCount = 0,
 
 @register('w-token')
 export class Token extends BaseElement(HTMLElement) {
-	// @attr(number) tokenId: number
-	headId: number
-	lemma: string
-	flags: string
-	def?: string
-	grammarRole?: string
-	case?: string
+	@attr(Number) accessor tokenId: number
+	@attr(Number) accessor headId: number
+	@attr() accessor definition: string
+	@attr() accessor lemma: string
+	@attr() accessor flags: string
+	@attr() accessor role: string
+	@attr() accessor case: string
 
 	$onmousedown() {
 		this.classList.toggle('selected')
@@ -33,8 +33,7 @@ export class Token extends BaseElement(HTMLElement) {
 
 	$pointerenter() {
 		timeout = setTimeout(() => {
-			const $head = this.head()
-			$head?.classList.add('head')
+			this.head?.classList.add('head')
 			if (this.isVerb()) {
 				this.subjOff = highlight(this.argument('SBJ'), 'subj')
 				this.dobjOff = highlight(this.argument('OBJ'), 'dobj')
@@ -45,8 +44,7 @@ export class Token extends BaseElement(HTMLElement) {
 
 	$pointerleave() {
 		clearTimeout(timeout)
-		const $head = this.head
-		$head?.classList.remove('head')
+		this.head?.classList.remove('head')
 		this.subjOff?.()
 		this.dobjOff?.()
 		this.dependentsOff?.()

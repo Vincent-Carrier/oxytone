@@ -32,7 +32,7 @@ var __runInitializers = (this && this.__runInitializers) || function (thisArg, i
     }
     return useValue ? value : void 0;
 };
-import { BaseElement, register } from '@/components/baseElement.js';
+import { BaseElement, attr, register } from '@/components/baseElement.js';
 import { $$, $id, $inVerticalView } from '@/lib/dom.js';
 import decodeFlags from '@/lib/flags.js';
 import { some } from 'lodash-es';
@@ -44,22 +44,65 @@ let Token = (() => {
     let _classExtraInitializers = [];
     let _classThis;
     let _classSuper = BaseElement(HTMLElement);
+    let _instanceExtraInitializers = [];
+    let _tokenId_decorators;
+    let _tokenId_initializers = [];
+    let _headId_decorators;
+    let _headId_initializers = [];
+    let _definition_decorators;
+    let _definition_initializers = [];
+    let _lemma_decorators;
+    let _lemma_initializers = [];
+    let _flags_decorators;
+    let _flags_initializers = [];
+    let _role_decorators;
+    let _role_initializers = [];
+    let _case_decorators;
+    let _case_initializers = [];
     var Token = class extends _classSuper {
         static { _classThis = this; }
         static {
             const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            _tokenId_decorators = [attr(Number)];
+            _headId_decorators = [attr(Number)];
+            _definition_decorators = [attr()];
+            _lemma_decorators = [attr()];
+            _flags_decorators = [attr()];
+            _role_decorators = [attr()];
+            _case_decorators = [attr()];
+            __esDecorate(this, null, _tokenId_decorators, { kind: "accessor", name: "tokenId", static: false, private: false, access: { has: obj => "tokenId" in obj, get: obj => obj.tokenId, set: (obj, value) => { obj.tokenId = value; } }, metadata: _metadata }, _tokenId_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _headId_decorators, { kind: "accessor", name: "headId", static: false, private: false, access: { has: obj => "headId" in obj, get: obj => obj.headId, set: (obj, value) => { obj.headId = value; } }, metadata: _metadata }, _headId_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _definition_decorators, { kind: "accessor", name: "definition", static: false, private: false, access: { has: obj => "definition" in obj, get: obj => obj.definition, set: (obj, value) => { obj.definition = value; } }, metadata: _metadata }, _definition_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _lemma_decorators, { kind: "accessor", name: "lemma", static: false, private: false, access: { has: obj => "lemma" in obj, get: obj => obj.lemma, set: (obj, value) => { obj.lemma = value; } }, metadata: _metadata }, _lemma_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _flags_decorators, { kind: "accessor", name: "flags", static: false, private: false, access: { has: obj => "flags" in obj, get: obj => obj.flags, set: (obj, value) => { obj.flags = value; } }, metadata: _metadata }, _flags_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _role_decorators, { kind: "accessor", name: "role", static: false, private: false, access: { has: obj => "role" in obj, get: obj => obj.role, set: (obj, value) => { obj.role = value; } }, metadata: _metadata }, _role_initializers, _instanceExtraInitializers);
+            __esDecorate(this, null, _case_decorators, { kind: "accessor", name: "case", static: false, private: false, access: { has: obj => "case" in obj, get: obj => obj.case, set: (obj, value) => { obj.case = value; } }, metadata: _metadata }, _case_initializers, _instanceExtraInitializers);
             __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
             Token = _classThis = _classDescriptor.value;
             if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
             __runInitializers(_classThis, _classExtraInitializers);
         }
-        // @attr(number) tokenId: number
-        headId;
-        lemma;
-        flags;
-        def;
-        grammarRole;
-        case;
+        #tokenId_accessor_storage = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _tokenId_initializers, void 0));
+        get tokenId() { return this.#tokenId_accessor_storage; }
+        set tokenId(value) { this.#tokenId_accessor_storage = value; }
+        #headId_accessor_storage = __runInitializers(this, _headId_initializers, void 0);
+        get headId() { return this.#headId_accessor_storage; }
+        set headId(value) { this.#headId_accessor_storage = value; }
+        #definition_accessor_storage = __runInitializers(this, _definition_initializers, void 0);
+        get definition() { return this.#definition_accessor_storage; }
+        set definition(value) { this.#definition_accessor_storage = value; }
+        #lemma_accessor_storage = __runInitializers(this, _lemma_initializers, void 0);
+        get lemma() { return this.#lemma_accessor_storage; }
+        set lemma(value) { this.#lemma_accessor_storage = value; }
+        #flags_accessor_storage = __runInitializers(this, _flags_initializers, void 0);
+        get flags() { return this.#flags_accessor_storage; }
+        set flags(value) { this.#flags_accessor_storage = value; }
+        #role_accessor_storage = __runInitializers(this, _role_initializers, void 0);
+        get role() { return this.#role_accessor_storage; }
+        set role(value) { this.#role_accessor_storage = value; }
+        #case_accessor_storage = __runInitializers(this, _case_initializers, void 0);
+        get case() { return this.#case_accessor_storage; }
+        set case(value) { this.#case_accessor_storage = value; }
         $onmousedown() {
             this.classList.toggle('selected');
             selectedCount = $$('.selected').length;
@@ -73,8 +116,7 @@ let Token = (() => {
         }
         $pointerenter() {
             timeout = setTimeout(() => {
-                const $head = this.head();
-                $head?.classList.add('head');
+                this.head?.classList.add('head');
                 if (this.isVerb()) {
                     this.subjOff = highlight(this.argument('SBJ'), 'subj');
                     this.dobjOff = highlight(this.argument('OBJ'), 'dobj');
@@ -84,8 +126,7 @@ let Token = (() => {
         }
         $pointerleave() {
             clearTimeout(timeout);
-            const $head = this.head;
-            $head?.classList.remove('head');
+            this.head?.classList.remove('head');
             this.subjOff?.();
             this.dobjOff?.();
             this.dependentsOff?.();
