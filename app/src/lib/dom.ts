@@ -1,4 +1,4 @@
-import { Div } from './types.js'
+type Div = HTMLDivElement
 
 export function $id<E extends HTMLElement = Div>(id: string): E {
 	return document.getElementById(id) as E

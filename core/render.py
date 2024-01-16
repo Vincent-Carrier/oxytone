@@ -24,17 +24,15 @@ def _(w: Word) -> _Element | str:
     el = Element(
         "w-token",
         filter_none(
-            **{
-                "token-id": str(w.id),
-                "head-id": str(w.head),
-            },
+            n=str(w.id),
+            head=str(w.head),
             lemma=w.lemma,
             flags=w.flags,
             role=w.role,
             definition=w.definition,
             case=w.case,
             pos=w.pos,
-            punct=str(w.lemma in RIGHT_PUNCT),
+            # punct=str(w.lemma in RIGHT_PUNCT),
         ),
     )
     el.text = w.form

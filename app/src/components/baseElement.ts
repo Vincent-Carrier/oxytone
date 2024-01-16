@@ -1,6 +1,4 @@
-import { Div } from '@/lib/types.js'
-import { identity, kebabCase } from 'lodash-es'
-
+type Div = HTMLDivElement
 type Constructor<T> = new (...args: any[]) => T
 
 export function BaseElement<T extends Constructor<HTMLElement>>(superClass: T) {
@@ -29,12 +27,21 @@ export function register(name: string) {
 	}
 }
 
-export function attr(convert: (k: string) => any = identity) {
+export function attr(convert: (k: string) => any = k => k, key: string = undefined) {
 	return function (val, ctx: ClassAccessorDecoratorContext) {
-		const key = kebabCase(ctx.name as string)
 		return {
 			get() {
-				return convert(this.attributes[key]?.value)
+				return convert(this.attributes[key ?? ctx.name]?.value)
+			},
+		}
+	}
+}
+
+export function select(selector: string) {
+	return function (val, ctx: ClassAccessorDecoratorContext) {
+		return {
+			get() {
+				return this.$(selector)
 			},
 		}
 	}

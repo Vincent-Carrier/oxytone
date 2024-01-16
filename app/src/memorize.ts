@@ -1,4 +1,4 @@
-import { wordsInView } from '@/_selectWords.js'
+import { Token } from '@/components/token.js'
 import { $id } from '@/lib/dom.js'
 
 function toggleWord(show: boolean, $el: HTMLSpanElement) {
@@ -16,7 +16,7 @@ $id('memorize').onclick = function (ev) {
 		$words.forEach($w => toggleWord(true, $w))
 		$words = []
 	} else {
-		$words = Array.from(wordsInView())
+		$words = Array.from(Token.inView())
 		$words.forEach($w => toggleWord(false, $w))
 	}
 }
