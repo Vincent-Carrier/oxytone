@@ -7,6 +7,9 @@ bottom-bar {
 	@extend .main-grid;
 	& > .center {
 		@include box($px: 8);
+		@include media(sm) {
+			@include box($px: 1);
+		}
 		@include flex-x(4, $align-items: center);
 		@extend .grid-center;
 	}

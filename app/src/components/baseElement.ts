@@ -1,7 +1,15 @@
-import { Div } from '@/lib/types.ts'
+import { Div } from '@/lib/types.js'
+
 type Constructor<T> = new (...args: any[]) => T
-export function Base<T extends Constructor<HTMLElement>>(superClass: T) {
+
+export function BaseElement<T extends Constructor<HTMLElement>>(superClass: T) {
 	return class extends superClass {
+		connectedCallback() {
+			for (const prop of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+				if (prop.startsWith('$on')) this.addEventListener(prop.slice(3), this[prop])
+			}
+		}
+
 		$<E extends HTMLElement = Div>(selector: string): E {
 			return this.querySelector<E>(selector)!
 		}
@@ -15,5 +23,14 @@ export function Base<T extends Constructor<HTMLElement>>(superClass: T) {
 				this.addEventListener(event, ev => listeners[event](ev.target as this))
 			}
 		}
+	}
+}
+
+export function register(name: string) {
+	return (target, ctx: ClassDecoratorContext) => {
+		ctx.addInitializer(function () {
+			//@ts-ignore
+			customElements.define(name, this)
+		})
 	}
 }

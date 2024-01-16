@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -166,6 +165,8 @@ app/static/*.css
 app/static/*.css.map
 app/static/*.js
 app/static/*.js.map
+app/src/**.js
+app/src/**.js.map
 
 chunks/**
 

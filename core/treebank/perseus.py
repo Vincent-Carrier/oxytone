@@ -24,9 +24,8 @@ from core.word import POS, Case, Word
 
 @final
 class PerseusTB(Treebank[T]):
-    is_verse: bool
     ref_cls: Type[T]
-    chunker: "Chunker | None"
+    chunker_cls: type[Chunker]
     filepath: Path
 
     def __init__(
@@ -35,9 +34,9 @@ class PerseusTB(Treebank[T]):
         **meta,
     ) -> None:
         super().__init__(**meta)
+
+        # Read XML head for metadata
         self.filepath = f
-        self.is_verse = self.meta.is_verse
-        self.ref_cls = self.meta.ref_cls
         for _, el in etree.iterparse(f, events=("start",)):
             if el.tag == "treebank" and (urn := el.attrib.get("cts")):
                 self.meta.urn = str(urn)
@@ -46,8 +45,9 @@ class PerseusTB(Treebank[T]):
             if el.tag == "sentence":
                 self.meta.urn = el.attrib.get("document_id")
                 break
-        if chunker := meta.get("chunker"):
-            self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
+
+        # if chunker := meta.get("chunker"):
+        #     self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
 
     def sentences(self) -> Iterator[Sentence]:
         tree = etree.parse(self.filepath)

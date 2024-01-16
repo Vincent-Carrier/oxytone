@@ -1,6 +1,7 @@
 @use 'theme' as *;
 @use 'components';
 @use './bars';
+@use './token';
 
 header {
 	@include box($pl: 8, $mt: 4, $mb: 6);
@@ -31,6 +32,9 @@ article {
 
 	> .prose {
 		@include box($px: 8);
+		@include media(sm) {
+			@include box($px: 1);
+		}
 	}
 
 	.sentence {
@@ -49,11 +53,6 @@ article {
 		@include box($pl: 1);
 	}
 
-	[data-id] {
-		cursor: pointer;
-		@include surface($rounded: sm);
-		@extend .color-coding;
-	}
 	.subdoc {
 		padding-right: len(2);
 	}

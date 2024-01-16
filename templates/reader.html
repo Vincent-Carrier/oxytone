@@ -9,7 +9,8 @@
 {% block head %}
     <link rel="stylesheet"
           href="{{ url_for('assets', filename='/reader.css') }}" />
-    <script src="{{ url_for('assets', filename='/reader.js') }}" type="module"></script>
+    <script src="{{ url_for('assets', filename='/reader.min.js') }}"
+            type="module"></script>
 {% endblock head %}
 {% block body_start %}
     <div class="top-bar">

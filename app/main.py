@@ -1,12 +1,10 @@
-from os import environ
 from sanic import Sanic
 
 from core.constants import STATIC
 
 
-def create_app(dev: bool) -> Sanic:
+def create_app() -> Sanic:
     app = Sanic("oxytone")
-    app.auto_reload = dev
     from app.routes.flashcards import bp as flashcards_bp
     from app.routes.read import bp as read_bp
     from app.routes.index import bp as index_bp
@@ -18,4 +16,4 @@ def create_app(dev: bool) -> Sanic:
     return app
 
 
-app = create_app(dev=environ.get("ENV") == "development")
+app = create_app()

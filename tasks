@@ -21,7 +21,9 @@ init() {
 }
 
 assets() {
-	css & js & wait
+	css &
+	bundle && js &
+	wait
 }
 
 css() {
@@ -29,7 +31,11 @@ css() {
 }
 
 js() {
-	npx esbuild $src/reader.ts --outdir=$static \
+	npx tsc "$@"
+}
+
+bundle() {
+	npx esbuild $src/reader.js --outfile=$static/reader.min.js \
 		--bundle --target=es2020 --sourcemap "$@"
 }
 
@@ -44,9 +50,9 @@ app() {
 
 watch() {
 	css --watch &
-	js --watch=forever &
+	js --watch &
 	browsersync &
-	app --debug "$@"
+	bundle --watch
 }
 
 test() {
@@ -72,7 +78,7 @@ script() {
 
 sync_fs() {
 	rsync -aP --delete --exclude-from=.rsyncignore \
-		./ oxy:oxytone
+		./ oxy:/var/www/oxytone
 }
 
 deploy() {

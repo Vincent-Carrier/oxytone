@@ -1,9 +1,11 @@
-import { Token } from '@/components/word.ts'
-import decodeFlags from '@/lib/flags.ts'
-import { Div } from '@/lib/types.ts'
-import { Base } from './baseElement.ts'
+import { Token } from '@/components/token.js'
+import decodeFlags from '@/lib/flags.js'
+import { Div } from '@/lib/types.js'
+import { BaseElement, register } from './baseElement.js'
 
-export class BottomBar extends Base(HTMLElement) {
+@register('bottom-bar')
+export class BottomBar extends BaseElement(HTMLElement) {
+	static tagName = 'bottom-bar'
 	$lemma: Div
 	$def: Div
 	$flags: Div
@@ -20,4 +22,3 @@ export class BottomBar extends Base(HTMLElement) {
 		this.$flags = this.$('#flags')
 	}
 }
-customElements.define('bottom-bar', BottomBar)

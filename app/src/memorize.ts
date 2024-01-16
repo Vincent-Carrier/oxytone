@@ -1,5 +1,5 @@
-import { wordsInView } from '@/_selectWords.ts'
-import { $id } from '@/lib/dom.ts'
+import { wordsInView } from '@/_selectWords.js'
+import { $id } from '@/lib/dom.js'
 
 function toggleWord(show: boolean, $el: HTMLSpanElement) {
 	const first = $el.innerText[0],

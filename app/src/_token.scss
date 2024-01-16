@@ -1,0 +1,44 @@
+@use 'theme' as *;
+
+w-token {
+	cursor: pointer;
+	@include surface($rounded: sm);
+
+	&:hover,
+	&.hl {
+		@include highlight(stone(200, 0.8));
+	}
+	&[pos='verb'] {
+		@include font($wght: 700);
+	}
+	&[case='nominative'] {
+		@include text(emerald(600));
+	}
+	&[case='accusative'] {
+		@include text(sky(600));
+	}
+	&[case='dative'] {
+		@include text(yellow(600));
+	}
+	&[case='genitive'] {
+		@include text(violet(600));
+	}
+	&[case='vocative'] {
+		@include text(pink(600));
+	}
+	&.subj {
+		@include highlight(emerald(100));
+	}
+	&.dobj {
+		@include highlight(sky(100));
+		&.dative {
+			@include highlight(yellow(100));
+		}
+	}
+	&.selected {
+		text-decoration: underline;
+	}
+	&.head {
+		text-decoration: underline;
+	}
+}

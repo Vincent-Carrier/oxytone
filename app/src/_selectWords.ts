@@ -1,5 +1,5 @@
-import { $inVerticalView } from '@/lib/dom.ts'
-import { Span } from '@/lib/types.ts'
+import { $inVerticalView } from '@/lib/dom.js'
+import { Span } from '@/lib/types.js'
 import { some } from 'lodash-es'
 
 export function* wordsInView() {

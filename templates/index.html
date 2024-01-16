@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import '_entry.html' as entries %}
+{% import "_macros.html" as macros %}
 {% block title %}
     Oxytone
 {% endblock title %}
@@ -23,7 +23,7 @@
         <section id="{{ author.slug }}">
             <h2>{{ author.name }}</h2>
             <div class="entries">
-                {% for doc in author.corpus.values() %}{{ entries.entry(doc) }}{% endfor %}
+                {% for doc in author.corpus.values() %}{{ macros.entry(doc) }}{% endfor %}
             </div>
         </section>
     {% endfor %}

@@ -21,6 +21,8 @@ watchdog = {extras = ["watchmedo"] }
 jinja2 = "*"
 sanic = "*"
 sanic-ext = "*"
+ipyflow = "*"
+tracerite = "*"
 
 [dev-packages]
 ipykernel = "*"

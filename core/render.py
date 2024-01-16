@@ -1,43 +1,47 @@
 from enum import Enum, auto
 from functools import singledispatch
-from typing import Any, NamedTuple, assert_never, TypeAlias, no_type_check
+from typing import NamedTuple, TypeAlias, no_type_check
 
-import dominate.tags as h
+from lxml import etree
+from lxml.builder import E
+from lxml.etree import _Element, Element
 from core.constants import RIGHT_PUNCT
 from core.ref import Ref
 from core.treebank.treebank import Treebank
-from core.utils import cx
+from core.utils import cx, filter_none
 from core.word import POS, Word
 
 
 @singledispatch
-def render(obj) -> Any:
+def render(obj) -> _Element | str:
     ...
 
 
 @render.register(Word)
-def _(word: Word) -> Any:
-    if word.form == '"':
+def _(w: Word) -> _Element | str:
+    if w.form == '"':
         return ""
-    return h.span(
-        word.form,
-        cls=cx(
-            word.case,
-            word.pos == POS.verb and word.pos,
-            word.lemma in RIGHT_PUNCT and "punct",
+    el = Element(
+        "w-token",
+        filter_none(
+            token_id=str(w.id),
+            head=str(w.head),
+            lemma=w.lemma,
+            flags=w.flags,
+            role=w.role,
+            definition=w.definition,
+            case=w.case,
+            pos=w.pos,
+            punct=str(w.lemma in RIGHT_PUNCT),
         ),
-        data_id=str(word.id),
-        data_head=str(word.head),
-        data_lemma=word.lemma,
-        data_flags=word.flags,
-        data_role=word.role,
-        data_def=word.definition,
     )
+    el.text = w.form
+    return el
 
 
 @render.register(Ref)
-def _(ref: Ref) -> Any:
-    return h.a(f"[{ref.start}]", cls="ref", id=str(ref.start), href=f"#{ref.start}")
+def _(ref: Ref) -> _Element:
+    return E.a(f"[{ref.start}]", cx("ref"), id=str(ref.start), href=f"#{ref.start}")
 
 
 class HtmlPartialRenderer(NamedTuple):
@@ -47,35 +51,37 @@ class HtmlPartialRenderer(NamedTuple):
 
     @no_type_check
     def body(self):
-        is_verse = self.tb.is_verse
-        verse_cls = "verse" if is_verse else "prose"
-        sentence = h.span(cls="sentence")
-        container = h.div(cls=f"syntax {verse_cls}")
+        sentence = []
+        sentences = []
 
         for t in iter(self.tb):
             match t:
                 case Word() | Ref():
-                    sentence += render(t)
+                    sentence.append(render(t))
                 case FT.SPACE:
-                    sentence += " "
+                    sentence.append(" ")
                 case FT.SENTENCE_END:
-                    container += sentence
-                    sentence = h.span(cls="sentence")
+                    sentences.append(E.span(*sentence, cx("sentence")))
+                    sentence = []
                 case FT.LINE_BREAK:
-                    sentence += h.br()
-                case int():  # verse line numbers
-                    visible = "visible" if t % 5 == 0 else ""
-                    sentence += h.a(t, cls=f"ln {visible}", id=str(t), href=f"#{t}")
+                    sentence.append(E.br())
+                case int(n):  # verse line numbers
+                    sentence.append(
+                        E.a(
+                            str(n),
+                            cx("ln", visible=t % 5 == 0),
+                            id=str(t),
+                            href=f"#{t}",
+                        )
+                    )
                 case None:
                     pass
-                case _:
-                    assert_never(t)
         if len(sentence):
-            container += sentence
-        return container
+            sentences.append(sentence)
+        return E.div(*sentences, cx("syntax", "verse" if self.tb.is_verse else "prose"))
 
     def render(self) -> str:
-        return self.body().render(pretty=False)
+        return etree.tostring(self.body(), encoding="unicode", pretty_print=True)
 
 
 class FT(Enum):  # Formatting Token

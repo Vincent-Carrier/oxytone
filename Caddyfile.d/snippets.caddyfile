@@ -1,0 +1,19 @@
+(app) {
+	route {
+		file_server /assets {
+			root ./app/static
+			pass_thru
+		}
+		reverse_proxy localhost:8000
+	}
+}
+
+(cache) {
+	ttl 50s
+	default_cache_control "public, max-age=86400"
+	badger {
+		configuration {
+			ValueDir default
+		}
+	}
+}

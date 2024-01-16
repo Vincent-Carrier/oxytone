@@ -1,16 +1,56 @@
-import { Base } from '@/components/baseElement.ts'
-import { $inVerticalView } from '@/lib/dom.ts'
-import decodeFlags from '@/lib/flags.ts'
+import { BaseElement, register } from '@/components/baseElement.js'
+import { $$, $id, $inVerticalView } from '@/lib/dom.js'
+import decodeFlags from '@/lib/flags.js'
 import { some } from 'lodash-es'
 
-export class Token extends Base(HTMLElement) {
-	tokenId: number
+const $export = $id<HTMLButtonElement>('export'),
+	$selectedCount = $id('selected-count')
+
+let selectedCount = 0,
+	timeout
+
+@register('w-token')
+export class Token extends BaseElement(HTMLElement) {
+	// @attr(number) tokenId: number
 	headId: number
 	lemma: string
 	flags: string
 	def?: string
 	grammarRole?: string
-	case?: string;
+	case?: string
+
+	$onmousedown() {
+		this.classList.toggle('selected')
+		selectedCount = $$('.selected').length
+		$selectedCount.innerText = selectedCount > 0 ? `(${selectedCount})` : ''
+		$export.disabled = selectedCount <= 0
+	}
+
+	$onmouseenter() {
+		if (this.classList.contains('punct')) return
+		// $bottomBar.word = this.attributes
+	}
+
+	$pointerenter() {
+		timeout = setTimeout(() => {
+			const $head = this.head()
+			$head?.classList.add('head')
+			if (this.isVerb()) {
+				this.subjOff = highlight(this.argument('SBJ'), 'subj')
+				this.dobjOff = highlight(this.argument('OBJ'), 'dobj')
+			}
+			this.dependentsOff = highlight(this.dependents(), 'hl')
+		}, 100)
+	}
+
+	$pointerleave() {
+		clearTimeout(timeout)
+		const $head = this.head
+		$head?.classList.remove('head')
+		this.subjOff?.()
+		this.dobjOff?.()
+		this.dependentsOff?.()
+	}
 
 	*wordsInView() {
 		let prevInView: boolean | undefined
@@ -90,4 +130,3 @@ export class Token extends Base(HTMLElement) {
 		return decodeFlags(this.flags)
 	}
 }
-customElements.define('w-token', Token)

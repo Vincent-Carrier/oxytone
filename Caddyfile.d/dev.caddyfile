@@ -1,0 +1,15 @@
+import snippets
+
+{
+	order cache before rewrite
+	cache * {
+		import cache
+	}
+	log {
+		output file caddy.out
+	}
+}
+
+:8080 {
+	import app
+}

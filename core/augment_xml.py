@@ -17,18 +17,20 @@ def render(obj) -> Any:
 
 
 @render.register(Word)
-def _(word: Word) -> Any:
-    data = dict(
-        id=str(word.id),
-        head=str(word.head),
-        lemma=word.lemma,
-        flags=word.flags,
-        case=str(word.case),
-        pos=str(word.pos),
-        role=word.role,
-        definition=word.definition,
+def _(w: Word) -> Any:
+    return E.word(
+        w.form,
+        **filter_none(
+            id=str(w.id),
+            head=str(w.head),
+            lemma=w.lemma,
+            flags=w.flags,
+            case=str(w.case),
+            pos=str(w.pos),
+            role=w.role,
+            definition=w.definition,
+        ),
     )
-    return E.word(word.form, **filter_none(data))
 
 
 @render.register(Ref)

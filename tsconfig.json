@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"paths": {
+			"@/*": [
+				"./app/src/*"
+			],
+			"npm:*": [
+				"./node_modules/*"
+			]
+		},
+		"module": "esnext",
+		"moduleResolution": "Bundler",
+		"target": "ES2022",
+		"sourceMap": true,
+		"lib": [
+			"ESNext",
+			"DOM",
+			"DOM.Iterable"
+		],
+	},
+	"compileOnSave": true,
+	"files": [
+		"app/src/reader.ts"
+	]
+}
