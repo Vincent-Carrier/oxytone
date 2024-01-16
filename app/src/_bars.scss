@@ -32,7 +32,7 @@ bottom-bar {
 			}
 		}
 	}
-	.flashcards {
+	flashcards {
 		@include flex-x(4, flex-end, baseline);
 		flex-grow: 1;
 		justify-self: end;
@@ -41,13 +41,19 @@ bottom-bar {
 
 bottom-bar {
 	@include inset($b: 0);
-	@include box($h: 12);
+	@include box($h: 12, $pt: 1);
 	@extend .main-grid;
 	border-top: 2px solid stone(200);
 
-	.help {
+	.center {
 		@include box($h: 10);
+		@include flex-x(2, $align-items: center);
 		line-height: 1;
+		white-space: nowrap;
+
+		& > .left {
+			flex-grow: 1;
+		}
 		& #lemma {
 			display: inline-block;
 			@include box($pr: 1);
@@ -60,7 +66,15 @@ bottom-bar {
 		}
 		& #def {
 			@include font(sans);
-			@include text(stone(600), sm);
+			@include text(stone(600), md);
+		}
+		& #lsj {
+			flex-direction: row-reverse;
+			align-self: center;
+			@include text($size: lg);
+			&:not([href]) {
+				display: none;
+			}
 		}
 	}
 }

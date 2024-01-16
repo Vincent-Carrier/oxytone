@@ -22,6 +22,10 @@
 	grid-column: 2;
 }
 
+.grow {
+	flex-grow: 1;
+}
+
 @mixin highlight($color) {
 	@include surface($color);
 	box-shadow: 0 0 0 2px $color;

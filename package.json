@@ -5,7 +5,6 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@types/lodash-es": "^4.17.12",
     "esbuild": "^0.17.19",
     "sass": "^1.62.1",
     "typescript": "^5.3.3"
@@ -13,8 +12,6 @@
   "dependencies": {
     "@vincentcarrier/zephyr": "^1.0.0",
     "clsx": "^1.2.1",
-    "ky": "^0.33.3",
-    "lodash-es": "^4.17.21",
     "remeda": "^1.36.0"
   }
 }

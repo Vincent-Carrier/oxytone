@@ -1,9 +1,0 @@
-<article id="{{ tb.slug }}" class="treebank">
-    <div class="syntax {{ 'verse' if tb.is_verse else 'prose' }}">
-        {% for sentence in sentences %}
-            <span class="sentence">
-                {% for token in sentence %}{{ render(token) }}{% endfor %}
-            </span>
-        {% endfor %}
-    </div>
-</article>

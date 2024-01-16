@@ -23,25 +23,30 @@
                     <span class="label">Go Back</span>
                 </a>
             </nav>
-            <div class="flashcards">
-                <button id="export" disabled>
-                    {% include "icons/heroicons:arrow-down-circle.svg" %}
-                    <label>Flashcards</label>
-                    <span id="selected-count" />
-                </button>
-            </div>
-            <button id="memorize">
-                {% include "icons/heroicons:academic-cap.svg" %}
-                <label>Memorize</label>
-            </button>
+            <div class="grow"></div>
+            <flashcards-button class="button" disabled>
+            {% include "icons/heroicons:arrow-down-circle.svg" %}
+            <label>Flashcards</label>
+            <span id="selected-count" />
+            </flashcards-button>
+            <memorize-button class="button">
+            {% include "icons/heroicons:academic-cap.svg" %}
+            <label>Memorize</label>
+            </memorize-button>
         </div>
     </div>
     <bottom-bar>
     <div class="center">
-        <div class="help">
+        <div class="left">
             <span id="lemma"></span>
             <span id="flags"></span>
             <div id="def"></div>
+        </div>
+        <div class="right">
+            <a id="lsj" class="button ghost" target="_blank">
+                {% include "icons/heroicons:arrow-top-right-on-square-16-solid.svg" %}
+                <span class="label">LSJ</span>
+            </a>
         </div>
     </div>
     </bottom-bar>
