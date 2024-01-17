@@ -6,9 +6,9 @@ from core.constants import CHUNKS
 from core.render import HtmlPartialRenderer
 from core.treebank.perseus import PerseusTB
 from core.corpus import corpus_index, corpus
+from app.jinja import template
 
 bp = Blueprint("read", url_prefix="/read")
-app = Sanic.get_app("oxytone")
 
 
 def treebank(tb: PerseusTB, slug: str, chunk_title: str | None = None):
@@ -17,18 +17,19 @@ def treebank(tb: PerseusTB, slug: str, chunk_title: str | None = None):
     return dict(body=body, chunk_title=chunk_title, **meta)
 
 
+render = template("reader")
+
+
 @bp.get("/<slug>")
-@app.ext.template("reader.html")
 async def get_treebank(req: Request, slug: str):
     try:
         tb = corpus[slug]
     except KeyError:
         raise NotFound(f"Unknown document {slug}")
-    return treebank(tb, slug)
+    return await render(**treebank(tb, slug))
 
 
 @bp.get("/<slug>/<chunk>")
-@app.ext.template("reader.html")
 async def get_chunk(req: Request, slug: str, chunk: str):
     f = CHUNKS / slug / f"{chunk}.xml"
     if not f.exists():
@@ -39,4 +40,4 @@ async def get_chunk(req: Request, slug: str, chunk: str):
         import_module("core.treebank.chunker"), corpus_index[slug].chunker
     )
     chunk_title = chunker.label(chunk)
-    return treebank(tb, slug, chunk_title)
+    return await render(**treebank(tb, slug, chunk_title))

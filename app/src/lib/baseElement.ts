@@ -30,11 +30,21 @@ export function register(name: string, base: string = undefined) {
 	}
 }
 
-export function attr(convert: (k: string) => any = k => k, key: string = undefined) {
-	return function (val, ctx: ClassAccessorDecoratorContext) {
+const identity = (v: any) => v
+type Parse = (k: string) => any
+
+export function attr(parse: Parse = identity, key: string = undefined) {
+	return function (val: any, ctx: ClassAccessorDecoratorContext) {
+		const k = key ?? (ctx.name as string)
 		return {
 			get() {
-				return convert(this.attributes[key ?? ctx.name]?.value)
+				return parse(this.attributes[k]?.value)
+			},
+			set(val: any) {
+				console.log(typeof val)
+				if (val === true) this.setAttribute(k, '')
+				else if (!val) this.removeAttribute(k)
+				else this.setAttribute(k, val as string)
 			},
 		}
 	}

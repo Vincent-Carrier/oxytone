@@ -3,7 +3,8 @@ from pathlib import Path
 
 from box import Box
 
-ENV = Box(os.environ)
+env = Box(os.environ)
+PROD = env.ENV != "development"
 ROOT = Path(__file__).parent.parent
 STATIC = ROOT / "app/static"
 DATA = ROOT / "data"

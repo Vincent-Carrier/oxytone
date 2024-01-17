@@ -1,12 +1,12 @@
 from typing import NamedTuple
 
 from box import Box
-from sanic import Blueprint, Request, Sanic
+from sanic import Blueprint, Request
 from slugify import slugify
+from app.jinja import template
 from core.corpus import corpus_index
 
 bp = Blueprint("index", "/")
-app = Sanic.get_app("oxytone")
 
 
 class AuthorCorpus(NamedTuple):
@@ -27,8 +27,9 @@ authors = [
     for author in list(dict.fromkeys(meta.author for meta in corpus_index.values()))
 ]
 
+render = template("index")
+
 
 @bp.get("/")
-@app.ext.template("index.html")
 async def get_index(req: Request):
-    return dict(authors=authors)
+    return await render(authors=authors)

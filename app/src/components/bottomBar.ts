@@ -9,7 +9,11 @@ export default class BottomBar extends CustomElement {
 	@select('#flags') accessor $flags: HTMLDivElement
 	@select('#lsj') accessor $lsj: HTMLAnchorElement
 
-	set word($w: Token) {
+	set word($w: Token | null) {
+		if ($w === null) {
+			this.$lemma.innerText = ''
+			return
+		}
 		this.$lemma.innerText = $w.lemma
 		this.$def.innerText = $w.definition ?? ''
 		this.$flags.innerHTML = decodeFlags($w.flags)

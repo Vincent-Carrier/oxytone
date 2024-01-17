@@ -1,15 +1,16 @@
 import BottomBar from '@/components/bottomBar.js'
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, register } from '@/lib/baseElement.js'
-import { $, $$, $id, $inVerticalView } from '@/lib/dom.js'
+import { $, $id, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
 const $flashcards = $<FlashcardsButton>('[is=flashcards-btn]'),
 	$selectedCount = $id('selected-count'),
-	$bottomBar = $<BottomBar>('bottom-bar')
+	$bottomBar = $<BottomBar>('bottom-bar'),
+	$treebank = $('article.treebank')
 
-let selectedCount = 0,
-	timeout
+let exports = 0,
+	timeout: number
 
 @register('w-token')
 export default class Token extends CustomElement {
@@ -19,18 +20,29 @@ export default class Token extends CustomElement {
 	@attr() accessor lemma: string
 	@attr() accessor flags: string
 	@attr() accessor role: string
+	@attr() accessor pos: string
 	@attr() accessor case: string
 	off: { [k: string]: () => void } = {}
 
-	$onpointerdown() {
-		this.classList.toggle('selected')
-		selectedCount = $$('.selected').length
-		$selectedCount.innerText = selectedCount > 0 ? `(${selectedCount})` : ''
-		$flashcards.disabled = selectedCount <= 0
+	get isSelected(): boolean {
+		return this.classList.contains('selected')
 	}
 
-	$pointerenter() {
+	$onpointerdown() {
+		if (this.pos == 'punct') return
+
+		// if (this.isSelected) {
+		// 	exports = $$('.exported', $treebank).length
+		// 	$selectedCount.innerText = exports > 0 ? `(${exports})` : ''
+		// 	$flashcards.disabled = exports <= 0
+		// }
+		this.classList.toggle('selected')
+		$bottomBar.word = this.isSelected ? this : null
+	}
+
+	$onpointerenter() {
 		timeout = setTimeout(() => {
+			if (this.pos == 'punct') return
 			this.$head?.classList.add('head')
 			if (this.isVerb) {
 				this.off.subj = highlight(this.argument('SBJ'), 'subj')
@@ -38,12 +50,9 @@ export default class Token extends CustomElement {
 			}
 			this.off.dependents = highlight(this.dependents(), 'hl')
 		}, 100)
-
-		if (this.classList.contains('punct')) return
-		$bottomBar.word = this
 	}
 
-	$pointerleave() {
+	$onpointerleave() {
 		clearTimeout(timeout)
 		this.$head?.classList.remove('head')
 		this.off.subj?.()

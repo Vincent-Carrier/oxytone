@@ -68,6 +68,10 @@ article {
 		&.visible {
 			color: gray(400);
 		}
+		&:hover {
+			color: sky(700);
+			cursor: none;
+		}
 	}
 	&.selection .ln {
 		visibility: hidden;
