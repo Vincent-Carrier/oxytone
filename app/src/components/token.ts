@@ -1,7 +1,7 @@
 import BottomBar from '@/components/bottomBar.js'
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, register } from '@/lib/baseElement.js'
-import { $, $inVerticalView } from '@/lib/dom.js'
+import { $, $$, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
 const $flashcards = $<FlashcardsButton>('[is=flashcards-btn]'),
@@ -31,8 +31,8 @@ export default class Token extends CustomElement {
 		return $treebank.querySelectorAll<Token>('w-token')
 	}
 
-	static allSelected(): NodeListOf<Token> {
-		return $treebank.querySelectorAll<Token>('w-token[selected]')
+	static allSelected(): Token[] {
+		return $$<Token>('w-token[selected]', $treebank)
 	}
 
 	static clearSelected() {
@@ -41,8 +41,9 @@ export default class Token extends CustomElement {
 
 	$onpointerdown() {
 		if (this.pos == 'punct') return
+		const wasSelected = this.selected
 		if (!$flashcards.active) Token.clearSelected()
-		this.selected = !this.selected
+		this.selected = !wasSelected
 		const event = new CustomEvent('tokenselect', { detail: { selected: this.selected } })
 		this.dispatchEvent(event)
 		$bottomBar.word = this.selected ? this : null

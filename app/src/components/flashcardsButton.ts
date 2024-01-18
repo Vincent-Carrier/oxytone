@@ -1,5 +1,5 @@
 import { BaseElement, attr, register, select } from '@/lib/baseElement.js'
-import { $, $$, $id } from '@/lib/dom.js'
+import { $, $id } from '@/lib/dom.js'
 import { postJSON } from '@/lib/fetch.js'
 import Token from './token.js'
 
@@ -33,10 +33,9 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 	}
 
 	async $onclick() {
-		// if (this.active && this.count > 0) {
-		// 	this.exportFlashcards()
-		// 	this.count = 0
-		// }
+		if (this.active && this.count > 0) {
+			await this.exportFlashcards()
+		}
 		this.clear()
 		this.active = !this.active
 		this.render()
@@ -48,7 +47,7 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 	}
 
 	async exportFlashcards() {
-		const words = $$<Token>('[selected]').map($w => ({
+		const words = Token.allSelected().map($w => ({
 			lemma: $w.lemma,
 			definition: $w.definition ?? '',
 		}))
