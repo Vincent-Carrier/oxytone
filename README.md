@@ -8,5 +8,7 @@ First off, you'll need `npm` installed and `pipenv` installed. Depending on your
 
 ```sh
 ./tasks init
+./tasks app --reload --debug
+# in a separate terminal:
 ./tasks watch
 ```
