@@ -2,7 +2,7 @@ type Div = HTMLDivElement
 type Constructor<T> = new (...args: any[]) => T
 
 export function BaseElement<T extends Constructor<HTMLElement>>(superClass: T) {
-	return class extends superClass implements ElementLifecycle {
+	return class extends superClass {
 		constructor(...args: any[]) {
 			super()
 			// TODO: Replace with decorator
@@ -38,10 +38,10 @@ export function attr(parse: Parse = identity, key: string = undefined) {
 		const k = key ?? (ctx.name as string)
 		return {
 			get() {
-				return parse(this.attributes[k]?.value)
+				if (parse === Boolean && this.attributes[k]?.value === '') return true
+				else return parse(this.attributes[k]?.value)
 			},
 			set(val: any) {
-				console.log(typeof val)
 				if (val === true) this.setAttribute(k, '')
 				else if (!val) this.removeAttribute(k)
 				else this.setAttribute(k, val as string)

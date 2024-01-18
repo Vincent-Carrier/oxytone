@@ -1,19 +1,18 @@
 import BottomBar from '@/components/bottomBar.js'
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, register } from '@/lib/baseElement.js'
-import { $, $id, $inVerticalView } from '@/lib/dom.js'
+import { $, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
 const $flashcards = $<FlashcardsButton>('[is=flashcards-btn]'),
-	$selectedCount = $id('selected-count'),
 	$bottomBar = $<BottomBar>('bottom-bar'),
 	$treebank = $('article.treebank')
 
-let exports = 0,
-	timeout: number
+let timeout: number
 
 @register('w-token')
 export default class Token extends CustomElement {
+	@attr(Boolean) accessor selected: boolean
 	@attr(Number) accessor n: number
 	@attr(Number) accessor head: number
 	@attr() accessor definition: string
@@ -28,16 +27,21 @@ export default class Token extends CustomElement {
 		return this.classList.contains('selected')
 	}
 
+	static allSelected(): NodeListOf<Token> {
+		return $treebank.querySelectorAll<Token>('w-token[selected]')
+	}
+
+	static clearSelected() {
+		Token.allSelected().forEach($w => ($w.selected = false))
+	}
+
 	$onpointerdown() {
 		if (this.pos == 'punct') return
-
-		// if (this.isSelected) {
-		// 	exports = $$('.exported', $treebank).length
-		// 	$selectedCount.innerText = exports > 0 ? `(${exports})` : ''
-		// 	$flashcards.disabled = exports <= 0
-		// }
-		this.classList.toggle('selected')
-		$bottomBar.word = this.isSelected ? this : null
+		if (!$flashcards.active) Token.clearSelected()
+		this.selected = !this.selected
+		const event = new CustomEvent('tokenselect', { detail: { selected: this.selected } })
+		this.dispatchEvent(event)
+		$bottomBar.word = this.selected ? this : null
 	}
 
 	$onpointerenter() {

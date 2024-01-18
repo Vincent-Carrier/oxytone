@@ -35,7 +35,7 @@ w-token {
 			@include highlight(yellow(100));
 		}
 	}
-	&.selected {
+	&[selected] {
 		text-decoration: underline;
 	}
 	&.head {

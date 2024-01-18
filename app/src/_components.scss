@@ -20,10 +20,15 @@ button,
 	}
 	&:hover:not(:disabled) {
 		@include surface(stone(200));
+		@include text(stone(700));
 		border-color: stone(400);
 	}
 	&:active {
 		@include surface(stone(400));
+	}
+	&[active] {
+		@include surface(stone(700));
+		@include text(stone(300));
 	}
 	&:disabled {
 		@include text(stone(500));
