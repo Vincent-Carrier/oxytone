@@ -38,8 +38,9 @@ export function attr(parse: Parse = identity, key: string = undefined) {
 		const k = key ?? (ctx.name as string)
 		return {
 			get() {
-				if (parse === Boolean && this.attributes[k]?.value === '') return true
-				else return parse(this.attributes[k]?.value)
+				const val = this.attributes[k]?.value
+				if (parse === Boolean && val === '') return true
+				else return parse(val)
 			},
 			set(val: any) {
 				if (val === true) this.setAttribute(k, '')

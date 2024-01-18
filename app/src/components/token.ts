@@ -27,6 +27,10 @@ export default class Token extends CustomElement {
 		return this.classList.contains('selected')
 	}
 
+	static all(): NodeListOf<Token> {
+		return $treebank.querySelectorAll<Token>('w-token')
+	}
+
 	static allSelected(): NodeListOf<Token> {
 		return $treebank.querySelectorAll<Token>('w-token[selected]')
 	}
@@ -66,7 +70,7 @@ export default class Token extends CustomElement {
 
 	static *inView() {
 		let prevInView: boolean | undefined
-		for (const $w of document.querySelectorAll<Token>('w-token')) {
+		for (const $w of Token.all()) {
 			const inView = $inVerticalView($w)
 			if (inView) yield $w
 			if (prevInView && prevInView != inView) break
@@ -106,12 +110,6 @@ export default class Token extends CustomElement {
 		}
 	}
 
-	verb(): Token | undefined {
-		for (const $a of this.headUp()) {
-			if (this.isVerb) return $a
-		}
-	}
-
 	*argument(...roles: string[]): Iterable<Token> {
 		for (const $w of this.directDependents()) {
 			yield* $w.constituent(...roles)
@@ -121,6 +119,12 @@ export default class Token extends CustomElement {
 	*constituent(...roles: string[]) {
 		if (this.isRole('COORD')) yield* this.directDependents({ include: roles })
 		else if (this.isRole(...roles)) yield this
+	}
+
+	verb(): Token | undefined {
+		for (const $a of this.headUp()) {
+			if (this.isVerb) return $a
+		}
 	}
 
 	isRole(...roles: string[]): boolean {
