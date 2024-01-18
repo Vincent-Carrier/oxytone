@@ -122,6 +122,11 @@ export default class Token extends CustomElement {
 		else if (this.isRole(...roles)) yield this
 	}
 
+	containingPhrase(): Token[] {
+		const verb = this.isVerb ? this : this.verb()
+		return Array.from(verb?.dependents() ?? [])
+	}
+
 	verb(): Token | undefined {
 		for (const $a of this.headUp()) {
 			if (this.isVerb) return $a

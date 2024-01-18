@@ -1,5 +1,6 @@
+from textwrap import dedent
 from time import time
-from typing import cast
+from typing import Any, cast
 from box import Box
 from sanic import Blueprint, HTTPResponse, Request, json, file
 from genanki import Note, Deck, BASIC_MODEL
@@ -14,11 +15,18 @@ bp = Blueprint("flashcards", url_prefix="/flashcards")
 async def flashcards(req: Request):
     r = Box(req.json)
     deck = Deck(hash(r.title), name=r.title)
-    words = cast(list[Word], r.words)
+    words = cast(list[Any], r.words)
     for word in words:
+        back = dedent(
+            f"""
+            {word.definition}<br/>
+            {word.phrase}<br/>
+            <a href="https://lsj.gr/index.php?search={word.lemma}">lsj.gr</a>
+            """
+        )
         note = Note(
             BASIC_MODEL,
-            fields=[word.lemma, word.definition],
+            fields=[word.lemma, back],
         )
         deck.add_note(note)
     f = f"{r.slug}-{time()}.apkg"

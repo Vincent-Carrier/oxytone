@@ -18,7 +18,6 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 		addEventListener(
 			'tokenselect',
 			(ev: CustomEvent) => {
-				console.log('ev:', ev)
 				this.count += ev.detail.selected ? 1 : -1
 				this.render()
 			},
@@ -50,6 +49,14 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 		const words = Token.allSelected().map($w => ({
 			lemma: $w.lemma,
 			definition: $w.definition ?? '',
+			phrase: $w
+				.containingPhrase()
+				.sort((a, b) => a.n - b.n)
+				.map(({ innerText }) =>
+					innerText === $w.innerText ? `<b>${innerText}</b>` : innerText
+				)
+				.join(' ')
+				.replace(' ,', ','),
 		}))
 		// TODO: error handling
 		const res = await postJSON('/flashcards', { title, slug, words })
