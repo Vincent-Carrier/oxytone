@@ -12,11 +12,21 @@ export function BaseElement<T extends Constructor<HTMLElement>>(Sup: T) {
 		$$<E extends HTMLElement = Div>(selector: string): E[] {
 			return $$<E>(selector, this)
 		}
+
+		static get selector(): string {
+			//@ts-ignore
+			return `[is="${this.tag}"]`
+		}
 	}
 }
-export class CustomElement extends BaseElement(HTMLElement) {}
+export class CustomElement extends BaseElement(HTMLElement) {
+	static get selector(): string {
+		//@ts-ignore
+		return this.tag
+	}
+}
 
-export function register(base: string = undefined) {
+export function register(base?: string) {
 	return (target: any, ctx: ClassDecoratorContext) => {
 		ctx.addInitializer(function (this: any) {
 			customElements.define(this.tag, this as any, base && { extends: base })
@@ -27,7 +37,7 @@ export function register(base: string = undefined) {
 const identity = (v: any) => v
 type Parse = (k: string) => any
 
-export function attr(parse: Parse = identity, key: string = undefined) {
+export function attr(parse: Parse = identity, key?: string) {
 	return function (val: any, ctx: ClassAccessorDecoratorContext) {
 		const k = key ?? (ctx.name as string)
 		return {
@@ -45,13 +55,19 @@ export function attr(parse: Parse = identity, key: string = undefined) {
 	}
 }
 
-export function select(selector: string) {
-	return function (val, ctx: ClassAccessorDecoratorContext) {
-		return {
-			get() {
+export function select(selector: string): any {
+	return function (val, ctx: DecoratorContext) {
+		if (ctx.kind === 'accessor')
+			return {
+				get() {
+					return this.$(selector)
+				},
+			}
+		else if (ctx.kind === 'field')
+			return function () {
 				return this.$(selector)
-			},
-		}
+			}
+		else throw Error(`${ctx.kind} not supported`)
 	}
 }
 

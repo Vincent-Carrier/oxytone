@@ -1,9 +1,9 @@
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, on, register } from '@/lib/baseElement.js'
-import { $, $$, $inVerticalView } from '@/lib/dom.js'
+import { $, $$, $get, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
-const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
+const $flashcards = $get(FlashcardsButton),
 	$treebank = $('article.treebank')
 
 let timeout: number

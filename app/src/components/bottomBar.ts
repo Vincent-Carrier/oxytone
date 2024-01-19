@@ -5,10 +5,10 @@ import decodeFlags from '@/lib/flags.js'
 @register()
 export default class BottomBar extends CustomElement {
 	static tag = 'bottom-bar'
-	@select('#lemma') accessor $lemma: HTMLDivElement
-	@select('#def') accessor $def: HTMLDivElement
-	@select('#flags') accessor $flags: HTMLDivElement
-	@select('#lsj') accessor $lsj: HTMLAnchorElement
+	@select('#lemma') $lemma: HTMLDivElement
+	@select('#def') $def: HTMLDivElement
+	@select('#flags') $flags: HTMLDivElement
+	@select('#lsj') $lsj: HTMLAnchorElement
 
 	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
 		const $w = ev.detail.word

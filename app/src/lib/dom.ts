@@ -15,20 +15,12 @@ export function $$<E extends HTMLElement = Div>(
 	return Array.from(root.querySelectorAll<E>(selector))
 }
 
-export function $on<E extends HTMLElement = Div>(
-	els: string | E | E[],
-	listeners: Record<string, (el: E) => void>,
-	root: ParentNode = document
-) {
-	let $els: E[]
-	if (els instanceof HTMLElement) $els = [els]
-	else if (typeof els === 'string') $els = $$(els, root)
-	else $els = els
-	$els.forEach(el => {
-		for (const event in listeners) {
-			el.addEventListener(event, ev => listeners[event](ev.target as E))
-		}
-	})
+export function $get<T extends HTMLElement>(El: (new () => T) & { selector: string }): T {
+	return $(El.selector)
+}
+
+export function $all<T extends HTMLElement>(El: (new () => T) & { selector: string }): T[] {
+	return $$(El.selector)
 }
 
 export function $inVerticalView($el: HTMLElement): boolean {
