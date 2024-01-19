@@ -1,31 +1,25 @@
+import { $, $$ } from '@/lib/dom.js'
+
 type Div = HTMLDivElement
 type Constructor<T> = new (...args: any[]) => T
 
-export function BaseElement<T extends Constructor<HTMLElement>>(superClass: T) {
-	return class extends superClass {
-		constructor(...args: any[]) {
-			super()
-			// TODO: Replace with decorator
-			for (const prop of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
-				if (prop.startsWith('$on')) this.addEventListener(prop.slice(3), this[prop])
-			}
-		}
-
+export function BaseElement<T extends Constructor<HTMLElement>>(Sup: T) {
+	return class Sub extends Sup {
 		$<E extends HTMLElement = Div>(selector: string): E {
-			return this.querySelector<E>(selector)!
+			return $<E>(selector, this)
 		}
 
 		$$<E extends HTMLElement = Div>(selector: string): E[] {
-			return Array.from(this.querySelectorAll<E>(selector))
+			return $$<E>(selector, this)
 		}
 	}
 }
 export class CustomElement extends BaseElement(HTMLElement) {}
 
-export function register(name: string, base: string = undefined) {
-	return (target, ctx: ClassDecoratorContext) => {
-		ctx.addInitializer(function () {
-			customElements.define(name, this as any, base && { extends: base })
+export function register(base: string = undefined) {
+	return (target: any, ctx: ClassDecoratorContext) => {
+		ctx.addInitializer(function (this: any) {
+			customElements.define(this.tag, this as any, base && { extends: base })
 		})
 	}
 }
@@ -63,7 +57,9 @@ export function select(selector: string) {
 
 export function on(event: string) {
 	return function (val, ctx: ClassMethodDecoratorContext) {
-		return {}
+		ctx.addInitializer(function (this: HTMLElement) {
+			this.addEventListener(event, val)
+		})
 	}
 }
 

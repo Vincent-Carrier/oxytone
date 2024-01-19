@@ -21,9 +21,7 @@ init() {
 }
 
 assets() {
-	css &
-	bundle && js &
-	wait
+	css & js & wait
 }
 
 css() {
@@ -49,9 +47,9 @@ app() {
 }
 
 watch() {
+	browsersync &
 	css --watch &
 	js --watch &
-	browsersync &
 	bundle --watch
 }
 
@@ -84,7 +82,8 @@ sync_fs() {
 deploy() {
 	install_deps
 	assets
-	app
+	bundle --minify
+	sudo systemctl restart oxytone.service
 }
 
 clean() {

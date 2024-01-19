@@ -1,17 +1,18 @@
 import BottomBar from '@/components/bottomBar.js'
 import FlashcardsButton from '@/components/flashcardsButton.js'
-import { CustomElement, attr, register } from '@/lib/baseElement.js'
+import { CustomElement, attr, on, register } from '@/lib/baseElement.js'
 import { $, $$, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
-const $flashcards = $<FlashcardsButton>('[is=flashcards-btn]'),
-	$bottomBar = $<BottomBar>('bottom-bar'),
+const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
+	$bottomBar = $<BottomBar>(BottomBar.tag),
 	$treebank = $('article.treebank')
 
 let timeout: number
 
-@register('w-token')
+@register()
 export default class Token extends CustomElement {
+	static tag = 'w-token'
 	@attr(Boolean) accessor selected: boolean
 	@attr(Number) accessor n: number
 	@attr(Number) accessor head: number
@@ -22,10 +23,6 @@ export default class Token extends CustomElement {
 	@attr() accessor pos: string
 	@attr() accessor case: string
 	off: { [k: string]: () => void } = {}
-
-	get isSelected(): boolean {
-		return this.classList.contains('selected')
-	}
 
 	static all(): NodeListOf<Token> {
 		return $treebank.querySelectorAll<Token>('w-token')
@@ -39,7 +36,7 @@ export default class Token extends CustomElement {
 		Token.allSelected().forEach($w => ($w.selected = false))
 	}
 
-	$onpointerdown() {
+	@on('pointerdown') #select() {
 		if (this.pos == 'punct') return
 		const wasSelected = this.selected
 		if (!$flashcards.active) Token.clearSelected()
@@ -49,7 +46,7 @@ export default class Token extends CustomElement {
 		$bottomBar.word = this.selected ? this : null
 	}
 
-	$onpointerenter() {
+	@on('pointerenter') #addHighlight() {
 		timeout = setTimeout(() => {
 			if (this.pos == 'punct') return
 			this.$head?.classList.add('head')
@@ -61,7 +58,7 @@ export default class Token extends CustomElement {
 		}, 100)
 	}
 
-	$onpointerleave() {
+	@on('pointerleave') #removeHighlight() {
 		clearTimeout(timeout)
 		this.$head?.classList.remove('head')
 		this.off.subj?.()
@@ -69,7 +66,7 @@ export default class Token extends CustomElement {
 		this.off.dependents?.()
 	}
 
-	static *inView() {
+	static *inView(): Iterable<Token> {
 		let prevInView: boolean | undefined
 		for (const $w of Token.all()) {
 			const inView = $inVerticalView($w)

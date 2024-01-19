@@ -1,11 +1,12 @@
 import Token from '@/components/token.js'
-import { BaseElement, register } from '@/lib/baseElement.js'
+import { BaseElement, on, register } from '@/lib/baseElement.js'
 
-@register('memorize-btn', 'button')
+@register('button')
 export default class MemorizeButton extends BaseElement(HTMLButtonElement) {
+	static tag = 'memorize-btn'
 	$words: Token[] = []
 
-	$onclick() {
+	@on('pointerdown') #handleClick() {
 		if (this.$words.length) {
 			this.$words.forEach($w => toggleWord(true, $w))
 			this.$words = []
