@@ -1,7 +1,7 @@
 import { BaseElement, attr, on, register, select } from '@/lib/baseElement.js'
 import { $, $id } from '@/lib/dom.js'
 import { postJSON } from '@/lib/fetch.js'
-import Token from './token.js'
+import Token, { TokenSelectInit } from './token.js'
 
 const $treebank = $('article.treebank'),
 	title = $id('title').innerText,
@@ -12,28 +12,21 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 	static tag = 'flashcards-btn'
 	@attr(Boolean) accessor active: boolean
 	@select('label') accessor #label: HTMLLabelElement
-	#count: number = 0
-
-	constructor() {
-		super()
-		addEventListener(
-			'tokenselect',
-			(ev: CustomEvent) => {
-				this.#count += ev.detail.selected ? 1 : -1
-				this.#render()
-			},
-			{ capture: true }
-		)
-	}
+	count: number = 0
 
 	#render() {
-		if (this.active) this.#label.innerText = `${this.#count} selected`
+		if (this.active) this.#label.innerText = `${this.count} selected`
 		else this.#label.innerText = 'Flashcards'
-		this.disabled = this.active && this.#count === 0
+		this.disabled = this.active && this.count === 0
+	}
+
+	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
+		this.count += ev.detail.word.selected ? 1 : -1
+		this.#render()
 	}
 
 	@on('pointerdown') async #handleClick() {
-		if (this.active && this.#count > 0) await this.#exportFlashcards()
+		if (this.active && this.count > 0) await this.#exportFlashcards()
 		this.#clear()
 		this.active = !this.active
 		this.#render()
@@ -41,7 +34,7 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 
 	#clear() {
 		Token.clearSelected()
-		this.#count = 0
+		this.count = 0
 	}
 
 	async #exportFlashcards() {

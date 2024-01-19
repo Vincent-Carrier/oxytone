@@ -34,7 +34,7 @@ js() {
 
 bundle() {
 	npx esbuild $src/reader.js --outfile=$static/reader.min.js \
-		--bundle --format=esm --target=es2020 --sourcemap "$@"
+		--bundle --format=esm --sourcemap "$@"
 }
 
 browsersync() {

@@ -1,6 +1,5 @@
-import Token from '@/components/token.js'
-import { CustomElement, register, select } from '@/lib/baseElement.js'
-import { $ } from '@/lib/dom.js'
+import { TokenSelectInit } from '@/components/token.js'
+import { CustomElement, on, register, select } from '@/lib/baseElement.js'
 import decodeFlags from '@/lib/flags.js'
 
 @register()
@@ -11,12 +10,9 @@ export default class BottomBar extends CustomElement {
 	@select('#flags') accessor $flags: HTMLDivElement
 	@select('#lsj') accessor $lsj: HTMLAnchorElement
 
-	static get(): BottomBar {
-		return $(BottomBar.tag)
-	}
-
-	set word($w: Token | null) {
-		if ($w === null) {
+	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
+		const $w = ev.detail.word
+		if (!$w.selected) {
 			this.$lemma.innerText = ''
 			return
 		}

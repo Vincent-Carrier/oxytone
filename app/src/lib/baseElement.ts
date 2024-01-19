@@ -55,10 +55,11 @@ export function select(selector: string) {
 	}
 }
 
-export function on(event: string) {
+export function on(event: string, options?: AddEventListenerOptions & { root?: true }) {
 	return function (val, ctx: ClassMethodDecoratorContext) {
 		ctx.addInitializer(function (this: HTMLElement) {
-			this.addEventListener(event, val)
+			if (options?.root) addEventListener(event, val.bind(this), options)
+			else this.addEventListener(event, val, options)
 		})
 	}
 }

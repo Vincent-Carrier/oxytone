@@ -1,11 +1,9 @@
-import BottomBar from '@/components/bottomBar.js'
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, on, register } from '@/lib/baseElement.js'
 import { $, $$, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
 const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
-	$bottomBar = $<BottomBar>(BottomBar.tag),
 	$treebank = $('article.treebank')
 
 let timeout: number
@@ -41,9 +39,8 @@ export default class Token extends CustomElement {
 		const wasSelected = this.selected
 		if (!$flashcards.active) Token.clearSelected()
 		this.selected = !wasSelected
-		const event = new CustomEvent('tokenselect', { detail: { selected: this.selected } })
+		const event = new CustomEvent('tokenselect', { detail: { word: this } })
 		this.dispatchEvent(event)
-		$bottomBar.word = this.selected ? this : null
 	}
 
 	@on('pointerenter') #addHighlight() {
@@ -158,3 +155,5 @@ function highlight(words: Iterable<Token>, className: string) {
 	$words.forEach($w => $w.classList.add(className))
 	return () => $words.forEach($w => $w.classList.remove(className))
 }
+
+export type TokenSelectInit = CustomEventInit<{ word: Token }>
