@@ -1,9 +1,9 @@
 import FlashcardsButton from '@/components/flashcardsButton.js'
 import { CustomElement, attr, on, register } from '@/lib/baseElement.js'
-import { $, $$, $get, $inVerticalView } from '@/lib/dom.js'
+import { $, $$, $inVerticalView } from '@/lib/dom.js'
 import decodeFlags from '@/lib/flags.js'
 
-const $flashcards = $get(FlashcardsButton),
+const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
 	$treebank = $('article.treebank')
 
 let timeout: number
@@ -157,3 +157,5 @@ function highlight(words: Iterable<Token>, className: string) {
 }
 
 export type TokenSelectInit = CustomEventInit<{ word: Token }>
+
+// console.log(MemorizeButton.selector)

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-src=app/src
-static=app/static
+src=./app/src
+static=./app/static
 port=8000
 py="pipenv run"
 
@@ -39,7 +39,7 @@ bundle() {
 
 browsersync() {
 	npx browser-sync start -w -f app/static/** templates/** \
-		--proxy "localhost:$port" --no-open "$@"
+		--proxy "localhost:$port" --host 0.0.0.0 --no-open "$@"
 }
 
 app() {
@@ -47,7 +47,7 @@ app() {
 }
 
 watch() {
-	browsersync &
+	browsersync "$@" &
 	css --watch &
 	js --watch &
 	bundle --watch
