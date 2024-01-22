@@ -1,15 +1,33 @@
 from enum import Enum, auto
 from functools import singledispatch
+from itertools import pairwise
 from typing import NamedTuple, TypeAlias, no_type_check
 
 from lxml import etree
 from lxml.builder import E
 from lxml.etree import _Element, Element
-from core.constants import RIGHT_PUNCT
+from more_itertools import peekable
 from core.ref import Ref
 from core.treebank.treebank import Treebank
 from core.utils import cx, filter_none
-from core.word import POS, Word
+from core.word import Word
+
+
+class Format(Enum):
+    SPACE = auto()
+    SENTENCE_END = auto()
+    LINE_BREAK = auto()
+
+
+class Header(str):
+    ...
+
+
+class LineNumber(int):
+    ...
+
+
+Token: TypeAlias = Word | Ref | Header | LineNumber | Format
 
 
 @singledispatch
@@ -44,6 +62,16 @@ def _(ref: Ref) -> _Element:
     return E.a(f"[{ref.start}]", cx("ref"), id=str(ref.start), href=f"#{ref.start}")
 
 
+@render.register(LineNumber)
+def _(n: LineNumber) -> _Element | str:
+    return E.a(str(n), cx("ln", visible=n % 5 == 0), id=str(n), href=f"#{n}")
+
+
+@render.register(Header)
+def _(h: Header) -> _Element | str:
+    return E.h2(h)
+
+
 class HtmlPartialRenderer(NamedTuple):
     """Renders a treebank as an HTML partial"""
 
@@ -51,46 +79,29 @@ class HtmlPartialRenderer(NamedTuple):
 
     @no_type_check
     def body(self):
-        sentence = []
-        sentences = []
-
-        for t in iter(self.tb):
-            match t:
-                case Word() | Ref():
-                    sentence.append(render(t))
-                case FT.SPACE:
-                    sentence.append(" ")
-                case FT.SENTENCE_END:
-                    sentences.append(E.span(*sentence, cx("sentence")))
-                    sentence = []
-                case FT.LINE_BREAK:
-                    sentence.append(E.br())
-                case int(n):  # verse line numbers
-                    sentence.append(
-                        E.a(
-                            str(n),
-                            cx("ln", visible=t % 5 == 0),
-                            id=str(t),
-                            href=f"#{t}",
-                        )
-                    )
-                case None:
-                    pass
-        if len(sentence):
-            sentences.append(sentence)
+        s, sentences = [], []
+        itr = peekable(self.tb)
+        try:
+            while t := next(itr):
+                match t:
+                    case Format.LINE_BREAK:
+                        s.append(E.br())
+                    case Format.SPACE:
+                        s.append(" ")
+                    case Format.SENTENCE_END:
+                        sentences.append(E.span(*s, cx("sentence")))
+                        s = []
+                    case Header():
+                        sentences.append(render(t))
+                        if itr.peek() == Format.LINE_BREAK:
+                            next(itr)
+                    case _:
+                        s.append(render(t))
+        except StopIteration:
+            ...
+        if len(s):
+            sentences.append(s)
         return E.div(*sentences, cx("syntax", "verse" if self.tb.is_verse else "prose"))
 
     def render(self) -> str:
         return etree.tostring(self.body(), encoding="unicode", pretty_print=True)
-
-
-class FT(Enum):  # Formatting Token
-    SPACE = auto()
-    SENTENCE_START = auto()
-    SENTENCE_END = auto()
-    PARAGRAPH_START = auto()
-    PARAGRAPH_END = auto()
-    LINE_BREAK = auto()
-
-
-Token: TypeAlias = Word | Ref | int | FT

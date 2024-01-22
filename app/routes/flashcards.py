@@ -2,11 +2,10 @@ from textwrap import dedent
 from time import time
 from typing import Any, cast
 from box import Box
-from sanic import Blueprint, HTTPResponse, Request, json, file
+from sanic import Blueprint, HTTPResponse, Request, file
 from genanki import Note, Deck, BASIC_MODEL
 
 from core.constants import TMP
-from core.word import Word
 
 bp = Blueprint("flashcards", url_prefix="/flashcards")
 
@@ -36,4 +35,4 @@ async def flashcards(req: Request):
 
 @bp.get("/<f>")
 async def download_deck(req: Request, f: str):
-    return await file(TMP / f, filename=f)
+    return await file(TMP / f, filename=f, mime_type="application/apkg")

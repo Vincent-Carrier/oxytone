@@ -14,3 +14,6 @@
 * DONE Fix broken verse numbering
 * TODO Pin dependencies
 * TODO Memorization mode
+* TODO NPM workspaces
+* TODO Fix Safari, mobile bugs with pointer events
+* TODO Focus styles for line numbers

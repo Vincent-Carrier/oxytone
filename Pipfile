@@ -24,6 +24,8 @@ beautifulsoup4 = "*"
 pytest = "*"
 mypy = "*"
 djlint = "*"
+isort = "*"
+black = "*"
 
 [requires]
 python_version = "3.11"

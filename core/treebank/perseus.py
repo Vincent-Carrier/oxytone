@@ -1,4 +1,3 @@
-from importlib import import_module
 from itertools import pairwise
 import re
 from pathlib import Path
@@ -15,7 +14,7 @@ from pyCTS import CTS_URN
 
 from core.constants import LEFT_PUNCT, LSJ, RIGHT_PUNCT
 from core.ref import Ref, T
-from core.render import FT, Token
+from core.render import Format, Header, LineNumber, Token
 from core.treebank.chunker import Chunker
 from core.treebank.treebank import Sentence, Treebank
 from core.utils import safelist
@@ -53,7 +52,7 @@ class PerseusTB(Treebank[T]):
         tree = etree.parse(self.filepath)
         root = tree.getroot()
         body = body if (body := root.find(".//body")) is not None else root
-        yield from body.findall("./sentence")
+        yield from body.iterchildren()
 
     def chunks(self) -> Iterator[list[Sentence]]:
         if self.chunker is None:
@@ -76,27 +75,30 @@ class PerseusTB(Treebank[T]):
                     continue
                 yield w
                 if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
-                    yield FT.SPACE
+                    yield Format.SPACE
             if self.ref_cls:
                 prev_ref = sentence_ref  # type: ignore
-            yield FT.SENTENCE_END
+            yield Format.SENTENCE_END
 
     def _iter_verse(self) -> Iterator[Token]:
         prev_ref: Ref | None = None
-        yield 1
+        yield LineNumber(1)
         for sentence in self.sentences():
+            if sentence.tag == "speaker":
+                yield Header(sentence.text or "")
+                continue
             for word, next in pairwise(sentence.findall("./word")):
                 w, n = (self.word(el) for el in (word, next))
                 if not w:
                     continue
                 if w.ref and prev_ref and w.ref > prev_ref:
-                    yield FT.LINE_BREAK
-                    yield prev_ref.start.verse + 1
+                    yield Format.LINE_BREAK
+                    yield LineNumber(prev_ref.start.verse + 1)
                 yield w
                 if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
-                    yield FT.SPACE
+                    yield Format.SPACE
                 prev_ref = w.ref or prev_ref
-            yield FT.SENTENCE_END
+            yield Format.SENTENCE_END
 
     def word(self, el) -> Word | None:
         if el is None:

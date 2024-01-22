@@ -118,12 +118,14 @@ export default class Token extends CustomElement {
 
 	containingPhrase(): Token[] {
 		const verb = this.isVerb ? this : this.verb()
-		return Array.from(verb?.dependents() ?? [])
+		if (verb === this) return [this, ...this.dependents()]
+		else if (verb) return [...verb.dependents()]
+		return []
 	}
 
 	verb(): Token | undefined {
-		for (const $a of this.headUp()) {
-			if (this.isVerb) return $a
+		for (const $w of this.headUp()) {
+			if ($w.isVerb) return $w
 		}
 	}
 
@@ -142,7 +144,7 @@ export default class Token extends CustomElement {
 	}
 
 	get isVerb(): boolean {
-		return this.isRole('PRED', 'ATR', 'ADV')
+		return this.isRole('PRED', 'ADV')
 	}
 
 	get morphology(): string {
@@ -157,5 +159,3 @@ function highlight(words: Iterable<Token>, className: string) {
 }
 
 export type TokenSelectInit = CustomEventInit<{ word: Token }>
-
-// console.log(MemorizeButton.selector)

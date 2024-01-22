@@ -37,9 +37,20 @@ article {
 		}
 	}
 
+	h2 {
+		@include font(sans, bold);
+		@include box($px: 8, $mt: 4);
+	}
+
 	.sentence {
-		display: inline;
 		@include box($pr: 1);
+		display: inline;
+		&::after {
+			content: '—';
+			display: inline-block;
+			@include box($px: 2);
+			@include text(stone(300));
+		}
 	}
 
 	.ref {
@@ -47,6 +58,11 @@ article {
 		@include box($pr: 1);
 		@include text(stone(500), sm);
 		@include font(sans);
+	}
+	&#eumenides .ref {
+		display: block !important;
+		@include box($mt: 8, $pl: 0);
+		@include text(stone(600), lg);
 	}
 	.punct + .ref,
 	.ref:first-child {
@@ -75,14 +91,5 @@ article {
 	}
 	&.selection .ln {
 		visibility: hidden;
-	}
-
-	&#eutyphro {
-		.sentence + .sentence::after {
-			content: '—';
-			display: inline-block;
-			@include box($px: 2);
-			@include text(stone(300));
-		}
 	}
 }

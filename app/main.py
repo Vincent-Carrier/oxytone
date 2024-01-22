@@ -13,6 +13,7 @@ def create_app() -> Sanic:
     app.blueprint(read_bp)
     app.blueprint(flashcards_bp)
     app.static("/", STATIC, name="assets")
+    app.config.TOUCHUP = False
     return app
 
 

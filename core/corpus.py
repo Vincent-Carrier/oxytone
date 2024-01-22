@@ -5,6 +5,7 @@ from core.treebank.perseus import PerseusTB
 
 PERSEUS1 = TREEBANKS / "perseus/1.6"
 PERSEUS2 = TREEBANKS / "perseus/2.1"
+AUGMENTED = TREEBANKS / "augmented"
 
 
 corpus: dict[str, PerseusTB] = {
@@ -58,7 +59,7 @@ corpus: dict[str, PerseusTB] = {
     ),
     # Aeschylus
     "persians": PerseusTB(
-        PERSEUS2 / "persians.xml",
+        AUGMENTED / "persians.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
@@ -69,7 +70,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "seven-against-thebes": PerseusTB(
-        PERSEUS2 / "seven-against-thebes.xml",
+        AUGMENTED / "seven-against-thebes.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
@@ -80,7 +81,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "suppliants": PerseusTB(
-        PERSEUS2 / "suppliants.xml",
+        AUGMENTED / "suppliants.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
@@ -91,7 +92,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "agamemnon": PerseusTB(
-        PERSEUS2 / "agamemnon.xml",
+        AUGMENTED / "agamemnon.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
@@ -102,7 +103,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "libation-bearers": PerseusTB(
-        PERSEUS2 / "libation-bearers.xml",
+        AUGMENTED / "libation-bearers.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
@@ -113,7 +114,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "eumenides": PerseusTB(
-        PERSEUS2 / "eumenides.xml",
+        AUGMENTED / "eumenides.xml",
         ref_cls=Verse,
         is_verse=False,
         lang="ag",
@@ -124,7 +125,7 @@ corpus: dict[str, PerseusTB] = {
         genre="Tragedy",
     ),
     "prometheus-bound": PerseusTB(
-        PERSEUS2 / "prometheus-bound.xml",
+        AUGMENTED / "prometheus-bound.xml",
         ref_cls=Verse,
         is_verse=True,
         lang="ag",
