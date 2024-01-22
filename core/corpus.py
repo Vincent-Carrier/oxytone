@@ -1,4 +1,5 @@
 from box import Box
+
 from core.constants import CHUNKS, TREEBANKS
 from core.ref import BCV, CV, Verse
 from core.treebank.perseus import PerseusTB
@@ -37,7 +38,7 @@ corpus: dict[str, PerseusTB] = {
     # Hesiod
     "theogony": PerseusTB(
         PERSEUS1 / "hesiod-theogony-perseus-grc1.xml",
-        ref_cls=BCV,
+        ref_cls=CV,
         is_verse=True,
         lang="ag",
         slug="theogony",

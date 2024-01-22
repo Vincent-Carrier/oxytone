@@ -1,4 +1,5 @@
 type Div = HTMLDivElement
+type Dict<V> = Record<string, V>
 
 export function $id<E extends HTMLElement = Div>(id: string): E {
 	return document.getElementById(id) as E
@@ -13,6 +14,25 @@ export function $$<E extends HTMLElement = Div>(
 	root: ParentNode = document
 ): E[] {
 	return Array.from(root.querySelectorAll<E>(selector))
+}
+
+type Selectable<E extends HTMLElement> = string | E | E[]
+function $select<E extends HTMLElement = Div>(sl: Selectable<E>, root: ParentNode = document): E[] {
+	if (sl instanceof HTMLElement) return [sl]
+	else if (typeof sl === 'string') return $$(sl, root)
+	else return sl
+}
+
+export function $on<E extends HTMLElement = Div>(
+	selectable: Selectable<E>,
+	listeners: Dict<(ev: UIEvent, $target: E) => void>,
+	root: ParentNode = document
+) {
+	for (const $el of $select(selectable, root)) {
+		for (const event in listeners) {
+			$el.addEventListener(event, ev => listeners[event](ev as UIEvent, ev.target as E))
+		}
+	}
 }
 
 export function $get<T extends HTMLElement>(El: (new () => T) & { selector: string }): T {

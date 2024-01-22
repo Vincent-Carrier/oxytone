@@ -3,6 +3,10 @@
 @use './bars';
 @use './token';
 
+html {
+	scroll-behavior: smooth;
+}
+
 header {
 	@include box($pl: 8, $mt: 4, $mb: 6);
 	line-height: 1;
@@ -35,6 +39,10 @@ article {
 		@include media(sm) {
 			@include box($px: 1);
 		}
+
+		h2 {
+			@include box($px: 0);
+		}
 	}
 
 	h2 {
@@ -42,9 +50,8 @@ article {
 		@include box($px: 8, $mt: 4);
 	}
 
-	.sentence {
+	.sentence:not(:has(.ln:only-child)) {
 		@include box($pr: 1);
-		display: inline;
 		&::after {
 			content: '—';
 			display: inline-block;
@@ -59,11 +66,7 @@ article {
 		@include text(stone(500), sm);
 		@include font(sans);
 	}
-	&#eumenides .ref {
-		display: block !important;
-		@include box($mt: 8, $pl: 0);
-		@include text(stone(600), lg);
-	}
+
 	.punct + .ref,
 	.ref:first-child {
 		@include box($pl: 1);
@@ -84,7 +87,8 @@ article {
 		&.visible {
 			color: gray(400);
 		}
-		&:hover {
+		&:hover,
+		&:target {
 			color: sky(700);
 			cursor: none;
 		}

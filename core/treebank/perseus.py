@@ -1,13 +1,8 @@
-from itertools import pairwise
 import re
-from pathlib import Path
 import shelve
-from typing import (
-    Iterator,
-    Type,
-    cast,
-    final,
-)
+from itertools import pairwise
+from pathlib import Path
+from typing import Iterator, Type, cast, final
 
 from lxml import etree
 from pyCTS import CTS_URN
@@ -30,9 +25,12 @@ class PerseusTB(Treebank[T]):
     def __init__(
         self,
         f: Path,
-        **meta,
+        **kwargs,
     ) -> None:
-        super().__init__(**meta)
+        super().__init__(**kwargs)
+        if not f.exists():
+            print(f"warning: {self.meta.slug} has no backing XML file")
+            return
 
         # Read XML head for metadata
         self.filepath = f
@@ -44,9 +42,6 @@ class PerseusTB(Treebank[T]):
             if el.tag == "sentence":
                 self.meta.urn = el.attrib.get("document_id")
                 break
-
-        # if chunker := meta.get("chunker"):
-        #     self.chunker = getattr(import_module("core.treebank.chunker"), chunker)
 
     def sentences(self) -> Iterator[Sentence]:
         tree = etree.parse(self.filepath)
@@ -65,6 +60,9 @@ class PerseusTB(Treebank[T]):
     def _iter_prose(self) -> Iterator[Token]:
         prev_ref: Ref | None = None
         for sentence in self.sentences():
+            if sentence.tag == "speaker":
+                yield Header(sentence.text or "")
+                continue
             if self.ref_cls:
                 sentence_ref = self.parse_ref(sentence.attrib["subdoc"])
                 if sentence_ref > prev_ref:

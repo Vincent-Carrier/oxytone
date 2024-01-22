@@ -5,8 +5,9 @@ from typing import NamedTuple, TypeAlias, no_type_check
 
 from lxml import etree
 from lxml.builder import E
-from lxml.etree import _Element, Element
+from lxml.etree import Element, _Element
 from more_itertools import peekable
+
 from core.ref import Ref
 from core.treebank.treebank import Treebank
 from core.utils import cx, filter_none

@@ -1,8 +1,17 @@
 @use 'theme' as *;
 
+html {
+	overflow-y: hidden;
+}
+
+main {
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+	height: calc(100vh - len(12));
+}
+
 .top-bar,
 bottom-bar {
-	@include inset($x: 0);
 	@include surface(stone(100));
 	@extend .main-grid;
 	& > .center {
@@ -16,10 +25,8 @@ bottom-bar {
 }
 
 .top-bar {
-	@include inset($t: 0);
 	@include box($h: 10);
 	border-bottom: 2px solid stone(200);
-	position: sticky;
 
 	nav {
 		#back.button {
@@ -35,7 +42,7 @@ bottom-bar {
 }
 
 bottom-bar {
-	@include inset($b: 0);
+	@include inset($b: 0, $x: 0);
 	@include box($h: 12, $pt: 1);
 	@extend .main-grid;
 	border-top: 2px solid stone(200);
