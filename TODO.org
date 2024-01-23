@@ -1,19 +1,17 @@
-* TODO Graft segmentation data for tragedies
+* DONE Graft segmentation data for tragedies
 * TODO Add more works
 ** Thucydides
 ** Lysias
 ** Hymn to Demeter
 ** Plutarch
 ** Xenophon
-* TODO Add span data to index
-* TODO Fix word definitions on mobile
+* TODO Add span data for Herodotus &cie.
 * DONE Extract styles lib
-* TODO Refine highlighting of verb complements
+* DONE Refine highlighting of verb complements
 * DONE Highlight head on hover
 * DONE Add ref and POS tags on Anki notes
 * DONE Fix broken verse numbering
-* TODO Pin dependencies
-* TODO Memorization mode
+* DONE Memorization mode
 * TODO NPM workspaces
-* TODO Fix Safari, mobile bugs with pointer events
-* TODO Focus styles for line numbers
+* TODO Fix Safari bugs
+* DONE Focus styles for line numbers

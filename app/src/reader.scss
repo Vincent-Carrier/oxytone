@@ -73,7 +73,7 @@ article {
 	}
 
 	.subdoc {
-		padding-right: len(2);
+		@include box($pr: 2);
 	}
 
 	.ln {
@@ -93,7 +93,7 @@ article {
 			cursor: none;
 		}
 	}
-	&.selection .ln {
+	&.selection :is(.ln, .ref) {
 		visibility: hidden;
 	}
 }

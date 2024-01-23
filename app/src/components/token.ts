@@ -34,7 +34,7 @@ export default class Token extends CustomElement {
 		Token.allSelected().forEach($w => ($w.selected = false))
 	}
 
-	@on('pointerdown') #select() {
+	@on('pointerdown') #select(ev: PointerEvent) {
 		if (this.pos == 'punct') return
 		const wasSelected = this.selected
 		if (!$flashcards.active) Token.clearSelected()
@@ -43,7 +43,7 @@ export default class Token extends CustomElement {
 		this.dispatchEvent(event)
 	}
 
-	@on('pointerenter') #addHighlight() {
+	@on('pointerenter') #addHighlight(ev: PointerEvent) {
 		timeout = setTimeout(() => {
 			if (this.pos == 'punct') return
 			this.$head?.classList.add('head')
@@ -55,7 +55,7 @@ export default class Token extends CustomElement {
 		}, 100)
 	}
 
-	@on('pointerleave') #removeHighlight() {
+	@on('pointerleave') #removeHighlight(ev: PointerEvent) {
 		clearTimeout(timeout)
 		this.$head?.classList.remove('head')
 		this.off.subj?.()

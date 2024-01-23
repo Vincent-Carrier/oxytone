@@ -11,10 +11,3 @@ addEventListener('selectionchange', () => {
 	if (!selection!.isCollapsed) $treebank.classList.add('selection')
 	else $treebank.classList.remove('selection')
 })
-
-// $on('a.ln', {
-// 	click(ev, $target) {
-// 		$target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-// 		ev.stopImmediatePropagation()
-// 	},
-// })
