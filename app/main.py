@@ -5,15 +5,13 @@ from core.constants import STATIC
 
 def create_app() -> Sanic:
     app = Sanic("oxytone")
-    from app.routes.flashcards import bp as flashcards_bp
-    from app.routes.read import bp as read_bp
-    from app.routes.index import bp as index_bp
+    import app.routes as r
 
-    app.blueprint(index_bp)
-    app.blueprint(read_bp)
-    app.blueprint(flashcards_bp)
+    app.blueprint(r.index)
+    app.blueprint(r.read)
+    app.blueprint(r.flashcards)
+    app.blueprint(r.nlp)
     app.static("/", STATIC, name="assets")
-    app.config.TOUCHUP = False
     return app
 
 

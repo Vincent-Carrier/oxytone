@@ -1,7 +1,6 @@
 from enum import Enum, auto
 from functools import singledispatch
-from itertools import pairwise
-from typing import NamedTuple, TypeAlias, no_type_check
+from typing import NamedTuple, TypeAlias
 
 from lxml import etree
 from lxml.builder import E
@@ -78,28 +77,23 @@ class HtmlPartialRenderer(NamedTuple):
 
     tb: Treebank
 
-    @no_type_check
     def body(self):
         s, sentences = [], []
-        itr = peekable(self.tb)
-        try:
-            while t := next(itr):
-                match t:
-                    case Format.LINE_BREAK:
-                        s.append(E.br())
-                    case Format.SPACE:
-                        s.append(" ")
-                    case Format.SENTENCE_END:
-                        sentences.append(E.span(*s, cx("sentence")))
-                        s = []
-                    case Header():
-                        sentences.append(render(t))
-                        if itr.peek() == Format.LINE_BREAK:
-                            next(itr)
-                    case _:
-                        s.append(render(t))
-        except StopIteration:
-            ...
+        for t in (itr := peekable(self.tb)):
+            match t:
+                case Format.LINE_BREAK:
+                    s.append(E.br())
+                case Format.SPACE:
+                    s.append(" ")
+                case Format.SENTENCE_END:
+                    sentences.append(E.span(*s, cx("sentence")))
+                    s = []
+                case Header():
+                    sentences.append(render(t))
+                    if itr.peek() == Format.LINE_BREAK:
+                        next(itr)
+                case _:
+                    s.append(render(t))
         if len(s):
             sentences.append(s)
         return E.div(*sentences, cx("syntax", "verse" if self.tb.is_verse else "prose"))

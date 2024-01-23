@@ -1,17 +1,17 @@
 * DONE Graft segmentation data for tragedies
-* TODO Add more works
-** Thucydides
-** Lysias
-** Hymn to Demeter
-** Plutarch
-** Xenophon
-* TODO Add span data for Herodotus &cie.
 * DONE Extract styles lib
 * DONE Refine highlighting of verb complements
 * DONE Highlight head on hover
 * DONE Add ref and POS tags on Anki notes
 * DONE Fix broken verse numbering
 * DONE Memorization mode
+* DONE Focus styles for line numbers
+* TODO Add span data for Herodotus &cie.
 * TODO NPM workspaces
 * TODO Fix Safari bugs
-* DONE Focus styles for line numbers
+* TODO Add more works
+** TODO Thucydides
+** TODO Lysias
+** TODO Hymn to Demeter
+** TODO Plutarch
+** TODO Xenophon

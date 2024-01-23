@@ -1,18 +1,10 @@
 from abc import ABCMeta, abstractmethod
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Generic,
-    Iterator,
-    Type,
-    TypeAlias,
-)
-from box import Box
+from typing import TYPE_CHECKING, Any, Generic, Iterator, Type, TypeAlias
 
+from box import Box
 from lxml import etree
 
 from core.ref import Ref, T
-from core.treebank.chunker import Chunker
 
 if TYPE_CHECKING:
     from core.render import Token
@@ -33,18 +25,16 @@ class Treebank(Generic[T], metaclass=ABCMeta):
     ref: str
     urn: str | None
     eng_urn: str
-    # chunker: Type[Chunker]
     ref_cls: Type[T] | None
 
     def __init__(
         self,
-        **meta,
+        **kwargs,
     ) -> None:
-        self.meta = Box(meta)
+        self.meta = Box(kwargs)
 
-    def __getattr__(self, __name: str) -> Any:
-        if attr := self.meta.get(__name):
-            return attr
+    def __getattr__(self, __name: str) -> Any | None:
+        return attr if (attr := self.meta.get(__name)) else None
 
     @abstractmethod
     def __iter__(self) -> Iterator["Token"]:

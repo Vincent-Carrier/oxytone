@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title %}
-    {{ title }}
-    {{ "- %s" % chunk_title if chunk_title }}
+    {% if title %}
+        {{ title }}
+        {{ "- %s" % chunk_title if chunk_title }}
+    {% else %}
+        Oxytone
+    {% endif %}
 {% endblock title %}
 {% block head %}
     <link rel="stylesheet"
@@ -13,13 +17,15 @@
     {% include "_toolbars.html" %}
 {% endblock body_start %}
 {% block content %}
-    <header>
-        <p id="author">{{ author }}</p>
-        <h1>
-            <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title
-            }}
-        </h1>
-        {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
-    </header>
+    {% if title %}
+        <header>
+            <p id="author">{{ author }}</p>
+            <h1>
+                <span id="title">{{ title }}</span> &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; {{ original_title
+                }}
+            </h1>
+            {% if chunk_title %}<p id="chunk-title">{{ chunk_title }}</p>{% endif %}
+        </header>
+    {% endif %}
     <article class="treebank" id="{{ slug }}">{{ body|safe }}</article>
 {% endblock content %}
