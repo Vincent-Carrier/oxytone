@@ -14,7 +14,6 @@ button,
 			display: none;
 		}
 	}
-
 	* {
 		cursor: pointer;
 	}
@@ -24,11 +23,16 @@ button,
 		border-color: stone(400);
 	}
 	&:active {
-		@include surface(stone(400));
+		@include surface(stone(900));
+		@include text(stone(300));
 	}
 	&[active] {
 		@include surface(stone(700));
 		@include text(stone(300));
+		&:hover {
+			@include surface(stone(800));
+			@include text(stone(300));
+		}
 	}
 	&:disabled {
 		@include text(stone(500));
@@ -37,7 +41,6 @@ button,
 	svg {
 		@include box(4, 4);
 	}
-
 	&.ghost {
 		border: none;
 		@include surface(transparent);

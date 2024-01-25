@@ -29,12 +29,12 @@ class NLPTreebank(Treebank):
 
     def __iter__(self) -> Iterator["Token"]:
         for w in (itr := peekable(self.words())):
+            n = itr.peek() if itr else None
+            if n and n.id == 0:
+                yield Format.SENTENCE_END
             yield w
-            # n = itr.peek()  # TODO: make sure this doesn't raise StopIteration
-            # if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
-            #     yield Format.SPACE
-            # if n.id == 0:
-        yield Format.SENTENCE_END
+            if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
+                yield Format.SPACE
 
     @staticmethod
     def make_word(w) -> Word:

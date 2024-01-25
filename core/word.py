@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-import greek_accentuation.syllabify as ga
 from enum import StrEnum, auto
 from typing import Optional
+
+import greek_accentuation.syllabify as ga
 
 from core.ref import Ref
 

@@ -11,6 +11,9 @@ w-token {
 	&[pos='verb'] {
 		@include font($wght: 700);
 	}
+	&.aside {
+		@include font($style: italic);
+	}
 	&[case='nominative'] {
 		@include text(emerald(600));
 	}

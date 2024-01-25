@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='/create_nlp.css') }}" />
+{% endblock head %}
+{% block body_start %}
+    {% include "_toolbars.html" %}
+{% endblock body_start %}
+{% block content %}
+    <form action="{{ url_for('nlp.create_nlp',) }}" method="post">
+        <label>
+            Body
+            <textarea name="body" cols="30" rows="10"></textarea>
+        </label>
+    </form>
+{% endblock content %}

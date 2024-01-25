@@ -9,7 +9,7 @@
         <meta name="keywords" content="">
         <title>
             {% block title %}
-                {{ title }}
+                {{ title if title else "Oxytone" }}
             {% endblock title %}
         </title>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">

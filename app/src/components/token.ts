@@ -82,8 +82,7 @@ export default class Token extends CustomElement {
 	*headUp(): Iterable<Token> {
 		const $head = this.$head
 		if (!$head) return
-		yield $head
-		yield* $head.headUp()
+		yield* [$head, ...$head.headUp()]
 	}
 
 	*directDependents(opts?: { include?: string[]; exclude?: string[] }) {
@@ -100,8 +99,16 @@ export default class Token extends CustomElement {
 		for (const $child of this.directDependents()) {
 			if (opts?.exclude && $child.isRole(...opts.exclude)) continue
 			if (opts?.include && !$child.isRole(...opts.include)) continue
-			yield $child
-			yield* $child.dependents()
+			yield* [$child, ...$child.dependents()]
+		}
+	}
+
+	*subtree(role: string) {
+		if (this.role === role) yield* [this, ...this.dependents()]
+		else if (this.role.startsWith(role)) {
+			const $h = this.$head
+			if (!$h) return
+			yield* [$h, ...$h.dependents()]
 		}
 	}
 
@@ -120,7 +127,7 @@ export default class Token extends CustomElement {
 		const verb = this.isVerb ? this : this.verb()
 		if (verb === this) return [this, ...this.dependents()]
 		else if (verb) return [...verb.dependents()]
-		return []
+		else return []
 	}
 
 	verb(): Token | undefined {
@@ -156,6 +163,10 @@ function highlight(words: Iterable<Token>, className: string) {
 	const $words = Array.from(words)
 	$words.forEach($w => $w.classList.add(className))
 	return () => $words.forEach($w => $w.classList.remove(className))
+}
+
+for (const $w of Token.all()) {
+	for (const $d of $w.subtree('ExD')) $d.classList.add('aside')
 }
 
 export type TokenSelectInit = CustomEventInit<{ word: Token }>

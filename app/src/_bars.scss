@@ -39,6 +39,13 @@ bottom-bar {
 			}
 		}
 	}
+
+	button[is='flashcards-btn'] label {
+		width: 10ch;
+	}
+	button[is='memorize-btn'] label {
+		width: 10ch;
+	}
 }
 
 bottom-bar {
@@ -83,8 +90,4 @@ bottom-bar {
 			}
 		}
 	}
-}
-
-button[is='flashcards-btn'] label {
-	width: 10ch;
 }

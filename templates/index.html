@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
-{% block title %}
-    Oxytone
-{% endblock title %}
+{% import "_entry.html" as entry %}
 {% block head %}
     <link rel="stylesheet"
           href="{{ url_for('assets', filename='/index.css') }}" />
@@ -23,31 +20,14 @@
         <section id="{{ author.slug }}">
             <h2>{{ author.name }}</h2>
             <div class="entries">
-                {% for doc in author.corpus.values() %}{{ macros.entry(doc) }}{% endfor %}
+                {% for doc in author.corpus.values() %}{{ entry.entry(doc) }}{% endfor %}
             </div>
         </section>
     {% endfor %}
     <footer>
         <h2>About</h2>
         <p>
-            The source code for Oxytone is available on <a href="https://github.com/Vincent-Carrier/pyrrho">GitHub</a>. It uses data <a href="https://perseusdl.github.io/treebank_data/">from the PerseusDL project</a>.
+            The source code for Oxytone is available on <a href="https://github.com/Vincent-Carrier/oxytone">GitHub</a>. It uses data <a href="https://perseusdl.github.io/treebank_data/">from the PerseusDL project</a>.
         </p>
-        {# <p>
-            Oxytone uses color-coding to represent various aspects of Ancient Greek grammar:
-            <div class="legend">
-                <div class="cases">
-                    <div class="nominative">Nominative</div>
-                    <div class="accusative">Accusative</div>
-                    <div class="dative">Dative</div>
-                    <div class="genitive">Genitive</div>
-                    <div class="vocative">Vocative</div>
-                </div>
-                <div class="roles">
-                    <div class="verb">Verb</div>
-                    <div class="subj">Subject</div>
-                    <div class="dobj">Object</div>
-                </div>
-            </div>
-        </p> #}
     </footer>
 {% endblock content %}

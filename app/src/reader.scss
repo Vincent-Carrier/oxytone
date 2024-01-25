@@ -97,3 +97,10 @@ article {
 		visibility: hidden;
 	}
 }
+
+.transparent {
+	color: transparent;
+	& > * {
+		color: transparent;
+	}
+}
