@@ -1,14 +1,18 @@
 @use 'theme' as *;
-@use 'components';
-@use './bars';
-@use './token';
+@use 'button';
+@use 'bars';
+@use 'token';
 
 html {
 	scroll-behavior: smooth;
 }
 
+main {
+	@include box($my: 6);
+}
+
 header {
-	@include box($pl: 8, $mt: 4, $mb: 6);
+	@include box($pl: 8);
 	line-height: 1;
 	#author {
 		@include font(sans);

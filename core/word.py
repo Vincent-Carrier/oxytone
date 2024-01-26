@@ -1,9 +1,11 @@
+import shelve
 from dataclasses import dataclass
 from enum import StrEnum, auto
 from typing import Optional
 
 import greek_accentuation.syllabify as ga
 
+from core.constants import LSJ
 from core.ref import Ref
 
 
@@ -113,8 +115,12 @@ class Word:
     ref: Ref | None = None
 
     def __post_init__(self):
+        self.definition = lsj.get(self.lemma) if self.lemma else None
         if ga.breathing(self.form) == ga.SMOOTH:
             self.form = ga.debreath(self.form).lstrip("h")
 
     def __str__(self) -> str:
         return self.form
+
+
+lsj = shelve.open(str(LSJ), "r")

@@ -86,12 +86,16 @@ deploy() {
 	sudo systemctl restart oxytone.service
 }
 
-clean() {
+cleanall() {
 	rm -f data/lsj.db
-	rm -rf $static/**.{css,css.map,js,js.map}
-	rm -rf data/treebanks/chunks/**
+	rm -rf data/treebanks/{chunks,augmented}/**
 	rm -rf tmp/**
-	rm -rf build/**
+}
+
+cleanassets() {
+	rm -rf $static/**.{css,css.map,js,js.map}
+	rm -rf app/src/**.{css,css.map,js,js.map}
+	rm -rf tmp/**
 }
 
 help() {

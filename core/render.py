@@ -2,6 +2,7 @@ from enum import Enum, auto
 from functools import singledispatch
 from typing import NamedTuple, TypeAlias
 
+import IPython
 from lxml import etree
 from lxml.builder import E
 from lxml.etree import Element, _Element
@@ -80,6 +81,7 @@ class HtmlPartialRenderer(NamedTuple):
     def body(self):
         s, sentences = [], []
         for t in (itr := peekable(self.tb)):
+            nxt = itr.peek() if itr else None
             match t:
                 case Format.LINE_BREAK:
                     s.append(E.br())
@@ -90,12 +92,13 @@ class HtmlPartialRenderer(NamedTuple):
                     s = []
                 case Header():
                     sentences.append(render(t))
-                    if itr.peek() == Format.LINE_BREAK:
+                    if nxt == Format.LINE_BREAK:
                         next(itr)
                 case _:
                     s.append(render(t))
         if len(s):
             sentences.append(s)
+        print(*sentences[:5])
         return E.div(*sentences, cx("syntax", "verse" if self.tb.is_verse else "prose"))
 
     def render(self) -> str:

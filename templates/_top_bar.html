@@ -1,0 +1,16 @@
+{% macro render() %}
+    <div class="top-bar">
+        <div class="center">
+            <nav>
+                <a class="button ghost"
+                   id="back"
+                   href="{{ url_for("index.get_index") }}">
+                    {% include "icons/heroicons:arrow-long-left-16-solid.svg" %}
+                    <span class="label">Go Back</span>
+                </a>
+            </nav>
+            <div class="grow"></div>
+            {{ caller() if caller }}
+        </div>
+    </div>
+{% endmacro %}

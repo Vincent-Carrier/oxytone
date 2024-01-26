@@ -1,5 +1,4 @@
 import re
-import shelve
 from itertools import pairwise
 from pathlib import Path
 from typing import Iterator, Type, cast, final
@@ -7,7 +6,7 @@ from typing import Iterator, Type, cast, final
 from lxml import etree
 from pyCTS import CTS_URN
 
-from core.constants import LEFT_PUNCT, LSJ, RIGHT_PUNCT
+from core.constants import LEFT_PUNCT, RIGHT_PUNCT
 from core.ref import Ref, T
 from core.render import Format, Header, LineNumber, Token
 from core.treebank.chunker import Chunker
@@ -126,9 +125,5 @@ class PerseusTB(Treebank[T]):
             case=Case.parse_agldt(tags.get(7)),
             flags=flags,
             role=attr.get("relation"),
-            definition=lsj.get(lemma) if lemma else None,
             ref=ref,
         )
-
-
-lsj = shelve.open(str(LSJ), "r")

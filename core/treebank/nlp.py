@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Iterator, final
 
 from cltk import NLP
 from more_itertools import peekable
+from rich import print
 
 from core.constants import LEFT_PUNCT, RIGHT_PUNCT
 from core.render import Format
@@ -29,12 +30,13 @@ class NLPTreebank(Treebank):
 
     def __iter__(self) -> Iterator["Token"]:
         for w in (itr := peekable(self.words())):
-            n = itr.peek() if itr else None
-            if n and n.id == 0:
+            nxt = itr.peek() if itr else None
+            if nxt and nxt.id == 0:
                 yield Format.SENTENCE_END
             yield w
-            if n and n.form not in RIGHT_PUNCT and w.form not in LEFT_PUNCT:
+            if nxt and (nxt.form not in RIGHT_PUNCT) and (w.form not in LEFT_PUNCT):
                 yield Format.SPACE
+        yield Format.SENTENCE_END
 
     @staticmethod
     def make_word(w) -> Word:

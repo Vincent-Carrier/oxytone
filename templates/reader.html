@@ -1,3 +1,4 @@
+{% import "_top_bar.html" as topbar %}
 {% extends "base.html" %}
 {% block title %}
     {% if title %}
@@ -14,7 +15,18 @@
             type="module"></script>
 {% endblock head %}
 {% block body_start %}
-    {% include "_toolbars.html" %}
+    {% call topbar.render() %}
+        <button is="flashcards-btn">
+            {% include "icons/heroicons:arrow-down-circle.svg" %}
+            <label>Flashcards</label>
+            <span id="selected-count" />
+        </button>
+        <button is="memorize-btn">
+            {% include "icons/heroicons:academic-cap.svg" %}
+            <label>Memorize</label>
+        </button>
+    {% endcall %}
+    {% include "_bottom_bar.html" %}
 {% endblock body_start %}
 {% block content %}
     {% if title %}

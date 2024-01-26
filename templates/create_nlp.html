@@ -1,16 +1,18 @@
+{% import "_top_bar.html" as topbar %}
 {% extends "base.html" %}
 {% block head %}
     <link rel="stylesheet"
           href="{{ url_for('assets', filename='/create_nlp.css') }}" />
 {% endblock head %}
 {% block body_start %}
-    {% include "_toolbars.html" %}
+    {{ topbar.render() }}
 {% endblock body_start %}
 {% block content %}
     <form action="{{ url_for('nlp.create_nlp',) }}" method="post">
         <label>
-            Body
+            <div>Body</div>
             <textarea name="body" cols="30" rows="10"></textarea>
         </label>
+        <button type="submit">Submit</button>
     </form>
 {% endblock content %}

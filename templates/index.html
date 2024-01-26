@@ -20,7 +20,7 @@
         <section id="{{ author.slug }}">
             <h2>{{ author.name }}</h2>
             <div class="entries">
-                {% for doc in author.corpus.values() %}{{ entry.entry(doc) }}{% endfor %}
+                {% for doc in author.corpus.values() %}{{ entry.render(doc) }}{% endfor %}
             </div>
         </section>
     {% endfor %}
