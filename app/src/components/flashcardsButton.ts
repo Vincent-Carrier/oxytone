@@ -41,6 +41,7 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 		const words = Token.allSelected().map($w => ({
 			lemma: $w.lemma,
 			definition: $w.definition ?? '',
+			ref: $w.canonicalRef()?.toString(),
 			phrase: $w
 				.containingPhrase()
 				.sort((a, b) => a.n - b.n)

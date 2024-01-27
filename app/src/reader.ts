@@ -4,6 +4,8 @@ import '@/components/memorizeButton.js'
 import '@/components/token.js'
 import { $ } from '@/lib/dom.js'
 
+console.log('hi')
+
 const $treebank = $('article.treebank')
 
 addEventListener('selectionchange', () => {

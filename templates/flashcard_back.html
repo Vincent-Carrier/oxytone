@@ -1,0 +1,12 @@
+{% if definition %}<div>{{ definition }}</div>{% endif %}
+{% if phrase %}<div>{{ phrase }}</div>{% endif %}
+{% if lemma %}
+    <div>
+        <a href="https://lsj.gr/index.php?search={{ lemma }}">lsj.gr</a>
+    </div>
+{% endif %}
+{% if ref %}
+    <div>
+        <a href="{{ ref }}">oxytone.xyz</a>
+    </div>
+{% endif %}

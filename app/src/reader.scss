@@ -3,12 +3,16 @@
 @use 'bars';
 @use 'token';
 
-html {
-	scroll-behavior: smooth;
+body {
+	@include flex-y(0);
+	height: 100vh;
 }
 
 main {
-	@include box($my: 6);
+	@include box($py: 6);
+	flex-grow: 1;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
 }
 
 header {

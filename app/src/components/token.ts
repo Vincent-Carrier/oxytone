@@ -73,6 +73,23 @@ export default class Token extends CustomElement {
 		}
 	}
 
+	nearestAnchor(): HTMLAnchorElement | null {
+		let sentence = this.closest('.sentence')
+		while (true) {
+			if (!sentence) return null
+			let anchor = sentence.querySelector<HTMLAnchorElement>(':is(.ref,.ln)')
+			if (anchor) return anchor
+			else sentence = sentence.previousElementSibling
+		}
+	}
+
+	canonicalRef(): string | null {
+		const href = this.nearestAnchor()?.href
+		if (!href) return null
+		const { origin } = new URL(href)
+		return href.replace(origin, 'https://oxytone.xyz')
+	}
+
 	get $head(): Token | null {
 		const $sentence = this.closest('.sentence'),
 			$head = $sentence?.querySelector<Token>(`[n="${this.head}"]`)

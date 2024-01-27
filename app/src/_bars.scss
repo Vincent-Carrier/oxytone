@@ -1,15 +1,5 @@
 @use 'theme' as *;
 
-html {
-	overflow-y: hidden;
-}
-
-main {
-	overflow-y: scroll;
-	scroll-behavior: smooth;
-	height: calc(100vh - len(12));
-}
-
 .top-bar,
 bottom-bar {
 	@include surface(stone(100));
@@ -26,6 +16,7 @@ bottom-bar {
 
 .top-bar {
 	@include box($h: 10);
+	flex-shrink: 0;
 	border-bottom: 2px solid stone(200);
 
 	nav {

@@ -1,28 +1,33 @@
-from textwrap import dedent
 from time import time
-from typing import Any, cast
-from box import Box
-from sanic import Blueprint, HTTPResponse, Request, file
-from genanki import Note, Deck, BASIC_MODEL
+from typing import cast
 
+from box import Box
+from genanki import BASIC_MODEL, Deck, Note
+from sanic import Blueprint, HTTPResponse, Request, file
+
+from app.jinja import jinja_env
 from core.constants import TMP
 
 bp = Blueprint("flashcards", url_prefix="/flashcards")
 
 
+class Word(Box):
+    lemma: str
+    definition: str
+    phrase: str
+    ref: str
+
+
+flashcard_tmpl = jinja_env.get_template("flashcard_back.html")
+
+
 @bp.post("/")
 async def flashcards(req: Request):
-    r = Box(req.json)
+    r = Box(req.json, default_box=True)
     deck = Deck(hash(r.title), name=r.title)
-    words = cast(list[Any], r.words)
+    words = cast(list[Word], r.words)
     for word in words:
-        back = dedent(
-            f"""
-            {word.definition}<br/>
-            {word.phrase}<br/>
-            <a href="https://lsj.gr/index.php?search={word.lemma}">lsj.gr</a>
-            """
-        )
+        back = await flashcard_tmpl.render_async(**word)
         note = Note(
             BASIC_MODEL,
             fields=[word.lemma, back],
