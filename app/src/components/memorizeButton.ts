@@ -1,11 +1,9 @@
 import Token from '@/components/token.js'
 import { BaseElement, attr, on, register, select } from '@/lib/baseElement.js'
+import { cycle } from '@/lib/utils.js'
 
-const states = ['off', 'words', 'lines'] as const
-type State = (typeof states)[number]
-function* cycleState(): Iterator<State> {
-	while (true) yield* states
-}
+const STATES = ['off', 'words', 'lines'] as const
+type State = (typeof STATES)[number]
 
 @register('button')
 export default class MemorizeButton extends BaseElement(HTMLButtonElement) {
@@ -13,11 +11,15 @@ export default class MemorizeButton extends BaseElement(HTMLButtonElement) {
 	@select('label') $label: HTMLLabelElement
 	@attr(Boolean) accessor active = false
 	$words: Token[] = []
-	#machine: Iterator<State> = cycleState()
+	#machine = cycle(...STATES)
 	#state: State = this.#machine.next().value
 
-	@on('pointerdown') #handleClick() {
+	#next() {
 		this.#state = this.#machine.next().value
+		this.#render()
+	}
+
+	#render() {
 		switch (this.#state) {
 			case 'words':
 				this.active = true
@@ -43,6 +45,10 @@ export default class MemorizeButton extends BaseElement(HTMLButtonElement) {
 				this.$words = []
 				break
 		}
+	}
+
+	@on('pointerdown') #handleClick() {
+		this.#next()
 	}
 }
 

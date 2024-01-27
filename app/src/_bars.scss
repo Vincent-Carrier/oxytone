@@ -45,10 +45,6 @@ bottom-bar {
 	@extend .main-grid;
 	border-top: 2px solid stone(200);
 
-	&:has(#lemma:empty) {
-		display: none;
-	}
-
 	.center {
 		@include box($h: 10);
 		@include flex-x(2, $align-items: center);

@@ -17,8 +17,17 @@ export function BaseElement<T extends Constructor<HTMLElement>>(Sup: T) {
 			//@ts-ignore
 			return `[is="${this.tag}"]`
 		}
+
+		static get() {
+			return $(this.selector)
+		}
+
+		static all() {
+			return document.querySelectorAll(this.selector)
+		}
 	}
 }
+
 export class CustomElement extends BaseElement(HTMLElement) {
 	static get selector(): string {
 		//@ts-ignore

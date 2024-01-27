@@ -1,4 +1,4 @@
-import { TokenSelectInit } from '@/components/token.js'
+import { type TokenSelectInit } from '@/components/token.js'
 import { CustomElement, on, register, select } from '@/lib/baseElement.js'
 import decodeFlags from '@/lib/flags.js'
 
@@ -12,10 +12,8 @@ export default class BottomBar extends CustomElement {
 
 	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
 		const $w = ev.detail.word
-		if (!$w.selected) {
-			this.$lemma.innerText = ''
-			return
-		}
+		this.hidden = !$w.selected
+		if (this.hidden) return
 		this.$lemma.innerText = $w.lemma
 		this.$def.innerText = $w.definition ?? ''
 		this.$flags.innerHTML = decodeFlags($w.flags)

@@ -22,10 +22,6 @@ export default class Token extends CustomElement {
 	@attr() accessor case: string
 	off: { [k: string]: () => void } = {}
 
-	static all(): NodeListOf<Token> {
-		return $treebank.querySelectorAll<Token>('w-token')
-	}
-
 	static allSelected(): Token[] {
 		return $$<Token>('w-token[selected]', $treebank)
 	}
@@ -65,7 +61,7 @@ export default class Token extends CustomElement {
 
 	static *inView(): Iterable<Token> {
 		let prevInView: boolean | undefined
-		for (const $w of Token.all()) {
+		for (const $w of Token.all() as Iterable<Token>) {
 			const inView = $inVerticalView($w)
 			if (inView) yield $w
 			if (prevInView && prevInView != inView) break
@@ -182,7 +178,7 @@ function highlight(words: Iterable<Token>, className: string) {
 	return () => $words.forEach($w => $w.classList.remove(className))
 }
 
-for (const $w of Token.all()) {
+for (const $w of Token.all() as Iterable<Token>) {
 	for (const $d of $w.subtree('ExD')) $d.classList.add('aside')
 }
 

@@ -1,4 +1,3 @@
-import base64
 import uuid
 
 from sanic import BadRequest, Blueprint, Request, Sanic, redirect
@@ -29,7 +28,6 @@ async def post_nlp(req: Request):
     if not body:
         return BadRequest("No body in form")
     slug = uuid.uuid4()
-    print(slug)
     app.ctx.nlp[str(slug)] = body
     return redirect(f"/nlp/{slug}")  # 201 doesn't work for some reason
 

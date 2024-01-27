@@ -11,6 +11,8 @@
 		"module": "esnext",
 		"moduleResolution": "Bundler",
 		"isolatedModules": true,
+		"useDefineForClassFields": true,
+		"verbatimModuleSyntax": true,
 		"target": "ES2022",
 		"sourceMap": true,
 		"lib": [
