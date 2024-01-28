@@ -13,9 +13,10 @@ python-box = "*"
 python-slugify = "*"
 jinja2 = "*"
 sanic = "*"
-cltk = "*"
+more-itertools = "*"
 
 [dev-packages]
+cltk = "*"
 ipykernel = "*"
 tracerite = "*"
 lxml-stubs = "*"

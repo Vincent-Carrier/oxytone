@@ -38,12 +38,12 @@ bundle() {
 }
 
 browsersync() {
-	npx browser-sync start -w -f app/static/** templates/** \
+	npx browser-sync start -w -f $static/** templates/** \
 		--proxy "localhost:$port" --host 0.0.0.0 --no-open "$@"
 }
 
 app() {
-	$py sanic app.main "$@"
+	$py sanic app.main:app "$@"
 }
 
 watch() {
@@ -94,7 +94,7 @@ cleanall() {
 
 cleanassets() {
 	rm -rf $static/**.{css,css.map,js,js.map}
-	rm -rf app/src/**.{css,css.map,js,js.map}
+	rm -rf $src/**.{css,css.map,js,js.map}
 	rm -rf tmp/**
 }
 

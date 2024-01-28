@@ -10,7 +10,7 @@ def create_app() -> Sanic:
     app.blueprint(r.index)
     app.blueprint(r.read)
     app.blueprint(r.flashcards)
-    app.blueprint(r.nlp)
+    # app.blueprint(r.nlp)
     app.static("/", STATIC, name="assets")
     return app
 

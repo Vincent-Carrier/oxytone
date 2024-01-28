@@ -8,8 +8,6 @@ __pycache__/
 .mypy_cache/
 .vscode/
 tests/
-data/treebanks/augmented/*
-data/treebanks/chunks/*
 app/static/*.css
 app/static/*.css.map
 app/static/*.js
