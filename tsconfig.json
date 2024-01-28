@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"paths": {
 			"@/*": [
-				"./app/src/*"
+				"./src/*"
 			],
 			"npm:*": [
 				"./node_modules/*"
@@ -23,6 +23,6 @@
 	},
 	"compileOnSave": true,
 	"files": [
-		"app/src/reader.ts"
+		"src/reader.ts"
 	]
 }
