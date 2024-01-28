@@ -1,7 +1,6 @@
-import FlashcardsButton from '@/components/flashcardsButton.js'
-import { CustomElement, attr, on, register } from '@/lib/baseElement.js'
-import { $, $$, $inVerticalView } from '@/lib/dom.js'
-import decodeFlags from '@/lib/flags.js'
+import { $, $$, $inVerticalView, CustomElement, attr, on, register } from '@vincentcarrier/boreas'
+import decodeFlags from '../flags.js'
+import FlashcardsButton from './flashcardsButton.js'
 
 const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
 	$treebank = $('article.treebank')

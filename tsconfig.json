@@ -1,13 +1,5 @@
 {
 	"compilerOptions": {
-		"paths": {
-			"@/*": [
-				"./src/*"
-			],
-			"npm:*": [
-				"./node_modules/*"
-			]
-		},
 		"module": "esnext",
 		"moduleResolution": "Bundler",
 		"isolatedModules": true,
@@ -20,9 +12,15 @@
 			"DOM",
 			"DOM.Iterable"
 		],
+		"composite": true
 	},
 	"compileOnSave": true,
-	"files": [
-		"src/reader.ts"
-	]
+	"references": [
+		{
+			"path": "src/"
+		},
+		{
+			"path": "packages/boreas/"
+		},
+	],
 }

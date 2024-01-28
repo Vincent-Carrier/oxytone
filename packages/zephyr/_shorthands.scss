@@ -1,0 +1,100 @@
+@use 'theme' as *;
+@use 'sass:map';
+
+@mixin text($color: null, $size: null, $track: null, $align: null, $transform: null) {
+	color: $color;
+	@include font-size($size);
+	letter-spacing: tracking($track);
+	text-align: $align;
+	text-transform: $transform;
+}
+
+@mixin font($fam: null, $wght: null, $style: null) {
+	@include font-family($fam);
+	font-weight: $wght;
+	font-style: $style;
+}
+
+@mixin layout($display: null, $position: null, $justify: null, $align: null, $place: null) {
+	display: $display;
+	position: $position;
+	justify-content: $justify;
+	align-items: $align;
+}
+
+@mixin box(
+	$w: null,
+	$h: null,
+	$mx: null,
+	$min-w: null,
+	$min-h: null,
+	$max-w: null,
+	$max-h: null,
+	$my: null,
+	$mt: null,
+	$mr: null,
+	$mb: null,
+	$ml: null,
+	$px: null,
+	$py: null,
+	$pt: null,
+	$pr: null,
+	$pb: null,
+	$pl: null
+) {
+	width: len($w);
+	height: len($h);
+	min-width: len($min-w);
+	min-height: len($min-h);
+	max-width: len($max-w);
+	max-height: len($max-h);
+	margin-inline: len($mx);
+	margin-block: len($my);
+	margin-top: len($mt);
+	margin-right: len($mr);
+	margin-bottom: len($mb);
+	margin-left: len($ml);
+	padding-inline: len($px);
+	padding-block: len($py);
+	padding-top: len($pt);
+	padding-right: len($pr);
+	padding-bottom: len($pb);
+	padding-left: len($pl);
+}
+
+@mixin surface($bg: null, $border: null, $rounded: null, $shadow: null) {
+	background-color: $bg;
+	border: $border;
+	@include radius($rounded);
+	@include shadow($shadow);
+}
+
+@mixin flex-x($gap, $justify-content: null, $align-items: null) {
+	display: flex;
+	flex-direction: row;
+	column-gap: len($gap);
+	justify-content: $justify-content;
+	align-items: $align-items;
+}
+
+@mixin flex-y($gap) {
+	display: flex;
+	flex-direction: column;
+	row-gap: len($gap);
+}
+
+@mixin inset($x: null, $y: null, $t: null, $b: null, $l: null, $r: null) {
+	position: fixed;
+	top: $t;
+	bottom: $b;
+	left: $l;
+	right: $r;
+	@if $y {
+		top: $y;
+		bottom: $y;
+	}
+	@if $x {
+		left: $x;
+		right: $x;
+	}
+}

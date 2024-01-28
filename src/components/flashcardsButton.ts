@@ -1,6 +1,5 @@
-import { BaseElement, attr, on, register, select } from '@/lib/baseElement.js'
-import { $, $id } from '@/lib/dom.js'
-import { postJSON } from '@/lib/fetch.js'
+import { $, $id, BaseElement, attr, on, register, select } from '@vincentcarrier/boreas'
+import { postJSON } from '../fetch.js'
 import Token, { type TokenSelectInit } from './token.js'
 
 const $treebank = $('article.treebank'),

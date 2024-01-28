@@ -1,6 +1,6 @@
-import Token from '@/components/token.js'
-import { BaseElement, attr, on, register, select } from '@/lib/baseElement.js'
-import { cycle } from '@/lib/utils.js'
+import { BaseElement, attr, on, register, select } from '@vincentcarrier/boreas'
+import { cycle } from '../utils.js'
+import Token from './token.js'
 
 const STATES = ['off', 'words', 'lines'] as const
 type State = (typeof STATES)[number]

@@ -1,4 +1,4 @@
-import { $, $$ } from '@/lib/dom.js'
+import { $, $$ } from '@/dom.js'
 
 type Div = HTMLDivElement
 type Constructor<T> = new (...args: any[]) => T

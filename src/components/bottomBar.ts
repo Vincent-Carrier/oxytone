@@ -1,6 +1,6 @@
-import { type TokenSelectInit } from '@/components/token.js'
-import { CustomElement, on, register, select } from '@/lib/baseElement.js'
-import decodeFlags from '@/lib/flags.js'
+import { CustomElement, on, register, select } from '@vincentcarrier/boreas'
+import decodeFlags from '../flags.js'
+import { type TokenSelectInit } from './token.js'
 
 @register()
 export default class BottomBar extends CustomElement {
@@ -11,7 +11,7 @@ export default class BottomBar extends CustomElement {
 	@select('#lsj') $lsj: HTMLAnchorElement
 
 	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
-		const $w = ev.detail.word
+		const $w = ev.detail!.word
 		this.hidden = !$w.selected
 		if (this.hidden) return
 		this.$lemma.innerText = $w.lemma

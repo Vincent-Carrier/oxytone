@@ -1,4 +1,4 @@
-@use '@vincentcarrier/zephyr' as *
+@use 'zephyr' as *
 	with(
 		$font-families: (
 			display: "'Cormorant SC', serif",
@@ -6,7 +6,7 @@
 			serif: "'Alegreya', serif",
 		)
 	);
-@forward '@vincentcarrier/zephyr';
+@forward 'zephyr';
 
 .main-grid {
 	display: grid;

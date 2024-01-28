@@ -1,0 +1,19 @@
+{
+  "name": "@vincentcarrier/zephyr",
+  "version": "1.0.0",
+  "description": "A Sassy alternative to TailwindCSS",
+  "keywords": [
+    "tailwind",
+    "tailwindcss",
+    "sass",
+    "scss",
+    "css",
+    "atomic-css",
+    "functional-css"
+  ],
+  "author": "Vincent Carrier",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  }
+}
