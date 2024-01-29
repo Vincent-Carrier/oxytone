@@ -1,10 +1,10 @@
 import '@ungap/custom-elements/es.js'
 
-import '@/components/bottomBar.js'
-import '@/components/flashcardsButton.js'
-import '@/components/memorizeButton.js'
-import '@/components/token.js'
-import { $ } from '@/lib/dom.js'
+import { $ } from '@vincentcarrier/boreas'
+import './components/bottomBar.js'
+import './components/flashcardsButton.js'
+import './components/memorizeButton.js'
+import './components/token.js'
 
 const $treebank = $('article.treebank')
 

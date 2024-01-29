@@ -161,10 +161,14 @@ cython_debug/
 scratch.*
 *.db
 
-app/static/*.css
-app/static/*.css.map
+static/*.css
+static/*.css.map
 *.js
 *.js.map
+*.d.ts
+
+tsconfig.tsbuildinfo
+
 
 chunks/**
 

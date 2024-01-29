@@ -327,7 +327,7 @@ export declare function BaseElement<T extends Constructor<HTMLElement>>(Sup: T):
         focus(options?: FocusOptions): void;
     };
     readonly selector: string;
-    get(): any;
+    get(): HTMLDivElement;
     all(): NodeListOf<Element>;
 } & T;
 declare const CustomElement_base: {
@@ -658,7 +658,7 @@ declare const CustomElement_base: {
         focus(options?: FocusOptions): void;
     };
     readonly selector: string;
-    get(): any;
+    get(): HTMLDivElement;
     all(): NodeListOf<Element>;
 } & {
     new (): HTMLElement;
