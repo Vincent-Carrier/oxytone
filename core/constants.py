@@ -4,7 +4,8 @@ from pathlib import Path
 from box import Box
 
 env = Box(os.environ, default_box=True)
-PROD = env.ENV != "development"
+PROD = env.ENV == "production"
+DEV = env.ENV == "development"
 ROOT = Path(__file__).parent.parent
 STATIC = ROOT / "static"
 DATA = ROOT / "data"

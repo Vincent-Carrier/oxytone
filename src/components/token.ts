@@ -5,7 +5,7 @@ import FlashcardsButton from './flashcardsButton.js'
 const $flashcards = $<FlashcardsButton>('[is="flashcards-btn"]'),
 	$treebank = $('article.treebank')
 
-let timeout: number
+let timeout: any
 
 @register()
 export default class Token extends CustomElement {

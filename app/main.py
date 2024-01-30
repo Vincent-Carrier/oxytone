@@ -1,6 +1,6 @@
 from sanic import Sanic
 
-from core.constants import STATIC
+from core.constants import DEV, STATIC
 
 
 def create_app() -> Sanic:
@@ -10,7 +10,10 @@ def create_app() -> Sanic:
     app.blueprint(r.index)
     app.blueprint(r.read)
     app.blueprint(r.flashcards)
-    # app.blueprint(r.nlp)
+    if DEV:
+        from app.routes.nlp import bp as nlp
+
+        app.blueprint(nlp)
     app.static("/", STATIC, name="assets")
     return app
 

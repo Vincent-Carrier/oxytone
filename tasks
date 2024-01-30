@@ -94,7 +94,8 @@ cleanall() {
 
 cleanassets() {
 	rm -rf $static/**.{css,css.map,js,js.map}
-	rm -rf $src/**.{css,css.map,js,js.map}
+	rm -rf $src/**.{css,css.map,d.ts,js,js.map}
+	rm -rf packages/boreas/**.{d.ts,js,js.map}
 	rm -rf tmp/**
 }
 
