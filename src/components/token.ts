@@ -16,8 +16,8 @@ export default class Token extends CustomElement {
 	@attr() accessor definition: string
 	@attr() accessor lemma: string
 	@attr() accessor flags: string
-	@attr() accessor role: string
-	@attr() accessor pos: string
+	@attr() accessor role: string | null
+	@attr() accessor pos: string | null
 	@attr() accessor case: string
 	off: { [k: string]: () => void } = {}
 
@@ -117,7 +117,7 @@ export default class Token extends CustomElement {
 
 	*subtree(role: string) {
 		if (this.role === role) yield* [this, ...this.dependents()]
-		else if (this.role.startsWith(role)) {
+		else if (this.role?.startsWith(role)) {
 			const $h = this.$head
 			if (!$h) return
 			yield* [$h, ...$h.dependents()]
@@ -150,7 +150,7 @@ export default class Token extends CustomElement {
 
 	isRole(...roles: string[]): boolean {
 		for (const role of roles) {
-			if (this.role.startsWith(role)) return true
+			if (this.role?.startsWith(role)) return true
 		}
 		return false
 	}

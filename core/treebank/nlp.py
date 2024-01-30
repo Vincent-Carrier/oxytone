@@ -31,11 +31,11 @@ class NLPTreebank(Treebank):
     def __iter__(self) -> Iterator["Token"]:
         for w in (itr := peekable(self.words())):
             nxt = itr.peek() if itr else None
-            if nxt and nxt.id == 0:
-                yield Format.SENTENCE_END
             yield w
             if nxt and (nxt.form not in RIGHT_PUNCT) and (w.form not in LEFT_PUNCT):
                 yield Format.SPACE
+            if nxt and nxt.id == 0:
+                yield Format.SENTENCE_END
         yield Format.SENTENCE_END
 
     @staticmethod

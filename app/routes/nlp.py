@@ -32,7 +32,7 @@ async def post_nlp(req: Request):
 
 @bp.get("/<slug>")
 async def show_nlp(req: Request, slug: str):
-    form_body = app.ctx.nlp.pop(slug)  # TODO: cache
+    form_body = app.ctx.nlp[slug]  # TODO: LRU cache
     tb = NLPTreebank(form_body)
     body = HtmlPartialRenderer(tb).render()
     return await render_reader(body=body, **tb.meta)

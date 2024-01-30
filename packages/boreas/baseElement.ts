@@ -38,7 +38,7 @@ export class CustomElement extends BaseElement(HTMLElement) {
 export function register(base?: string) {
 	return (target: any, ctx: ClassDecoratorContext) => {
 		ctx.addInitializer(function (this: any) {
-			customElements.define(this.tag, this as any, base && { extends: base })
+			customElements.define(this.tag, this as any, base ? { extends: base } : undefined)
 		})
 	}
 }
@@ -65,7 +65,7 @@ export function attr(parse: Parse = identity, key?: string) {
 }
 
 export function select(selector: string): any {
-	return function (val, ctx: DecoratorContext) {
+	return function (val: any, ctx: DecoratorContext) {
 		if (ctx.kind === 'accessor')
 			return {
 				get() {
@@ -81,7 +81,7 @@ export function select(selector: string): any {
 }
 
 export function on(event: string, options?: AddEventListenerOptions & { root?: true }) {
-	return function (val, ctx: ClassMethodDecoratorContext) {
+	return function (val: any, ctx: ClassMethodDecoratorContext) {
 		ctx.addInitializer(function (this: HTMLElement) {
 			if (options?.root) addEventListener(event, val.bind(this), options)
 			else this.addEventListener(event, val, options)

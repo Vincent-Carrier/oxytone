@@ -1,9 +1,9 @@
-import { $, $id, BaseElement, attr, on, register, select } from '@vincentcarrier/boreas'
+import { $, BaseElement, attr, on, register, select } from '@vincentcarrier/boreas'
 import { postJSON } from '../fetch.js'
 import Token, { type TokenSelectInit } from './token.js'
 
 const $treebank = $('article.treebank'),
-	title = $id('title').innerText,
+	title = $('#title')?.innerText,
 	slug = $treebank.id
 
 @register('button')
@@ -20,7 +20,7 @@ export default class FlashcardsButton extends BaseElement(HTMLButtonElement) {
 	}
 
 	@on('tokenselect', { root: true, capture: true }) #handleTokenSelect(ev: TokenSelectInit) {
-		this.count += ev.detail.word.selected ? 1 : -1
+		this.count += ev.detail!.word.selected ? 1 : -1
 		this.#render()
 	}
 

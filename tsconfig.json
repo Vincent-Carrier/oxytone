@@ -12,7 +12,8 @@
 			"DOM",
 			"DOM.Iterable"
 		],
-		"composite": true
+		"composite": true,
+		"strictNullChecks": true,
 	},
 	"compileOnSave": true,
 	"references": [

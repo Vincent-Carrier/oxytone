@@ -16,7 +16,7 @@ export default class BottomBar extends CustomElement {
 		if (this.hidden) return
 		this.$lemma.innerText = $w.lemma
 		this.$def.innerText = $w.definition ?? ''
-		this.$flags.innerHTML = decodeFlags($w.flags)
+		this.$flags.innerHTML = $w.flags ? decodeFlags($w.flags) : ''
 		this.$lsj.href = `https://lsj.gr/index.php?search=${$w.lemma}`
 	}
 }
