@@ -1,0 +1,4 @@
+lit/**.xml filter=lfs diff=lfs merge=lfs -text
+agldt/**.xml filter=lfs diff=lfs merge=lfs -text
+glaux/**.xml filter=lfs diff=lfs merge=lfs -text
+lsj/**.xml filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,69 @@
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="4.0">
+  <display-name>BaseX: The XML Database and XQuery Processor</display-name>
+  <description>HTTP Services</description>
+
+  <!-- Global session and servlet listener -->
+  <listener>
+    <listener-class>org.basex.http.SessionListener</listener-class>
+    <listener-class>org.basex.http.ServletListener</listener-class>
+  </listener>
+
+  <!-- RESTXQ Service (can be disabled by removing this entry) -->
+  <servlet>
+    <servlet-name>RESTXQ</servlet-name>
+    <servlet-class>org.basex.http.restxq.RestXqServlet</servlet-class>
+    <init-param>
+      <param-name>org.basex.user</param-name>
+      <param-value>admin</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RESTXQ</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- WebSocket Service (can be disabled by removing this entry) -->
+  <servlet>
+    <servlet-name>WebSocket</servlet-name>
+    <servlet-class>org.basex.http.ws.WsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WebSocket</servlet-name>
+    <url-pattern>/ws/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- REST Service (can be disabled by removing this entry) -->
+  <servlet>
+    <servlet-name>REST</servlet-name>
+    <servlet-class>org.basex.http.rest.RESTServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>REST</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- WebDAV Service (can be disabled by removing this entry) -->
+  <servlet>
+    <servlet-name>WebDAV</servlet-name>
+    <servlet-class>org.basex.http.webdav.WebDAVServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WebDAV</servlet-name>
+    <url-pattern>/webdav/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Mapping for static resources (may be restricted to a sub path) -->
+  <servlet>
+    <servlet-name>default</servlet-name>
+    <init-param>
+      <param-name>useFileMappedBuffer</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/static/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
