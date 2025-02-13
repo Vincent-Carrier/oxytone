@@ -1,1 +1,38 @@
 @import 'tailwindcss';
+
+html {
+  font-family: "Alegreya", serif;
+}
+
+ox-w {
+  @apply cursor-pointer;
+
+  &.selected {
+    @apply bg-slate-200 rounded-sm;
+  }
+
+  &[pos="verb"] {
+    @apply font-bold;
+  }
+
+  &[case="nom"] {
+    @apply text-green-700;
+  }
+
+  &[case="acc"] {
+    @apply text-blue-700;
+  }
+
+  &[case="dat"] {
+    @apply text-yellow-700;
+  }
+
+  &[case="gen"] {
+    @apply text-purple-700;
+  }
+
+  &[case="voc"] {
+    @apply text-pink-700;
+  }
+
+}

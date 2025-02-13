@@ -1,2 +1,10 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import type { PageProps } from './$types';
+	import '$lib/components/word.svelte';
+
+	let { data }: PageProps = $props();
+</script>
+
+<article class="mx-auto my-12 max-w-xl text-xl leading-relaxed">
+	{@html data.treebank}
+</article>

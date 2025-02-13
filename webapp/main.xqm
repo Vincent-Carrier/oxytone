@@ -11,11 +11,11 @@ declare %rest:path("lsj/{$lemma}")
    return xslt:transform($entry, "./lsj-entry.xslt")
 };
 
-declare %rest:path("read/iliad/{$book}")
+declare %rest:path("read/{$urn=.+}")
         %rest:GET
         %output:method("html")
-        function ox:getIliad($book) {
-    let $iliad := db:get('agldt', 'v2.1/tlg0012.tlg001.perseus-grc1.tb.xml')
-    let $body := ref:get-book($iliad, $book)
-    return xslt:transform($body, "./tb.xslt")
+        function ox:getTb($urn) {
+    let $body:= db:get('flatbanks', $urn)
+    (: return $body :)
+    return xslt:transform($body, "tb.xslt")
 };

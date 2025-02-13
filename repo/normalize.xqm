@@ -92,7 +92,7 @@ declare function n:expand-postag($tag) {
 declare function n:normalize($tb) {
   <treebank>
     <body>{
-      for $sen in $tb/body/sentence
+      for $sen in $tb/treebank/body/sentence
       return <sentence>{
         $sen/@*,
         for sliding window $win in $sen/word
