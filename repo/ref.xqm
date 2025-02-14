@@ -9,11 +9,20 @@ declare function ref:from-str($str) {
 };
 
 declare function ref:get-book($tb, $book as xs:integer) {
-    <body>{
-        for $s in $tb/treebank/body/sentence
-        let $parts := ref:from-str($s/@subdoc/string())
-        let $book := tokenize($parts[1], '\.')[1] => parse-integer()
-        where $book = $book
-        return $s
-    }</body>
+  let $xslt := 
+    <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:template match="@*|node()">
+            <xsl:copy>
+                <xsl:apply-templates select="@*|node()"/>
+            </xsl:copy>
+        </xsl:template>
+        <xsl:template match="sentence">
+            <xsl:if test="starts-with(@subdoc, '{$book}.')">
+                <xsl:copy>
+                    <xsl:apply-templates select="@*|node()"/>
+                </xsl:copy>
+            </xsl:if>
+        </xsl:template>
+    </xsl:stylesheet>
+  return xslt:transform($tb, $xslt)
 };

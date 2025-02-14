@@ -1,7 +1,10 @@
 import type { PageLoad } from "./$types"
 
+const DB_URL = 'http://localhost:8080'
+
 export const load: PageLoad = async ({ params }) => {
-  const res = await fetch('http://localhost:8080/read/tlg0003/tlg001/perseus-grc1')
+  console.log(params.urn)
+  const res = await fetch(`${DB_URL}/read/${params.urn}`)
   return {
     treebank: await res.text()
   }
