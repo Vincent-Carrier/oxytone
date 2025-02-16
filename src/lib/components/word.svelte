@@ -11,7 +11,7 @@
 <script lang="ts">
 	let { children } = $props();
 	$host().onclick = () => {
-		$host().classList.toggle('selected');
+		$host().toggleAttribute('selected');
 	};
 </script>
 

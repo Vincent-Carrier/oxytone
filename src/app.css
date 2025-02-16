@@ -4,10 +4,14 @@ html {
   font-family: "Alegreya", serif;
 }
 
-ox-w {
-  @apply cursor-pointer;
+.line-nbr {
+  @apply inline-block w-12 mr-4 text-sm text-right text-gray-500;
+}
 
-  &.selected {
+ox-w {
+  @apply cursor-pointer text-gray-700;
+
+  &[selected] {
     @apply bg-slate-200 rounded-sm;
   }
 
@@ -16,11 +20,11 @@ ox-w {
   }
 
   &[case="nom"] {
-    @apply text-green-700;
+    @apply text-emerald-700;
   }
 
   &[case="acc"] {
-    @apply text-blue-700;
+    @apply text-sky-700;
   }
 
   &[case="dat"] {

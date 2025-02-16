@@ -16,8 +16,8 @@ declare function ref:get-book($tb, $book as xs:integer) {
                 <xsl:apply-templates select="@*|node()"/>
             </xsl:copy>
         </xsl:template>
-        <xsl:template match="sentence">
-            <xsl:if test="starts-with(@subdoc, '{$book}.')">
+        <xsl:template match="ln">
+            <xsl:if test="starts-with(@n, '{$book}.')">
                 <xsl:copy>
                     <xsl:apply-templates select="@*|node()"/>
                 </xsl:copy>

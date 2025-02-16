@@ -88,31 +88,71 @@ declare function n:expand-postag($tag) {
     )[data() != ""]
 };
 
+declare function n:is-verse($author, $work) {
+  switch($author)
+    case ('tlg0012') return true()
+    default return false()
+};
 
-declare function n:normalize($tb) {
-  <treebank>
+
+declare function n:cite-break($a, $b, $c) {
+  ($a != $c and $b = "")
+  or ($b != $c and $c != "" and $b != "")
+};
+
+declare function n:normalize-verse($tb) {
+    for tumbling window $line in $tb//word[not(@artificial)]
+      start $s end $e previous $p next $n 
+      when n:cite-break($p/@cite, $e/@cite, $n/@cite)
+    let $ref := tokenize($s/@cite/string(), ':') => foot()
+    return 
+      <ln n="{$ref}">
+        {
+          for sliding window $win in $line
+            start $w at $i end $n at $j 
+            when $j - $i = 1
+          let $ref := tokenize($w/@cite/string(), ':') => foot()
+          let $morph := n:expand-postag($w/@postag/string())
+          return element w {
+              attribute ref {$ref},
+              attribute sentence_id {$w/../@id},
+              $w/@*[name()=("id", "head", "lemma", "relation")],
+              $morph,
+              concat(
+                $w/@form/string(),
+                (: insert space if not followed by punctuation :)
+                if (characters($n/@postag/string())[1] != "u") then "&#x20;"
+              )
+          }
+        }
+      </ln>
+};
+
+declare function n:normalize-prose($tb) {
+  for $sen in $tb//sentence
+  return <sentence>{
+    $sen/@*,
+    for sliding window $win in $sen/word
+      start $s at $i end $e at $j
+      when $j - $i = 1
+    return (
+      element w {
+        $s/@*[name()=("id", "head", "lemma", "relation")],
+        n:expand-postag($s/@postag/string()),
+        concat(
+          $s/@form/string(),
+          (: insert space if not followed by punctuation :)
+          if (characters($e/@postag/string())[1] != "u") then "&#x20;")
+      }
+    )
+  }</sentence>
+};
+
+declare function n:normalize($tb, $verse) {
+  <treebank type="{if ($verse) then 'verse' else 'prose'}">
     <body>{
-      for $sen in $tb/treebank/body/sentence
-      return <sentence>{
-        $sen/@*,
-        for sliding window $win in $sen/word
-          start $s at $i end $e at $j
-          when $j - $i = 1
-        (: compare @cite to see if we've reached a new verse :)
-        let $refs := if ($s/@cite) then
-          $win/@cite/string() =!> fn { tokenize(., ':') => foot() }()
-        return (
-          element w {
-            $s/@*[name()=("id", "head", "lemma", "relation")],
-            n:expand-postag($s/@postag/string()),
-            concat(
-              $s/@form/string(),
-              (: insert space if not followed by punctuation :)
-              if (characters($e/@postag/string())[1] != "u") then "&#x20;")
-          },
-          if (not(all-equal($refs))) then <br/>
-        )
-      }</sentence>
+      if ($verse) then n:normalize-verse($tb)
+      else n:normalize-prose($tb)
     }</body>
   </treebank>
 };
