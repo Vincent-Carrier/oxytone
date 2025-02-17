@@ -8,7 +8,7 @@ treebanks:
           -Q treebanks.xq
 
 flatbanks:
-    basex -O MAINMEM=true -O ATTRINCLUDE=id,sentence_id -O TEXTINDEX=false \
+    basex -O ATTRINCLUDE=id,sentence_id -O TEXTINDEX=false \
           -c "CREATE DB flatbanks" \
           -Q flatbanks.xq
 

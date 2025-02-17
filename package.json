@@ -38,5 +38,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"ky": "^1.7.5"
 	}
 }

@@ -32,26 +32,6 @@ declare variable $ox:xslt :=
               <xsl:apply-templates/>
           </div>
       </xsl:template>
-      <xsl:template match="bibl">
-          <span class="bibl">
-              <xsl:apply-templates select="author"/>
-              <xsl:text> </xsl:text>
-              <xsl:apply-templates select="title"/>
-              <xsl:text> </xsl:text>
-              <xsl:apply-templates select="biblScope"/>
-          </span>
-      </xsl:template>
-      <xsl:template match="cit">
-          <div class="citation">
-              <span class="quote greek-text">
-                  <xsl:apply-templates select="quote"/>
-              </span>
-              <xsl:apply-templates select="bibl"/>
-          </div>
-      </xsl:template>
-      <xsl:template match="text()">
-          <xsl:value-of select="normalize-space()"/>
-      </xsl:template>
   </xsl:stylesheet>;
 
 declare %rest:path("define/lsj/{$lemma}")

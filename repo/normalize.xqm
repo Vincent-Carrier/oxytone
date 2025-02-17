@@ -100,7 +100,7 @@ declare function n:cite-break($a, $b, $c) {
   or ($b != $c and $c != "" and $b != "")
 };
 
-declare function n:normalize-verse($tb) {
+declare function n:normalize-verse($tb) as element()* {
     for tumbling window $line in $tb//word[not(@artificial)]
       start $s end $e previous $p next $n 
       when n:cite-break($p/@cite, $e/@cite, $n/@cite)
@@ -128,7 +128,7 @@ declare function n:normalize-verse($tb) {
       </ln>
 };
 
-declare function n:normalize-prose($tb) {
+declare function n:normalize-prose($tb) as element()* {
   for $sen in $tb//sentence
   return <sentence>{
     $sen/@*,
@@ -148,11 +148,12 @@ declare function n:normalize-prose($tb) {
   }</sentence>
 };
 
-declare function n:normalize($tb, $verse) {
+declare function n:normalize($tb, $verse) as element() {
   <treebank type="{if ($verse) then 'verse' else 'prose'}">
     <body>{
-      if ($verse) then n:normalize-verse($tb)
-      else n:normalize-prose($tb)
+      n:normalize-verse($tb)
+      (: if ($verse) {n:normalize-verse($tb)}
+      else {n:normalize-prose($tb)} :)
     }</body>
   </treebank>
 };

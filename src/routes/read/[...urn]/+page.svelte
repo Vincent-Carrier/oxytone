@@ -1,12 +1,22 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
+	import api from '$lib/api';
 	import { onMount } from 'svelte';
 
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
 	let selected: HTMLElement[] | undefined = $state();
 	let defined: HTMLElement | undefined = $state();
+	let definition: string | undefined = $state();
+
+	$effect(() => {
+		if (defined) {
+			api
+				.get(`define/lsj/${defined.getAttribute('lemma')}`)
+				.then((res) => res.text().then((body) => (definition = body)));
+		}
+	});
 
 	onMount(() => {
 		const mo = new MutationObserver((mutations) => {
@@ -35,7 +45,7 @@
 		</div>
 	</article>
 	{#if defined}
-		<div class="min-h-12 border-t-1 border-gray-300 bg-gray-100">
+		<div class="min-h-20 overflow-y-scroll border-t-1 border-gray-300 bg-gray-100 px-16 py-4">
 			<div class="mx-auto max-w-xl">
 				<div class="text-lg">
 					{defined?.getAttribute('lemma')}
@@ -50,6 +60,9 @@
 					{defined?.getAttribute('gender')}
 					{defined?.getAttribute('case')}
 					{defined?.getAttribute('degree')}
+				</div>
+				<div class="text-sm">
+					{@html definition}
 				</div>
 			</div>
 		</div>
