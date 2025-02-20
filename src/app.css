@@ -1,76 +1,84 @@
 @import 'tailwindcss';
 
+@theme {
+	--font-serif: 'Alegreya', serif;
+	--font-sans: 'Alegreya Sans', system-ui, sans-serif;
+}
+
 html {
-  font-family: "Alegreya", serif;
+	@apply font-serif;
+}
+
+.sentence-nbr {
+	@apply mr-1 ml-2 inline-block border-b-1 font-sans text-sm text-gray-400;
 }
 
 .line-nbr {
-  @apply inline-block w-12 mr-4 text-sm text-right text-gray-400;
+	@apply mr-2 inline-block w-10 text-right font-sans text-sm text-gray-400;
 
-  &[n$="0"],
-  &[n$="5"] {
-    @apply text-gray-600;
-  }
+	&[n$='0'],
+	&[n$='5'] {
+		@apply text-gray-500;
+	}
 }
 
-.line:has([n$="0"], [n$="5"]) {
-  @apply bg-gray-50;
+.line:has([n$='0'], [n$='5']) {
+	@apply bg-gray-50;
 }
 
 .entry {
-  @apply relative;
+	@apply relative;
 
-  & .headword {
-    @apply font-bold sticky top-0 bg-gray-50 border-b-1 border-gray-300;
-  }
+	& .headword {
+		@apply sticky top-0 mb-2 border-b-1 border-gray-300 bg-gray-50 font-bold;
+	}
 
-  & .meanings {
-    list-style: '‒  ' inside;
-  }
+	& .meanings {
+		list-style: '‒  ' inside;
+	}
 }
 
-.sense-nbr[n="0"],
-.sense-nbr[n="1"],
-.sense-nbr[n="2"],
-.sense-nbr[n="3"],
-.sense-nbr[n="4"],
-.sense-nbr[n="5"],
-.sense-nbr[n="6"],
-.sense-nbr[n="7"],
-.sense-nbr[n="8"],
-.sense-nbr[n="9"] {
-  @apply ml-1;
+.sense-nbr[n='0'],
+.sense-nbr[n='1'],
+.sense-nbr[n='2'],
+.sense-nbr[n='3'],
+.sense-nbr[n='4'],
+.sense-nbr[n='5'],
+.sense-nbr[n='6'],
+.sense-nbr[n='7'],
+.sense-nbr[n='8'],
+.sense-nbr[n='9'] {
+	@apply ml-1;
 }
 
 ox-w {
-  @apply cursor-pointer text-gray-700;
+	@apply cursor-pointer text-gray-700;
 
-  &[selected] {
-    @apply bg-slate-200 rounded-sm;
-  }
+	&[selected] {
+		@apply rounded-sm bg-slate-200;
+	}
 
-  &[pos="verb"] {
-    @apply font-bold;
-  }
+	&[pos='verb'] {
+		@apply font-bold;
+	}
 
-  &[case="nom"] {
-    @apply text-emerald-700;
-  }
+	&[case='nom.'] {
+		@apply text-emerald-700;
+	}
 
-  &[case="acc"] {
-    @apply text-sky-700;
-  }
+	&[case='acc.'] {
+		@apply text-sky-700;
+	}
 
-  &[case="dat"] {
-    @apply text-yellow-700;
-  }
+	&[case='dat.'] {
+		@apply text-yellow-700;
+	}
 
-  &[case="gen"] {
-    @apply text-purple-700;
-  }
+	&[case='gen.'] {
+		@apply text-purple-700;
+	}
 
-  &[case="voc"] {
-    @apply text-pink-700;
-  }
-
+	&[case='voc.'] {
+		@apply text-pink-700;
+	}
 }

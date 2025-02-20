@@ -40,6 +40,10 @@
 		]
 	},
 	"dependencies": {
+		"@fontsource/alegreya": "^5.1.2",
+		"@fontsource/alegreya-sans": "^5.1.2",
+		"@fontsource/alegreya-sans-sc": "^5.1.1",
+		"@fontsource/alegreya-sc": "^5.1.1",
 		"ky": "^1.7.5"
 	}
 }

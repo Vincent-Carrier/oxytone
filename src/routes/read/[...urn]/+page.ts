@@ -1,10 +1,8 @@
 import type { PageLoad } from "./$types"
+import api from '$lib/api'
 
-const DB_URL = 'http://localhost:8080'
-
-export const load: PageLoad = async ({ params }) => {
-  console.log(params.urn)
-  const res = await fetch(`${DB_URL}/read/${params.urn}`)
+export const load: PageLoad = async ({ fetch, params }) => {
+  const res = await api(fetch).get(`read/${params.urn}`)
   return {
     treebank: await res.text()
   }

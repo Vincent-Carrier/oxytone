@@ -30,5 +30,10 @@ export default ts.config(
 				parser: ts.parser
 			}
 		}
+	},
+	{
+		rules: {
+			'svelte/no-html-tags': 'off'
+		}
 	}
 );

@@ -8,6 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/alegreya':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@fontsource/alegreya-sans':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@fontsource/alegreya-sans-sc':
+        specifier: ^5.1.1
+        version: 5.1.1
+      '@fontsource/alegreya-sc':
+        specifier: ^5.1.1
+        version: 5.1.1
       ky:
         specifier: ^1.7.5
         version: 1.7.5
@@ -272,6 +284,18 @@ packages:
   '@eslint/plugin-kit@0.2.5':
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource/alegreya-sans-sc@5.1.1':
+    resolution: {integrity: sha512-WFtC0puZvrV92s9WHDqMBFFbJrQs3w03MBXhYsbgZoiDOkoS+dv/l6HYJtJ6ja9XqeIyujfsc1p6xZKOh3ScIw==}
+
+  '@fontsource/alegreya-sans@5.1.2':
+    resolution: {integrity: sha512-YE36j8ico/3Gjt6JwPxObaTvNJwZ7Si5glgKMAcZ/gl1rrtWbpMXnpj1gGXST54OoRPaXr3VKJvS4NzBsMSy4Q==}
+
+  '@fontsource/alegreya-sc@5.1.1':
+    resolution: {integrity: sha512-wej7PXi3j9D2SLPZj9u1WfzST98eG2pEURbc2lMr3bePKSqDWYGl/dmzugRFIP9fCqYnY8miXJ9NdZoUVuYbEA==}
+
+  '@fontsource/alegreya@5.1.2':
+    resolution: {integrity: sha512-g53I6JhIw+gdlrVIeyLLaadY/ydpTC004MQtjBqrOlcTR+tlCSQbSTJOrc6w83L81cFBM6YAcwrkiyRL3oeaNg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1578,6 +1602,14 @@ snapshots:
     dependencies:
       '@eslint/core': 0.10.0
       levn: 0.4.1
+
+  '@fontsource/alegreya-sans-sc@5.1.1': {}
+
+  '@fontsource/alegreya-sans@5.1.2': {}
+
+  '@fontsource/alegreya-sc@5.1.1': {}
+
+  '@fontsource/alegreya@5.1.2': {}
 
   '@humanfs/core@0.19.1': {}
 

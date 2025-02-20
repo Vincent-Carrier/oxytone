@@ -6,13 +6,15 @@
 import sys
 import requests
 from time import time
+from unicodedata import is_normalized, normalize, name
 from genanki import BASIC_MODEL, Deck, Note
 
 deck = Deck(hash("wordlist"), name="Greek Vocab")
-for lemma in sys.stdin:
+for line in sys.stdin:
+    lemma = line.rstrip()
     res = requests.get(f"http://localhost:8080/define/lsj/{lemma}")
     definition = res.text
-    print(f"{lemma}:\n\t{definition}")
+    print(f"{lemma!r} {is_normalized('NFC', lemma)}:\n\t{definition}")
     back = definition
     note = Note(
         BASIC_MODEL,
@@ -20,7 +22,5 @@ for lemma in sys.stdin:
     )
     deck.add_note(note)
 
-f = f"wordlist-{time()}.apkg"
+f = f"wordlist.apkg"
 deck.write_to_file(f)
-
-
