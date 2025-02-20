@@ -1,14 +1,18 @@
 db: lsj treebanks flatbanks lit catalog
 
 lsj:
-    basex -O AUTOFLUSH=false -c "CREATE DB lsj lsj/"
+    basex -O AUTOFLUSH=false \
+          -O ATTRINCLUDE=id -O TEXTINDEX=false \
+          -c "CREATE DB lsj" \
+          -Q lsj.xq
 
 treebanks:
     basex -O AUTOFLUSH=false -c "CREATE DB treebanks" \
           -Q treebanks.xq
 
 flatbanks:
-    basex -O ATTRINCLUDE=id,sentence_id -O TEXTINDEX=false \
+    basex -O AUTOFLUSH=false \
+          -O ATTRINCLUDE=id,sentence_id -O TEXTINDEX=false \
           -c "CREATE DB flatbanks" \
           -Q flatbanks.xq
 

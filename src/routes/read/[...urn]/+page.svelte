@@ -6,65 +6,70 @@
 
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
-	let selected: HTMLElement[] | undefined = $state();
+	let selected: HTMLElement[] | undefined = $state([]);
 	let defined: HTMLElement | undefined = $state();
+	let lemma: string | null | undefined = $derived(defined?.getAttribute('lemma'));
 	let definition: string | undefined = $state();
 
 	$effect(() => {
-		if (defined) {
-			api
-				.get(`define/lsj/${defined.getAttribute('lemma')}`)
-				.then((res) => res.text().then((body) => (definition = body)));
+		if (lemma) {
+			api.get(`define/lsj/${lemma}`).then((res) => res.text().then((body) => (definition = body)));
 		}
 	});
 
 	onMount(() => {
-		const mo = new MutationObserver((mutations) => {
-			for (let m of mutations) {
-				let w = m.target as HTMLElement;
-				if (w.hasAttribute('selected')) {
-					defined = w;
-					selected?.push(w);
-				} else {
-					defined = undefined;
-					let i = selected?.findIndex((e) => Object.is(e, w));
-					selected?.splice(i!);
-				}
+		tb.addEventListener('w-click', (ev) => {
+			let w = ev.target as HTMLElement;
+			w.toggleAttribute('selected');
+			defined = w.hasAttribute('selected') ? w : undefined;
+			definition = undefined;
+			if (!selected) {
+				tb.querySelectorAll('ox-w[selected]').forEach((e) => {
+					if (!defined?.isSameNode(e)) e.removeAttribute('selected');
+				});
 			}
 		});
-		mo.observe(tb, { subtree: true, attributeFilter: ['selected'] });
 	});
-
-	$inspect(selected, defined);
 </script>
 
 <div class="flex h-screen flex-col">
-	<article bind:this={tb} class="overflow-y-scroll py-12 text-xl leading-relaxed">
-		<div class="mx-auto max-w-xl">
-			{@html data.treebank}
+	<article class="overflow-y-scroll pt-4 pb-32 text-xl leading-relaxed">
+		<div bind:this={tb}>
+			{@html data.treebank
+				.normalize('NFD')
+				.replaceAll(/>([αεηιυοω]{1,2})\u{0313}/gu, '>$1') // strip smooth breathings
+				.normalize('NFC')}
 		</div>
 	</article>
 	{#if defined}
-		<div class="min-h-20 overflow-y-scroll border-t-1 border-gray-300 bg-gray-100 px-16 py-4">
+		<div class="min-h-16 border-t-1 border-gray-300 bg-gray-100 px-16 py-1">
 			<div class="mx-auto max-w-xl">
-				<div class="text-lg">
+				<div class="text-lg font-bold">
 					{defined?.getAttribute('lemma')}
 				</div>
 				<div class="text-sm text-gray-700 italic">
-					{defined?.getAttribute('pos')}
-					{defined?.getAttribute('person')}
-					{defined?.getAttribute('number')}
-					{defined?.getAttribute('tense')}
-					{defined?.getAttribute('mood')}
-					{defined?.getAttribute('voice')}
-					{defined?.getAttribute('gender')}
-					{defined?.getAttribute('case')}
-					{defined?.getAttribute('degree')}
-				</div>
-				<div class="text-sm">
-					{@html definition}
+					{#each ['pos', 'person', 'number', 'tense', 'mood', 'voice', 'gender', 'case', 'degree'] as morpho}
+						{@const m = defined?.getAttribute(morpho)}
+						{m}{#if morpho === 'case' && m}.{/if}{' '}
+					{/each}
 				</div>
 			</div>
 		</div>
 	{/if}
 </div>
+
+{#if lemma && definition}
+	<div
+		class="absolute right-8 bottom-8 h-32 w-80 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm"
+	>
+		{@html definition}
+
+		<a
+			target="_blank"
+			href={`https://lsj.gr/wiki/${lemma}`}
+			class="mt-4 block text-right text-blue-600"
+		>
+			<span class="underline">lsj.gr/</span> 🡽
+		</a>
+	</div>
+{/if}

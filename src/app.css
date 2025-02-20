@@ -5,7 +5,41 @@ html {
 }
 
 .line-nbr {
-  @apply inline-block w-12 mr-4 text-sm text-right text-gray-500;
+  @apply inline-block w-12 mr-4 text-sm text-right text-gray-400;
+
+  &[n$="0"],
+  &[n$="5"] {
+    @apply text-gray-600;
+  }
+}
+
+.line:has([n$="0"], [n$="5"]) {
+  @apply bg-gray-50;
+}
+
+.entry {
+  @apply relative;
+
+  & .headword {
+    @apply font-bold sticky top-0 bg-gray-50 border-b-1 border-gray-300;
+  }
+
+  & .meanings {
+    list-style: '‒  ' inside;
+  }
+}
+
+.sense-nbr[n="0"],
+.sense-nbr[n="1"],
+.sense-nbr[n="2"],
+.sense-nbr[n="3"],
+.sense-nbr[n="4"],
+.sense-nbr[n="5"],
+.sense-nbr[n="6"],
+.sense-nbr[n="7"],
+.sense-nbr[n="8"],
+.sense-nbr[n="9"] {
+  @apply ml-1;
 }
 
 ox-w {

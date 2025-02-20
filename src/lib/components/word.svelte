@@ -11,7 +11,7 @@
 <script lang="ts">
 	let { children } = $props();
 	$host().onclick = () => {
-		$host().toggleAttribute('selected');
+		$host().dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
 	};
 </script>
 

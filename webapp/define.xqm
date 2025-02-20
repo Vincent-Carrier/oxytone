@@ -1,36 +1,25 @@
 module namespace ox = "oxytone/define";
 
-import module namespace lsj = "lsj";
-
 declare variable $ox:xslt := 
-  <xsl:stylesheet version="1.0" 
-      xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-      <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
-      <xsl:template match="entryFree">
-          <div class="entry">
-              <link href="/static/style.css" rel="stylesheet" />
-              <h2 class="headword">
-                  <xsl:apply-templates select="orth"/>
-              </h2>
-              <div class="senses">
-                  <xsl:apply-templates select="sense"/>
+  <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+      <xsl:output method="xml" indent="no" encoding="UTF-8"/>
+      <xsl:template match="/">
+        <div>
+          <xsl:for-each select="/div/entryFree">
+            <div class="entry">
+              <div class="headword">
+                <xsl:value-of select="orth"/>
               </div>
-          </div>
-      </xsl:template>
-      <xsl:template match="orth">
-          <span class="greek-text">
-              <xsl:value-of select="."/>
-          </span>
-      </xsl:template>
-      <xsl:template match="sense">
-          <div class="sense">
-              <xsl:if test="@n">
-                  <span class="sense-number">
-                      <xsl:value-of select="@n"/>. 
-                  </span>
-              </xsl:if>
-              <xsl:apply-templates/>
-          </div>
+              <ul class="meanings">
+                <xsl:for-each select=".//sense//tr[not(.=preceding::*)]/text()">
+                  <li>
+                    <xsl:value-of select="." />
+                  </li>
+                </xsl:for-each>
+              </ul>
+            </div>
+          </xsl:for-each>
+        </div>
       </xsl:template>
   </xsl:stylesheet>;
 
@@ -38,6 +27,6 @@ declare %rest:path("define/lsj/{$lemma}")
         %rest:GET
         %output:method("html")
         function ox:getDefinition($lemma) {
-   let $entry := lsj:define($lemma)
+   let $entry := <div>{db:get("lsj", $lemma)}</div>
    return xslt:transform($entry, $ox:xslt)
 };

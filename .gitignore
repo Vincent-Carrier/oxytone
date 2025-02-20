@@ -27,3 +27,5 @@ vite.config.ts.timestamp-*
 data/
 .basex
 .basexgui
+
+lib/custom
