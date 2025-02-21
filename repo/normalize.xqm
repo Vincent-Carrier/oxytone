@@ -101,22 +101,22 @@ declare function n:cite-break($a, $b, $c) {
 };
 
 declare function n:normalize-verse($tb) as element()* {
-    for tumbling window $line in $tb//word[not(@artificial)]
-      start $s end $e previous $p next $n 
+    for tumbling window $line in $tb//word
+      start $s end $e previous $p next $n
       when n:cite-break($p/@cite, $e/@cite, $n/@cite)
     let $ref := tokenize($s/@cite/string(), ':') => foot()
-    return 
+    return
       <ln n="{$ref}">
         {
           for sliding window $win in $line
-            start $w at $i end $n at $j 
+            start $w at $i end $n at $j
             when $j - $i = 1
           let $ref := tokenize($w/@cite/string(), ':') => foot()
           let $morph := n:expand-postag($w/@postag/string())
           return element w {
               attribute ref {$ref},
               attribute sentence_id {$w/../@id},
-              $w/@*[name()=("id", "head", "lemma", "relation")],
+              $w/@*[name()=("id", "head", "lemma", "relation", "artificial")],
               $morph,
               concat(
                 $w/@form/string(),
@@ -137,7 +137,7 @@ declare function n:normalize-prose($tb) as element()* {
       when $j - $i = 1
     return (
       element w {
-        $s/@*[name()=("id", "head", "lemma", "relation")],
+        $s/@*[name()=("id", "head", "lemma", "relation", "artificial")],
         n:expand-postag($s/@postag/string()),
         concat(
           $s/@form/string(),

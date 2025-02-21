@@ -1,0 +1,26 @@
+@reference '../app.css';
+
+.author {
+	@apply flex flex-wrap items-baseline;
+	h2 {
+		@apply font-sc mt-2 text-xl;
+	}
+
+	.works {
+		@apply font-serif;
+		&:has(> :only-child) {
+			& li::before {
+				content: ', ';
+				@apply inline-block w-4;
+			}
+		}
+		&:has(> :nth-child(2)) {
+			@apply w-full;
+			list-style: '‒  ' inside;
+		}
+
+		& a {
+			@apply text-blue-600 underline;
+		}
+	}
+}

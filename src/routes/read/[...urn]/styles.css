@@ -1,0 +1,72 @@
+@reference '../../../app.css';
+
+.treebank {
+	@apply font-serif;
+}
+
+.sentence-nbr {
+	@apply mr-1 ml-3 inline-block font-sans text-sm text-gray-400;
+	&::before {
+		content: '[';
+	}
+	&::after {
+		content: ']';
+	}
+}
+
+.line-nbr {
+	@apply mr-2 inline-block w-10 text-right font-sans text-sm text-gray-400;
+
+	&[n$='0'],
+	&[n$='5'] {
+		@apply text-gray-500;
+	}
+}
+
+.line:has([n$='0'], [n$='5']) {
+	@apply bg-gray-50;
+}
+
+.entry {
+	@apply relative;
+
+	& .headword {
+		@apply sticky top-0 mb-2 border-b-1 border-gray-300 bg-gray-50 font-bold;
+	}
+
+	& .meanings {
+		list-style: '‒  ' inside;
+	}
+}
+
+ox-w {
+	@apply cursor-pointer text-gray-700;
+
+	&[selected] {
+		@apply rounded-sm bg-slate-200;
+	}
+
+	&[pos='verb'] {
+		@apply font-bold;
+	}
+
+	&[case='nom.'] {
+		@apply text-emerald-700;
+	}
+
+	&[case='acc.'] {
+		@apply text-sky-700;
+	}
+
+	&[case='dat.'] {
+		@apply text-yellow-700;
+	}
+
+	&[case='gen.'] {
+		@apply text-purple-700;
+	}
+
+	&[case='voc.'] {
+		@apply text-pink-700;
+	}
+}

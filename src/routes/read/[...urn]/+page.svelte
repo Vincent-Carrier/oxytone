@@ -1,4 +1,5 @@
 <script lang="ts">
+	import './styles.css';
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
 	import api from '$lib/api';
@@ -43,13 +44,16 @@
 </script>
 
 <div class="relative flex h-screen flex-col">
-	<div class="sticky top-0 flex justify-end gap-x-4 border-b border-gray-300 px-8 py-2">
+	<nav
+		class="font-sans-sc sticky top-0 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-2"
+	>
+		<a href="/" class="text-gray-800">oxytone</a>
 		<button
 			onclick={exportWordList}
-			class="cursor-pointer border-1 border-blue-700 px-2 font-sans text-sm text-blue-700"
+			class="ml-auto cursor-pointer border-1 border-blue-700 px-2 text-sm text-blue-700"
 			>.apkg</button
 		>
-	</div>
+	</nav>
 	<article
 		class="overflow-y-scroll scroll-smooth pt-4 pb-32 text-xl leading-relaxed has-[.sentence]:px-12"
 	>
