@@ -80,7 +80,7 @@
 
 {#if lemma && definition}
 	<div
-		class="absolute right-8 bottom-8 max-h-32 w-80 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm"
+		class="absolute right-8 bottom-8 max-h-32 w-80 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm lg:max-h-[80%]"
 	>
 		{@html definition}
 		<a
