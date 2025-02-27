@@ -1,10 +1,11 @@
 module namespace r = "oxytone/read";
+declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 import module namespace ref = "ref";
 import module namespace n = "normalize";
 
 declare variable $r:proseXslt :=
-  <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:stylesheet version="3.0">
     <xsl:output method="xml" indent="no" encoding="UTF-8"/>
     <xsl:template match="/">
       <xsl:for-each select="//body">
@@ -30,7 +31,7 @@ declare variable $r:proseXslt :=
   </xsl:stylesheet>;
 
 declare variable $r:lineXslt :=
-  <div class="line" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <div class="line">
     <a class="line-nbr">
       <xsl:copy-of select="@n" />
       <xsl:attribute name="id">
@@ -49,11 +50,11 @@ declare variable $r:lineXslt :=
   </div>;
 
 declare variable $r:verseXslt :=
-  <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:stylesheet version="1.0">
     <xsl:output method="xml" indent="no" encoding="UTF-8"/>
     <xsl:template match="/">
       <div class="treebank">
-        <xsl:apply-templates select="ln" />
+        <xsl:apply-templates />
       </div>
     </xsl:template>
     <xsl:template match="ln">
@@ -62,7 +63,7 @@ declare variable $r:verseXslt :=
   </xsl:stylesheet>;
 
 declare variable $r:mergedXslt :=
-  <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:stylesheet version="1.0">
     <xsl:output method="xml" indent="no" encoding="UTF-8"/>
     <xsl:template match="/">
       <div class="treebank">
@@ -83,7 +84,7 @@ declare
   %rest:path("/read/{$author}/{$work}/{$edition}")
   %rest:single
   %output:method("html")
-  function r:getTb($author, $work, $edition) {
+  function r:getTreebank($author, $work, $edition) {
     let $body := db:get('flatbanks', string-join(($author, $work, $edition), '/'))[1]
     let $xslt := if (n:is-verse($author, $work)) then $r:verseXslt else $r:proseXslt
     return xslt:transform($body, $xslt)

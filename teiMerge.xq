@@ -1,5 +1,6 @@
-let $pairs := (
-  map { 'tb': 'tlg0012/tlg001/perseus-grc1', 'tei': 'tlg0012/tlg001/perseus-grc2' }
+(: Homer :)
+(: let $pairs := (
+  { 'tb': 'tlg0012/tlg001/perseus-grc1', 'tei': 'tlg0012/tlg001/perseus-grc2' }
 )
 for $pair in $pairs
   let $tb := db:get("flatbanks", $pair?tb)[1]
@@ -29,4 +30,35 @@ for $pair in $pairs
     </treebank>
     let $path := `{$urn[1 to 2] => string-join('/')}/merged/{$n}`
     let $_ := message($path)
-    return db:put('flatbanks', $merged, $path)
+    return db:put('flatbanks', $merged, $path), :)
+
+(: Tragedy :)
+let $pairs := (
+  { 'tb': 'tlg0011/tlg003/perseus-grc1', 'tei': 'tlg0011/tlg003/perseus-grc2' }
+)
+for $pair in $pairs
+  let $tb := db:get("flatbanks", $pair?tb)[1]
+  let $tei := db:get("lit", $pair?tei)[1]
+  let $urn := tokenize($pair?tb, '/')
+  let $merged := <treebank>
+    <body>
+      {
+        for $el in $teiBook/*
+        return typeswitch ($el) {
+          case element(milestone)
+            return if ($el/@unit = "card") then <hr />
+          case element(l)
+            return $tbBook[@n=concat("1.", $el/@n)]
+          case element(q)
+            return <blockquote>{
+              for $ln in $el/l
+              return $tbBook[@n=concat("1.", $ln/@n)]
+            }</blockquote>
+          default return ()
+        }
+      }
+    </body>
+  </treebank>
+  let $path := `{$urn[1 to 2] => string-join('/')}/merged/{$n}`
+  let $_ := message($path)
+  return db:put('flatbanks', $merged, $path)
