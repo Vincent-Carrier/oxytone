@@ -1,4 +1,4 @@
-db: lsj treebanks flatbanks lit catalog
+db: lsj shortdefs treebanks flatbanks lit catalog
 
 lsj:
     basex -O AUTOFLUSH=false \
@@ -6,13 +6,16 @@ lsj:
           -c "CREATE DB lsj" \
           -Q lsj.xq
 
+shortdefs:
+    basex -Q shortdefs.xq
+
 treebanks:
     basex -O AUTOFLUSH=false -c "CREATE DB treebanks" \
           -Q treebanks.xq
 
 flatbanks:
     basex -O AUTOFLUSH=false \
-          -O ATTRINCLUDE=id,sentence_id -O TEXTINDEX=false \
+          -O ATTRINCLUDE=id,sentence -O TEXTINDEX=false \
           -c "CREATE DB flatbanks" \
           -Q flatbanks.xq
 

@@ -1,11 +1,7 @@
 @reference '../../../app.css';
 
-.treebank {
-	@apply font-serif;
-}
-
 .sentence-nbr {
-	@apply mr-1 ml-3 inline-block font-sans text-sm text-gray-400;
+	@apply mr-1 ml-3 inline-block font-sans text-sm text-gray-400 select-none;
 	&::before {
 		content: '[';
 	}
@@ -15,7 +11,7 @@
 }
 
 .line-nbr {
-	@apply mr-2 inline-block w-10 text-right font-sans text-sm text-gray-400;
+	@apply mr-2 inline-block w-10 text-right font-sans text-sm text-gray-400 select-none;
 
 	&[n$='0'],
 	&[n$='5'] {
@@ -23,34 +19,83 @@
 	}
 }
 
-.entry {
+dl {
 	@apply relative;
 
-	& .headword {
-		@apply sticky top-0 mb-2 border-b-1 border-gray-300 bg-gray-50 font-bold;
-	}
-
 	& .meanings {
-		list-style: '‒  ' inside;
+		@apply flex flex-col gap-y-1;
+	}
+
+	& dt {
+		@apply sticky top-0 mb-2 block border-b-1 border-gray-300 bg-gray-50 font-bold;
+	}
+
+	& dd {
+		@apply text-gray-600;
+		&:not(.shortdef) {
+			@apply pl-4;
+			&::before {
+				content: '‒';
+				@apply mr-2 -ml-4;
+			}
+		}
+		&.shortdef {
+			@apply font-bold text-gray-800;
+		}
+
+		& .lemma-ref {
+			@apply cursor-pointer text-blue-700 underline;
+		}
+
+		& strong {
+			@apply text-gray-800;
+		}
 	}
 }
 
-blockquote ox-w {
-	@apply italic;
+blockquote {
+	& .line-nbr {
+		@apply mr-6;
+	}
+	& .line {
+		& :not(.line-nbr) {
+			@apply italic;
+		}
+
+		&:first-of-type ox-w:first-of-type {
+			@apply relative;
+			&::before {
+				@apply absolute -bottom-1 -left-3 text-2xl !font-normal text-gray-500;
+				content: '“';
+			}
+		}
+
+		&:last-of-type ox-w:last-of-type {
+			@apply relative;
+			&::after {
+				@apply absolute -right-3 -bottom-1 text-2xl !font-normal text-gray-500;
+				content: '”';
+			}
+		}
+	}
 }
 
-hr:first-child {
-	@apply hidden;
-}
 hr {
-	@apply my-1 border-gray-100;
+	@apply my-4 border-gray-100;
+	&:first-child {
+		@apply hidden;
+	}
 }
 
 ox-w {
 	@apply cursor-pointer text-gray-700;
 
+	&.head {
+		@apply underline;
+	}
+
 	&[selected] {
-		@apply rounded-sm bg-slate-200;
+		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
 	}
 
 	&[pos='verb'] {
@@ -60,17 +105,29 @@ ox-w {
 	&[case='nom.'] {
 		@apply text-emerald-700;
 	}
+	&.sbj.dep {
+		@apply bg-emerald-50;
+	}
 
 	&[case='acc.'] {
 		@apply text-sky-700;
+	}
+	&.acc-obj.dep {
+		@apply bg-sky-50;
 	}
 
 	&[case='dat.'] {
 		@apply text-yellow-700;
 	}
+	&.dat-obj.dep {
+		@apply bg-yellow-50;
+	}
 
 	&[case='gen.'] {
 		@apply text-purple-700;
+	}
+	&.gen-obj.dep {
+		@apply bg-purple-50;
 	}
 
 	&[case='voc.'] {

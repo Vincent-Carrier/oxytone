@@ -2,40 +2,89 @@
 	import './styles.css';
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
-	import api from '$lib/api';
+	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
+	import { env } from '$env/dynamic/public';
 
+	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
-	let sel: HTMLElement[] | undefined = $state([]);
+	let sel: HTMLElement[] | undefined = $state();
 	let defined: HTMLElement | undefined = $state();
 	let lemma: string | null | undefined = $derived(defined?.getAttribute('lemma'));
 	let definition: string | undefined = $state();
 
 	$effect(() => {
-		if (lemma) {
-			api(fetch)
-				.get(`define/lsj/${lemma}`)
-				.then((res) => res.text().then((body) => (definition = body)));
+		if (lemma && defined?.getAttribute('pos') !== 'punct.') {
+			(async () => {
+				definition = await api.get(`define/lsj/${lemma}`).text();
+			})();
 		}
 	});
 
+	$effect(() => {
+		if (definition)
+			document.querySelectorAll('#definition button.lemma-ref').forEach((el) => {
+				let btn = el as HTMLButtonElement;
+				btn.onclick = () => {
+					defined = btn;
+				};
+			});
+	});
+
 	onMount(() => {
-		tb.addEventListener('w-click', (ev) => {
+		let clearDependants: () => void;
+		tb!.addEventListener('w-click', async (ev) => {
 			let w = ev.target as HTMLElement;
+			let id = w.getAttribute('id');
 			w.toggleAttribute('selected');
 			defined = w.hasAttribute('selected') ? w : undefined;
 			definition = undefined;
+			if (clearDependants) clearDependants();
 			if (sel) {
 				if (defined) sel.push(defined);
 				else sel.splice(sel.indexOf(w));
 			} else {
-				tb.querySelectorAll('ox-w[selected]').forEach((e) => {
-					if (!defined?.isSameNode(e)) e.removeAttribute('selected');
-				});
+				tb.querySelectorAll(`ox-w[selected]:not([id="${id}"])`).forEach((e) =>
+					e.removeAttribute('selected')
+				);
+				if (defined) {
+					clearDependants = await highlightDependants(w);
+				}
 			}
 		});
 	});
+
+	type Dep = { type: string; head: number; descendants: number[] };
+	async function highlightDependants(w: HTMLElement) {
+		let id = w.getAttribute('id');
+		let sentence = w.getAttribute('sentence');
+		let complements: Dep[] = await api.get(`hl/tlg0012/tlg001/${sentence}/${id}`).json();
+		let nodes: { el: HTMLElement; class: string | string[] }[] = [];
+		for (let c of complements) {
+			let el = tb!.querySelector(`[sentence="${sentence}"][id="${c.head}"]`) as HTMLElement;
+			if (el) nodes.push({ el, class: ['head', c.type] });
+			for (let d of c.descendants) {
+				let el = tb!.querySelector(`[sentence="${sentence}"][id="${d}"]`) as HTMLElement;
+				if (el) nodes.push({ el, class: ['dep', c.type] });
+			}
+		}
+		for (let n of nodes) {
+			n.el.classList.add(...n.class);
+		}
+		return () => {
+			for (let n of nodes) {
+				n.el.classList.remove(...n.class);
+			}
+		};
+	}
+
+	function stripBreathings(s: string): string {
+		return s
+			.normalize('NFD')
+			.replaceAll(/>([αεηιυοωΑΕΗΙΥΟΩ]{1,2})\u{0313}/gu, '>$1')
+			.normalize('NFC');
+	}
 
 	function exportWordList() {
 		const wordlist = sel!.map((e) => e.getAttribute('lemma')).join('\n');
@@ -55,13 +104,10 @@
 		>
 	</nav>
 	<article
-		class="overflow-y-scroll scroll-smooth pt-4 pb-32 text-xl leading-relaxed has-[.sentence]:px-12"
+		class="overflow-y-scroll scroll-smooth pt-4 pb-32 text-lg leading-relaxed has-[.sentence]:px-12"
 	>
-		<div bind:this={tb} class="max-w-prose">
-			{@html data.treebank
-				.normalize('NFD')
-				.replaceAll(/>([αεηιυοω]{1,2})\u{0313}/gu, '>$1') // strip smooth breathings
-				.normalize('NFC')}
+		<div bind:this={tb} class="max-w-md font-serif">
+			{@html stripBreathings(data.treebank)}
 		</div>
 	</article>
 	{#if defined}
@@ -80,7 +126,8 @@
 
 {#if lemma && definition}
 	<div
-		class="absolute right-8 bottom-8 max-h-32 w-80 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm lg:max-h-[80%]"
+		id="definition"
+		class="absolute right-2 bottom-8 max-h-32 w-72 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm md:max-h-[80%]"
 	>
 		{@html definition}
 		<a
