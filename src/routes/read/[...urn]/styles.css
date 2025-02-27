@@ -11,12 +11,19 @@
 }
 
 .line-nbr {
-	@apply mr-2 inline-block w-10 text-right font-sans text-sm text-gray-400 select-none;
+	@apply mr-2 inline-block w-10 pr-1 text-right font-sans text-sm text-gray-400 select-none;
 
-	&[n$='0'],
-	&[n$='5'] {
-		@apply text-gray-600;
+	&[n$='0'] {
+		@apply bg-gray-100 text-gray-600;
 	}
+}
+
+article {
+	scroll-snap-type: y proximity;
+}
+.speaker {
+	@apply font-sc sticky top-0 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;
+	scroll-snap-align: start;
 }
 
 dl {
@@ -81,7 +88,7 @@ blockquote {
 }
 
 hr {
-	@apply my-4 border-gray-100;
+	@apply my-4 ml-20 w-48 border-gray-300;
 	&:first-child {
 		@apply hidden;
 	}

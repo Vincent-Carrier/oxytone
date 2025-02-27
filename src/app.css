@@ -6,3 +6,7 @@
 	--font-sc: 'Alegreya SC', serif;
 	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
 }
+
+:root {
+	font-size: 150%;
+}

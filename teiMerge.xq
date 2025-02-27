@@ -28,7 +28,7 @@ for $pair in $pairs
         }
       </book>
     </treebank>
-    let $path := `{$urn[1 to 2] => string-join('/')}/merged/{$n}`
+    let $path := string-join(($urn[1 to 2], 'merged', $n), '/')
     let $_ := message($path)
     return db:put('flatbanks', $merged, $path), :)
 
@@ -43,22 +43,24 @@ for $pair in $pairs
   let $merged := <treebank>
     <body>
       {
-        for $el in $teiBook/*
+        for $el in $tei//body//*
         return typeswitch ($el) {
           case element(milestone)
             return if ($el/@unit = "card") then <hr />
+          case element(speaker)
+            return <speaker>{$el/text()}</speaker>
           case element(l)
-            return $tbBook[@n=concat("1.", $el/@n)]
+            return $tb//ln[@n=$el/@n]
           case element(q)
             return <blockquote>{
               for $ln in $el/l
-              return $tbBook[@n=concat("1.", $ln/@n)]
+              return $tb[@n=$ln/@n]
             }</blockquote>
           default return ()
         }
       }
     </body>
   </treebank>
-  let $path := `{$urn[1 to 2] => string-join('/')}/merged/{$n}`
+  let $path := string-join(($urn[1 to 2], 'merged'), '/')
   let $_ := message($path)
   return db:put('flatbanks', $merged, $path)

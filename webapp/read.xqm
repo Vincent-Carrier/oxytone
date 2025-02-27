@@ -75,6 +75,11 @@ declare variable $r:mergedXslt :=
         <xsl:apply-templates select="node()" />
       </xsl:copy>
     </xsl:template>
+    <xsl:template match="speaker">
+      <div class="speaker">
+        <xsl:value-of select="."/>
+      </div>
+    </xsl:template>
     <xsl:template match="ln">
       {$r:lineXslt}
     </xsl:template>
@@ -86,7 +91,10 @@ declare
   %output:method("html")
   function r:getTreebank($author, $work, $edition) {
     let $body := db:get('flatbanks', string-join(($author, $work, $edition), '/'))[1]
-    let $xslt := if (n:is-verse($author, $work)) then $r:verseXslt else $r:proseXslt
+    let $xslt :=
+      if ($edition = 'merged') then $r:mergedXslt
+      else if (n:is-verse($author, $work)) then $r:verseXslt
+      else $r:proseXslt
     return xslt:transform($body, $xslt)
 };
 

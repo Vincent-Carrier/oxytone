@@ -4,7 +4,6 @@
 	import '$lib/components/word.svelte';
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
-	import { env } from '$env/dynamic/public';
 
 	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
@@ -33,6 +32,10 @@
 	});
 
 	onMount(() => {
+		tb.querySelectorAll('.speaker').forEach(
+			(el) => (el.textContent = stripDiacritics(el.textContent!))
+		);
+
 		let clearDependants: () => void;
 		tb!.addEventListener('w-click', async (ev) => {
 			let w = ev.target as HTMLElement;
@@ -86,6 +89,10 @@
 			.normalize('NFC');
 	}
 
+	function stripDiacritics(s: string): string {
+		return s.normalize('NFD').replaceAll(/\p{M}/gu, '');
+	}
+
 	function exportWordList() {
 		const wordlist = sel!.map((e) => e.getAttribute('lemma')).join('\n');
 		navigator.clipboard.writeText(wordlist);
@@ -103,9 +110,7 @@
 			>.apkg</button
 		>
 	</nav>
-	<article
-		class="overflow-y-scroll scroll-smooth pt-4 pb-32 text-lg leading-relaxed has-[.sentence]:px-12"
-	>
+	<article class="mt-4 overflow-y-scroll scroll-smooth pb-32 leading-relaxed has-[.sentence]:px-12">
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html stripBreathings(data.treebank)}
 		</div>
