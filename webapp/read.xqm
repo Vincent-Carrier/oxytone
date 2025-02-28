@@ -63,7 +63,7 @@ declare variable $r:verseXslt :=
   </xsl:stylesheet>;
 
 declare variable $r:mergedXslt :=
-  <xsl:stylesheet version="1.0">
+  <xsl:stylesheet version="3.0">
     <xsl:output method="xml" indent="no" encoding="UTF-8"/>
     <xsl:template match="/">
       <div class="treebank">
@@ -77,13 +77,22 @@ declare variable $r:mergedXslt :=
     </xsl:template>
     <xsl:template match="speaker">
       <div class="speaker">
-        <xsl:value-of select="."/>
+        <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
       </div>
     </xsl:template>
     <xsl:template match="ln">
       {$r:lineXslt}
     </xsl:template>
   </xsl:stylesheet>;
+
+declare
+  %rest:path("/read/{$author}/{$work}")
+  %rest:single
+  %output:method("html")
+  function r:getMerged($author, $work) {
+    let $body := db:get('flatbanks', string-join(($author, $work, 'merged'), '/'))[1]
+    return xslt:transform($body, $r:mergedXslt)
+};
 
 declare
   %rest:path("/read/{$author}/{$work}/{$edition}")

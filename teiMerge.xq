@@ -1,3 +1,5 @@
+import module namespace m = "merge";
+
 (: Homer :)
 (: let $pairs := (
   { 'tb': 'tlg0012/tlg001/perseus-grc1', 'tei': 'tlg0012/tlg001/perseus-grc2' }
@@ -33,13 +35,11 @@ for $pair in $pairs
     return db:put('flatbanks', $merged, $path), :)
 
 (: Tragedy :)
-let $pairs := (
-  { 'tb': 'tlg0011/tlg003/perseus-grc1', 'tei': 'tlg0011/tlg003/perseus-grc2' }
-)
-for $pair in $pairs
-  let $tb := db:get("flatbanks", $pair?tb)[1]
-  let $tei := db:get("lit", $pair?tei)[1]
-  let $urn := tokenize($pair?tb, '/')
+for key $tbPath value $teiPath in
+map:build(db:list('flatbanks', 'tlg0011'), value := m:teiPath#1)
+  let $tb := db:get("flatbanks", $tbPath)[1]
+  let $tei := db:get("lit", $teiPath)[1]
+  let $urn := tokenize($tbPath, '/')
   let $merged := <treebank>
     <body>
       {

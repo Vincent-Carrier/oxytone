@@ -2,19 +2,20 @@
 	import './styles.css';
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
+	import type { Word } from '$lib/components/word.svelte';
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
 
 	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
-	let sel: HTMLElement[] | undefined = $state();
-	let defined: HTMLElement | undefined = $state();
-	let lemma: string | null | undefined = $derived(defined?.getAttribute('lemma'));
+	let sel: Word[] | undefined = $state();
+	let defined: Word | undefined = $state();
+	let lemma: string | null | undefined = $state();
 	let definition: string | undefined = $state();
 
 	$effect(() => {
-		if (lemma && defined?.getAttribute('pos') !== 'punct.') {
+		if (lemma && defined?.pos !== 'punct.') {
 			(async () => {
 				definition = await api.get(`define/lsj/${lemma}`).text();
 			})();
@@ -26,49 +27,55 @@
 			document.querySelectorAll('#definition button.lemma-ref').forEach((el) => {
 				let btn = el as HTMLButtonElement;
 				btn.onclick = () => {
-					defined = btn;
+					lemma = btn.textContent;
 				};
 			});
 	});
 
-	onMount(() => {
-		tb.querySelectorAll('.speaker').forEach(
-			(el) => (el.textContent = stripDiacritics(el.textContent!))
-		);
+	function select(w: Word) {
+		w.classList.toggle('selected');
+		if (w.classList.contains('selected')) {
+			defined = w;
+			lemma = defined.lemma;
+		} else {
+			defined = undefined;
+			lemma = undefined;
+			definition = undefined;
+		}
+		if (sel) {
+			if (defined) sel.push(defined);
+			else sel.splice(sel.indexOf(w));
+		} else {
+			tb.querySelectorAll(`ox-w.selected:not([id="${w?.id}"])`).forEach((el) => {
+				let e = el as Word;
+				e.classList.remove('selected');
+			});
+		}
+	}
 
+	onMount(() => {
 		let clearDependants: () => void;
 		tb!.addEventListener('w-click', async (ev) => {
-			let w = ev.target as HTMLElement;
-			let id = w.getAttribute('id');
-			w.toggleAttribute('selected');
-			defined = w.hasAttribute('selected') ? w : undefined;
-			definition = undefined;
+			let w = ev.target as Word;
+			select(w);
 			if (clearDependants) clearDependants();
-			if (sel) {
-				if (defined) sel.push(defined);
-				else sel.splice(sel.indexOf(w));
-			} else {
-				tb.querySelectorAll(`ox-w[selected]:not([id="${id}"])`).forEach((e) =>
-					e.removeAttribute('selected')
-				);
-				if (defined) {
-					clearDependants = await highlightDependants(w);
-				}
+			if (!sel && defined) {
+				clearDependants = await highlightDependants(w);
 			}
 		});
 	});
 
 	type Dep = { type: string; head: number; descendants: number[] };
-	async function highlightDependants(w: HTMLElement) {
-		let id = w.getAttribute('id');
-		let sentence = w.getAttribute('sentence');
+	async function highlightDependants(w: Word) {
+		let id = w.id;
+		let sentence = w.sentence;
 		let complements: Dep[] = await api.get(`hl/tlg0012/tlg001/${sentence}/${id}`).json();
-		let nodes: { el: HTMLElement; class: string | string[] }[] = [];
+		let nodes: { el: Word; class: string | string[] }[] = [];
 		for (let c of complements) {
-			let el = tb!.querySelector(`[sentence="${sentence}"][id="${c.head}"]`) as HTMLElement;
+			let el = tb!.querySelector(`[sentence="${sentence}"][id="${c.head}"]`) as Word;
 			if (el) nodes.push({ el, class: ['head', c.type] });
 			for (let d of c.descendants) {
-				let el = tb!.querySelector(`[sentence="${sentence}"][id="${d}"]`) as HTMLElement;
+				let el = tb!.querySelector(`[sentence="${sentence}"][id="${d}"]`) as Word;
 				if (el) nodes.push({ el, class: ['dep', c.type] });
 			}
 		}
@@ -89,12 +96,8 @@
 			.normalize('NFC');
 	}
 
-	function stripDiacritics(s: string): string {
-		return s.normalize('NFD').replaceAll(/\p{M}/gu, '');
-	}
-
 	function exportWordList() {
-		const wordlist = sel!.map((e) => e.getAttribute('lemma')).join('\n');
+		const wordlist = sel!.map((e) => e.lemma).join('\n');
 		navigator.clipboard.writeText(wordlist);
 	}
 </script>
@@ -118,7 +121,7 @@
 	{#if defined}
 		<div class="min-h-16 border-t-1 border-gray-300 bg-gray-100 px-12 py-1">
 			<div class="text-lg font-bold">
-				{defined?.getAttribute('lemma')}
+				{defined?.lemma}
 			</div>
 			<div class="text-sm text-gray-700 italic">
 				{#each ['pos', 'person', 'tense', 'mood', 'voice', 'number', 'gender', 'case', 'degree'] as morpho}

@@ -18,6 +18,11 @@
 	}
 }
 
+.line {
+	text-indent: 3.5rem hanging;
+	@apply mt-1 leading-none;
+}
+
 article {
 	scroll-snap-type: y proximity;
 }
@@ -101,7 +106,7 @@ ox-w {
 		@apply underline;
 	}
 
-	&[selected] {
+	&.selected {
 		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
 	}
 

@@ -1,4 +1,4 @@
-import prettier from 'eslint-config-prettier';
+import prettier, { rules } from 'eslint-config-prettier';
 import js from '@eslint/js';
 import { includeIgnoreFile } from '@eslint/compat';
 import svelte from 'eslint-plugin-svelte';
@@ -31,9 +31,5 @@ export default ts.config(
 			}
 		}
 	},
-	{
-		rules: {
-			'svelte/no-html-tags': 'off'
-		}
-	}
+	rules({ 'svelte/no-at-html': 'off' })
 );
