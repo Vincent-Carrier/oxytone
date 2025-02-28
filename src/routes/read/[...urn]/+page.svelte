@@ -65,17 +65,15 @@
 		});
 	});
 
-	type Dep = { type: string; head: number; descendants: number[] };
+	type Complement = { type: string; head: number; descendants: number[] };
 	async function highlightDependants(w: Word) {
-		let id = w.id;
-		let sentence = w.sentence;
-		let complements: Dep[] = await api.get(`hl/tlg0012/tlg001/${sentence}/${id}`).json();
+		let complements: Complement[] = await api.get(`hl/tlg0012/tlg001/${w.sentence}/${w.id}`).json();
 		let nodes: { el: Word; class: string | string[] }[] = [];
 		for (let c of complements) {
-			let el = tb!.querySelector(`[sentence="${sentence}"][id="${c.head}"]`) as Word;
+			let el = tb!.querySelector(`[sentence="${w.sentence}"][id="${c.head}"]`) as Word;
 			if (el) nodes.push({ el, class: ['head', c.type] });
 			for (let d of c.descendants) {
-				let el = tb!.querySelector(`[sentence="${sentence}"][id="${d}"]`) as Word;
+				let el = tb!.querySelector(`[sentence="${w.sentence}"][id="${d}"]`) as Word;
 				if (el) nodes.push({ el, class: ['dep', c.type] });
 			}
 		}
@@ -90,10 +88,10 @@
 	}
 
 	function stripBreathings(s: string): string {
-		return s
-			.normalize('NFD')
-			.replaceAll(/>([αεηιυοωΑΕΗΙΥΟΩ]{1,2})\u{0313}/gu, '>$1')
-			.normalize('NFC');
+		return s;
+		// .normalize('NFD')
+		// .replaceAll(/>([αεηιυοωΑΕΗΙΥΟΩ]{1,2})\u{0313}/gu, '>$1')
+		// .normalize('NFC');
 	}
 
 	function exportWordList() {
