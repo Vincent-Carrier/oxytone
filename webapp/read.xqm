@@ -50,7 +50,7 @@ declare variable $r:lineXslt :=
   </div>;
 
 declare variable $r:verseXslt :=
-  <xsl:stylesheet version="1.0">
+  <xsl:stylesheet version="3.0">
     <xsl:output method="xml" indent="no" encoding="UTF-8"/>
     <xsl:template match="/">
       <div class="treebank">

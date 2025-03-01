@@ -5,7 +5,11 @@
 	import type { Word } from '$lib/components/word.svelte';
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import Morphology from '$lib/components/morphology.svelte';
+	import Definition from '$lib/components/definition.svelte';
 
+	let urn = page.params.urn.split('/');
 	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
@@ -67,7 +71,9 @@
 
 	type Complement = { type: string; head: number; descendants: number[] };
 	async function highlightDependants(w: Word) {
-		let complements: Complement[] = await api.get(`hl/tlg0012/tlg001/${w.sentence}/${w.id}`).json();
+		let complements: Complement[] = await api
+			.get(`hl/${urn[0]}/${urn[1]}/${w.sentence}/${w.id}`)
+			.json();
 		let nodes: { el: Word; class: string | string[] }[] = [];
 		for (let c of complements) {
 			let el = tb!.querySelector(`[sentence="${w.sentence}"][id="${c.head}"]`) as Word;
@@ -117,31 +123,10 @@
 		</div>
 	</article>
 	{#if defined}
-		<div class="min-h-16 border-t-1 border-gray-300 bg-gray-100 px-12 py-1">
-			<div class="text-lg font-bold">
-				{defined?.lemma}
-			</div>
-			<div class="text-sm text-gray-700 italic">
-				{#each ['pos', 'person', 'tense', 'mood', 'voice', 'number', 'gender', 'case', 'degree'] as morpho}
-					{defined?.getAttribute(morpho)}{' '}
-				{/each}
-			</div>
-		</div>
+		<Morphology word={defined} />
 	{/if}
 </div>
 
 {#if lemma && definition}
-	<div
-		id="definition"
-		class="absolute right-2 bottom-8 max-h-32 w-72 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm md:max-h-[80%]"
-	>
-		{@html definition}
-		<a
-			target="_blank"
-			href={`https://lsj.gr/wiki/${lemma}`}
-			class="mt-4 mb-2 block text-right text-blue-600"
-		>
-			<span class="underline">lsj.gr/</span> 🡽
-		</a>
-	</div>
+	<Definition {lemma} {definition} />
 {/if}
