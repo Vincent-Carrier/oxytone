@@ -37,7 +37,7 @@
 	});
 
 	function select(w: Word) {
-		w.classList.toggle('selected');
+		w.toggleSelected();
 		if (w.classList.contains('selected')) {
 			defined = w;
 			lemma = defined.lemma;
@@ -50,10 +50,10 @@
 			if (defined) sel.push(defined);
 			else sel.splice(sel.indexOf(w));
 		} else {
-			tb.querySelectorAll(`ox-w.selected:not([id="${w?.id}"])`).forEach((el) => {
-				let e = el as Word;
-				e.classList.remove('selected');
-			});
+			let selection = tb.querySelectorAll(`ox-w.selected:not([id="${w?.id}"])`);
+			for (let el of selection) {
+				(el as Word).toggleSelected();
+			}
 		}
 	}
 
@@ -114,7 +114,7 @@
 		<button
 			onclick={exportWordList}
 			class="ml-auto cursor-pointer border-1 border-blue-700 px-2 text-sm text-blue-700"
-			>.apkg</button
+			>flashcards</button
 		>
 	</nav>
 	<article class="mt-4 overflow-y-scroll scroll-smooth pb-32 leading-relaxed has-[.sentence]:px-12">
