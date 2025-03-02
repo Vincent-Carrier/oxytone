@@ -7,6 +7,20 @@
 	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
 }
 
-:root {
-	font-size: 150%;
+@layer base {
+	:root {
+		font-size: 150%;
+	}
+}
+
+@layer components {
+	.btn {
+		@apply cursor-pointer border-1 border-blue-700 px-2 text-blue-700;
+		&.ghost {
+			@apply border-none;
+		}
+		&.danger {
+			@apply border-red-700 text-red-700;
+		}
+	}
 }

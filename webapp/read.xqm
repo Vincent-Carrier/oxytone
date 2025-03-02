@@ -1,34 +1,36 @@
 module namespace r = "oxytone/read";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
+
 import module namespace ref = "ref";
+import module namespace xsm = "xsm";
 import module namespace n = "normalize";
 
-declare variable $r:proseXslt :=
-  <xsl:stylesheet version="3.0">
-    <xsl:output method="xml" indent="no" encoding="UTF-8"/>
-    <xsl:template match="/">
-      <xsl:for-each select="//body">
-        <div class="treebank">
-            <xsl:for-each select=".//sentence">
-              <span class="sentence">
-                <span class="sentence-nbr">
-                  <xsl:value-of select="@id" />
-                </span>
-                <xsl:for-each select=".//w[not(@artificial)]">
-                  <ox-w>
-                    <xsl:copy-of select="./*|@*|text()" />
-                  </ox-w>
-                </xsl:for-each>
-                <xsl:for-each select=".//br">
-                  <br/>
-                </xsl:for-each>
-              </span>
-            </xsl:for-each>
-        </div>
+declare variable $r:proseXslt := xsm:stylesheet({
+  "/":
+    <div class="treebank">
+      <xsl:for-each select=".//sentence">
+        <span class="sentence">
+          <span class="sentence-nbr">
+            <xsl:value-of select="@id" />
+          </span>
+          <xsl:for-each select=".//w[not(@artificial)]">
+            <ox-w>
+              <xsl:copy-of select="./*|@*|text()" />
+            </ox-w>
+          </xsl:for-each>
+          <xsl:for-each select=".//br">
+            <br/>
+          </xsl:for-each>
+        </span>
       </xsl:for-each>
-    </xsl:template>
-  </xsl:stylesheet>;
+    </div>
+});
+
+declare variable $r:wordXslt :=
+  <ox-w>
+    <xsl:copy-of select="./*|@*|text()" />
+  </ox-w>;
 
 declare variable $r:lineXslt :=
   <div class="line">
@@ -43,47 +45,30 @@ declare variable $r:lineXslt :=
       <xsl:value-of select="@n" />
     </a>
     <xsl:for-each select=".//w">
-      <ox-w>
-        <xsl:copy-of select="./*|@*|text()" />
-      </ox-w>
+      {$r:wordXslt}
     </xsl:for-each>
   </div>;
 
-declare variable $r:verseXslt :=
-  <xsl:stylesheet version="3.0">
-    <xsl:output method="xml" indent="no" encoding="UTF-8"/>
-    <xsl:template match="/">
-      <div class="treebank">
-        <xsl:apply-templates />
-      </div>
-    </xsl:template>
-    <xsl:template match="ln">
-      {$r:lineXslt}
-    </xsl:template>
-  </xsl:stylesheet>;
+declare variable $r:verseXslt := xsm:stylesheet({
+  "/":
+    <div class="treebank">
+      <xsl:apply-templates />
+    </div>,
+  "ln": $r:lineXslt
+});
 
-declare variable $r:mergedXslt :=
-  <xsl:stylesheet version="3.0">
-    <xsl:output method="xml" indent="no" encoding="UTF-8"/>
-    <xsl:template match="/">
+declare variable $r:mergedXslt := xsm:stylesheet({
+  "/":
       <div class="treebank">
         <xsl:apply-templates />
-      </div>
-    </xsl:template>
-    <xsl:template match="hr|blockquote">
-      <xsl:copy>
-        <xsl:apply-templates select="node()" />
-      </xsl:copy>
-    </xsl:template>
-    <xsl:template match="speaker">
-      <div class="speaker">
-        <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
-      </div>
-    </xsl:template>
-    <xsl:template match="ln">
-      {$r:lineXslt}
-    </xsl:template>
-  </xsl:stylesheet>;
+      </div>,
+  "hr|blockquote": xsm:keep("node()"),
+  "speaker":
+    <div class="speaker">
+      <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
+    </div>,
+  "ln": $r:lineXslt
+});
 
 declare
   %rest:path("/read/{$author}/{$work}")
@@ -108,11 +93,11 @@ declare
 };
 
 declare
-  %rest:path("/read/{$author}/{$work}/{$edition}/{$book=\d+}")
+  %rest:path("/read/{$author}/{$work}/book/{$book=\d+}")
   %rest:single
   %output:method("html")
-  function r:getBook($author, $work, $edition, $book) {
-    let $path := string-join(($author, $work, $edition, $book), '/')
+  function r:getBook($author, $work, $book) {
+    let $path := string-join(($author, $work, 'merged', $book), '/')
     let $_ := message($path)
     let $tb := db:get('flatbanks', $path)
     return xslt:transform($tb, $r:mergedXslt)

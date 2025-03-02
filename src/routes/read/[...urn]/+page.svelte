@@ -3,20 +3,50 @@
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
 	import type { Word } from '$lib/components/word.svelte';
+	import FlashcardsButton from '$lib/components/flashcards-button.svelte';
+	import Morphology from '$lib/components/morphology.svelte';
+	import Definition from '$lib/components/definition.svelte';
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import Morphology from '$lib/components/morphology.svelte';
-	import Definition from '$lib/components/definition.svelte';
+	import { goto } from '$app/navigation';
 
 	let urn = page.params.urn.split('/');
+	let sp = page.url.searchParams;
 	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
-	let sel: Word[] | undefined = $state();
-	let defined: Word | undefined = $state();
-	let lemma: string | null | undefined = $state();
-	let definition: string | undefined = $state();
+	let selection: Word[] | null = $state(null);
+	let defined: Word | null = $state(null);
+	let lemma: string | null = $state(null);
+	let definition: string | null = $state(null);
+	let clearDependants: null | (() => void) = $state(null);
+
+	$effect(() => {
+		if (clearDependants) clearDependants();
+		if (selection === null && defined) {
+			highlightDependants(defined).then((clear) => (clearDependants = clear));
+		}
+	});
+
+	$effect(() => {
+		let sp;
+		if (defined) {
+			sp = new URLSearchParams({
+				word: String(defined.id),
+				sentence: String(defined.sentence)
+			});
+		}
+		goto(`?${sp?.toString() ?? ''}`);
+	});
+
+	$effect(() => {
+		if (selection === null) {
+			defined = null;
+			lemma = null;
+			definition = null;
+		}
+	});
 
 	$effect(() => {
 		if (lemma && defined?.pos !== 'punct.') {
@@ -27,28 +57,29 @@
 	});
 
 	$effect(() => {
-		if (definition)
-			document.querySelectorAll('#definition button.lemma-ref').forEach((el) => {
-				let btn = el as HTMLButtonElement;
+		if (definition) {
+			let buttons = document.querySelectorAll<HTMLButtonElement>('#definition button.lemma-ref');
+			for (let btn of buttons) {
 				btn.onclick = () => {
 					lemma = btn.textContent;
 				};
-			});
+			}
+		}
 	});
 
 	function select(w: Word) {
 		w.toggleSelected();
-		if (w.classList.contains('selected')) {
+		if (w.selected) {
 			defined = w;
-			lemma = defined.lemma;
+			lemma = defined.lemma ?? null;
 		} else {
-			defined = undefined;
-			lemma = undefined;
-			definition = undefined;
+			defined = null;
+			lemma = null;
+			definition = null;
 		}
-		if (sel) {
-			if (defined) sel.push(defined);
-			else sel.splice(sel.indexOf(w));
+		if (selection) {
+			if (defined) selection.push(defined);
+			else selection.splice(selection.indexOf(w));
 		} else {
 			let selection = tb.querySelectorAll(`ox-w.selected:not([id="${w?.id}"])`);
 			for (let el of selection) {
@@ -58,14 +89,16 @@
 	}
 
 	onMount(() => {
-		let clearDependants: () => void;
+		if (sp.has('word')) {
+			defined = tb.querySelector(
+				`[sentence="${sp.get('sentence')}"][id="${sp.get('word')}"]`
+			) as Word;
+			lemma = defined.lemma ?? null;
+			defined?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
 		tb!.addEventListener('w-click', async (ev) => {
 			let w = ev.target as Word;
 			select(w);
-			if (clearDependants) clearDependants();
-			if (!sel && defined) {
-				clearDependants = await highlightDependants(w);
-			}
 		});
 	});
 
@@ -99,23 +132,14 @@
 		// .replaceAll(/>([αεηιυοωΑΕΗΙΥΟΩ]{1,2})\u{0313}/gu, '>$1')
 		// .normalize('NFC');
 	}
-
-	function exportWordList() {
-		const wordlist = sel!.map((e) => e.lemma).join('\n');
-		navigator.clipboard.writeText(wordlist);
-	}
 </script>
 
 <div class="relative flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-2"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-2"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
-		<button
-			onclick={exportWordList}
-			class="ml-auto cursor-pointer border-1 border-blue-700 px-2 text-sm text-blue-700"
-			>flashcards</button
-		>
+		<FlashcardsButton bind:selection />
 	</nav>
 	<article class="mt-4 overflow-y-scroll scroll-smooth pb-32 leading-relaxed has-[.sentence]:px-12">
 		<div bind:this={tb} class="max-w-md font-serif">

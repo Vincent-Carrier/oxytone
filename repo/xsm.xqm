@@ -22,3 +22,9 @@ declare function xsm:attr($name as xs:string, $value as xs:string) as element() 
       <value-of select="{$value}" />
     </attribute>
 };
+
+declare function xsm:keep($select as xs:string := "@*|node()") as element() {
+  <copy>
+    <apply-templates select="{$select}" />
+  </copy>
+};

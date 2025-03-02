@@ -15,12 +15,15 @@ treebanks:
 
 flatbanks:
     basex -O AUTOFLUSH=false \
+          -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
           -O ATTRINCLUDE=id,sentence -O TEXTINDEX=false \
           -c "CREATE DB flatbanks" \
           -Q flatbanks.xq
 
 lit:
-    basex -O AUTOFLUSH=false -c "CREATE DB lit" \
+    basex -O AUTOFLUSH=false \
+          -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
+          -c "CREATE DB lit" \
           -Q lit.xq
 
 catalog:

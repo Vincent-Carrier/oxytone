@@ -1,4 +1,4 @@
-let $f := file:read-text('LSJ_shortdefs.tsv', 'utf-8', true())
+let $f := file:read-text('lsj-shortdefs.tsv', 'utf-8', true())
 let $defs := csv:parse($f, {'header': true(), 'separator': 'tab', 'format': 'xquery'})
 for $w in $defs?records
     let $lemma := $w?1

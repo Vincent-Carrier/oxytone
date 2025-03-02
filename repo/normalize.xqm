@@ -106,7 +106,7 @@ declare function n:normalize-verse($tb) as element()* {
       when n:cite-break($p/@cite, $e/@cite, $n/@cite)
     let $ref := tokenize($s/@cite/string(), ':') => foot()
     return
-      <ln n="{$ref}">
+      <ln n="{$ref}" xml:space="preserve">
         {
           for sliding window $win in $line
             start $w at $i end $n at $j
@@ -128,7 +128,7 @@ declare function n:normalize-verse($tb) as element()* {
 
 declare function n:normalize-prose($tb) as element()* {
   for $sen in $tb//sentence
-  return <sentence>{
+  return <sentence xml:space="preserve">{
     $sen/@*,
     for sliding window $win in $sen/word
       start $s at $i end $e at $j

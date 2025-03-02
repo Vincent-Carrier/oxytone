@@ -56,7 +56,7 @@ dl {
 		}
 
 		& .lemma-ref {
-			@apply cursor-pointer text-blue-700 underline;
+			@apply inline cursor-pointer text-blue-700 underline;
 		}
 
 		& strong {
