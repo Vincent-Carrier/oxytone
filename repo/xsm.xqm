@@ -12,7 +12,8 @@ declare function xsm:stylesheet(
     {for key $match value $template in $templates
       return <template match="{$match}">
         {$template}
-      </template>}
+      </template>
+    }
     {$body}
   </stylesheet>
 };

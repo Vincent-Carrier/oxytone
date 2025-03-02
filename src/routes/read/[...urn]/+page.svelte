@@ -89,6 +89,8 @@
 	}
 
 	onMount(() => {
+		document.title = document.querySelector('h1')?.textContent ?? 'Oxytone';
+
 		if (sp.has('word')) {
 			defined = tb.querySelector(
 				`[sentence="${sp.get('sentence')}"][id="${sp.get('word')}"]`
@@ -141,7 +143,7 @@
 		<a href="/" class="text-gray-800">oxytone</a>
 		<FlashcardsButton bind:selection />
 	</nav>
-	<article class="mt-4 overflow-y-scroll scroll-smooth pb-32 leading-relaxed has-[.sentence]:px-12">
+	<article class="overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12">
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html stripBreathings(data.treebank)}
 		</div>

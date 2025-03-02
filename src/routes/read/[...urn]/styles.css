@@ -1,5 +1,9 @@
 @reference '../../../app.css';
 
+h1 {
+	@apply font-sc mb-4 ml-12 text-2xl text-gray-800 lowercase underline;
+}
+
 .sentence-nbr {
 	@apply mr-1 ml-3 inline-block font-sans text-sm text-gray-400 select-none;
 	&::before {
@@ -94,7 +98,8 @@ blockquote {
 
 hr {
 	@apply my-4 ml-20 w-48 border-gray-300;
-	&:first-child {
+	&:first-child,
+	h1 + & {
 		@apply hidden;
 	}
 }

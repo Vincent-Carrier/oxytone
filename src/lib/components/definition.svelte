@@ -9,7 +9,7 @@
 
 <div
 	id="definition"
-	class="absolute right-2 bottom-8 max-h-32 w-72 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm md:max-h-[80%]"
+	class="absolute right-2 bottom-8 max-h-32 w-72 overflow-y-scroll border-1 border-gray-300 bg-gray-50 px-2 text-sm lg:max-h-[80%]"
 >
 	{@html definition}
 	<a

@@ -9,6 +9,7 @@ import module namespace n = "normalize";
 declare variable $r:proseXslt := xsm:stylesheet({
   "/":
     <div class="treebank">
+      <h1><xsl:value-of select="$title" /></h1>
       <xsl:for-each select=".//sentence">
         <span class="sentence">
           <span class="sentence-nbr">
@@ -25,11 +26,20 @@ declare variable $r:proseXslt := xsm:stylesheet({
         </span>
       </xsl:for-each>
     </div>
-});
+}, (<xsl:param name="title" />));
+
+declare variable $r:rootXslt :=
+  <div class="treebank">
+    <h1>
+      <xsl:value-of select="replace(normalize-unicode($title, 'NFD'), '\p{{M}}', '')" />
+    </h1>
+    <xsl:apply-templates />
+  </div>;
 
 declare variable $r:wordXslt :=
   <ox-w>
-    <xsl:copy-of select="./*|@*|text()" />
+    <xsl:copy-of select="@*" />
+    <xsl:value-of select="normalize-unicode(., 'NFD') => replace('^([αεηιυοω]){{1,2}}&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
   </ox-w>;
 
 declare variable $r:lineXslt :=
@@ -58,17 +68,14 @@ declare variable $r:verseXslt := xsm:stylesheet({
 });
 
 declare variable $r:mergedXslt := xsm:stylesheet({
-  "/":
-      <div class="treebank">
-        <xsl:apply-templates />
-      </div>,
+  "/": $r:rootXslt,
   "hr|blockquote": xsm:keep("node()"),
   "speaker":
     <div class="speaker">
       <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
     </div>,
   "ln": $r:lineXslt
-});
+}, (<xsl:param name="title" />));
 
 declare
   %rest:path("/read/{$author}/{$work}")
@@ -100,7 +107,8 @@ declare
     let $path := string-join(($author, $work, 'merged', $book), '/')
     let $_ := message($path)
     let $tb := db:get('flatbanks', $path)
-    return xslt:transform($tb, $r:mergedXslt)
+    let $title := db:get("lit", `{$author}/{$work}`)/TEI/teiHeader/fileDesc/titleStmt/title
+    return xslt:transform($tb, $r:mergedXslt, { 'title': $title })
 };
 
 declare
