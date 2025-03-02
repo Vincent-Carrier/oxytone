@@ -1,7 +1,13 @@
 @reference '../../../app.css';
 
-h1 {
-	@apply font-sc mb-4 ml-12 text-2xl text-gray-800 lowercase underline;
+hgroup {
+	@apply font-sc mb-4 ml-12 lowercase;
+	& h1 {
+		@apply text-2xl text-gray-800 underline;
+	}
+	& .author {
+		@apply text-gray-800;
+	}
 }
 
 .sentence-nbr {
@@ -99,7 +105,7 @@ blockquote {
 hr {
 	@apply my-4 ml-20 w-48 border-gray-300;
 	&:first-child,
-	h1 + & {
+	hgroup + & {
 		@apply hidden;
 	}
 }

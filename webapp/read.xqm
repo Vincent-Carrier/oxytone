@@ -30,9 +30,14 @@ declare variable $r:proseXslt := xsm:stylesheet({
 
 declare variable $r:rootXslt :=
   <div class="treebank">
-    <h1>
-      <xsl:value-of select="replace(normalize-unicode($title, 'NFD'), '\p{{M}}', '')" />
-    </h1>
+    <hgroup>
+      <h1>
+        <xsl:value-of select="replace(normalize-unicode($title, 'NFD'), '\p{{M}}', '')" />
+      </h1>
+      <p class="author">
+        <xsl:value-of select="replace(normalize-unicode($author, 'NFD'), '\p{{M}}', '')" />
+      </p>
+    </hgroup>
     <xsl:apply-templates />
   </div>;
 
@@ -75,7 +80,7 @@ declare variable $r:mergedXslt := xsm:stylesheet({
       <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
     </div>,
   "ln": $r:lineXslt
-}, (<xsl:param name="title" />));
+}, (<xsl:param name="title" />, <xsl:param name="author" />));
 
 declare
   %rest:path("/read/{$author}/{$work}")
@@ -107,8 +112,11 @@ declare
     let $path := string-join(($author, $work, 'merged', $book), '/')
     let $_ := message($path)
     let $tb := db:get('flatbanks', $path)
-    let $title := db:get("lit", `{$author}/{$work}`)/TEI/teiHeader/fileDesc/titleStmt/title
-    return xslt:transform($tb, $r:mergedXslt, { 'title': $title })
+    let $titleStmt := db:get("lit", `{$author}/{$work}`)/TEI/teiHeader/fileDesc/titleStmt
+    return xslt:transform($tb, $r:mergedXslt, {
+      'title': $titleStmt/title/text(),
+      'author': $titleStmt/author/text()
+    })
 };
 
 declare
