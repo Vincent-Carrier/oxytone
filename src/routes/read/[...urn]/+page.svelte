@@ -23,24 +23,6 @@
 	let clearDependants: null | (() => void) = $state(null);
 
 	$effect(() => {
-		if (clearDependants) clearDependants();
-		if (selection === null && defined) {
-			highlightDependants(defined).then((clear) => (clearDependants = clear));
-		}
-	});
-
-	$effect(() => {
-		let sp;
-		if (defined) {
-			sp = new URLSearchParams({
-				word: String(defined.id),
-				sentence: String(defined.sentence)
-			});
-		}
-		goto(`?${sp?.toString() ?? ''}`);
-	});
-
-	$effect(() => {
 		if (selection === null) {
 			defined = null;
 			lemma = null;
@@ -85,6 +67,10 @@
 			for (let el of selection) {
 				(el as Word).toggleSelected();
 			}
+		}
+		clearDependants?.();
+		if (selection === null && defined) {
+			highlightDependants(defined).then((clear) => (clearDependants = clear));
 		}
 	}
 

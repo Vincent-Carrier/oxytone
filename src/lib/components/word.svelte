@@ -56,9 +56,18 @@
 
 <script lang="ts">
 	let { children } = $props();
-	$host().onclick = () => {
-		$host().dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
+	let w = $host() as Word;
+	w.onclick = () => {
+		w.dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
 	};
+
+	// if (
+	// 	!['punct.', 'verb'].includes(w.pos!) &&
+	// 	!['AuxY'].includes(w.relation!) &&
+	// 	Math.abs(w.id - w.head) > 4
+	// ) {
+	// 	w.classList.add('underline');
+	// }
 </script>
 
 {children}

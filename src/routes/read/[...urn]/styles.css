@@ -26,6 +26,10 @@ hgroup {
 	&[n$='0'] {
 		@apply bg-gray-100 text-gray-600;
 	}
+
+	&:target {
+		@apply bg-blue-50 text-blue-600;
+	}
 }
 
 .line {
@@ -35,6 +39,7 @@ hgroup {
 
 article {
 	scroll-snap-type: y proximity;
+	scroll-padding: 3rem;
 }
 .speaker {
 	@apply font-sc sticky top-0 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;

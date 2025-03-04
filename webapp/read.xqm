@@ -1,10 +1,10 @@
 module namespace r = "oxytone/read";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
-
 import module namespace ref = "ref";
 import module namespace xsm = "xsm";
 import module namespace n = "normalize";
+
 
 declare variable $r:proseXslt := xsm:stylesheet({
   "/":
@@ -44,7 +44,7 @@ declare variable $r:rootXslt :=
 declare variable $r:wordXslt :=
   <ox-w>
     <xsl:copy-of select="@*" />
-    <xsl:value-of select="normalize-unicode(., 'NFD') => replace('^([αεηιυοω]){{1,2}}&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
+    <xsl:value-of select="normalize-unicode(., 'NFD') => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
   </ox-w>;
 
 declare variable $r:lineXslt :=
@@ -86,7 +86,7 @@ declare
   %rest:path("/read/{$author}/{$work}")
   %rest:single
   %output:method("html")
-  function r:getMerged($author, $work) {
+  function r:get-merged($author, $work) {
     let $body := db:get('flatbanks', string-join(($author, $work, 'merged'), '/'))[1]
     return xslt:transform($body, $r:mergedXslt)
 };
@@ -95,7 +95,7 @@ declare
   %rest:path("/read/{$author}/{$work}/{$edition}")
   %rest:single
   %output:method("html")
-  function r:getTreebank($author, $work, $edition) {
+  function r:get-treebank($author, $work, $edition) {
     let $body := db:get('flatbanks', string-join(($author, $work, $edition), '/'))[1]
     let $xslt :=
       if ($edition = 'merged') then $r:mergedXslt
@@ -108,7 +108,7 @@ declare
   %rest:path("/read/{$author}/{$work}/book/{$book=\d+}")
   %rest:single
   %output:method("html")
-  function r:getBook($author, $work, $book) {
+  function r:get-book($author, $work, $book) {
     let $path := string-join(($author, $work, 'merged', $book), '/')
     let $_ := message($path)
     let $tb := db:get('flatbanks', $path)
@@ -122,7 +122,7 @@ declare
 declare
   %rest:path("/hl/{$author}/{$work}/{$sentence=\d+}/{$word=\d+}")
   %output:method("json")
-  function r:highlightDependencies($author, $work, $sentence, $word) {
+  function r:highlight-dependencies($author, $work, $sentence, $word) {
     let $path := string-join(($author, $work), '/')
     let $tb := db:get('treebanks', $path)[1]
     let $sen := $tb//sentence[@id=$sentence]
