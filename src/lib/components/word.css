@@ -1,0 +1,49 @@
+@reference '$/app.css';
+
+ox-w {
+	@apply cursor-pointer text-gray-700;
+
+	&.head {
+		@apply underline;
+	}
+
+	&.selected {
+		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
+	}
+
+	&[pos='verb'] {
+		@apply font-bold;
+	}
+
+	&[case='nom.'] {
+		@apply text-emerald-700;
+	}
+	&.sbj.dep {
+		@apply bg-emerald-50;
+	}
+
+	&[case='acc.'] {
+		@apply text-sky-700;
+	}
+	&.acc-obj.dep {
+		@apply bg-sky-50;
+	}
+
+	&[case='dat.'] {
+		@apply text-yellow-700;
+	}
+	&.dat-obj.dep {
+		@apply bg-yellow-50;
+	}
+
+	&[case='gen.'] {
+		@apply text-purple-700;
+	}
+	&.gen-obj.dep {
+		@apply bg-purple-50;
+	}
+
+	&[case='voc.'] {
+		@apply text-pink-700;
+	}
+}

@@ -55,6 +55,7 @@
 </script>
 
 <script lang="ts">
+	import './word.css';
 	let { children } = $props();
 	let w = $host() as Word;
 	w.onclick = () => {

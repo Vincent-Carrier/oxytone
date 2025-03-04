@@ -1,4 +1,4 @@
-@reference '../../../app.css';
+@reference '$/app.css';
 
 hgroup {
 	@apply font-sc mb-4 ml-12 lowercase;
@@ -46,36 +46,6 @@ article {
 	scroll-snap-align: start;
 }
 
-dl {
-	@apply relative;
-
-	& .meanings {
-		@apply flex flex-col gap-y-1;
-	}
-
-	& dt {
-		@apply sticky top-0 mb-2 block border-b-1 border-gray-300 bg-gray-50 font-bold;
-	}
-
-	& dd {
-		@apply text-gray-600;
-		&:not(.shortdef) {
-			@apply pl-4;
-			&::before {
-				content: '‒';
-				@apply mr-2 -ml-4;
-			}
-		}
-		&.shortdef {
-			@apply font-bold text-gray-800;
-		}
-
-		& strong {
-			@apply text-gray-800;
-		}
-	}
-}
-
 blockquote {
 	& .line-nbr {
 		@apply mr-6;
@@ -108,53 +78,5 @@ hr {
 	&:first-child,
 	hgroup + & {
 		@apply hidden;
-	}
-}
-
-ox-w {
-	@apply cursor-pointer text-gray-700;
-
-	&.head {
-		@apply underline;
-	}
-
-	&.selected {
-		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
-	}
-
-	&[pos='verb'] {
-		@apply font-bold;
-	}
-
-	&[case='nom.'] {
-		@apply text-emerald-700;
-	}
-	&.sbj.dep {
-		@apply bg-emerald-50;
-	}
-
-	&[case='acc.'] {
-		@apply text-sky-700;
-	}
-	&.acc-obj.dep {
-		@apply bg-sky-50;
-	}
-
-	&[case='dat.'] {
-		@apply text-yellow-700;
-	}
-	&.dat-obj.dep {
-		@apply bg-yellow-50;
-	}
-
-	&[case='gen.'] {
-		@apply text-purple-700;
-	}
-	&.gen-obj.dep {
-		@apply bg-purple-50;
-	}
-
-	&[case='voc.'] {
-		@apply text-pink-700;
 	}
 }

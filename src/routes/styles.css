@@ -1,4 +1,4 @@
-@reference '../app.css';
+@reference '$/app.css';
 
 .author {
 	@apply flex flex-wrap items-baseline;

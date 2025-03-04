@@ -1,4 +1,5 @@
 <script lang="ts">
+	import './definition.css';
 	import makeApi from '$lib/api';
 	let api = makeApi(fetch);
 
