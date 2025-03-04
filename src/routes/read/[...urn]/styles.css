@@ -70,10 +70,6 @@ dl {
 			@apply font-bold text-gray-800;
 		}
 
-		& .lemma-ref {
-			@apply inline cursor-pointer text-blue-700 underline;
-		}
-
 		& strong {
 			@apply text-gray-800;
 		}

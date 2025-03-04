@@ -35,5 +35,5 @@
 		{/if}
 	</button>
 {:else}
-	<button onclick={() => (selection = [])} class="btn ml-auto"> flashcards </button>
+	<button onclick={() => (selection = [])} class="btn ghost ml-auto">flashcards</button>
 {/if}

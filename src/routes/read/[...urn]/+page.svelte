@@ -9,7 +9,6 @@
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 
 	let urn = page.params.urn.split('/');
 	let sp = page.url.searchParams;
@@ -19,33 +18,12 @@
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
 	let lemma: string | null = $state(null);
-	let definition: string | null = $state(null);
 	let clearDependants: null | (() => void) = $state(null);
 
 	$effect(() => {
 		if (selection === null) {
 			defined = null;
 			lemma = null;
-			definition = null;
-		}
-	});
-
-	$effect(() => {
-		if (lemma && defined?.pos !== 'punct.') {
-			(async () => {
-				definition = await api.get(`define/lsj/${lemma}`).text();
-			})();
-		}
-	});
-
-	$effect(() => {
-		if (definition) {
-			let buttons = document.querySelectorAll<HTMLButtonElement>('#definition button.lemma-ref');
-			for (let btn of buttons) {
-				btn.onclick = () => {
-					lemma = btn.textContent;
-				};
-			}
 		}
 	});
 
@@ -57,7 +35,6 @@
 		} else {
 			defined = null;
 			lemma = null;
-			definition = null;
 		}
 		if (selection) {
 			if (defined) selection.push(defined);
@@ -113,25 +90,18 @@
 			}
 		};
 	}
-
-	function stripBreathings(s: string): string {
-		return s;
-		// .normalize('NFD')
-		// .replaceAll(/>([αεηιυοωΑΕΗΙΥΟΩ]{1,2})\u{0313}/gu, '>$1')
-		// .normalize('NFC');
-	}
 </script>
 
 <div class="relative flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-2"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-1 text-sm"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
 		<FlashcardsButton bind:selection />
 	</nav>
 	<article class="overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12">
 		<div bind:this={tb} class="max-w-md font-serif">
-			{@html stripBreathings(data.treebank)}
+			{@html data.treebank}
 		</div>
 	</article>
 	{#if defined}
@@ -139,6 +109,6 @@
 	{/if}
 </div>
 
-{#if lemma && definition}
-	<Definition {lemma} {definition} />
+{#if lemma}
+	<Definition {lemma} />
 {/if}

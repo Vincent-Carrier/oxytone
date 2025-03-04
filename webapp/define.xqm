@@ -28,11 +28,6 @@ declare variable $def:xslt := xsm:stylesheet(
       <strong>
         <xsl:value-of select="concat('&#x20;', ., '&#x20;')"/>
       </strong>,
-    "xr/ref[@lang='greek']":
-      <button class="lemma-ref">
-        {xsm:attr("lemma", ".")}
-        <xsl:value-of select="." />
-      </button>,
     "bibl": (),
     "text()": <xsl:value-of select="replace(., ',$|cf\.$', '')"/>
   },

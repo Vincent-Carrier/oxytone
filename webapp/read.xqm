@@ -114,7 +114,7 @@ declare
     let $tb := db:get('flatbanks', $path)
     let $titleStmt := db:get("lit", `{$author}/{$work}`)/TEI/teiHeader/fileDesc/titleStmt
     return xslt:transform($tb, $r:mergedXslt, {
-      'title': $titleStmt/title/text(),
+      'title': `{$titleStmt/title/text()} {$book}`,
       'author': $titleStmt/author/text()
     })
 };
