@@ -42,11 +42,12 @@ article {
 	scroll-padding: 3rem;
 }
 .speaker {
-	@apply font-sc sticky top-0 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;
+	@apply font-sc sticky -top-4 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;
 	scroll-snap-align: start;
 }
 
 blockquote {
+	@apply my-4;
 	& .line-nbr {
 		@apply mr-6;
 	}
@@ -58,7 +59,7 @@ blockquote {
 		&:first-of-type ox-w:first-of-type {
 			@apply relative;
 			&::before {
-				@apply absolute -bottom-1 -left-3 text-2xl !font-normal text-gray-500;
+				@apply absolute -top-1 -left-4 text-2xl !font-normal text-gray-600;
 				content: '“';
 			}
 		}
@@ -66,7 +67,7 @@ blockquote {
 		&:last-of-type ox-w:last-of-type {
 			@apply relative;
 			&::after {
-				@apply absolute -right-3 -bottom-1 text-2xl !font-normal text-gray-500;
+				@apply absolute -right-3 -bottom-3 text-2xl !font-normal text-gray-600;
 				content: '”';
 			}
 		}

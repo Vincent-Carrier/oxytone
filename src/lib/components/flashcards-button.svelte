@@ -15,16 +15,11 @@
 </script>
 
 {#if selection}
-	<button onclick={() => (selection = null)} class="btn ghost danger ml-auto"> cancel </button>
+	<button onclick={() => (selection = null)} class="btn ghost danger"> cancel </button>
 	<button onclick={exportWordList} class="btn relative" popovertarget="flashcards-help">
 		<span> {`${count} word${count === 1 ? '' : 's'} selected`}</span>
 		{#if selection?.length < 1}
-			<div
-				class={[
-					'absolute top-10 right-0 left-auto w-36 border-r-2 border-blue-700 bg-gray-100 px-2 py-1',
-					'font-sans text-xs text-gray-600 italic'
-				]}
-			>
+			<div class="tooltip info w-40">
 				<p>
 					Select words to create a deck of <a
 						href="https://apps.ankiweb.net/"
@@ -35,5 +30,5 @@
 		{/if}
 	</button>
 {:else}
-	<button onclick={() => (selection = [])} class="btn ghost ml-auto">flashcards</button>
+	<button onclick={() => (selection = [])} class="btn ghost">flashcards</button>
 {/if}

@@ -11,39 +11,39 @@ ox-w {
 		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
 	}
 
-	&[pos='verb'] {
+	.verbs &[pos='verb'] {
 		@apply font-bold;
 	}
 
-	&[case='nom.'] {
+	.syntax &[case='nom.'] {
 		@apply text-emerald-700;
 	}
 	&.sbj.dep {
 		@apply bg-emerald-50;
 	}
 
-	&[case='acc.'] {
+	.syntax &[case='acc.'] {
 		@apply text-sky-700;
 	}
 	&.acc-obj.dep {
 		@apply bg-sky-50;
 	}
 
-	&[case='dat.'] {
+	.syntax &[case='dat.'] {
 		@apply text-yellow-700;
 	}
 	&.dat-obj.dep {
 		@apply bg-yellow-50;
 	}
 
-	&[case='gen.'] {
+	.syntax &[case='gen.'] {
 		@apply text-purple-700;
 	}
 	&.gen-obj.dep {
 		@apply bg-purple-50;
 	}
 
-	&[case='voc.'] {
+	.syntax &[case='voc.'] {
 		@apply text-pink-700;
 	}
 }

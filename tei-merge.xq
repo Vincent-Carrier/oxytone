@@ -17,11 +17,11 @@ map:build(db:list('flatbanks', 'tlg0012'), value := m:teiPath#1)
             case element(milestone)
               return if ($el/@unit = "card") then <hr />
             case element(l)
-              return $tbBook[@n=concat("1.", $el/@n)]
+              return $tbBook[@n=concat($n, '.', $el/@n)]
             case element(q)
               return <blockquote>{
                 for $ln in $el/l
-                return $tbBook[@n=concat("1.", $ln/@n)]
+                return $tbBook[@n=concat($n, '.', $ln/@n)]
               }</blockquote>
             default return ()
           }

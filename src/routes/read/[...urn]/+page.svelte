@@ -1,14 +1,16 @@
 <script lang="ts">
-	import './styles.css';
+	import './treebank.css';
 	import type { PageProps } from './$types';
 	import '$lib/components/word.svelte';
 	import type { Word } from '$lib/components/word.svelte';
 	import FlashcardsButton from '$lib/components/flashcards-button.svelte';
+	import ColorsButton from '$lib/components/colors-button.svelte';
 	import Morphology from '$lib/components/morphology.svelte';
 	import Definition from '$lib/components/definition.svelte';
 	import makeApi from '$lib/api';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import VerbsButton from '$/lib/components/verbs-button.svelte';
 
 	let urn = page.params.urn.split('/');
 	let sp = page.url.searchParams;
@@ -94,12 +96,18 @@
 
 <div class="relative flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-4 border-b border-gray-300 px-12 py-1 text-sm"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 px-12 py-1 text-sm"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
+		<div class="grow"></div>
 		<FlashcardsButton bind:selection />
+		<VerbsButton />
+		<ColorsButton />
 	</nav>
-	<article class="overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12">
+	<article
+		id="treebank"
+		class="verbs syntax overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12"
+	>
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html data.treebank}
 		</div>

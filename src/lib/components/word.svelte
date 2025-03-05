@@ -63,11 +63,15 @@
 	};
 
 	// if (
-	// 	!['punct.', 'verb'].includes(w.pos!) &&
-	// 	!['AuxY'].includes(w.relation!) &&
-	// 	Math.abs(w.id - w.head) > 4
+	// 	!['verb', 'punct.'].includes(w.pos!) &&
+	// 	!w.relation?.startsWith('COORD') &&
+	// 	!w.relation?.startsWith('Aux')
 	// ) {
-	// 	w.classList.add('underline');
+	// 	let dist = Math.abs(w.head - w.id);
+	// 	if (dist > 2) {
+	// 		if (dist < 5) w.classList.add('bg-gray-100');
+	// 		else if (dist < 9) w.classList.add('bg-gray-200');
+	// 	}
 	// }
 </script>
 

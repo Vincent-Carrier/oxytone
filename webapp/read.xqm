@@ -1,10 +1,8 @@
 module namespace r = "oxytone/read";
-declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
-
-import module namespace ref = "ref";
 import module namespace xsm = "xsm";
 import module namespace n = "normalize";
 
+declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare variable $r:proseXslt := xsm:stylesheet({
   "/":
@@ -88,7 +86,12 @@ declare
   %output:method("html")
   function r:get-merged($author, $work) {
     let $body := db:get('flatbanks', string-join(($author, $work, 'merged'), '/'))[1]
-    return xslt:transform($body, $r:mergedXslt)
+    let $tei := db:get("lit", `{$author}/{$work}`)[1]
+    let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
+    return xslt:transform($body, $r:mergedXslt, {
+      'title': `{$titleStmt/title/text()}`,
+      'author': $titleStmt/author/text()
+    })
 };
 
 declare
@@ -112,7 +115,8 @@ declare
     let $path := string-join(($author, $work, 'merged', $book), '/')
     let $_ := message($path)
     let $tb := db:get('flatbanks', $path)
-    let $titleStmt := db:get("lit", `{$author}/{$work}`)/TEI/teiHeader/fileDesc/titleStmt
+    let $tei := db:get("lit", `{$author}/{$work}`)[1]
+    let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
     return xslt:transform($tb, $r:mergedXslt, {
       'title': `{$titleStmt/title/text()} {$book}`,
       'author': $titleStmt/author/text()
