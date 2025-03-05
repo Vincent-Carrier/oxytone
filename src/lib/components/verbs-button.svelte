@@ -26,10 +26,10 @@
 	});
 </script>
 
-<button {onclick} {onmouseenter} {onmouseleave} class="btn relative flex items-baseline gap-x-1"
+<button {onclick} {onmouseenter} {onmouseleave} class="btn relative flex items-center gap-x-1"
 	>verbs
 	<div
-		class={['h-2 w-2 rounded-full border-1 border-blue-700 bg-blue-600', verbs || 'bg-transparent']}
+		class={['h-1 w-1 rounded-full border-1 border-blue-700 bg-blue-600', verbs || 'bg-transparent']}
 	></div>
 	{#if help}
 		<div class="tooltip info w-max">

@@ -17,7 +17,7 @@
 {#if selection}
 	<button onclick={() => (selection = null)} class="btn ghost danger"> cancel </button>
 	<button onclick={exportWordList} class="btn relative" popovertarget="flashcards-help">
-		<span> {`${count} word${count === 1 ? '' : 's'} selected`}</span>
+		<span> {`export ${count} word${count === 1 ? '' : 's'}`}</span>
 		{#if selection?.length < 1}
 			<div class="tooltip info w-40">
 				<p>

@@ -8,7 +8,7 @@ dl {
 	}
 
 	& dt {
-		@apply sticky top-0 mb-2 block border-b-1 border-gray-300 bg-gray-50 font-bold;
+		@apply sticky top-0 -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
 	}
 
 	& dd {

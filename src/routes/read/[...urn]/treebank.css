@@ -21,20 +21,20 @@ hgroup {
 }
 
 .line-nbr {
-	@apply mr-2 inline-block w-10 pr-1 text-right font-sans text-sm text-gray-400 select-none;
+	@apply mr-2 inline-block w-10 border-r-1 border-gray-100 pt-1 pr-1 text-right font-sans text-sm text-gray-400 select-none;
 
 	&[n$='0'] {
-		@apply bg-gray-100 text-gray-600;
+		@apply bg-gray-50 text-gray-500;
 	}
 
 	&:target {
-		@apply bg-blue-50 text-blue-600;
+		@apply border-blue-200 bg-blue-50 text-blue-600;
 	}
 }
 
 .line {
 	text-indent: 3.5rem hanging;
-	@apply mt-1 leading-none;
+	@apply leading-snug;
 }
 
 article {
@@ -47,7 +47,6 @@ article {
 }
 
 blockquote {
-	@apply my-4;
 	& .line-nbr {
 		@apply mr-6;
 	}
@@ -59,7 +58,7 @@ blockquote {
 		&:first-of-type ox-w:first-of-type {
 			@apply relative;
 			&::before {
-				@apply absolute -top-1 -left-4 text-2xl !font-normal text-gray-600;
+				@apply absolute -top-1 -left-4 text-2xl !font-normal text-gray-300;
 				content: '“';
 			}
 		}
@@ -67,7 +66,7 @@ blockquote {
 		&:last-of-type ox-w:last-of-type {
 			@apply relative;
 			&::after {
-				@apply absolute -right-3 -bottom-3 text-2xl !font-normal text-gray-600;
+				@apply absolute -right-3 -bottom-3 text-2xl !font-normal text-gray-300;
 				content: '”';
 			}
 		}
