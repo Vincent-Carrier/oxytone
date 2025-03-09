@@ -15,17 +15,17 @@
 
 @layer components {
 	.btn {
-		@apply cursor-pointer rounded-sm px-1 leading-tight text-blue-700 outline-1 outline-blue-700;
+		@apply cursor-pointer rounded-sm px-1 leading-tight text-blue-700 outline-1 outline-blue-700 hover:bg-blue-50 active:bg-blue-100;
 		&.ghost {
 			@apply outline-none;
 		}
 		&.danger {
-			@apply text-red-700 outline-red-700;
+			@apply text-red-700 outline-red-700 hover:bg-red-50 active:bg-red-100;
 		}
 	}
 
 	.tooltip {
-		@apply absolute top-8 right-0 w-56 rounded-sm border-1 border-r-4 border-b-3 px-2 py-1;
+		@apply absolute top-7 right-0 w-56 rounded-sm border-1 border-r-4 border-b-3 px-2 py-1;
 		@apply font-sans text-xs italic;
 		&.info {
 			@apply border-blue-900 bg-blue-50 text-blue-900;

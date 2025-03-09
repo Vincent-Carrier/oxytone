@@ -96,7 +96,7 @@
 
 <div class="relative flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 px-12 py-1 text-sm"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 px-12 py-1 text-xs"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>

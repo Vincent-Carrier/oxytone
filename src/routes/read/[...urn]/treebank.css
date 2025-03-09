@@ -58,7 +58,7 @@ blockquote {
 		&:first-of-type ox-w:first-of-type {
 			@apply relative;
 			&::before {
-				@apply absolute -top-1 -left-4 text-2xl !font-normal text-gray-300;
+				@apply absolute -left-4 text-2xl !font-normal text-gray-300;
 				content: '“';
 			}
 		}
@@ -66,7 +66,7 @@ blockquote {
 		&:last-of-type ox-w:last-of-type {
 			@apply relative;
 			&::after {
-				@apply absolute -right-3 -bottom-3 text-2xl !font-normal text-gray-300;
+				@apply absolute -right-3 text-2xl !font-normal text-gray-300;
 				content: '”';
 			}
 		}

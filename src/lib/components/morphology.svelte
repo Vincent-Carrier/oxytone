@@ -8,11 +8,11 @@
 	const { word }: Props = $props();
 </script>
 
-<div class="flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 px-12 py-1">
+<div class="flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 px-12 py-1 text-xs">
 	<div class="leading-none font-bold">
 		{word?.lemma}
 	</div>
-	<div class="text-sm text-gray-700 italic">
+	<div class="text-gray-700 italic">
 		{#each ['pos', 'person', 'tense', 'mood', 'voice', 'number', 'gender', 'case', 'degree'] as morpho}
 			{(word as any)?.[morpho]}{' '}
 		{/each}
