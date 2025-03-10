@@ -1,10 +1,11 @@
 module namespace r = "oxytone/read";
 import module namespace xsm = "xsm";
 import module namespace n = "normalize";
+import module namespace lazy = "lazy";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
-declare variable $r:proseXslt := xsm:stylesheet({
+declare variable $r:prose-xslt := xsm:stylesheet({
   "/":
     <div class="treebank">
       <h1><xsl:value-of select="$title" /></h1>
@@ -26,7 +27,7 @@ declare variable $r:proseXslt := xsm:stylesheet({
     </div>
 }, (<xsl:param name="title" />));
 
-declare variable $r:rootXslt :=
+declare variable $r:root-xslt :=
   <div class="treebank">
     <hgroup>
       <h1>
@@ -39,7 +40,7 @@ declare variable $r:rootXslt :=
     <xsl:apply-templates />
   </div>;
 
-declare variable $r:wordXslt :=
+declare variable $r:word-xslt :=
   <ox-w>
     <xsl:copy-of select="@*" />
     <xsl:value-of select="normalize-unicode(., 'NFD') => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
@@ -58,20 +59,20 @@ declare variable $r:lineXslt :=
       <xsl:value-of select="@n" />
     </a>
     <xsl:for-each select=".//w">
-      {$r:wordXslt}
+      {$r:word-xslt}
     </xsl:for-each>
   </div>;
 
-declare variable $r:verseXslt := xsm:stylesheet({
+(: declare variable $r:verse-xslt := xsm:stylesheet({
   "/":
     <div class="treebank">
       <xsl:apply-templates />
     </div>,
   "ln": $r:lineXslt
-});
+}); :)
 
-declare variable $r:mergedXslt := xsm:stylesheet({
-  "/": $r:rootXslt,
+declare variable $r:verse-xslt := xsm:stylesheet({
+  "/": $r:root-xslt,
   "hr|blockquote": xsm:keep("node()"),
   "speaker":
     <div class="speaker">
@@ -84,11 +85,12 @@ declare
   %rest:path("/read/{$author}/{$work}")
   %rest:single
   %output:method("html")
-  function r:get-merged($author, $work) {
-    let $body := db:get('flatbanks', string-join(($author, $work, 'merged'), '/'))[1]
+  function r:get-treebank($author, $work) {
+    let $body := lazy:get-treebank($author, $work)
+    let $xslt := if ($body/@type = 'verse') then $r:verse-xslt
     let $tei := db:get("lit", `{$author}/{$work}`)[1]
     let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
-    return xslt:transform($body, $r:mergedXslt, {
+    return xslt:transform($body, $r:verse-xslt, {
       'title': `{$titleStmt/title/text()}`,
       'author': $titleStmt/author/text()
     })
@@ -101,9 +103,9 @@ declare
   function r:get-treebank($author, $work, $edition) {
     let $body := db:get('flatbanks', string-join(($author, $work, $edition), '/'))[1]
     let $xslt :=
-      if ($edition = 'merged') then $r:mergedXslt
-      else if (n:is-verse($author, $work)) then $r:verseXslt
-      else $r:proseXslt
+      if ($edition = 'merged') then $r:verse-xslt
+      else if (n:is-verse($author, $work)) then $r:verse-xslt
+      else $r:prose-xslt
     return xslt:transform($body, $xslt)
 };
 
@@ -117,7 +119,7 @@ declare
     let $tb := db:get('flatbanks', $path)
     let $tei := db:get("lit", `{$author}/{$work}`)[1]
     let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
-    return xslt:transform($tb, $r:mergedXslt, {
+    return xslt:transform($tb, $r:verse-xslt, {
       'title': `{$titleStmt/title/text()} {$book}`,
       'author': $titleStmt/author/text()
     })
