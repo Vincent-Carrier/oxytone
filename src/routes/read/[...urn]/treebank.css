@@ -1,7 +1,10 @@
 @reference '$/app.css';
 
 hgroup {
-	@apply font-sc mb-4 ml-12 lowercase;
+	@apply font-sc mb-4 text-balance lowercase;
+	.treebank:has(.line-nbr) & {
+		@apply ml-12;
+	}
 	& h1 {
 		@apply text-2xl text-gray-800 underline;
 	}

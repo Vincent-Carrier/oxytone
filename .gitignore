@@ -28,4 +28,7 @@ data/
 .basex
 .basexgui
 
-lib/custom
+treebanks/
+lsj/
+lit/
+glaux/

@@ -1,0 +1,44 @@
+# General Options
+DEBUG = false
+DBPATH = /home/vincent/code/paroxytone/data
+LOGPATH = .logs
+REPOPATH = /home/vincent/code/paroxytone/repo
+LANG = English
+FAIRLOCK = false
+CACHETIMEOUT = 3600
+WRITESTORE = true
+
+# Client/Server Architecture
+HOST = localhost
+PORT = 1984
+SERVERPORT = 1984
+USER = 
+PASSWORD = 
+SERVERHOST = 
+PROXYHOST = 
+PROXYPORT = 0
+NONPROXYHOSTS = 
+IGNORECERT = false
+TIMEOUT = 30
+KEEPALIVE = 600
+PARALLEL = 8
+LOG = data
+LOGEXCLUDE = 
+LOGCUT = 
+LOGMSGMAXLEN = 1000
+LOGTRACE = true
+
+# HTTP Services
+WEBPATH = /home/vincent/code/paroxytone/webapp
+GZIP = false
+RESTPATH = 
+RESTXQPATH = 
+PARSERESTXQ = 3
+RESTXQERRORS = true
+HTTPLOCAL = false
+STOPPORT = 8081
+AUTHMETHOD = Basic
+
+# Local Options
+INTPARSE = true
+MIXUPDATES = true

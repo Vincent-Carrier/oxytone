@@ -4,16 +4,18 @@ declare default element namespace "http://www.w3.org/1999/XSL/Transform";
 declare function xsm:stylesheet(
   $templates as map(xs:string, element()*),
   $body as element()* := (),
+  $params as xs:string* := (),
   $method as xs:string := "xml",
   $indent as xs:string := "no"
 ) as element() {
   <stylesheet version="3.0">
     <output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
+    {for $param in $params
+      return <param name="{$param}" />}
     {for key $match value $template in $templates
       return <template match="{$match}">
         {$template}
-      </template>
-    }
+      </template>}
     {$body}
   </stylesheet>
 };
