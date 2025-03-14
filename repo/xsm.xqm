@@ -1,5 +1,6 @@
 module namespace xsm = "xsm";
-declare default element namespace "http://www.w3.org/1999/XSL/Transform";
+
+declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare function xsm:stylesheet(
   $templates as map(xs:string, element()*),
@@ -8,26 +9,34 @@ declare function xsm:stylesheet(
   $method as xs:string := "xml",
   $indent as xs:string := "no"
 ) as element() {
-  <stylesheet version="3.0">
-    <output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
+  <xsl:stylesheet version="3.0" xmlns:oxy="http://oxytone.xyz/functions">
+    <xsl:output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
+    <xsl:function name="oxy:strip-diacritics">
+      <xsl:param name="text"/>
+      <xsl:value-of select="replace(normalize-unicode($text, 'NFD'), '\p{{M}}', '')" />
+    </xsl:function>
+    <xsl:function name="oxy:strip-smooth-breathings">
+      <xsl:param name="text"/>
+      <xsl:value-of select="normalize-unicode($text, 'NFD') => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
+    </xsl:function>
     {for $param in $params
-      return <param name="{$param}" />}
+      return <xsl:param name="{$param}" />}
     {for key $match value $template in $templates
-      return <template match="{$match}">
+      return <xsl:template match="{$match}">
         {$template}
-      </template>}
+      </xsl:template>}
     {$body}
-  </stylesheet>
+  </xsl:stylesheet>
 };
 
 declare function xsm:attr($name as xs:string, $value as xs:string) as element() {
-    <attribute name="{$name}">
-      <value-of select="{$value}" />
-    </attribute>
+    <xsl:attribute name="{$name}">
+      <xsl:value-of select="{$value}" />
+    </xsl:attribute>
 };
 
 declare function xsm:keep($select as xs:string := "@*|node()") as element() {
-  <copy>
-    <apply-templates select="{$select}" />
-  </copy>
+  <xsl:copy>
+  <xsl:apply-templates select="{$select}" />
+  </xsl:copy>
 };

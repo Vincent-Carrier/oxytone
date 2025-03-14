@@ -1,5 +1,5 @@
 module namespace uf = "unflat";
-import module namespace n = "normalize";
+import module namespace pt = "postag";
 
 declare function uf:make-node ($nodes, $id, $head, $attrs){
   let $rel := $attrs/../@relation => data() => lower-case() => tokenize('_')
@@ -7,7 +7,7 @@ declare function uf:make-node ($nodes, $id, $head, $attrs){
   return element {$el} {
     if ($rel[2]) then $rel => slice(2) =!> fn { attribute {.} {} }(),
     $attrs[name()=("id", "form", "lemma")],
-    n:expand-postag($attrs[name()="postag"]),
+    pt:expand($attrs[name()="postag"]),
     for $n in $nodes/../*[@head=$id]
     return uf:make-node($n, $n/@id, $n/@head, $n/@*[not(name()=("head"))])
   }

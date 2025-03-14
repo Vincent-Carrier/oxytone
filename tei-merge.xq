@@ -1,27 +1,27 @@
 import module namespace m = "merge";
 
 (: Homer :)
-for key $tbPath value $teiPath in
-map:build(db:list('flatbanks', 'tlg0012'), value := m:teiPath#1)
-  let $tb := db:get("flatbanks", $tbPath)[1]
-  let $tei := db:get("lit", $teiPath)[1]
-  let $urn := tokenize($tbPath, '/')
+for key $tb-path value $tei-path in
+map:build(db:list('flatbanks', 'tlg0012'), value := m:tei-path#1)
+  let $tb := db:get("flatbanks", $tb-path)[1]
+  let $tei := db:get("lit", $tei-path)[1]
+  let $urn := tokenize($tb-path, '/')
   for $n in (1 to 24)
-    let $teiBook := $tei//div[lower-case(@subtype)="book" and @n=$n]
-    let $tbBook := $tb//ln[starts-with(@n, `{$n}.`)]
+    let $tei-book := $tei//div[lower-case(@subtype)="book" and @n=$n]
+    let $tb-book := $tb//ln[starts-with(@n, `{$n}.`)]
     let $merged := <treebank>
       <book n="{$n}">
         {
-          for $el in $teiBook/*
+          for $el in $tei-book/*
           return typeswitch ($el) {
             case element(milestone)
               return if ($el/@unit = "card") then <hr />
             case element(l)
-              return $tbBook[@n=concat($n, '.', $el/@n)]
+              return $tb-book[@n=concat($n, '.', $el/@n)]
             case element(q)
               return <blockquote>{
                 for $ln in $el/l
-                return $tbBook[@n=concat($n, '.', $ln/@n)]
+                return $tb-book[@n=concat($n, '.', $ln/@n)]
               }</blockquote>
             default return ()
           }
@@ -33,11 +33,11 @@ map:build(db:list('flatbanks', 'tlg0012'), value := m:teiPath#1)
     return db:put('flatbanks', $merged, $path),
 
 (: Tragedy :)
-for key $tbPath value $teiPath in
-map:build(db:list('flatbanks', 'tlg0011'), value := m:teiPath#1)
-  let $tb := db:get("flatbanks", $tbPath)[1]
-  let $tei := db:get("lit", $teiPath)[1]
-  let $urn := tokenize($tbPath, '/')
+for key $tb-path value $tei-path in
+map:build(db:list('flatbanks', 'tlg0011'), value := m:tei-path#1)
+  let $tb := db:get("flatbanks", $tb-path)[1]
+  let $tei := db:get("lit", $tei-path)[1]
+  let $urn := tokenize($tb-path, '/')
   let $merged := <treebank>
     <body>
       {

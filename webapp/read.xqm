@@ -5,23 +5,35 @@ import module namespace dblazy = "dblazy";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare variable $r:xslt := xsm:stylesheet({
-  "/":
+  "/treebank":
     <div class="treebank">
       <hgroup>
         <h1>
-          <xsl:value-of select="replace(normalize-unicode($title, 'NFD'), '\p{{M}}', '')" />
+          <xsl:value-of select="oxy:strip-diacritics(head/title)" />
         </h1>
         <p class="author">
-          <xsl:value-of select="replace(normalize-unicode($author, 'NFD'), '\p{{M}}', '')" />
+          <xsl:value-of select="oxy:strip-diacritics($author)" />
         </p>
       </hgroup>
-      <xsl:apply-templates />
+      <div class="body">
+        <xsl:apply-templates select="body" />
+      </div>
     </div>,
   "sentence":
     <span class="sentence">
       <span class="sentence-nbr">
         <xsl:value-of select="@id" />
       </span>
+      <xsl:apply-templates />
+    </span>,
+  "verse":
+    <span class="verse">
+      <a class="verse-nbr">
+        <xsl:attribute name="href">
+          <xsl:value-of select="concat('#', replace(@id, '\w+ \d+\.(\d+)$', '$1'))" />
+        </xsl:attribute>
+        <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+      </a>
       <xsl:apply-templates />
     </span>,
   "ln":
@@ -40,12 +52,12 @@ declare variable $r:xslt := xsm:stylesheet({
     </div>,
   "speaker":
     <div class="speaker">
-      <xsl:value-of select="replace(normalize-unicode(., 'NFD'), '\p{{M}}', '')"/>
+      <xsl:value-of select="oxy:strip-diacritics(.)"/>
     </div>,
   "w[not(@artificial)]":
     <ox-w>
       <xsl:copy-of select="@*" />
-      <xsl:value-of select="normalize-unicode(., 'NFD') => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
+      <xsl:value-of select="oxy:strip-smooth-breathings(.)" />
     </ox-w>,
   "blockquote": xsm:keep("node()"),
   "br|hr": xsm:keep()
@@ -67,18 +79,16 @@ declare
 
 
 declare
-  %rest:path("/read/{$author}/{$work}/book/{$book=\d+}")
+  %rest:path("/read/{$author}/{$work}/{$part}")
   %rest:single
   %output:method("html")
-  function r:get-book($author, $work, $book) {
-    let $path := string-join(($author, $work, 'merged', $book), '/')
+  function r:get-part($author, $work, $part) {
+    let $path := string-join(($author, $work, $part), '/')
     let $_ := message($path)
-    let $tb := db:get('flatbanks', $path)
-    let $tei := db:get("lit", `{$author}/{$work}`)[1]
-    let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
+    let $tb := dblazy:get-flatbank($author, $work)
     return xslt:transform($tb, $r:xslt, {
-      'title': `{$titleStmt/title/text()} {$book}`,
-      'author': $titleStmt/author/text()
+      'title': 'Unknown',
+      'author': 'Unknown'
     })
 };
 
