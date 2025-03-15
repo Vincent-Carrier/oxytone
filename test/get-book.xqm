@@ -1,11 +1,15 @@
 module namespace t = 'test';
 
-import module namespace p = 'paginate';
+import module namespace dbl = 'db-lazy';
+import module namespace n = 'normalize';
 
-declare variable $t:iliad := db:get('flatbanks', 'tlg0012/tlg001')[1];
+declare %unit:test function t:get-tb() {
+  let $tb := dbl:get-flatbank('tlg0540', 'tlg001')
+  return unit:assert($tb//w)
+};
 
-declare %unit:test function t:get-book() {
-  let $pager := p:pager('tlg0012', '001')
-  let $book := $pager($t:iliad, 2)
-  return unit:assert-equals($book//ln[1]/@n/string(), "2.1")
+declare %unit:test function t:normalize-tb() {
+  let $doc := doc('../treebanks/agldt/v2.1/tlg0540.tlg001.perseus-grc1.tb.xml')
+  let $tb := n:normalize($doc)
+  return unit:assert($tb//w)
 };

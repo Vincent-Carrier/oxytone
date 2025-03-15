@@ -7,8 +7,13 @@ declare function m:tei-path($author, $work) as xs:string {
 declare function m:merge-homer($tb, $tei, $book) {
   let $tei-book := $tei//div[lower-case(@subtype)="book" and @n=$book]
   let $tb-book := $tb//ln[starts-with(@n, `{$book}.`)]
+  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
   return <treebank>
-    <book n="{$book}">
+    <head>
+      {$titleStmt/title}
+      {$titleStmt/author}
+    </head>
+    <body n="{$book}">
       {
         for $el in $tei-book/*
         return typeswitch ($el) {
@@ -24,12 +29,17 @@ declare function m:merge-homer($tb, $tei, $book) {
           default return ()
         }
       }
-    </book>
+    </body>
   </treebank>
 };
 
 declare function m:merge-tragedy($tb, $tei) {
-  <treebank>
+  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
+  return <treebank>
+    <head>
+      {$titleStmt/title}
+      {$titleStmt/author}
+    </head>
     <body>
       {
         for $el in $tei//body//*
@@ -52,11 +62,23 @@ declare function m:merge-tragedy($tb, $tei) {
   </treebank>
 };
 
+declare function m:merge-tei($tb, $tei) {
+  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
+  return <treebank>
+    <head>
+      {$titleStmt/title}
+      {$titleStmt/author}
+    </head>
+    {$tb//body}
+  </treebank>
+};
+
 declare function m:merge($tb, $author, $work, $part := ()) {
   let $tei-path := m:tei-path($author, $work)
   let $tei := db:get('lit', $tei-path)
   return switch ($author)
     case 'tlg0012' return m:merge-homer($tb, $tei, $part)
     case 'tlg0011' return m:merge-tragedy($tb, $tei)
-    default return $tb
+    case 'nt' return $tb
+    default return m:merge-tei($tb, $tei)
 };

@@ -1,7 +1,7 @@
 @reference '$/app.css';
 
 hgroup {
-	@apply font-sc mb-4 text-balance lowercase;
+	@apply font-sc mb-4 ml-12 text-balance lowercase;
 	& h1 {
 		@apply text-2xl text-gray-800 underline;
 	}
@@ -43,16 +43,15 @@ hgroup {
 
 .line {
 	text-indent: 3.5rem hanging;
-	@apply -ml-12 leading-snug;
+	@apply leading-snug;
 }
 
-article {
-	scroll-snap-type: y proximity;
+.body:not(:has(.line)) {
 	@apply ml-12;
 }
+
 .speaker {
 	@apply font-sc sticky -top-4 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;
-	scroll-snap-align: start;
 }
 
 blockquote {

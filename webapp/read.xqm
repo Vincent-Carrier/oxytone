@@ -1,6 +1,6 @@
 module namespace r = "oxytone/read";
 import module namespace xsm = "xsm";
-import module namespace dblazy = "dblazy";
+import module namespace dbl = "db-lazy";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
@@ -12,7 +12,7 @@ declare variable $r:xslt := xsm:stylesheet({
           <xsl:value-of select="oxy:strip-diacritics(head/title)" />
         </h1>
         <p class="author">
-          <xsl:value-of select="oxy:strip-diacritics($author)" />
+          <xsl:value-of select="oxy:strip-diacritics(head/author)" />
         </p>
       </hgroup>
       <div class="body">
@@ -61,35 +61,19 @@ declare variable $r:xslt := xsm:stylesheet({
     </ox-w>,
   "blockquote": xsm:keep("node()"),
   "br|hr": xsm:keep()
-}, params := ("title", "author"));
-
-declare
-  %rest:path("/read/{$author}/{$work}")
-  %rest:single
-  %output:method("html")
-  function r:get-treebank($author, $work) {
-    let $body := dblazy:get-flatbank($author, $work)
-    let $tei := db:get("lit", `{$author}/{$work}`)[1]
-    let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
-    return xslt:transform($body, $r:xslt, {
-      'title': `{$titleStmt/title/text()}`,
-      'author': $titleStmt/author/text()
-    })
-};
+});
 
 
 declare
-  %rest:path("/read/{$author}/{$work}/{$part}")
+  %rest:path("/read/{$author}/{$work-part=.+}")
   %rest:single
   %output:method("html")
-  function r:get-part($author, $work, $part) {
-    let $path := string-join(($author, $work, $part), '/')
+  function r:get-part($author, $work-part) {
+    let $wp := tokenize($work-part, '/')
+    let $path := string-join(($author, $work-part), '/')
     let $_ := message($path)
-    let $tb := dblazy:get-flatbank($author, $work)
-    return xslt:transform($tb, $r:xslt, {
-      'title': 'Unknown',
-      'author': 'Unknown'
-    })
+    let $tb := dbl:get-flatbank($author, $wp[1], $wp[2])
+    return xslt:transform($tb, $r:xslt)
 };
 
 

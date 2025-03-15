@@ -59,7 +59,7 @@ declare function n:normalize-prose($tb) as element()* {
   }</sentence>
 };
 
-declare function n:normalize($tb, $verse) as element() {
+declare function n:normalize($tb, $verse := false()) as element() {
   <treebank type="{if ($verse) then 'verse' else 'prose'}">
     <body>{
       if ($verse) {n:normalize-verse($tb)}
