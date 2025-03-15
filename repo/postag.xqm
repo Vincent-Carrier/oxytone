@@ -164,7 +164,7 @@ declare function pt:proiel-pos($tag) {
   attribute pos {
       switch ($tag)
         case ("Nb", "Ne") return "noun"
-        case "v" return "verb"
+        case "V-" return "verb"
         case "A-" return "adj."
         case "Df" return "adv."
         case "S-" return "article"

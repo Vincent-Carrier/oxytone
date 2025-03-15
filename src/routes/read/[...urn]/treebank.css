@@ -21,6 +21,9 @@ hgroup {
 }
 .verse-nbr {
 	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	&:target {
+		@apply bg-blue-50 text-blue-600;
+	}
 	&::before {
 		content: '[';
 	}

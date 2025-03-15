@@ -6,7 +6,7 @@ declare %updating function dbl:get-flatbank($author, $work, $part := ()) {
   let $urn := string-join(($author, $work, $part), '/')
   let $path := db:list('flatbanks', $urn)[1]
   return
-    if (not(db:option('debug')) and $path)
+    if ($path)
       then db:get('flatbanks', $path)[1]
       else
         let $path := file:list('treebanks/agldt/v2.1/', pattern := `{$author}.{$work}.*.tb.xml`)[1]
