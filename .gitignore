@@ -32,3 +32,8 @@ treebanks/
 lsj/
 lit/
 glaux/
+
+
+# Python
+.ropeproject/
+.venv/

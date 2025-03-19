@@ -1,5 +1,7 @@
 <script lang="ts">
+	// import { getContext } from 'svelte';
 	import type { Word } from './word.svelte';
+	import type { KyInstance } from 'ky';
 
 	interface Props {
 		selection: Word[] | null;
@@ -7,10 +9,11 @@
 
 	let { selection = $bindable() }: Props = $props();
 	let count = $derived(selection?.length);
-
+	// let python = getContext<KyInstance>('python');
 	function exportWordList() {
-		const wordlist = selection!.map((e) => e.lemma).join('\n');
-		navigator.clipboard.writeText(wordlist);
+		let lemmas = selection?.map((w) => w.lemma).filter(Boolean);
+		console.log(lemmas);
+		// python.post('/flashcards', { json: lemmas });
 	}
 </script>
 
@@ -24,7 +27,7 @@
 					Select words to create a deck of <a
 						href="https://apps.ankiweb.net/"
 						class="text-blue-700 underline">Anki flashcards</a
-					>
+					>. Each card will contain the lemma and its full LSJ definition.
 				</p>
 			</div>
 		{/if}

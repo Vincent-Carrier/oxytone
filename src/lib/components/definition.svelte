@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import './definition.css';
-	import makeApi from '$lib/api';
-	let api = makeApi(fetch);
+	import type { KyInstance } from 'ky';
 
+	let basex = getContext<KyInstance>('basex');
+	console.log(basex);
 	interface Props {
 		lemma: string;
 	}
@@ -13,7 +15,7 @@
 	$effect(() => {
 		if (/\p{L}+/u.test(lemma)) {
 			(async () => {
-				definition = await api.get(`define/lsj/${lemma}`).text();
+				definition = await basex.get(`define/lsj/${lemma}`).text();
 			})();
 		}
 	});

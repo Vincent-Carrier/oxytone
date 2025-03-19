@@ -7,20 +7,24 @@
 	import ColorsButton from '$lib/components/colors-button.svelte';
 	import Morphology from '$lib/components/morphology.svelte';
 	import Definition from '$lib/components/definition.svelte';
-	import makeApi from '$lib/api';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { page } from '$app/state';
 	import VerbsButton from '$/lib/components/verbs-button.svelte';
+	import type { KyInstance } from 'ky';
+	import { setContext } from 'svelte';
+	import { makeBaseX, makePython } from '$/lib/api';
 
 	let urn = page.params.urn.split('/');
 	let sp = page.url.searchParams;
-	let api = makeApi(fetch);
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
 	let lemma: string | null = $state(null);
 	let clearDependants: null | (() => void) = $state(null);
+
+	setContext('basex', () => makeBaseX(fetch));
+	setContext('python', () => makePython(fetch));
 
 	$effect(() => {
 		if (selection === null) {
@@ -71,7 +75,7 @@
 
 	type Complement = { type: string; head: number; descendants: number[] };
 	async function highlightDependants(w: Word) {
-		let complements: Complement[] = await api
+		let complements: Complement[] = await basex
 			.get(`hl/${urn[0]}/${urn[1]}/${w.sentence}/${w.id}`)
 			.json();
 		let nodes: { el: Word; class: string | string[] }[] = [];
@@ -106,7 +110,7 @@
 	</nav>
 	<article
 		id="treebank"
-		class="verbs syntax overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12"
+		class="verbs syntax scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12"
 	>
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html data.treebank}

@@ -32,6 +32,9 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:attribute name="href">
           <xsl:value-of select="concat('#', replace(@id, '\w+ \d+\.(\d+)$', '$1'))" />
         </xsl:attribute>
+        <xsl:attribute name="id">
+          <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+        </xsl:attribute>
         <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
       </a>
       <xsl:apply-templates />

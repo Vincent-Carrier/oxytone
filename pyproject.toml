@@ -1,0 +1,11 @@
+[project]
+name = "paroxytone"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.11",
+    "genanki>=0.13.1",
+    "httpx>=0.28.1",
+]

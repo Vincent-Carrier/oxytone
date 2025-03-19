@@ -4,7 +4,6 @@
 	import '@fontsource/alegreya-sans';
 	import '@fontsource/alegreya-sc';
 	import '@fontsource/alegreya-sans-sc';
-
 	let { children } = $props();
 </script>
 

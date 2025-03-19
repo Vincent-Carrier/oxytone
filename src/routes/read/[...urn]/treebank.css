@@ -20,15 +20,12 @@ hgroup {
 	}
 }
 .verse-nbr {
-	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	@apply mx-1 inline-block font-sans text-sm text-gray-400 select-none;
 	&:target {
-		@apply bg-blue-50 text-blue-600;
-	}
-	&::before {
-		content: '[';
+		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
 	}
 	&::after {
-		content: ']';
+		content: '|';
 	}
 }
 
@@ -47,10 +44,6 @@ hgroup {
 .line {
 	text-indent: 3.5rem hanging;
 	@apply leading-snug;
-}
-
-.body:not(:has(.line)) {
-	@apply ml-12;
 }
 
 .speaker {

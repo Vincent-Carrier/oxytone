@@ -28,6 +28,7 @@ for $div at $i in $nt/proiel/source/div
                   {pt:expand-proiel(@morphology)}
                   {@form || @presentation-after}
                 </w>}
+                &#x20;
             </verse>
       }</body>
     </treebank>
