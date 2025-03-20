@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
 	import './definition.css';
-	import type { KyInstance } from 'ky';
+	import { basex } from '$lib/api';
 
-	let basex = getContext<KyInstance>('basex');
-	console.log(basex);
 	interface Props {
 		lemma: string;
 	}

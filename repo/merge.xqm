@@ -69,12 +69,29 @@ declare function m:merge-tei($tb, $tei) {
   </treebank>
 };
 
+declare function m:merge-glaux($tb, $author, $work) {
+  let $_ := store:read('glaux')
+  let $meta := store:get(`{$author}/{$work}`)
+  let $_ := message(("====== ", $meta, "======"))
+  return <treebank>
+      <head>
+        <title>{$meta?title}</title>
+        <author>{$meta?author}</author>
+      </head>
+      {$tb//body}
+    </treebank>
+};
+
+
+
 declare function m:merge($tb, $author, $work, $part := ()) {
   let $tei := db:get('lit', `{$author}/{$work}`)[1]
   return if ($tei) then
     switch ($author)
       case 'tlg0012' return m:merge-homer($tb, $tei, $part)
       case 'tlg0011' return m:merge-tragedy($tb, $tei)
-      default return m:merge-tei($tb, $tei)
-    else $tb
+      default return m:merge-glaux($tb, $author, $work)
+    else switch($author)
+      case 'nt' return $tb
+      default return m:merge-glaux($tb, $author, $work)
 };

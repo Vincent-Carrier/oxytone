@@ -19,7 +19,6 @@ declare %updating function dbl:get-flatbank($author, $work, $part := ()) {
           dbl:file-matches('treebanks/agldt/v2.1/', `{$author}\.{$work}\.`),
           file:children(`glaux/{$author}/{$work}/`)
         )[1] => file:resolve-path()
-        let $_ := message(("==== Path ====", $path))
         return if ($path) then
           let $is-verse := n:is-verse($author, $work)
           let $tb := n:normalize(doc($path), $is-verse)

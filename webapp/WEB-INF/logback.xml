@@ -1,0 +1,14 @@
+<configuration>
+  <!-- Silence Jetty's HTTP header logging -->
+  <logger name="org.eclipse.jetty.server.HttpChannel" level="WARN" />
+  <logger name="org.eclipse.jetty.http.HttpParser" level="WARN" />
+  <logger name="org.eclipse.jetty.server.HttpConnection" level="WARN" />
+
+  <!-- Your other loggers... -->
+
+  <!-- Root logger -->
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <!-- other appenders... -->
+  </root>
+</configuration>

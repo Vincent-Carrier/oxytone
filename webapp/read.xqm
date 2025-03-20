@@ -21,9 +21,15 @@ declare variable $r:xslt := xsm:stylesheet({
     </div>,
   "sentence":
     <span class="sentence">
-      <span class="sentence-nbr">
-        <xsl:value-of select="@id" />
-      </span>
+      <a class="sentence-nbr">
+        <xsl:attribute name="href">
+          <xsl:value-of select="concat('#', replace(@id, '\w+ \d+\.(\d+)$', '$1'))" />
+        </xsl:attribute>
+        <xsl:attribute name="id">
+          <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+        </xsl:attribute>
+        <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+      </a>
       <xsl:apply-templates />
     </span>,
   "verse":

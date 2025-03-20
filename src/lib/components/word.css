@@ -3,10 +3,6 @@
 ox-w {
 	@apply cursor-pointer text-gray-700;
 
-	&.head {
-		@apply underline;
-	}
-
 	&.selected {
 		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
 	}
@@ -18,28 +14,28 @@ ox-w {
 	.syntax &[case='nom.'] {
 		@apply text-emerald-700;
 	}
-	&.sbj.dep {
+	&.sbj {
 		@apply bg-emerald-50;
 	}
 
 	.syntax &[case='acc.'] {
 		@apply text-sky-700;
 	}
-	&.acc-obj.dep {
+	&.acc-obj {
 		@apply bg-sky-50;
 	}
 
 	.syntax &[case='dat.'] {
 		@apply text-yellow-700;
 	}
-	&.dat-obj.dep {
+	&.dat-obj {
 		@apply bg-yellow-50;
 	}
 
 	.syntax &[case='gen.'] {
 		@apply text-purple-700;
 	}
-	&.gen-obj.dep {
+	&.gen-obj {
 		@apply bg-purple-50;
 	}
 

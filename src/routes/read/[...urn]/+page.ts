@@ -1,8 +1,8 @@
 import type { PageLoad } from './$types';
-import { makeBaseX } from '$lib/api';
+import { basex } from '$lib/api';
 
-export const load: PageLoad = async ({ fetch, params }) => {
-	const res = await makeBaseX(fetch).get(`read/${params.urn}`);
+export const load: PageLoad = async ({ params }) => {
+	const res = await basex.get(`read/${params.urn}`);
 	return {
 		treebank: await res.text()
 	};

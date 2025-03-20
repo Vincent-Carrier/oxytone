@@ -1,8 +1,8 @@
 import type { PageLoad } from './$types';
-import { makeBaseX } from '$lib/api';
+import { basex } from '$lib/api';
 
-export const load: PageLoad = async ({ fetch }) => {
-	const res = await makeBaseX(fetch).get('/');
+export const load: PageLoad = async () => {
+	const res = await basex.get('/');
 	return {
 		body: await res.text()
 	};

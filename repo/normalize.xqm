@@ -17,14 +17,14 @@ declare function n:normalize-verse($tb) as element()* {
   for tumbling window $line in $tb//word[not(@artificial)]
     start $s end $e previous $p next $n
     when n:cite-break($p/@cite, $e/@cite, $n/@cite)
-  let $ref := tokenize($s/@cite/string(), ':') => foot()
+  let $ref := tokenize($s/@cite, ':') => foot()
   return
     <ln n="{$ref}" xml:space="preserve">
       {
         for sliding window $win in $line
           start $w at $i end $n at $j
           when $j - $i = 1
-        let $morph := pt:expand($w/@postag/string())
+        let $morph := pt:expand($w/@postag)
         return element w {
           attribute sentence {$w/../@id},
           $w/@*[name()=("id", "head", "lemma", "relation")],
@@ -32,7 +32,7 @@ declare function n:normalize-verse($tb) as element()* {
           concat(
             $w/@form/string(),
             (: insert space if not followed by punctuation :)
-            if (characters($n/@postag/string())[1] != "u") then "&#x20;"
+            if (characters($n/@postag)[1] != "u") then "&#x20;"
           )
         }
       }
@@ -42,20 +42,23 @@ declare function n:normalize-verse($tb) as element()* {
 declare function n:normalize-prose($tb) as element()* {
   for $sen in $tb//sentence
   return <sentence xml:space="preserve">{
-    $sen/@*,
-    for sliding window $win in $sen/word
+    attribute id {$sen/@id otherwise $sen/@struct_id},
+    $sen/@* except $sen/@id,
+    for sliding window $win in $sen/word[not(@artificial)]
       start $s at $i end $e at $j
       when $j - $i = 1
-    return (
-      element w {
-        $s/@*[name()=("id", "head", "lemma", "relation", "artificial")],
-        pt:expand($s/@postag/string()),
-        concat(
-          $s/@form/string(),
-          (: insert space if not followed by punctuation :)
-          if (characters($e/@postag/string())[1] != "u") then "&#x20;")
-      }
-    )
+      return (
+        element w {
+          $s/@*[name()=("id", "head", "relation")],
+          attribute sentence {$sen/@id otherwise $sen/@struct_id},
+          attribute lemma {normalize-unicode($s/@lemma, 'NFC')},
+          pt:expand($s/@postag),
+          concat(
+            $s/@form,
+            (: insert space if not followed by punctuation :)
+            if (characters($e/@postag)[1] != "u") then "&#x20;")
+        }
+      )
   }</sentence>
 };
 

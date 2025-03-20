@@ -44,9 +44,57 @@
 	function extend(constructor: new () => HTMLElement) {
 		return class extends constructor {
 			selected = false;
+			onclick = () => {
+				this.dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
+			};
+
 			toggleSelected() {
 				this.selected = !this.selected;
 				this.classList.toggle('selected');
+			}
+
+			*sentenceWords(this: Word) {
+				yield* document.querySelectorAll(`#treebank [sentence="${this.sentence}"]`);
+			}
+
+			*directDependencies(this: Word, rel: string | undefined = undefined): Iterable<Word> {
+				let words = document.querySelectorAll<Word>(
+					`#treebank [sentence="${this.sentence}"][head="${this.id}"]`
+				);
+				for (let w of words) {
+					if (rel && w.relation?.startsWith(rel)) yield w;
+					else if (!rel) yield w;
+				}
+			}
+
+			*dependencies(this: Word): Iterable<Word> {
+				for (let d of this.directDependencies()) {
+					yield d;
+					yield* d.dependencies();
+				}
+			}
+
+			*complement(this: Word, rel: string): Iterable<Word> {
+				yield* this.directDependencies(rel);
+				for (let coord of this.directDependencies('COORD')) {
+					yield* coord.directDependencies(rel);
+				}
+			}
+
+			highlightComplements(this: Word) {
+				let complements: { w: Word; class: string }[] = [];
+				for (let w of this.complement('OBJ')) {
+					complements.push({
+						w,
+						// @ts-ignore
+						class: { 'acc.': 'acc-obj', 'dat.': 'dat-obj', 'gen.': 'gen-obj' }[w.case ?? 'acc.']
+					});
+				}
+				for (let w of this.complement('SBJ')) complements.push({ w, class: 'sbj' });
+				for (let c of complements) c.w.classList.add(c.class);
+				return () => {
+					for (let c of complements) c.w.classList.remove(c.class);
+				};
 			}
 		};
 	}
@@ -58,9 +106,6 @@
 	import './word.css';
 	let { children } = $props();
 	let w = $host() as Word;
-	w.onclick = () => {
-		w.dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
-	};
 
 	function highlightHyperbatons() {
 		if (

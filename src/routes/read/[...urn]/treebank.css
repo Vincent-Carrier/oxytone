@@ -1,7 +1,7 @@
 @reference '$/app.css';
 
 hgroup {
-	@apply font-sc mb-4 ml-12 text-balance lowercase;
+	@apply font-sc mb-4 text-balance lowercase;
 	& h1 {
 		@apply text-2xl text-gray-800 underline;
 	}
@@ -11,7 +11,10 @@ hgroup {
 }
 
 .sentence-nbr {
-	@apply mr-1 ml-3 inline-block font-sans text-sm text-gray-400 select-none;
+	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	&:target {
+		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
+	}
 	&::before {
 		content: '[';
 	}

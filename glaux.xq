@@ -5,7 +5,14 @@ for $text in $index?records
     let $path := `tlg{$urn[1]}/tlg{$urn[2]}`
     let $author := $text?5
     let $title := $text?6
-    let $_ := message(($path, $author, $title))
-    return store:put(`{$path}`, {'author': $author, 'title': $title}),
+    let $_ := message(`{$path}, {$author}, {$title}, {$text?12}`)
+    return store:put(`{$path}`, {
+      'author': $author,
+      'title': $title,
+      'date': $text?3 cast as xs:integer,
+      'genre': $text?7,
+      'dialect': $text?8,
+      'tokens': $text?12 cast as xs:integer
+    }),
 
 store:write('glaux')

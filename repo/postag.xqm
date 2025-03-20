@@ -1,6 +1,6 @@
 module namespace pt = "postag";
 
-declare function pt:expand($tag) {
+declare function pt:expand($tag as xs:string) {
   let $tags := characters($tag)
   return (
     attribute pos {
@@ -160,7 +160,7 @@ declare function pt:expand-proiel($tag) {
   )[data() != ""]
 };
 
-declare function pt:proiel-pos($tag) {
+declare function pt:proiel-pos($tag as xs:string) {
   attribute pos {
       switch ($tag)
         case ("Nb", "Ne") return "noun"

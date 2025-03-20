@@ -7,12 +7,10 @@
 	import ColorsButton from '$lib/components/colors-button.svelte';
 	import Morphology from '$lib/components/morphology.svelte';
 	import Definition from '$lib/components/definition.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import VerbsButton from '$/lib/components/verbs-button.svelte';
-	import type { KyInstance } from 'ky';
-	import { setContext } from 'svelte';
-	import { makeBaseX, makePython } from '$/lib/api';
+	import { basex } from '$lib/api';
 
 	let urn = page.params.urn.split('/');
 	let sp = page.url.searchParams;
@@ -22,9 +20,6 @@
 	let defined: Word | null = $state(null);
 	let lemma: string | null = $state(null);
 	let clearDependants: null | (() => void) = $state(null);
-
-	setContext('basex', () => makeBaseX(fetch));
-	setContext('python', () => makePython(fetch));
 
 	$effect(() => {
 		if (selection === null) {
