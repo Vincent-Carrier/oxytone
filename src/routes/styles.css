@@ -1,26 +1,23 @@
 @reference '$/app.css';
 
-.author {
-	@apply flex flex-wrap items-baseline;
-	h2 {
-		@apply font-sc mt-2 text-xl;
+section.genre {
+	@apply mx-4 my-4 text-gray-800;
+	& h2 {
+		@apply font-sc border-b-1 border-gray-300 text-xl font-bold lowercase;
 	}
-
-	.works {
-		@apply font-serif;
-		&:has(> :only-child) {
-			& li::before {
-				content: ', ';
-				@apply inline-block w-4;
-			}
+	& ul.authors {
+		@apply columns-1 md:columns-2 xl:columns-3;
+		& h3 {
+			@apply font-sc text-lg font-medium lowercase;
 		}
-		&:has(> :nth-child(2)) {
-			@apply w-full;
+
+		ul.works {
+			@apply font-serif text-sm;
 			list-style: '‒  ' inside;
-		}
 
-		& a {
-			@apply text-blue-600 underline;
+			& a {
+				@apply text-blue-600 underline;
+			}
 		}
 	}
 }

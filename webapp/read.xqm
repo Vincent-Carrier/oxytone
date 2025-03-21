@@ -80,35 +80,6 @@ declare
   function r:get-part($author, $work-part) {
     let $wp := tokenize($work-part, '/')
     let $path := string-join(($author, $work-part), '/')
-    let $_ := message($path)
     let $tb := dbl:get-flatbank($author, $wp[1], $wp[2])
     return xslt:transform($tb, $r:xslt)
-};
-
-
-declare
-  %rest:path("/hl/{$author}/{$work}/{$sentence=\d+}/{$word=\d+}")
-  %output:method("json")
-  function r:highlight-dependencies($author, $work, $sentence, $word) {
-    let $path := string-join(($author, $work), '/')
-    let $tb := db:get('treebanks', $path)[1]
-    let $sen := $tb//sentence[@id=$sentence]
-    let $w := $sen//*[@id=$word]
-    let $o := ($w/obj, $w/coord/obj)
-    let $s := ($w/sbj, $w/coord/sbj)
-    let $dobjs := $o =!> fn { map {
-      'type': switch(@case)
-        case 'dat.' return 'dat-obj'
-        case 'gen.' return 'gen-obj'
-        default return 'acc-obj',
-      'head': xs:integer(@id),
-      'descendants': .//@id =!> xs:integer() => array:build()
-    } }()
-    let $sbjs := $s =!> fn { map {
-      'type': 'sbj',
-      'head': xs:integer(@id),
-      'descendants': .//@id =!> xs:integer() => array:build()
-    } }()
-
-    return array:build(($dobjs, $sbjs))
 };

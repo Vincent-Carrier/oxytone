@@ -10,9 +10,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import VerbsButton from '$/lib/components/verbs-button.svelte';
-	import { basex } from '$lib/api';
 
-	let urn = page.params.urn.split('/');
 	let sp = page.url.searchParams;
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
@@ -29,6 +27,7 @@
 	});
 
 	function select(w: Word) {
+		defined?.clearComplements();
 		w.toggleSelected();
 		if (w.selected) {
 			defined = w;
@@ -46,9 +45,8 @@
 				(el as Word).toggleSelected();
 			}
 		}
-		clearDependants?.();
 		if (selection === null && defined) {
-			highlightDependants(defined).then((clear) => (clearDependants = clear));
+			defined.highlightComplements();
 		}
 	}
 
@@ -67,30 +65,6 @@
 			select(w);
 		});
 	});
-
-	type Complement = { type: string; head: number; descendants: number[] };
-	async function highlightDependants(w: Word) {
-		let complements: Complement[] = await basex
-			.get(`hl/${urn[0]}/${urn[1]}/${w.sentence}/${w.id}`)
-			.json();
-		let nodes: { el: Word; class: string | string[] }[] = [];
-		for (let c of complements) {
-			let el = tb!.querySelector(`[sentence="${w.sentence}"][id="${c.head}"]`) as Word;
-			if (el) nodes.push({ el, class: ['head', c.type] });
-			for (let d of c.descendants) {
-				let el = tb!.querySelector(`[sentence="${w.sentence}"][id="${d}"]`) as Word;
-				if (el) nodes.push({ el, class: ['dep', c.type] });
-			}
-		}
-		for (let n of nodes) {
-			n.el.classList.add(...n.class);
-		}
-		return () => {
-			for (let n of nodes) {
-				n.el.classList.remove(...n.class);
-			}
-		};
-	}
 </script>
 
 <div class="relative flex h-screen flex-col">

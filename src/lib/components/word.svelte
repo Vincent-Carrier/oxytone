@@ -44,9 +44,7 @@
 	function extend(constructor: new () => HTMLElement) {
 		return class extends constructor {
 			selected = false;
-			onclick = () => {
-				this.dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
-			};
+			clearComplements = () => {};
 
 			toggleSelected() {
 				this.selected = !this.selected;
@@ -92,7 +90,7 @@
 				}
 				for (let w of this.complement('SBJ')) complements.push({ w, class: 'sbj' });
 				for (let c of complements) c.w.classList.add(c.class);
-				return () => {
+				this.clearComplements = () => {
 					for (let c of complements) c.w.classList.remove(c.class);
 				};
 			}
@@ -106,6 +104,9 @@
 	import './word.css';
 	let { children } = $props();
 	let w = $host() as Word;
+	w.onclick = () => {
+		w.dispatchEvent(new CustomEvent('w-click', { bubbles: true }));
+	};
 
 	function highlightHyperbatons() {
 		if (
