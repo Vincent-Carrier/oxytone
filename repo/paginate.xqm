@@ -3,12 +3,12 @@ import module namespace xsm = "xsm";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
-declare function p:pager($author as xs:string, $work as xs:string) {
-  if ($author = 'tlg0012') then
+declare function p:pager($urn as xs:string) {
+  if ($urn => matches('^tlg0012') then
     fn($tb, $n) { p:xslt-filter($tb, 'ln', `starts-with(@n, '{$n}.')`) }
 };
 
-declare function p:all-pages($author as xs:string, $work as xs:string) {
+declare function p:all-pages($urn xs:string) {
   if ($author = 'tlg0012') then
     1 to 24
 };

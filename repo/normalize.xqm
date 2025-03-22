@@ -7,16 +7,10 @@ declare function n:is-verse($author, $work) {
     default return false()
 };
 
-
-declare function n:cite-break($a, $b, $c) {
-  ($a != $c and $b = "")
-  or ($b != $c and $c != "" and $b != "")
-};
-
 declare function n:normalize-verse($tb) as element()* {
   for tumbling window $line in $tb//word[not(@artificial)]
     start $s end $e previous $p next $n
-    when n:cite-break($p/@cite, $e/@cite, $n/@cite)
+    when $s/@cite != $n/@cite and $n/@cite != ""
   let $ref := tokenize($s/@cite, ':') => foot()
   return
     <ln n="{$ref}" xml:space="preserve">

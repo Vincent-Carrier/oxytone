@@ -2,18 +2,40 @@
 
 section.genre {
 	@apply mx-4 my-4 text-gray-800;
+	@apply columns-1 gap-8 sm:columns-2 xl:columns-3;
+
 	& h2 {
-		@apply font-sc border-b-1 border-gray-300 text-xl font-bold lowercase;
+		@apply font-sc mb-2 border-b-1 border-gray-300 text-xl font-bold lowercase;
+		column-span: all;
 	}
 	& ul.authors {
-		@apply columns-1 md:columns-2 xl:columns-3;
-		& h3 {
-			@apply font-sc text-lg font-medium lowercase;
+		& > li {
+			@apply mb-2 break-inside-avoid;
+		}
+
+		& h3,
+		summary {
+			@apply font-sc text-lg leading-none font-medium lowercase;
+		}
+
+		& summary {
+			@apply cursor-pointer;
+			text-indent: 0.8rem hanging;
+		}
+
+		& details summary::marker {
+			content: '+ ';
+		}
+		& details[open] summary::marker {
+			content: '‒ ';
 		}
 
 		ul.works {
 			@apply font-serif text-sm;
 			list-style: '‒  ' inside;
+			& li {
+				/* text-indent: 0.75rem hanging; */
+			}
 
 			& a {
 				@apply text-blue-600 underline;

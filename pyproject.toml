@@ -8,4 +8,5 @@ dependencies = [
     "fastapi[standard]>=0.115.11",
     "genanki>=0.13.1",
     "httpx>=0.28.1",
+    "regex>=2024.11.6",
 ]
