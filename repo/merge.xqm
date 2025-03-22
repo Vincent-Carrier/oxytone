@@ -5,10 +5,6 @@ declare function m:merge-homer($tb, $tei, $book) {
   let $tb-book := $tb//ln[starts-with(@n, `{$book}.`)]
   let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
   return <treebank>
-    <head>
-      {$titleStmt/title}
-      {$titleStmt/author}
-    </head>
     <body n="{$book}">
       {
         for $el in $tei-book/*
@@ -30,12 +26,7 @@ declare function m:merge-homer($tb, $tei, $book) {
 };
 
 declare function m:merge-tragedy($tb, $tei) {
-  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
-  return <treebank>
-    <head>
-      {$titleStmt/title}
-      {$titleStmt/author}
-    </head>
+  <treebank>
     <body>
       {
         for $el in $tei//body//*
@@ -58,40 +49,19 @@ declare function m:merge-tragedy($tb, $tei) {
   </treebank>
 };
 
-declare function m:merge-tei($tb, $tei) {
-  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
-  return <treebank>
-    <head>
-      {$titleStmt/title}
-      {$titleStmt/author}
-    </head>
-    {$tb//body}
-  </treebank>
-};
-
-declare function m:merge-glaux($tb, $author, $work) {
-  let $_ := store:read('glaux')
-  let $meta := store:get(`{$author}/{$work}`)
-  let $_ := message(("====== ", $meta, "======"))
-  return <treebank>
-      <head>
-        <title>{$meta?title}</title>
-        <author>{$meta?author}</author>
-      </head>
-      {$tb//body}
-    </treebank>
-};
-
-
-
 declare function m:merge($tb, $author, $work, $part := ()) {
   let $tei := db:get('lit', `{$author}/{$work}`)[1]
-  return if ($tei) then
-    switch ($author)
+  let $merged := switch ($author)
       case 'tlg0012' return m:merge-homer($tb, $tei, $part)
-      case 'tlg0011' return m:merge-tragedy($tb, $tei)
-      default return m:merge-glaux($tb, $author, $work)
-    else switch($author)
-      case 'nt' return $tb
-      default return m:merge-glaux($tb, $author, $work)
+      case ('tlg0011', 'tlg0085', 'tlg0006', 'tlg0341', 'tlg0019') return m:merge-tragedy($tb, $tei)
+      default return $tb
+
+  let $_ := store:read('glaux')
+  let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
+  return $merged transform with {
+    insert node <head>
+      <title>{$meta?title}</title>
+      <author>{$meta?author}</author>
+    </head> as first into .
+  }
 };

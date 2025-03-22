@@ -6,7 +6,10 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare variable $r:xslt := xsm:stylesheet({
   "/treebank":
-    <div class="treebank">
+    <div>
+      <xsl:attribute name="class">
+        <xsl:value-of select="concat('treebank ', @style)" />
+      </xsl:attribute>
       <hgroup>
         <h1>
           <xsl:value-of select="oxy:strip-diacritics(head/title)" />

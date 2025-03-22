@@ -19,9 +19,9 @@ declare %updating function dbl:get-flatbank($author, $work, $part := ()) {
           dbl:file-matches('treebanks/agldt/v2.1/', `{$author}\.{$work}\.`),
           file:children(`glaux/{$author}/{$work}/`)
         )[1] => file:resolve-path()
-        return if ($path) then
-          let $is-verse := n:is-verse($author, $work)
-          let $tb := n:normalize(doc($path), $is-verse)
+        return if (trace($path, "PATH: ")) then
+          let $style := trace(n:style($author, $work), "STYLE: ")
+          let $tb := n:normalize(doc($path), $style)
           let $merged := m:merge($tb, $author, $work, $part)
           let $_ := if (not(db:option('debug'))) then db:put('flatbanks', $merged, $urn)
           return $merged

@@ -79,7 +79,7 @@
 	</nav>
 	<article
 		id="treebank"
-		class="verbs syntax scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed has-[.sentence]:px-12"
+		class="verbs syntax scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed"
 	>
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html data.treebank}

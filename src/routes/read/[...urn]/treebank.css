@@ -1,10 +1,7 @@
 @reference '$/app.css';
 
 hgroup {
-	#treebank:has(.line) & {
-		@apply ml-12;
-	}
-	@apply font-sc mb-4 text-balance lowercase;
+	@apply font-sc mb-4 ml-12 text-balance lowercase;
 	& h1 {
 		@apply text-2xl text-gray-800 underline;
 	}
@@ -13,8 +10,19 @@ hgroup {
 	}
 }
 
+.treebank.dialogue,
+.treebank.prose {
+	& > .body {
+		@apply ml-12;
+	}
+}
+
 .sentence-nbr {
 	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	.speaker + .sentence > &,
+	.body > .sentence:first-child > & {
+		@apply -ml-0;
+	}
 	&:target {
 		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
 	}
@@ -37,11 +45,9 @@ hgroup {
 
 .line-nbr {
 	@apply mr-2 inline-block w-10 border-r-1 border-gray-100 pt-1 pr-1 text-right font-sans text-sm text-gray-400 select-none;
-
 	&[n$='0'] {
 		@apply bg-gray-50 text-gray-500;
 	}
-
 	&:target {
 		@apply border-blue-200 bg-blue-50 text-blue-600;
 	}
@@ -53,7 +59,10 @@ hgroup {
 }
 
 .speaker {
-	@apply font-sc sticky -top-4 mt-2 bg-white pl-12 text-sm text-gray-400 lowercase underline;
+	@apply font-sc sticky -top-4 mt-2 bg-white text-sm text-gray-400 lowercase underline;
+}
+.treebank.verse .speaker {
+	@apply ml-12;
 }
 
 blockquote {
@@ -64,7 +73,6 @@ blockquote {
 		& :not(.line-nbr) {
 			@apply italic;
 		}
-
 		&:first-of-type ox-w:first-of-type {
 			@apply relative;
 			&::before {
@@ -72,7 +80,6 @@ blockquote {
 				content: '“';
 			}
 		}
-
 		&:last-of-type ox-w:last-of-type {
 			@apply relative;
 			&::after {
