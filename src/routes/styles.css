@@ -14,7 +14,7 @@ section.genre {
 		}
 
 		& h3,
-		summary {
+		details.author > summary {
 			@apply font-sc text-lg leading-none font-medium lowercase;
 		}
 
@@ -33,12 +33,22 @@ section.genre {
 		ul.works {
 			@apply font-serif text-sm;
 			list-style: '‒  ' inside;
-			& li {
-				/* text-indent: 0.75rem hanging; */
-			}
-
 			& a {
 				@apply text-blue-600 underline;
+			}
+
+			& li:has(details) {
+				list-style: none;
+			}
+
+			& details.work {
+				& summary {
+				}
+
+				& ol {
+					@apply pl-2;
+					list-style: '‒  ' inside;
+				}
 			}
 		}
 	}

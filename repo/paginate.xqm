@@ -4,13 +4,14 @@ import module namespace xsm = "xsm";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare function p:pager($urn as xs:string) {
-  if ($urn => matches('^tlg0012') then
-    fn($tb, $n) { p:xslt-filter($tb, 'ln', `starts-with(@n, '{$n}.')`) }
-};
-
-declare function p:all-pages($urn xs:string) {
-  if ($author = 'tlg0012') then
-    1 to 24
+  switch ($urn)
+    case ('tlg0012/tlg001', 'tlg0012/tlg002')
+      return {
+        'get': fn($tb, $n) { p:xslt-filter($tb, 'ln', `starts-with(@n, '{$n}.')`) },
+        'list': fn() { 1 to 24 },
+        'format': fn($n) { `Book {$n}` }
+      }
+    default return ()
 };
 
 declare function p:xslt-filter($xml, $el as xs:string, $pred as xs:string) {
