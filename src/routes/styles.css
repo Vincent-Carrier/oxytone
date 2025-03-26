@@ -25,13 +25,14 @@ section.genre {
 
 		& details summary::marker {
 			content: '+ ';
+			@apply font-bold;
 		}
 		& details[open] summary::marker {
 			content: '‒ ';
 		}
 
 		ul.works {
-			@apply font-serif text-sm;
+			@apply pl-1 font-serif text-sm;
 			list-style: '‒  ' inside;
 			& a {
 				@apply text-blue-600 underline;

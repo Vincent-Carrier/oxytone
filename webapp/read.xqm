@@ -35,6 +35,32 @@ declare variable $r:xslt := xsm:stylesheet({
       </a>
       <xsl:apply-templates />
     </span>,
+  "chapter":
+    <section>
+      <a class="chapter-nbr">
+        <xsl:attribute name="href">
+          <xsl:value-of select="concat('#', @id)" />
+        </xsl:attribute>
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id" />
+        </xsl:attribute>
+        <xsl:value-of select="@id" />
+      </a>
+      <xsl:apply-templates />
+    </section>,
+  "section":
+    <p>
+      <a class="section-nbr">
+        <xsl:attribute name="href">
+          <xsl:value-of select="concat('#', @id)" />
+        </xsl:attribute>
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id" />
+        </xsl:attribute>
+        <xsl:value-of select="@id" />
+      </a>
+      <xsl:apply-templates />
+    </p>,
   "verse":
     <span class="verse">
       <a class="verse-nbr">
@@ -77,12 +103,12 @@ declare variable $r:xslt := xsm:stylesheet({
 
 
 declare
-  %rest:path("/read/{$author}/{$work-part=.+}")
+  %rest:path("/read/{$author}/{$work-page=.+}")
   %rest:single
   %output:method("html")
-  function r:get-part($author, $work-part) {
-    let $wp := tokenize($work-part, '/')
-    let $path := string-join(($author, $work-part), '/')
+  function r:get-page($author, $work-page) {
+    let $wp := tokenize($work-page, '/')
+    let $path := string-join(($author, $work-page), '/')
     let $tb := dbl:get-flatbank($author, $wp[1], $wp[2])
     return xslt:transform($tb, $r:xslt)
 };

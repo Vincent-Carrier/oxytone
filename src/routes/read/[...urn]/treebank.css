@@ -17,8 +17,36 @@
 	}
 }
 
+p {
+	@apply mb-1;
+}
+section {
+	@apply mb-4;
+}
+
+.chapter-nbr,
+.section-nbr {
+	@apply mr-1 inline-block font-sans text-sm text-gray-600 select-none;
+	&:target {
+		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
+	}
+	&::before {
+		content: '[';
+	}
+	&::after {
+		content: ']';
+	}
+}
+
+.chapter-nbr {
+	@apply float-left mt-1 -ml-10;
+}
+
 .sentence-nbr {
 	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	p & {
+		@apply hidden;
+	}
 	.speaker + .sentence > &,
 	.body > .sentence:first-child > & {
 		@apply -ml-0;
@@ -59,7 +87,7 @@
 }
 
 .speaker {
-	@apply font-sc sticky -top-4 mt-2 bg-white text-sm text-gray-400 lowercase underline;
+	@apply font-sc sticky -top-4 mt-2 bg-gray-50 text-sm text-gray-400 lowercase underline;
 }
 .treebank.verse .speaker {
 	@apply ml-12;

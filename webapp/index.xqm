@@ -18,7 +18,7 @@ declare %rest:path("")
           return
             if (count($author-in-genre) > 5) then
               <li>
-                <details class="author">
+                <details class="author" open="">
                   <summary>{$author}</summary>
                   <ul class="works">
                     {for $work in $author-in-genre return idx:render-work($work)}
@@ -41,7 +41,7 @@ declare function idx:render-work($work) {
   return
     <li>
       {if (exists($pager)) then
-        <details class="work">
+        <details class="work" open="">
           <summary>{$work?title}</summary>
           <ol class="pages">
           {for $n in $pager?list()

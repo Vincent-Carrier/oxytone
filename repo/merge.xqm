@@ -2,8 +2,6 @@ module namespace m = "merge";
 
 declare function m:merge-homer($tb, $tei, $book) {
   let $tei-book := $tei//div[lower-case(@subtype)="book" and @n=$book]
-  let $tb-book := $tb//ln[starts-with(@n, `{$book}.`)]
-  let $titleStmt := $tei/TEI/teiHeader/fileDesc/titleStmt
   return <treebank>
     <body n="{$book}">
       {
@@ -12,11 +10,11 @@ declare function m:merge-homer($tb, $tei, $book) {
           case element(milestone)
             return if ($el/@unit = "card") then <hr />
           case element(l)
-            return $tb-book[@n=concat($book, '.', $el/@n)]
+            return $tb//ln[@n=concat($book, '.', $el/@n)]
           case element(q)
             return <blockquote>{
               for $ln in $el/l
-              return $tb-book[@n=concat($book, '.', $ln/@n)]
+                return $tb//ln[@n=concat($book, '.', $ln/@n)]
             }</blockquote>
           default return ()
         }
@@ -58,10 +56,5 @@ declare function m:merge($tb, $author, $work, $part := ()) {
 
   let $_ := store:read('glaux')
   let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
-  return $merged transform with {
-    insert node <head>
-      <title>{$meta?title}</title>
-      <author>{$meta?author}</author>
-    </head> as first into .
-  }
+  return $merged
 };

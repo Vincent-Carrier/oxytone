@@ -27,23 +27,27 @@ declare function n:normalize-verse($tb) as element()* {
 };
 
 declare function n:normalize-prose($tb) as element()* {
-  for $sen in $tb//sentence
-  return <sentence xml:space="preserve">{
-    attribute id {$sen/@id otherwise $sen/@struct_id},
-    $sen/@* except $sen/@id,
-    for sliding window $win in $sen/word[not(@artificial)]
-      start $w at $i end $e at $j
-      when $j - $i = 1
-      return n:make-word($w, not(n:is-punct-right($e)))
-  }</sentence>
+	for tumbling window $chapter in $tb//sentence
+		end $e next $n
+    when ($e/word/@div_chapter)[1] != ($n/word/@div_chapter)[1]
+    return
+      <chapter id="{($e/word/@div_chapter)[1]}">{
+        for tumbling window $section in $chapter
+          end $e next $n
+          when ($e/word/@div_section)[1] != ($n/word/@div_section)[1]
+          return <section id="{($e/word/@div_section)[1]}">{
+      		  for $sen in $section
+     			    return n:make-sentence($sen)
+          }</section>
+      }</chapter>
 };
 
 declare function n:normalize-dialogue($tb) as element()* {
   for tumbling window $speech in $tb//sentence
-    start $s next $n
-    when $s/word[1]/@speaker != $n/word[1]/@speaker
+    end $e next $n
+    when ($e/word/@speaker)[1] != ($n/word/@speaker)[1]
     return (
-      trace(<speaker>{$s/word[1]/@speaker/string()}</speaker>, "SPEAKER: "),
+      <speaker>{$e/word[1]/@speaker/string()}</speaker>,
       for $sen in $speech
         return <sentence xml:space="preserve">{
           attribute id {$sen/@id otherwise $sen/@struct_id},
@@ -75,6 +79,18 @@ declare function n:make-word($w, $pad-right) {
     if ($w/@postag) then pt:expand($w/@postag),
     concat($w/@form, if ($pad-right) then "&#x20;")
   }
+};
+
+declare function n:make-sentence($sen) {
+  <sentence xml:space="preserve">{
+    attribute id {$sen/@id otherwise $sen/@struct_id},
+    $sen/@* except $sen/@id,
+    for sliding window $win in $sen/word[not(@artificial)]
+      start $w at $i end $e at $j
+      when $j - $i = 1
+      return n:make-word($w, not(n:is-punct-right($e))),
+    "&#x20;"
+  }</sentence>
 };
 
 declare function n:is-punct-right($w) {
