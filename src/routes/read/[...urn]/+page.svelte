@@ -64,6 +64,14 @@
 			let w = ev.target as Word;
 			select(w);
 		});
+
+		// Don't add line / chapter anchors to history stack
+		tb.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+			anchor.addEventListener('click', (ev) => {
+				window.location.replace(anchor.getAttribute('href')!);
+				ev.preventDefault();
+			});
+		});
 	});
 </script>
 

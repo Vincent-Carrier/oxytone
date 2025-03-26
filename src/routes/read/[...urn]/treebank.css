@@ -26,20 +26,16 @@ section {
 
 .chapter-nbr,
 .section-nbr {
-	@apply mr-1 inline-block font-sans text-sm text-gray-600 select-none;
+	@apply font-sans text-sm select-none;
 	&:target {
-		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
-	}
-	&::before {
-		content: '[';
-	}
-	&::after {
-		content: ']';
+		@apply bg-blue-50 text-blue-500 outline-blue-500;
 	}
 }
-
+.section-nbr {
+	@apply mr-1 inline-block bg-gray-100 px-1 text-gray-600 outline-1 outline-gray-200;
+}
 .chapter-nbr {
-	@apply float-left mt-1 -ml-10;
+	@apply float-left mt-1 -ml-8 text-gray-400;
 }
 
 .sentence-nbr {

@@ -21,7 +21,7 @@ declare function n:normalize-verse($tb) as element()* {
         for sliding window $win in $line
           start $w at $i end $e at $j
           when $j - $i = 1
-          return n:make-word($w, not(n:is-punct-right($e)))
+          return n:word($w, not(n:is-punct-right($e)))
       }
     </ln>
 };
@@ -37,7 +37,7 @@ declare function n:normalize-prose($tb) as element()* {
           when ($e/word/@div_section)[1] != ($n/word/@div_section)[1]
           return <section id="{($e/word/@div_section)[1]}">{
       		  for $sen in $section
-     			    return n:make-sentence($sen)
+     			    return n:sentence($sen)
           }</section>
       }</chapter>
 };
@@ -49,14 +49,7 @@ declare function n:normalize-dialogue($tb) as element()* {
     return (
       <speaker>{$e/word[1]/@speaker/string()}</speaker>,
       for $sen in $speech
-        return <sentence xml:space="preserve">{
-          attribute id {$sen/@id otherwise $sen/@struct_id},
-          $sen/@* except $sen/@id,
-          for sliding window $win in $sen/word[not(@artificial)]
-            start $w at $i end $e at $j
-            when $j - $i = 1
-            return n:make-word($w, not(n:is-punct-right($e)))
-        }</sentence>
+        return n:sentence($sen)
     )
 };
 
@@ -71,7 +64,7 @@ declare function n:normalize($tb, $style := "prose") as element() {
   </treebank>
 };
 
-declare function n:make-word($w, $pad-right) {
+declare function n:word($w, $pad-right) {
   element w {
     $w/@*[name()=("id", "head", "relation")],
     attribute sentence {$w/../@id otherwise $w/../@struct_id},
@@ -81,19 +74,18 @@ declare function n:make-word($w, $pad-right) {
   }
 };
 
-declare function n:make-sentence($sen) {
+declare function n:sentence($sen) {
   <sentence xml:space="preserve">{
     attribute id {$sen/@id otherwise $sen/@struct_id},
     $sen/@* except $sen/@id,
     for sliding window $win in $sen/word[not(@artificial)]
       start $w at $i end $e at $j
       when $j - $i = 1
-      return n:make-word($w, not(n:is-punct-right($e))),
+      return n:word($w, not(n:is-punct-right($e))),
     "&#x20;"
   }</sentence>
 };
 
 declare function n:is-punct-right($w) {
-  characters($w/@postag)[1] = "u"
-  and $w/@form != ("[", "(")
+  substring($w/@postag, 1, 1) = "u" and $w/@form != ("[", "(")
 };
