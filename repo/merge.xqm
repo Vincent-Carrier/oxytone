@@ -1,4 +1,5 @@
 module namespace m = "merge";
+import module namespace p = "paginate";
 
 declare function m:merge-homer($tb, $tei, $book) {
   let $tei-book := $tei//div[lower-case(@subtype)="book" and @n=$book]
@@ -20,7 +21,9 @@ declare function m:merge-homer($tb, $tei, $book) {
         }
       }
     </body>
-  </treebank>
+  </treebank> transform with {
+    delete nodes .//w[@lemma = '"']
+  }
 };
 
 declare function m:merge($tb, $author, $work, $part := ()) {

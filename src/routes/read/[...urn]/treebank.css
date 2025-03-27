@@ -68,10 +68,7 @@ p {
 }
 
 .line-nbr {
-	@apply mr-2 inline-block w-10 border-r-1 border-gray-100 pt-1 pr-1 text-right font-sans text-sm text-gray-400 select-none;
-	&[n$='0'] {
-		@apply bg-gray-50 text-gray-500;
-	}
+	@apply mr-2 inline-block w-10 border-r-1 border-gray-200 bg-white pt-1 pr-1 text-right font-sans text-sm text-gray-300 select-none;
 	&:target {
 		@apply border-blue-200 bg-blue-50 text-blue-600;
 	}
@@ -118,9 +115,8 @@ blockquote {
 }
 
 hr {
-	@apply my-4 ml-20 w-48 border-gray-300;
-	&:first-child,
-	hgroup + & {
+	@apply mx-8 my-4 w-48 border-gray-300;
+	.body :first-child & {
 		@apply hidden;
 	}
 }

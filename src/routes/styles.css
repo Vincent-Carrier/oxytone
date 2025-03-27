@@ -50,6 +50,9 @@ section.genre {
 					@apply pl-2;
 					list-style: '‒  ' inside;
 				}
+				& li {
+					@apply capitalize;
+				}
 			}
 		}
 	}

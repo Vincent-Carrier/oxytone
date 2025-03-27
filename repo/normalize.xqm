@@ -1,7 +1,7 @@
 module namespace n = "normalize";
 import module namespace pt = "postag";
-import module namespace m = 'merge';
 import module namespace p = 'paginate';
+import module namespace m = 'merge';
 
 declare function n:style($author, $work) {
   let $_ := store:read('glaux')
@@ -78,8 +78,13 @@ declare function n:word($w, $pad-right) {
     attribute sentence {$w/../@id otherwise $w/../@struct_id},
     attribute lemma {normalize-unicode($w/@lemma, 'NFC')},
     if ($w/@postag) then pt:expand($w/@postag),
-    concat($w/@form, if ($pad-right) then "&#x20;")
+    concat(replace($w/@form, '^-(.*)', '$1'), if ($pad-right) then "&#x20;")
   }
+};
+
+declare function n:is-punct-right($w) {
+  substring($w/@postag, 1, 1) = "u" and $w/@form != ("[", "(")
+  or $w/@lemma = "τε"
 };
 
 declare function n:sentence($sen) {
@@ -101,10 +106,6 @@ declare function n:line($line, $id) {
       when $j - $i = 1
       return n:word($w, not(n:is-punct-right($e)))
   }</ln>
-};
-
-declare function n:is-punct-right($w) {
-  substring($w/@postag, 1, 1) = "u" and $w/@form != ("[", "(")
 };
 
 declare %updating %public function n:get-normalized($author, $work, $page := ()) {

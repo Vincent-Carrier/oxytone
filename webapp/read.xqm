@@ -12,26 +12,26 @@ declare variable $r:xslt := xsm:stylesheet({
       </xsl:attribute>
       <hgroup>
         <h1>
-          <xsl:value-of select="oxy:strip-diacritics(concat(head/title, ', ', head/page))" />
+          <xsl:value-of select="concat(oxy:strip-diacritics(normalize-unicode(head/title, 'NFD')), ', ', head/page)" />
         </h1>
         <p class="author">
-          <xsl:value-of select="oxy:strip-diacritics(head/author)" />
+          <xsl:value-of select="head/author" />
         </p>
       </hgroup>
-      <div class="body">
+      <main class="body">
         <xsl:apply-templates select="body" />
-      </div>
+      </main>
     </div>,
   "sentence":
     <span class="sentence">
       <a class="sentence-nbr">
         <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', replace(@id, '\w+ \d+\.(\d+)$', '$1'))" />
+          <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
         <xsl:attribute name="id">
-          <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+          <xsl:value-of select="@id" />
         </xsl:attribute>
-        <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+        <xsl:value-of select="@id" />
       </a>
       <xsl:apply-templates />
     </span>,
@@ -65,12 +65,12 @@ declare variable $r:xslt := xsm:stylesheet({
     <span class="verse">
       <a class="verse-nbr">
         <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', replace(@id, '\w+ \d+\.(\d+)$', '$1'))" />
+          <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
         <xsl:attribute name="id">
-          <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+          <xsl:value-of select="@id" />
         </xsl:attribute>
-        <xsl:value-of select="replace(@id, '\w+ \d+\.(\d+)$', '$1')" />
+        <xsl:value-of select="@id" />
       </a>
       <xsl:apply-templates />
     </span>,
@@ -84,7 +84,7 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:attribute name="href">
           <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
-        <xsl:value-of select="@id" />
+        <xsl:value-of select="replace(@id, '\d+\.(\d+)$', '$1')" />
       </a>
       <xsl:apply-templates />
     </div>,
@@ -97,8 +97,9 @@ declare variable $r:xslt := xsm:stylesheet({
       <xsl:copy-of select="@*" />
       <xsl:value-of select="oxy:strip-smooth-breathings(.)" />
     </ox-w>,
+  "hr": <div class="flex"><div class="line-nbr"></div><hr /></div>,
   "blockquote": xsm:keep("node()"),
-  "br|hr": xsm:keep()
+  "br": xsm:keep()
 });
 
 

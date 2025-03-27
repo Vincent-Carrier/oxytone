@@ -11,13 +11,11 @@
 	import { page } from '$app/state';
 	import VerbsButton from '$/lib/components/verbs-button.svelte';
 
-	let sp = page.url.searchParams;
 	let { data }: PageProps = $props();
 	let tb: HTMLElement;
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
 	let lemma: string | null = $state(null);
-	let clearDependants: null | (() => void) = $state(null);
 
 	$effect(() => {
 		if (selection === null) {
@@ -52,14 +50,8 @@
 
 	onMount(() => {
 		document.title = document.querySelector('h1')?.textContent ?? 'Oxytone';
-
-		if (sp.has('word')) {
-			defined = tb.querySelector(
-				`[sentence="${sp.get('sentence')}"][id="${sp.get('word')}"]`
-			) as Word;
-			lemma = defined.lemma ?? null;
-			defined?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}
+		let hash = page.url.hash;
+		if (hash) document.querySelector(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' });
 		tb!.addEventListener('w-click', async (ev) => {
 			let w = ev.target as Word;
 			select(w);
@@ -87,7 +79,7 @@
 	</nav>
 	<article
 		id="treebank"
-		class="verbs syntax scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed"
+		class="verbs syntax relative scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed"
 	>
 		<div bind:this={tb} class="max-w-md font-serif">
 			{@html data.treebank}
