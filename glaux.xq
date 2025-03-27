@@ -1,4 +1,4 @@
-let $f := file:read-text('glaux-merged.tsv', 'utf-8', true())
+let $f := file:read-text('glaux.tsv', 'utf-8', true())
 let $index := csv:parse($f, {'header': true(), 'separator': 'tab', 'format': 'xquery'})
 for $text in $index?records
     let $urn := $text?2 => tokenize('-')

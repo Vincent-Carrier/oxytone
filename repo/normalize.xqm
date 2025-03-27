@@ -33,6 +33,17 @@ declare function n:normalize-theater($tb) as element()* {
     )
 };
 
+declare function n:normalize-dialogue($tb) as element()* {
+  for tumbling window $speech in $tb//sentence
+    end $e next $n
+    when ($e/word/@speaker)[1] != ($n/word/@speaker)[1]
+    return (
+      <speaker>{$e/word[1]/@speaker/string()}</speaker>,
+      for $sen in $speech
+        return n:sentence($sen)
+    )
+};
+
 declare function n:normalize-prose($tb) as element()* {
 	for tumbling window $chapter in $tb//sentence
 		end $e next $n
@@ -47,17 +58,6 @@ declare function n:normalize-prose($tb) as element()* {
      			    return n:sentence($sen)
           }</section>
       }</chapter>
-};
-
-declare function n:normalize-dialogue($tb) as element()* {
-  for tumbling window $speech in $tb//sentence
-    end $e next $n
-    when ($e/word/@speaker)[1] != ($n/word/@speaker)[1]
-    return (
-      <speaker>{$e/word[1]/@speaker/string()}</speaker>,
-      for $sen in $speech
-        return n:sentence($sen)
-    )
 };
 
 declare function n:normalize($tb, $style := "prose") as element() {
@@ -121,9 +121,8 @@ declare %updating %public function n:get-normalized($author, $work, $page := ())
       let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
       let $merged := $normalized transform with {
         insert node <head>
-          <title>{$meta?title}</title>
-          <author>{$meta?author}</author>
-          {if (exists($pager)) then <page>{$pager?format($page cast as xs:integer)}</page>}
+          <title>{$meta?english-title}</title>
+          <author>{$meta?english-author}</author>
         </head> as first into .
       }
       let $_ := if (not(db:option('debug'))) then db:put('normalized', $merged, $urn)

@@ -1,34 +1,36 @@
 import tempfile
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
-import sys
 from genanki import BASIC_MODEL, Deck, Note
 from httpx import AsyncClient
+from typing import Annotated
 
 basex = AsyncClient(base_url="http://localhost:8080")
 app = FastAPI()
 
 
-class Flashcard(BaseModel):
-    lemma: str
-    definition: str | None = None
-
-
-@app.post("/flashcards")
-async def create_flashcards(flashcards: list[Flashcard]):
-    deck = Deck(hash("wordlist"), name="Oxytone")
-    for fc in flashcards:
-        res = await basex.get(f"/define/lsj/{fc.lemma}")
+@app.get("/flashcards")
+async def create_flashcards(
+    author: Annotated[str, Query()],
+    work: Annotated[str, Query()],
+    w: Annotated[list[str], Query()],
+):
+    deck = Deck(hash("wordlist"), name="Greek Vocabulary")
+    for lemma in w:
+        res = await basex.get(f"/define/lsj/{lemma}")
         definition = res.text
         deck.add_note(
             Note(
                 BASIC_MODEL,
-                fields=[fc.lemma, definition],
+                fields=[lemma, definition],
+                tags=[f"author-{author}", f"work-{work}"],
             )
         )
-    with tempfile.TemporaryFile() as f:
-        deck.write_to_file(f)
-        return FileResponse(
-            f.name, filename="oxytone.apkg", media_type="application/zip"
-        )
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            deck.write_to_file(f.name)
+            response = FileResponse(
+                f.name,
+                filename="greek-flashcards.apkg",
+                media_type="application/octet-stream",
+            )
+            return response

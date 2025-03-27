@@ -12,7 +12,7 @@ declare variable $r:xslt := xsm:stylesheet({
       </xsl:attribute>
       <hgroup>
         <h1>
-          <xsl:value-of select="concat(oxy:strip-diacritics(normalize-unicode(head/title, 'NFD')), ', ', head/page)" />
+          <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />
         </h1>
         <p class="author">
           <xsl:value-of select="head/author" />
