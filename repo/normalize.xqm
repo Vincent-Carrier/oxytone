@@ -1,29 +1,36 @@
 module namespace n = "normalize";
 import module namespace pt = "postag";
+import module namespace m = 'merge';
+import module namespace p = 'paginate';
 
 declare function n:style($author, $work) {
   let $_ := store:read('glaux')
   let $meta := store:get(`{$author}/{$work}`)
   return switch ($meta?genre)
-    case ("Tragedy", "Epic poetry", "Lyric poetry", "Comedy") return "verse"
+    case ("Epic poetry", "Lyric poetry") return "verse"
+    case ("Tragedy", "Comedy") return "theater"
     case ("Philosophic Dialogue") return "dialogue"
     default return "prose"
 };
 
 declare function n:normalize-verse($tb) as element()* {
   for tumbling window $line in $tb//word[not(@artificial)]
-    start $s end $e previous $p next $n
-    when $s/@cite != $n/@cite and $n/@cite != ""
-  let $ref := tokenize($s/@cite, ':') => foot()
-  return
-    <ln n="{$ref}" xml:space="preserve">
-      {
-        for sliding window $win in $line
-          start $w at $i end $e at $j
-          when $j - $i = 1
-          return n:word($w, not(n:is-punct-right($e)))
-      }
-    </ln>
+    end $e next $n
+    when $e/@line != $n/@line
+    return n:line($line, $e/@line)
+};
+
+declare function n:normalize-theater($tb) as element()* {
+  for tumbling window $speech in $tb//sentence
+    end $e next $n
+    when ($e/word/@speaker)[1] != ($n/word/@speaker)[1]
+    return (
+      <speaker>{$e/word[1]/@speaker/string()}</speaker>,
+      for tumbling window $line in $speech//word[not(@artificial)]
+        end $e next $n
+        when $e/@line != $n/@line
+        return n:line($line, $e/@line)
+    )
 };
 
 declare function n:normalize-prose($tb) as element()* {
@@ -58,6 +65,7 @@ declare function n:normalize($tb, $style := "prose") as element() {
     <body>{
       switch ($style)
         case "verse" return n:normalize-verse($tb)
+        case "theater" return n:normalize-theater($tb)
         case "dialogue" return n:normalize-dialogue($tb)
         default return n:normalize-prose($tb)
     }</body>
@@ -86,6 +94,38 @@ declare function n:sentence($sen) {
   }</sentence>
 };
 
+declare function n:line($line, $id) {
+  <ln id="{$id}" xml:space="preserve">{
+    for sliding window $win in $line
+      start $w at $i end $e at $j
+      when $j - $i = 1
+      return n:word($w, not(n:is-punct-right($e)))
+  }</ln>
+};
+
 declare function n:is-punct-right($w) {
   substring($w/@postag, 1, 1) = "u" and $w/@form != ("[", "(")
+};
+
+declare %updating %public function n:get-normalized($author, $work, $page := ()) {
+  let $urn := trace(string-join(($author, $work, $page), '/'), "URN: ")
+  return db:get('normalized', $urn)[1]
+    otherwise (
+      let $tb := db:get('glaux', `{$author}/{$work}/`)[1]
+      let $style := trace(n:style($author, $work), "STYLE: ")
+      let $pager := p:pager(`{$author}/{$work}`)
+      let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
+      let $normalized := $paged => n:normalize($style) => m:merge($author, $work, $page)
+      let $_ := store:read('glaux')
+      let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
+      let $merged := $normalized transform with {
+        insert node <head>
+          <title>{$meta?title}</title>
+          <author>{$meta?author}</author>
+          {if (exists($pager)) then <page>{$pager?format($page cast as xs:integer)}</page>}
+        </head> as first into .
+      }
+      let $_ := if (not(db:option('debug'))) then db:put('normalized', $merged, $urn)
+      return $merged
+  )
 };

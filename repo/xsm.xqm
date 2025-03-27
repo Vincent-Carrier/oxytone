@@ -13,11 +13,11 @@ declare function xsm:stylesheet(
     <xsl:output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
     <xsl:function name="oxy:strip-diacritics">
       <xsl:param name="text"/>
-      <xsl:value-of select="replace(normalize-unicode($text, 'NFD'), '\p{{M}}', '')" />
+      <xsl:value-of select="replace($text, '\p{{M}}', '')" />
     </xsl:function>
     <xsl:function name="oxy:strip-smooth-breathings">
       <xsl:param name="text"/>
-      <xsl:value-of select="normalize-unicode($text, 'NFD') => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
+      <xsl:value-of select="$text => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
     </xsl:function>
     {for $param in $params
       return <xsl:param name="{$param}" />}

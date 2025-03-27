@@ -17,11 +17,11 @@
 	}
 }
 
-p {
-	@apply mb-1;
-}
 section {
 	@apply mb-4;
+}
+p {
+	@apply mb-1;
 }
 
 .chapter-nbr,
@@ -85,8 +85,11 @@ section {
 .speaker {
 	@apply font-sc sticky -top-4 mt-2 bg-gray-50 text-sm text-gray-400 lowercase underline;
 }
-.treebank.verse .speaker {
-	@apply ml-12;
+.treebank.verse,
+.treebank.theater {
+	& .speaker {
+		@apply ml-12;
+	}
 }
 
 blockquote {

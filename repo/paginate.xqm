@@ -7,7 +7,7 @@ declare function p:pager($urn as xs:string) {
   switch ($urn)
     case ('tlg0012/tlg001', 'tlg0012/tlg002')
       return {
-        'get': fn($tb, $n) { p:xslt-filter($tb, 'sentence', `starts-with(@subdoc, '{$n}.')`) },
+        'get': fn($tb, $n) { p:xslt-filter($tb, 'sentence', `./word[1]/@div_book = {$n}`) },
         'list': fn() { 1 to 24 },
         'format': fn($n) { `Book {$n} ({p:greek-numeral($n)})` }
       }
@@ -40,7 +40,7 @@ declare function p:book-pager($last) {
   }
 };
 
-declare function p:greek-numeral($n) as xs:string {
+declare function p:greek-numeral($n as xs:integer) as xs:string {
   let $char := if ($n < 18) then $n - 1 else $n (: skip sigma alternate :)
   return char(0x0391 + $char)
 };

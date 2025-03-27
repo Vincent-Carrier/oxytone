@@ -1,6 +1,6 @@
 module namespace r = "oxytone/read";
 import module namespace xsm = "xsm";
-import module namespace dbl = "db-lazy";
+import module namespace n = "normalize";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
@@ -12,7 +12,7 @@ declare variable $r:xslt := xsm:stylesheet({
       </xsl:attribute>
       <hgroup>
         <h1>
-          <xsl:value-of select="oxy:strip-diacritics(head/title)" />
+          <xsl:value-of select="oxy:strip-diacritics(concat(head/title, ', ', head/page))" />
         </h1>
         <p class="author">
           <xsl:value-of select="oxy:strip-diacritics(head/author)" />
@@ -77,14 +77,14 @@ declare variable $r:xslt := xsm:stylesheet({
   "ln":
     <div class="line">
       <a class="line-nbr">
-        <xsl:copy-of select="@n" />
+        <xsl:copy-of select="@id" />
         <xsl:attribute name="id">
-          <xsl:value-of select="@n" />
+          <xsl:value-of select="@id" />
         </xsl:attribute>
         <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', @n)" />
+          <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
-        <xsl:value-of select="@n" />
+        <xsl:value-of select="@id" />
       </a>
       <xsl:apply-templates />
     </div>,
@@ -109,6 +109,6 @@ declare
   function r:get-page($author, $work-page) {
     let $wp := tokenize($work-page, '/')
     let $path := string-join(($author, $work-page), '/')
-    let $tb := dbl:get-flatbank($author, $wp[1], $wp[2])
+    let $tb := n:get-normalized($author, $wp[1], $wp[2])
     return xslt:transform($tb, $r:xslt)
 };

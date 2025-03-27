@@ -13,6 +13,9 @@ treebanks:
     basex -O AUTOFLUSH=false -c "CREATE DB treebanks" \
           -Q treebanks.xq
 
+glaux:
+    basex -O AUTOFLUSH=false -c "CREATE DB glaux glaux/" \
+
 flatbanks:
     basex -O AUTOFLUSH=false \
           -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
