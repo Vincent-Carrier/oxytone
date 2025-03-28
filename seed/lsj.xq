@@ -1,5 +1,5 @@
-for $path in file:list('lsj/', true(), '*.xml')
-  let $doc := doc(`./lsj/{$path}`)
+for $path in file:list('../lsj/', true(), '*.xml')
+  let $doc := doc(`../lsj/{$path}`)
   for $entry in $doc//entryFree
     let $key := $entry/@key/string()
     let $w := tokenize($key, '\d+$')

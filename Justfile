@@ -1,5 +1,6 @@
 seed: lsj treebanks flatbanks tei catalog
 
+# DB commands
 lsj:
     basex -O AUTOFLUSH=false \
           -O ATTRINCLUDE=id -O TEXTINDEX=false \
@@ -22,3 +23,13 @@ tei:
 
 index:
     basex -Q seed/index.xq
+
+# Dev commands
+basex:
+  basexhttp -d
+
+svelte:
+  pnpm dev
+
+fastapi:
+  fastapi dev
