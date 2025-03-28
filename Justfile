@@ -1,4 +1,4 @@
-seed: lsj treebanks flatbanks lit catalog
+seed: lsj treebanks flatbanks tei catalog
 
 lsj:
     basex -O AUTOFLUSH=false \
@@ -8,19 +8,17 @@ lsj:
 
 syntax:
     basex -O AUTOFLUSH=false -c "CREATE DB syntax" \
-    -Q seed/syntax.xq
+          -Q seed/syntax.xq
 
 glaux:
     basex -O AUTOFLUSH=false \
-          -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section \
+          -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
           -c "CREATE DB glaux glaux/"
 
-lit:
-    basex -O AUTOFLUSH=false \
+tei:
+    basex -O AUTOFLUSH=false -O STRIPNS=true \
           -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
-          -c "CREATE DB lit" \
-          -Q seed/lit.xq
+          -c "CREATE DB tei tei/" \
 
-catalog:
-    basex -O AUTOFLUSH=false -c "CREATE DB catalog" \
-          -Q seed/catalog.xq
+index:
+    basex -Q seed/index.xq

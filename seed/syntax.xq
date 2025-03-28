@@ -1,11 +1,7 @@
-import module namespace uf = "unflat";
+import module namespace syn = "syntax";
 
-let $tbDir := `agldt/v2.1`
-
-for $path in file:list($tbDir, true(), '*.xml')
-let $urn := tokenize($path, '\.')
-let $dbPath := string-join($urn[1 to 3], '/')
-let $doc := doc(`{$tbDir}/{$path}`)
-let $tb := uf:unflat($doc)
-return  db:put('treebanks', $tb, $dbPath)
-
+let $glaux := map:build(db:list('glaux'), value := fn { db:get('glaux', .) })
+for key $path value $tb in $glaux
+  where $tb//[@analysis="manual"]
+  let $syn := syn:unflat($tb)
+  return  db:put('syntax', $syn, $path)

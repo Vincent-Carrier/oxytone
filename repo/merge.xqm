@@ -28,6 +28,6 @@ declare function m:merge-homer($tb, $tei, $book) {
 
 declare function m:merge($tb, $author, $work, $part := ()) {
   switch ($author)
-    case 'tlg0012' return m:merge-homer($tb, db:get('lit', `{$author}/{$work}`)[1], $part)
+    case 'tlg0012' return m:merge-homer($tb, db:get('tei', `{$author}/{$work}`)[1], $part)
     default return $tb
 };

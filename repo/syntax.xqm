@@ -1,7 +1,7 @@
-module namespace uf = "unflat";
+module namespace syn = "syntax";
 import module namespace pt = "postag";
 
-declare function uf:node ($nodes, $id, $head, $attrs){
+declare function syn:node ($nodes, $id, $head, $attrs){
   let $rel := $attrs/../@relation => data() => lower-case() => tokenize('_')
   let $el := if ($rel[1] != "") then $rel[1] else "unknown"
   return element {$el} {
@@ -9,11 +9,11 @@ declare function uf:node ($nodes, $id, $head, $attrs){
     $attrs[name()=("id", "form", "lemma")],
     pt:expand($attrs[name()="postag"]),
     for $n in $nodes/../*[@head=$id]
-    return uf:node($n, $n/@id, $n/@head, $n/@*[not(name()=("head"))])
+    return syn:node($n, $n/@id, $n/@head, $n/@*[not(name()=("head"))])
   }
 };
 
-declare function uf:unflat($tb) {
+declare function syn:unflat($tb) {
   <treebank>
     <body>{
       for $s in $tb//sentence
@@ -21,7 +21,7 @@ declare function uf:unflat($tb) {
         $s/@* ,
         for $w in $s/word
         let $attrs := $w/@*[not(name()=("head"))]
-        return if ($w/@head="0") then uf:node($w, $w/@id , $w/@head, $attrs)
+        return if ($w/@head="0") then syn:node($w, $w/@id , $w/@head, $attrs)
       }</sentence>
     }</body>
   </treebank>
