@@ -82,18 +82,21 @@ section {
 
 .speaker {
 	@apply font-sc sticky leading-none text-gray-500 lowercase;
-	.dialogue & .long {
-		@apply absolute inset-0 hidden w-fit bg-gray-50 outline-1 outline-gray-300 group-hover:block;
-	}
-	.theater & .short {
-		@apply hidden;
-	}
 	.theater & {
 		@apply -top-4 mt-4 bg-white;
 		@apply border-b-1 border-gray-300;
+		& .short {
+			@apply hidden;
+		}
 	}
 	.dialogue & {
-		@apply top-0 float-left mt-1 -ml-10 bg-gray-50;
+		@apply top-0 float-left mt-1 -ml-12 bg-gray-50 uppercase;
+		& .short::after {
+			content: '.';
+		}
+		& .long {
+			@apply absolute inset-0 hidden w-fit cursor-none bg-white text-gray-700 outline-1 outline-gray-600 group-hover:block;
+		}
 	}
 }
 
