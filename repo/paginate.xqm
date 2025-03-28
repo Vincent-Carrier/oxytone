@@ -3,6 +3,16 @@ import module namespace xsm = "xsm";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
+(: declare function p:pages($tb, $urn as xs:string) {
+  let $pager := p:pager($urn)
+  return
+    if ($pager) then
+      for $n in $pager:list
+        return $pager:get($tb, $n)
+    else
+      $tb
+}; :)
+
 declare function p:pager($urn as xs:string) {
   switch ($urn)
     case ('tlg0012/tlg001', 'tlg0012/tlg002')

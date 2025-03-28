@@ -93,7 +93,7 @@ section {
 		@apply border-b-1 border-gray-300;
 	}
 	.dialogue & {
-		@apply top-0 float-left mt-1 -ml-10 bg-gray-50;
+		@apply top-0 float-left mt-1 -ml-10 w-5 bg-gray-50;
 	}
 }
 
