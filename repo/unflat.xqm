@@ -1,7 +1,7 @@
 module namespace uf = "unflat";
 import module namespace pt = "postag";
 
-declare function uf:make-node ($nodes, $id, $head, $attrs){
+declare function uf:node ($nodes, $id, $head, $attrs){
   let $rel := $attrs/../@relation => data() => lower-case() => tokenize('_')
   let $el := if ($rel[1] != "") then $rel[1] else "unknown"
   return element {$el} {
@@ -9,7 +9,7 @@ declare function uf:make-node ($nodes, $id, $head, $attrs){
     $attrs[name()=("id", "form", "lemma")],
     pt:expand($attrs[name()="postag"]),
     for $n in $nodes/../*[@head=$id]
-    return uf:make-node($n, $n/@id, $n/@head, $n/@*[not(name()=("head"))])
+    return uf:node($n, $n/@id, $n/@head, $n/@*[not(name()=("head"))])
   }
 };
 
@@ -21,7 +21,7 @@ declare function uf:unflat($tb) {
         $s/@* ,
         for $w in $s/word
         let $attrs := $w/@*[not(name()=("head"))]
-        return if ($w/@head="0") then uf:make-node($w, $w/@id , $w/@head, $attrs)
+        return if ($w/@head="0") then uf:node($w, $w/@id , $w/@head, $attrs)
       }</sentence>
     }</body>
   </treebank>

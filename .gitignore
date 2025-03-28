@@ -28,9 +28,8 @@ data/
 .basex
 .basexgui
 
-treebanks/
 lsj/
-lit/
+tei/
 glaux/
 
 

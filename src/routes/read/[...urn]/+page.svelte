@@ -58,9 +58,11 @@
 		});
 
 		// Don't add line / chapter anchors to history stack
-		tb.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+		tb.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
 			anchor.addEventListener('click', (ev) => {
-				window.location.replace(anchor.getAttribute('href')!);
+				let a = ev.target as HTMLAnchorElement;
+				if (a.hash == location.hash) location.replace('#');
+				else location.replace(a.hash);
 				ev.preventDefault();
 			});
 		});
@@ -69,7 +71,7 @@
 
 <div class="relative flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 px-12 py-1 text-sm"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 px-12 py-1 text-sm"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>
@@ -77,11 +79,12 @@
 		<VerbsButton />
 		<ColorsButton />
 	</nav>
+	<div class="absolute top-0 bottom-0 left-0 z-10 w-10 border-r-1 border-gray-200 bg-gray-50"></div>
 	<article
 		id="treebank"
-		class="verbs syntax relative scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pb-32 leading-relaxed"
+		class="verbs syntax relative h-full scroll-pt-8 overflow-y-scroll scroll-smooth bg-white pt-4 pb-12 leading-relaxed"
 	>
-		<div bind:this={tb} class="max-w-md font-serif">
+		<div bind:this={tb} class="max-w-[60ch] font-serif">
 			{@html data.treebank}
 		</div>
 	</article>

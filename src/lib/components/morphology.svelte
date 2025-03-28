@@ -8,7 +8,9 @@
 	const { word }: Props = $props();
 </script>
 
-<div class="flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 px-12 py-1 text-xs">
+<div
+	class="flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-14 text-xs"
+>
 	<div class="leading-none font-bold">
 		{word?.lemma}
 	</div>

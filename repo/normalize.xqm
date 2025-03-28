@@ -9,7 +9,7 @@ declare function n:style($author, $work) {
   return switch ($meta?genre)
     case ("Epic poetry", "Lyric poetry") return "verse"
     case ("Tragedy", "Comedy") return "theater"
-    case ("Philosophic Dialogue") return "dialogue"
+    case ("Philosophic Dialogue", "Dialogue") return "dialogue"
     default return "prose"
 };
 
@@ -39,8 +39,8 @@ declare function n:normalize-dialogue($tb) as element()* {
     when ($e/word/@speaker)[1] != ($n/word/@speaker)[1]
     return (
       <speaker>{$e/word[1]/@speaker/string()}</speaker>,
-      for $sen in $speech
-        return n:sentence($sen)
+      <p>{for $sen in $speech
+        return n:sentence($sen)}</p>
     )
 };
 
@@ -75,16 +75,18 @@ declare function n:normalize($tb, $style := "prose") as element() {
 declare function n:word($w, $pad-right) {
   element w {
     $w/@*[name()=("id", "head", "relation")],
-    attribute sentence {$w/../@id otherwise $w/../@struct_id},
+    attribute sentence {$w/../@id},
     attribute lemma {normalize-unicode($w/@lemma, 'NFC')},
+    if (matches($w/@form, "-$")) then attribute hidden {},
     if ($w/@postag) then pt:expand($w/@postag),
     concat(replace($w/@form, '^-(.*)', '$1'), if ($pad-right) then "&#x20;")
   }
 };
 
-declare function n:is-punct-right($w) {
-  substring($w/@postag, 1, 1) = "u" and $w/@form != ("[", "(")
-  or $w/@lemma = "τε"
+declare function n:pad-right($w, $n) {
+  not($n/@form = ("]", ")", "·", ",", ";", ":", "."))
+  and not($w/@form = ("[", "("))
+  and $n/@lemma != "τε"
 };
 
 declare function n:sentence($sen) {
@@ -94,7 +96,7 @@ declare function n:sentence($sen) {
     for sliding window $win in $sen/word[not(@artificial)]
       start $w at $i end $e at $j
       when $j - $i = 1
-      return n:word($w, not(n:is-punct-right($e))),
+      return n:word($w, n:pad-right($w, $e)),
     "&#x20;"
   }</sentence>
 };
@@ -104,7 +106,7 @@ declare function n:line($line, $id) {
     for sliding window $win in $line
       start $w at $i end $e at $j
       when $j - $i = 1
-      return n:word($w, not(n:is-punct-right($e)))
+      return n:word($w, n:pad-right($w, $e))
   }</ln>
 };
 
@@ -116,6 +118,9 @@ declare %updating %public function n:get-normalized($author, $work, $page := ())
       let $style := trace(n:style($author, $work), "STYLE: ")
       let $pager := p:pager(`{$author}/{$work}`)
       let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
+      (: let $fixed-quotes := $paged transform with {
+        replace nodes
+      } :)
       let $normalized := $paged => n:normalize($style) => m:merge($author, $work, $page)
       let $_ := store:read('glaux')
       let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")

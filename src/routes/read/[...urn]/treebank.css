@@ -1,7 +1,7 @@
 @reference '$/app.css';
 
 .treebank > hgroup {
-	@apply font-sc mb-4 ml-12 text-balance lowercase;
+	@apply font-sc mb-4 ml-14 text-balance lowercase;
 	& h1 {
 		@apply text-2xl text-gray-800 underline;
 	}
@@ -13,42 +13,55 @@
 .treebank.dialogue,
 .treebank.prose {
 	& > .body {
-		@apply ml-12;
+		@apply ml-14;
 	}
 }
 
 section {
-	@apply mb-4;
+	@apply mb-8;
 }
-p {
-	@apply mb-1;
+/* p:not(p:has(.sentence:nth-of-type(4))) {
+	@apply inline;
+} */
+
+.body {
+	@apply relative z-10;
+	.theater &,
+	.verse & {
+		@apply max-w-fit;
+	}
 }
 
 .chapter-nbr,
-.section-nbr {
+.section-nbr,
+.line-nbr,
+.sentence-nbr {
 	@apply font-sans text-sm select-none;
 	&:target {
-		@apply bg-blue-50 text-blue-500 outline-blue-500;
+		@apply border-blue-500 bg-blue-50 text-blue-500;
 	}
 }
 .section-nbr {
-	@apply mr-1 inline-block bg-gray-100 px-1 text-gray-600 outline-1 outline-gray-200;
+	@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
 }
 .chapter-nbr {
-	@apply float-left mt-1 -ml-8 text-gray-400;
+	@apply sticky top-0 z-50 float-left mt-1 -ml-14 w-10 pr-1 text-right text-gray-400;
+	&:target {
+		@apply border-r-1 border-blue-500;
+	}
 }
 
 .sentence-nbr {
-	@apply mr-1 ml-2 inline-block font-sans text-sm text-gray-400 select-none;
+	@apply mr-1 ml-2 inline-block text-gray-400;
 	p & {
 		@apply hidden;
 	}
 	.speaker + .sentence > &,
 	.body > .sentence:first-child > & {
-		@apply -ml-0;
+		@apply ml-0;
 	}
 	&:target {
-		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
+		@apply outline-1 outline-offset-1;
 	}
 	&::before {
 		content: '[';
@@ -57,21 +70,9 @@ p {
 		content: ']';
 	}
 }
-.verse-nbr {
-	@apply mx-1 inline-block font-sans text-sm text-gray-400 select-none;
-	&:target {
-		@apply bg-blue-50 text-blue-600 outline-1 outline-offset-1;
-	}
-	&::after {
-		content: '|';
-	}
-}
 
 .line-nbr {
-	@apply mr-2 inline-block w-10 border-r-1 border-gray-200 bg-white pt-1 pr-1 text-right font-sans text-sm text-gray-300 select-none;
-	&:target {
-		@apply border-blue-200 bg-blue-50 text-blue-600;
-	}
+	@apply mr-4 inline-block w-10 border-r-1 border-transparent pt-1 pr-1 text-right text-gray-300;
 }
 
 .line {
@@ -80,12 +81,26 @@ p {
 }
 
 .speaker {
-	@apply font-sc sticky -top-4 mt-2 bg-gray-50 text-sm text-gray-400 lowercase underline;
+	@apply font-sc sticky leading-none text-gray-500 lowercase;
+	.dialogue & .long {
+		@apply absolute inset-0 hidden w-fit bg-gray-50 outline-1 outline-gray-300 group-hover:block;
+	}
+	.theater & .short {
+		@apply hidden;
+	}
+	.theater & {
+		@apply -top-4 mt-4 bg-white;
+		@apply border-b-1 border-gray-300;
+	}
+	.dialogue & {
+		@apply top-0 float-left mt-1 -ml-10 bg-gray-50;
+	}
 }
+
 .treebank.verse,
 .treebank.theater {
 	& .speaker {
-		@apply ml-12;
+		@apply ml-14;
 	}
 }
 

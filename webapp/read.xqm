@@ -86,19 +86,26 @@ declare variable $r:xslt := xsm:stylesheet({
         </xsl:attribute>
         <xsl:value-of select="replace(@id, '\d+\.(\d+)$', '$1')" />
       </a>
-      <xsl:apply-templates />
+      <span class="verse">
+        <xsl:apply-templates />
+      </span>
     </div>,
   "speaker":
-    <div class="speaker">
-      <xsl:value-of select="oxy:strip-diacritics(.)"/>
+    <div class="speaker group">
+      <span class="short">
+        <xsl:value-of select="substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2)"/>
+      </span>
+      <span class="long">
+        <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(., 'NFD'))"/>
+      </span>
     </div>,
-  "w[not(@artificial)]":
+  "w":
     <ox-w>
       <xsl:copy-of select="@*" />
       <xsl:value-of select="oxy:strip-smooth-breathings(.)" />
     </ox-w>,
   "hr": <div class="flex"><div class="line-nbr"></div><hr /></div>,
-  "blockquote": xsm:keep("node()"),
+  "blockquote|p": xsm:keep("node()"),
   "br": xsm:keep()
 });
 
