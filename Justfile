@@ -27,7 +27,7 @@ glaux:
 tei:
     basex -O AUTOFLUSH=false -O STRIPNS=true \
           -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
-          -c "CREATE DB tei tei/tlg0012" \
+          -c "CREATE DB tei tei/" \
 
 [group('db')]
 index:
@@ -57,7 +57,3 @@ saxon:
   mkdir -p "$BASEX_HOME/lib/custom/"
   mv saxon-he/**.jar "$BASEX_HOME/lib/custom/"
   rm -rf SaxonHE12-5J.zip saxon-he/
-
-[script]
-chilling:
-  echo $BASEX_HOME

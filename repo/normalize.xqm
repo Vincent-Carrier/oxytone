@@ -91,12 +91,15 @@ declare function n:pad-right($w, $n) {
 
 declare function n:sentence($sen) {
   <sentence xml:space="preserve">{
-    attribute id {$sen/@id otherwise $sen/@struct_id},
-    $sen/@* except $sen/@id,
+    $sen/@*,
     for sliding window $win in $sen/word[not(@artificial)]
-      start $w at $i end $e at $j
+      start $w at $i end $n at $j
       when $j - $i = 1
-      return n:word($w, n:pad-right($w, $e)),
+      return (
+        n:word($w, n:pad-right($w, $n)),
+        if ($w/@div_stephanus_section != $n/@div_stephanus_section)
+          then <stephanus id="{$n/@div_stephanus_section}" />
+      ),
     "&#x20;"
   }</sentence>
 };
@@ -104,9 +107,9 @@ declare function n:sentence($sen) {
 declare function n:line($line, $id) {
   <ln id="{$id}" xml:space="preserve">{
     for sliding window $win in $line
-      start $w at $i end $e at $j
+      start $w at $i end $n at $j
       when $j - $i = 1
-      return n:word($w, n:pad-right($w, $e))
+      return n:word($w, n:pad-right($w, $n))
   }</ln>
 };
 

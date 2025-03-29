@@ -24,6 +24,10 @@ section {
 	@apply inline;
 } */
 
+.dialogue p {
+	@apply mb-2;
+}
+
 .body {
 	@apply relative z-10;
 	.theater &,
@@ -35,7 +39,8 @@ section {
 .chapter-nbr,
 .section-nbr,
 .line-nbr,
-.sentence-nbr {
+.sentence-nbr,
+.stephanus-nbr {
 	@apply font-sans text-sm select-none;
 	&:target {
 		@apply border-blue-500 bg-blue-50 text-blue-500;
@@ -90,7 +95,7 @@ section {
 		}
 	}
 	.dialogue & {
-		@apply top-0 float-left mt-1 -ml-12 bg-gray-50 uppercase;
+		@apply top-0 float-left mt-1 -ml-12 w-7 bg-gray-50 uppercase;
 		& .short::after {
 			content: '.';
 		}
@@ -108,6 +113,7 @@ section {
 }
 
 blockquote {
+	@apply my-2;
 	& .line-nbr {
 		@apply mr-6;
 	}
@@ -136,5 +142,12 @@ hr {
 	@apply mx-8 my-4 w-48 border-gray-300;
 	.body :first-child & {
 		@apply hidden;
+	}
+}
+
+.stephanus-nbr {
+	@apply float-right -mr-12 block p-1 text-gray-400;
+	&:target {
+		@apply outline-1;
 	}
 }

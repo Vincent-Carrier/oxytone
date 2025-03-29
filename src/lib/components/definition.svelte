@@ -20,7 +20,7 @@
 
 {#if definition}
 	<div
-		class="-sm absolute right-2 bottom-8 max-h-32 w-72 overflow-y-scroll rounded border-1 border-r-4 border-b-3 border-gray-500 bg-gray-50 px-2 text-sm lg:bottom-2 lg:max-h-[80%]"
+		class="-sm absolute right-2 bottom-8 z-30 max-h-32 w-72 overflow-y-scroll rounded border-1 border-r-4 border-b-3 border-gray-500 bg-gray-50 px-2 text-sm lg:bottom-2 lg:max-h-[80%]"
 	>
 		{@html definition}
 		<a
