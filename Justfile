@@ -8,10 +8,11 @@ seed: lsj glaux tei index
 
 [group('db')]
 lsj:
+  basex -Q seed/shortdefs.xq
   basex -O AUTOFLUSH=false \
         -O ATTRINCLUDE=id -O TEXTINDEX=false \
         -c "CREATE DB lsj" \
-        -Q seed/lsj.xq -Q seed/shortdefs.xq
+        -Q seed/lsj.xq
 
 [group('db')]
 syntax:
@@ -50,7 +51,7 @@ fastapi:
 
 [group('install')]
 install: saxon corpus
-  uv install
+  uv pip sync pyproject.toml
   pnpm install
 
 [group('install')]
@@ -68,5 +69,5 @@ saxon:
 
 
 release:
-  zip -r corpus.zip glaux/ tei/
+  zip -r corpus.zip glaux/ tei/ lsj/
   gh release create corpus.zip
