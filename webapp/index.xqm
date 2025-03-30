@@ -46,11 +46,11 @@ declare function idx:work($work) {
           <ol class="pages">
           {for $n in $pager?list
             return <li>
-              <a href="{`read/{$work?tlg}/{$n}`}">{$pager?format($n)}</a>
+              <a href="{`read/{substring($work?tlg, 1, 14)}/{$n}`}">{$pager?format($n)}</a>
             </li>}
           </ol>
         </details>
       else
-        <a href="{`read/{$work?tlg}`}">{$work?english-title}</a>}
+        <a href="{`read/{substring($work?tlg, 1, 14)}`}">{$work?english-title}</a>}
     </li>
 };

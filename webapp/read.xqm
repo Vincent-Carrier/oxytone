@@ -18,7 +18,7 @@ declare variable $r:xslt := xsm:stylesheet({
           <xsl:value-of select="head/author" />
         </p>
       </hgroup>
-      <main class="body">
+      <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
     </div>,

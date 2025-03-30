@@ -13,7 +13,7 @@
 .treebank.dialogue,
 .treebank.prose {
 	& > .body {
-		@apply ml-14;
+		@apply ml-14 text-justify;
 	}
 }
 
@@ -57,22 +57,9 @@ section {
 }
 
 .sentence-nbr {
-	@apply mr-1 ml-2 inline-block text-gray-400;
-	p & {
+	&:not([id$='0'], [id$='5']),
+	section & {
 		@apply hidden;
-	}
-	.speaker + .sentence > &,
-	.body > .sentence:first-child > & {
-		@apply ml-0;
-	}
-	&:target {
-		@apply outline-1 outline-offset-1;
-	}
-	&::before {
-		content: '[';
-	}
-	&::after {
-		content: ']';
 	}
 }
 
@@ -145,7 +132,8 @@ hr {
 	}
 }
 
-.stephanus-nbr {
+.stephanus-nbr,
+.sentence-nbr {
 	@apply float-right -mr-12 block p-1 text-gray-400;
 	&:target {
 		@apply outline-1;
