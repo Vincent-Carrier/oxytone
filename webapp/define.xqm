@@ -26,10 +26,12 @@ declare variable $def:xslt := xsm:stylesheet(
       </div>),
     "tr":
       <strong>
-        <xsl:value-of select="concat('&#x20;', ., '&#x20;')"/>
+        <xsl:value-of select="concat(' ', ., ' ')"/>
       </strong>,
-    "bibl": (),
-    "text()": <xsl:value-of select="replace(., ',$|cf\.$', '')"/>
+    "bibl":
+      <span class="bibl">
+        <xsl:value-of select="." />
+      </span>
   },
   <xsl:preserve-space elements="*" />
 );

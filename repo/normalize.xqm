@@ -92,7 +92,7 @@ declare function n:word($w, $pad-right) {
     attribute lemma {normalize-unicode($w/@lemma, 'NFC')},
     if (matches($w/@form, "-$")) then attribute hidden {},
     if ($w/@postag) then pt:expand($w/@postag),
-    concat(replace($w/@form, '^-(.*)', '$1'), if ($pad-right) then "&#x20;")
+    concat(replace($w/@form, '^-(.*)', '$1'), if ($pad-right) then " ")
   }
 };
 
@@ -134,12 +134,14 @@ declare %updating %public function n:get-normalized($author, $work, $page := ())
       let $style := trace(n:style($author, $work), "STYLE: ")
       let $pager := p:pager(`{$author}/{$work}`)
       let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
-      let $fixed-quotes := $paged update {
+      let $fixed := $paged update {
         replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
       } update {
         replace value of node .//word[@form = '"']/@form with '”'
+      } update {
+        replace value of node .//word[@form = 'G?']/@form with '[…]'
       }
-      let $normalized := $fixed-quotes => n:normalize($style) => m:merge($author, $work, $page)
+      let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
       let $_ := store:read('glaux')
       let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
       let $merged := $normalized update {

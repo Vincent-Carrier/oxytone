@@ -78,14 +78,14 @@ declare variable $r:xslt := xsm:stylesheet({
       </span>
     </div>,
   "speaker":
-    <div class="speaker group">
-      <span class="short">
-        <xsl:value-of select="substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2)"/>
-      </span>
-      <span class="long">
+    <xsl:sequence>
+      <div class="speaker long">
         <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(., 'NFD'))"/>
-      </span>
-    </div>,
+      </div>
+      <div class="speaker short">
+          <xsl:value-of select="concat(substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2), '.')"/>
+      </div>
+    </xsl:sequence>,
   "stephanus":
     <a class="stephanus-nbr">
       <xsl:attribute name="href">

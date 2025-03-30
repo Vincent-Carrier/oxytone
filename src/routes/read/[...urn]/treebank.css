@@ -17,23 +17,23 @@
 	}
 }
 
-section {
-	@apply mb-8;
-}
-/* p:not(p:has(.sentence:nth-of-type(4))) {
-	@apply inline;
-} */
-
-.dialogue p {
-	@apply mb-2;
-}
-
 .body {
 	@apply relative z-10;
 	.theater &,
 	.verse & {
 		@apply max-w-fit;
 	}
+}
+
+section {
+	@apply mb-8;
+}
+p:not(p:has(ox-w:nth-of-type(60))) {
+	@apply inline;
+}
+
+.dialogue p {
+	@apply mb-2;
 }
 
 .chapter-nbr,
@@ -46,9 +46,19 @@ section {
 		@apply border-blue-500 bg-blue-50 text-blue-500;
 	}
 }
+
+.stephanus-nbr,
+.sentence-nbr {
+	@apply float-left -ml-12 block bg-gray-50 p-1 text-gray-400;
+	&:target {
+		@apply outline-1;
+	}
+}
+
 .section-nbr {
 	@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
 }
+
 .chapter-nbr {
 	@apply sticky top-0 z-50 float-left mt-1 -ml-14 w-10 pr-1 text-right text-gray-400;
 	&:target {
@@ -58,7 +68,7 @@ section {
 
 .sentence-nbr {
 	&:not([id$='0'], [id$='5']),
-	section & {
+	p & {
 		@apply hidden;
 	}
 }
@@ -73,22 +83,12 @@ section {
 }
 
 .speaker {
-	@apply font-sc sticky leading-none text-gray-500 lowercase;
-	.theater & {
-		@apply -top-4 mt-4 bg-white;
-		@apply border-b-1 border-gray-300;
-		& .short {
-			@apply hidden;
-		}
+	@apply mt-4 uppercase;
+	&.long {
+		@apply w-[calc(100%+4rem)] bg-white text-gray-700 underline;
 	}
-	.dialogue & {
-		@apply top-0 float-left mt-1 -ml-12 w-7 bg-gray-50 uppercase;
-		& .short::after {
-			content: '.';
-		}
-		& .long {
-			@apply absolute inset-0 hidden w-fit cursor-none bg-white text-gray-700 outline-1 outline-gray-600 group-hover:block;
-		}
+	&.short {
+		@apply sticky top-0 -z-50 float-right -mt-5 -mr-12 block w-7 bg-white text-gray-500;
 	}
 }
 
@@ -129,13 +129,5 @@ hr {
 	@apply mx-8 my-4 w-48 border-gray-300;
 	.body :first-child & {
 		@apply hidden;
-	}
-}
-
-.stephanus-nbr,
-.sentence-nbr {
-	@apply float-right -mr-12 block p-1 text-gray-400;
-	&:target {
-		@apply outline-1;
 	}
 }

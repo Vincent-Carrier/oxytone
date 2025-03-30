@@ -23,6 +23,9 @@ dl {
 		&.shortdef {
 			@apply font-bold text-gray-800;
 		}
+		& .bibl {
+			@apply text-gray-400;
+		}
 
 		& strong {
 			@apply text-gray-800;
