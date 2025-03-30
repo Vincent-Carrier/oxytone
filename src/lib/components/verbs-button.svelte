@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
-	interface Props {}
-
-	let {}: Props = $props();
+	import Tooltip from './tooltip.svelte';
 
 	let help = $state(false);
 	let verbs = $state(true);
@@ -32,8 +29,8 @@
 		class={['h-1 w-1 rounded-full border-1 border-blue-700 bg-blue-600', verbs || 'bg-transparent']}
 	></div>
 	{#if help}
-		<div class="tooltip info w-max">
+		<Tooltip>
 			<p class="">Each verb is shown in bold</p>
-		</div>
+		</Tooltip>
 	{/if}
 </button>

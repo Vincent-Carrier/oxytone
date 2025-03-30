@@ -13,7 +13,7 @@
 .treebank.dialogue,
 .treebank.prose {
 	& > .body {
-		@apply ml-14;
+		@apply ml-14 text-justify;
 	}
 }
 
@@ -23,6 +23,10 @@ section {
 /* p:not(p:has(.sentence:nth-of-type(4))) {
 	@apply inline;
 } */
+
+.dialogue p {
+	@apply mb-2;
+}
 
 .body {
 	@apply relative z-10;
@@ -35,7 +39,8 @@ section {
 .chapter-nbr,
 .section-nbr,
 .line-nbr,
-.sentence-nbr {
+.sentence-nbr,
+.stephanus-nbr {
 	@apply font-sans text-sm select-none;
 	&:target {
 		@apply border-blue-500 bg-blue-50 text-blue-500;
@@ -52,22 +57,9 @@ section {
 }
 
 .sentence-nbr {
-	@apply mr-1 ml-2 inline-block text-gray-400;
-	p & {
+	&:not([id$='0'], [id$='5']),
+	section & {
 		@apply hidden;
-	}
-	.speaker + .sentence > &,
-	.body > .sentence:first-child > & {
-		@apply ml-0;
-	}
-	&:target {
-		@apply outline-1 outline-offset-1;
-	}
-	&::before {
-		content: '[';
-	}
-	&::after {
-		content: ']';
 	}
 }
 
@@ -82,18 +74,21 @@ section {
 
 .speaker {
 	@apply font-sc sticky leading-none text-gray-500 lowercase;
-	.dialogue & .long {
-		@apply absolute inset-0 hidden w-fit bg-gray-50 outline-1 outline-gray-300 group-hover:block;
-	}
-	.theater & .short {
-		@apply hidden;
-	}
 	.theater & {
 		@apply -top-4 mt-4 bg-white;
 		@apply border-b-1 border-gray-300;
+		& .short {
+			@apply hidden;
+		}
 	}
 	.dialogue & {
-		@apply top-0 float-left mt-1 -ml-10 w-5 bg-gray-50;
+		@apply top-0 float-left mt-1 -ml-12 w-7 bg-gray-50 uppercase;
+		& .short::after {
+			content: '.';
+		}
+		& .long {
+			@apply absolute inset-0 hidden w-fit cursor-none bg-white text-gray-700 outline-1 outline-gray-600 group-hover:block;
+		}
 	}
 }
 
@@ -105,6 +100,7 @@ section {
 }
 
 blockquote {
+	@apply my-2;
 	& .line-nbr {
 		@apply mr-6;
 	}
@@ -133,5 +129,13 @@ hr {
 	@apply mx-8 my-4 w-48 border-gray-300;
 	.body :first-child & {
 		@apply hidden;
+	}
+}
+
+.stephanus-nbr,
+.sentence-nbr {
+	@apply float-right -mr-12 block p-1 text-gray-400;
+	&:target {
+		@apply outline-1;
 	}
 }

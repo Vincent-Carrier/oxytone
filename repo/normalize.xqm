@@ -45,19 +45,32 @@ declare function n:normalize-dialogue($tb) as element()* {
 };
 
 declare function n:normalize-prose($tb) as element()* {
-	for tumbling window $chapter in $tb//sentence
-		end $e next $n
-    when ($e/word/@div_chapter)[1] != ($n/word/@div_chapter)[1]
-    return
-      <chapter id="{($e/word/@div_chapter)[1]}">{
-        for tumbling window $section in $chapter
-          end $e next $n
-          when ($e/word/@div_section)[1] != ($n/word/@div_section)[1]
-          return <section id="{($e/word/@div_section)[1]}">{
-      		  for $sen in $section
-     			    return n:sentence($sen)
-          }</section>
-      }</chapter>
+  if (exists($tb//word/@div_chapter)) then
+  	for tumbling window $chapter in $tb//sentence
+  		end $e next $n
+      when ($e/word/@div_chapter)[1] != ($n/word/@div_chapter)[1]
+      return
+        <chapter id="{($e/word/@div_chapter)[1]}">{
+          for tumbling window $section in $chapter
+            end $e next $n
+            when ($e/word/@div_section)[1] != ($n/word/@div_section)[1]
+            return <section id="{($e/word/@div_section)[1]}">{
+        		  for $sen in $section
+       			    return n:sentence($sen)
+            }</section>
+        }</chapter>
+  else if (exists ($tb//word/@div_fable)) then
+   	for tumbling window $fable in $tb//sentence
+  		end $e next $n
+      when ($e/word/@div_fable)[1] != ($n/word/@div_fable)[1]
+      return
+        <chapter id="{($e/word/@div_fable)[1]}">{
+          for $sen in $fable
+            return n:sentence($sen)
+        }</chapter>
+  else
+    for $sen in $tb//sentence
+      return n:sentence($sen)
 };
 
 declare function n:normalize($tb, $style := "prose") as element() {
@@ -84,19 +97,22 @@ declare function n:word($w, $pad-right) {
 };
 
 declare function n:pad-right($w, $n) {
-  not($n/@form = ("]", ")", "·", ",", ";", ":", "."))
-  and not($w/@form = ("[", "("))
+  not($n/@form = ("]", ")", "”", "·", ",", ";", ":", "."))
+  and not($w/@form = ("[", "(", "“"))
   and $n/@lemma != "τε"
 };
 
 declare function n:sentence($sen) {
   <sentence xml:space="preserve">{
-    attribute id {$sen/@id otherwise $sen/@struct_id},
-    $sen/@* except $sen/@id,
+    $sen/@*,
     for sliding window $win in $sen/word[not(@artificial)]
-      start $w at $i end $e at $j
+      start $w at $i end $n at $j
       when $j - $i = 1
-      return n:word($w, n:pad-right($w, $e)),
+      return (
+        n:word($w, n:pad-right($w, $n)),
+        if ($w/@div_stephanus_section != $n/@div_stephanus_section)
+          then <stephanus id="{$n/@div_stephanus_section}" />
+      ),
     "&#x20;"
   }</sentence>
 };
@@ -104,9 +120,9 @@ declare function n:sentence($sen) {
 declare function n:line($line, $id) {
   <ln id="{$id}" xml:space="preserve">{
     for sliding window $win in $line
-      start $w at $i end $e at $j
+      start $w at $i end $n at $j
       when $j - $i = 1
-      return n:word($w, n:pad-right($w, $e))
+      return n:word($w, n:pad-right($w, $n))
   }</ln>
 };
 
@@ -118,13 +134,15 @@ declare %updating %public function n:get-normalized($author, $work, $page := ())
       let $style := trace(n:style($author, $work), "STYLE: ")
       let $pager := p:pager(`{$author}/{$work}`)
       let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
-      (: let $fixed-quotes := $paged transform with {
-        replace nodes
-      } :)
-      let $normalized := $paged => n:normalize($style) => m:merge($author, $work, $page)
+      let $fixed-quotes := $paged update {
+        replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
+      } update {
+        replace value of node .//word[@form = '"']/@form with '”'
+      }
+      let $normalized := $fixed-quotes => n:normalize($style) => m:merge($author, $work, $page)
       let $_ := store:read('glaux')
       let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
-      let $merged := $normalized transform with {
+      let $merged := $normalized update {
         insert node <head>
           <title>{$meta?english-title}</title>
           <author>{$meta?english-author}</author>

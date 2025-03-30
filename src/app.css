@@ -23,12 +23,4 @@
 			@apply text-red-700 outline-red-700 hover:bg-red-50 active:bg-red-100;
 		}
 	}
-
-	.tooltip {
-		@apply absolute top-7 right-0 w-56 rounded-sm border-1 border-r-4 border-b-3 px-2 py-1;
-		@apply font-sans text-xs italic;
-		&.info {
-			@apply border-blue-900 bg-blue-50 text-blue-900;
-		}
-	}
 }

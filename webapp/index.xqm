@@ -6,22 +6,22 @@ declare %rest:path("")
         %output:method("html")
         function idx:get-index() {
   let $_ := store:read('glaux')
-  let $index := map:build(store:keys, value := fn($k) { store:get($k) })
-  for key $tlg value $meta in $index
-    where $meta?tokens > 2000
-    group by $genre := $meta?genre
+  for $k in store:keys()
+    let $work := store:get($k)
+    where $work?tokens > 2000
+    group by $genre := $work?genre
     return <section class="genre">
       <h2>{$genre}</h2>
       <ul class="authors">{
-        for $author-in-genre in $meta
+        for $author-in-genre in $work
           group by $author := $author-in-genre?english-author
           return
             if (count($author-in-genre) > 5) then
               <li>
-                <details class="author" open="" name="author">
+                <details class="author" open="">
                   <summary>{$author}</summary>
                   <ul class="works">
-                    {for $meta in $author-in-genre return idx:work($meta)}
+                    {for $work in $author-in-genre return idx:work($work)}
                   </ul>
                 </details>
               </li>
@@ -29,28 +29,28 @@ declare %rest:path("")
               <li>
                 <h3>{$author}</h3>
                 <ul class="works">
-                  {for $meta in $author-in-genre return idx:work($meta)}
+                  {for $work in $author-in-genre return idx:work($work)}
                 </ul>
               </li>
       }</ul>
     </section>
 };
 
-declare function idx:work($meta) {
-  let $pager := p:pager($meta?tlg)
+declare function idx:work($work) {
+  let $pager := p:pager($work?tlg)
   return
     <li>
       {if (exists($pager)) then
-        <details class="work" open="" name="work">
-          <summary>{$meta?english-title}</summary>
+        <details class="work" name="work">
+          <summary>{$work?english-title}</summary>
           <ol class="pages">
           {for $n in $pager?list
             return <li>
-              <a href="{`read/{$meta?tlg}/{$n}`}">{$pager?format($n)}</a>
+              <a href="{`read/{substring($work?tlg, 1, 14)}/{$n}`}">{$pager?format($n)}</a>
             </li>}
           </ol>
         </details>
       else
-        <a href="{`read/{$meta?tlg}`}">{$meta?english-title}</a>}
+        <a href="{`read/{substring($work?tlg, 1, 14)}`}">{$work?english-title}</a>}
     </li>
 };

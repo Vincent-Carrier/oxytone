@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Tooltip from './tooltip.svelte';
 
 	interface Props {}
 
@@ -35,7 +36,7 @@
 		]}
 	></div>
 	{#if help}
-		<div class="tooltip info">
+		<Tooltip>
 			<p class="">Each word is colored according to its case:</p>
 			<div class="syntax flex flex-wrap justify-center gap-x-4 font-bold">
 				<div class="text-emerald-700">Nominative</div>
@@ -44,6 +45,6 @@
 				<div class="text-purple-700">Genitive</div>
 				<div class="text-pink-700">Vocative</div>
 			</div>
-		</div>
+		</Tooltip>
 	{/if}
 </button>
