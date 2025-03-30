@@ -1,5 +1,5 @@
 # General Options
-DEBUG = false
+DEBUG = true
 DBPATH = /home/vincent/code/paroxytone/data
 LOGPATH = .logs
 REPOPATH = /home/vincent/code/paroxytone/repo
@@ -12,27 +12,27 @@ WRITESTORE = true
 HOST = localhost
 PORT = 1984
 SERVERPORT = 1984
-USER = 
-PASSWORD = 
-SERVERHOST = 
-PROXYHOST = 
+USER =
+PASSWORD =
+SERVERHOST =
+PROXYHOST =
 PROXYPORT = 0
-NONPROXYHOSTS = 
+NONPROXYHOSTS =
 IGNORECERT = false
 TIMEOUT = 30
 KEEPALIVE = 600
 PARALLEL = 8
 LOG = data
-LOGEXCLUDE = 
-LOGCUT = 
+LOGEXCLUDE =
+LOGCUT =
 LOGMSGMAXLEN = 1000
 LOGTRACE = true
 
 # HTTP Services
 WEBPATH = /home/vincent/code/paroxytone/webapp
 GZIP = false
-RESTPATH = 
-RESTXQPATH = 
+RESTPATH =
+RESTXQPATH =
 PARSERESTXQ = 3
 RESTXQERRORS = true
 HTTPLOCAL = false

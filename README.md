@@ -16,17 +16,15 @@ Paroxytone includes the full [GLAUx corpus](https://github.com/alekkeersmaekers/
 
 ```
 paroxytone/
-- app/              # Python FastAPI backend (for Anki flashcards)
-- data/             # BaseX binary indices
-- glaux/            # GLAUx corpus files
-- tei/              # TEI corpus files
-- lsj/              # LSJ dictionary resources
-- repo/             # XQuery modules for data processing
-- seed/             # Database seeding scripts and data
-- src/              # SvelteKit frontend
-- static/           # Static assets for SvelteKit
-- webapp/           # BaseX REST API
-  - WEB-INF/      # Jetty configuration
+  webapp/           # BaseX RESTXQ endpoints
+  repo/             # XQuery modules
+  seed/             # XQuery seeding scripts
+  app/              # Python FastAPI backend (for Anki flashcards)
+  src/              # SvelteKit frontend
+  static/           # Static assets for SvelteKit
+  glaux/            # GLAUx corpus files
+  tei/              # TEI corpus files
+  lsj/              # LSJ dictionary resources
 ```
 
 ## Requirements

@@ -9,25 +9,23 @@ seed: lsj glaux tei index
 [group('db')]
 lsj:
   basex -Q seed/shortdefs.xq
-  basex -O AUTOFLUSH=false \
-        -O ATTRINCLUDE=id -O TEXTINDEX=false \
+  basex -O ATTRINCLUDE=id -O TEXTINDEX=false \
         -c "CREATE DB lsj" \
         -Q seed/lsj.xq
 
 [group('db')]
 syntax:
-  basex -O AUTOFLUSH=false -c "CREATE DB syntax" \
+  basex -c "CREATE DB syntax" \
         -Q seed/syntax.xq
 
 [group('db')]
 glaux:
-  basex -O AUTOFLUSH=false \
-        -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
+  basex -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
         -c "CREATE DB glaux glaux/"
 
 [group('db')]
 tei:
-  basex -O AUTOFLUSH=false -O STRIPNS=true \
+  basex -O STRIPNS=true \
         -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
         -c "CREATE DB tei tei/" \
 
