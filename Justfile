@@ -60,7 +60,7 @@ corpus:
 
 [group('install')]
 saxon:
-  wget https://github.com/Saxonica/Saxon-HE/blob/main/12/Java/SaxonHE12-5J.zip
+  wget https://github.com/Saxonica/Saxon-HE/releases/download/SaxonHE12-5/SaxonHE12-5J.zip
   unzip SaxonHE12-5J.zip -d saxon-he/
   mkdir -p "$BASEX_HOME/lib/custom/"
   mv saxon-he/**.jar "$BASEX_HOME/lib/custom/"
