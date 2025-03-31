@@ -6,7 +6,7 @@ section.century {
 		@apply mt-0;
 	}
 	& h2 {
-		@apply font-sc sticky top-12 float-left -mt-1 border-b-1 border-gray-300 text-xl font-bold;
+		@apply font-sc sticky top-12 float-left text-xl font-bold;
 	}
 	& ul.authors {
 		@apply ml-24;
