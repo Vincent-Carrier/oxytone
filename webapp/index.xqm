@@ -9,29 +9,26 @@ declare %rest:path("")
   for $k in store:keys()
     let $work := store:get($k)
     where $work?tokens > 2000
-    group by $genre := $work?genre
-    return <section class="genre">
-      <h2>{$genre}</h2>
+    group by $date := $work?date
+    return <section class="century">
+      <h2>
+        {abs(1 + round($date div 100)) * 100}
+        <small>s   </small>{" "}
+        {if ($date > -101) then 'AD' else 'BC'}
+      </h2>
       <ul class="authors">{
-        for $author-in-genre in $work
-          group by $author := $author-in-genre?english-author
+        for $author-in-date in $work
+        group by $author := $author-in-date?english-author
           return
-            if (count($author-in-genre) > 5) then
-              <li>
-                <details class="author" open="">
-                  <summary>{$author}</summary>
-                  <ul class="works">
-                    {for $work in $author-in-genre return idx:work($work)}
-                  </ul>
-                </details>
-              </li>
-            else
-              <li>
-                <h3>{$author}</h3>
+            <li>
+              <details class="author">
+                {if (count($author-in-date) <= 20) then attribute open {}}
+                <summary><span>{$author}</span></summary>
                 <ul class="works">
-                  {for $work in $author-in-genre return idx:work($work)}
+                  {for $work in $author-in-date return idx:work($work)}
                 </ul>
-              </li>
+              </details>
+            </li>
       }</ul>
     </section>
 };
@@ -41,7 +38,8 @@ declare function idx:work($work) {
   return
     <li>
       {if (exists($pager)) then
-        <details class="work" name="work">
+        <details class="work">
+          {if (count($pager?list) <= 5 ) then attribute open {}}
           <summary>{$work?english-title}</summary>
           <ol class="pages">
           {for $n in $pager?list

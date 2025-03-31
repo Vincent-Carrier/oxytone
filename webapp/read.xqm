@@ -85,6 +85,9 @@ declare variable $r:xslt := xsm:stylesheet({
       <div class="speaker short">
           <xsl:value-of select="concat(substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2), '.')"/>
       </div>
+      <div class="speaker mask">
+          <xsl:value-of select="concat(substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2), '.')"/>
+      </div>
     </xsl:sequence>,
   "stephanus":
     <a class="stephanus-nbr">

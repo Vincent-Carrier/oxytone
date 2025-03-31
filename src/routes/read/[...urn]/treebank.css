@@ -85,10 +85,13 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 .speaker {
 	@apply mt-4 uppercase;
 	&.long {
-		@apply w-[calc(100%+4rem)] bg-white text-gray-700 underline;
+		@apply bg-white text-gray-700 underline;
 	}
 	&.short {
-		@apply sticky top-0 -z-50 float-right -mt-5 -mr-12 block w-7 bg-white text-gray-500;
+		@apply sticky top-4 -z-50 float-right -mt-5 -mr-12 block w-8 bg-white text-gray-500;
+	}
+	&.mask {
+		@apply float-right -mt-5 -mr-22 block h-20 w-8 bg-white text-transparent;
 	}
 }
 

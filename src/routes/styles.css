@@ -1,21 +1,24 @@
 @reference '$/app.css';
 
-section.genre {
-	@apply mx-4 my-4 text-gray-800;
-	@apply columns-1 gap-8 sm:columns-2 xl:columns-3;
-
+section.century {
+	@apply mx-4 my-8 text-gray-800;
+	&:first-of-type {
+		@apply mt-0;
+	}
 	& h2 {
-		@apply font-sc mb-2 border-b-1 border-gray-300 text-xl font-bold lowercase;
-		column-span: all;
+		@apply font-sc sticky top-12 float-left -mt-1 border-b-1 border-gray-300 text-xl font-bold;
 	}
 	& ul.authors {
+		@apply ml-24;
 		& > li {
-			@apply mb-2 break-inside-avoid;
+			@apply mb-4;
 		}
 
-		& h3,
-		details.author > summary {
-			@apply font-sc text-lg leading-none font-medium lowercase;
+		& details.author > summary {
+			@apply font-sc sticky top-0 mt-4 mb-2 bg-white py-1 text-lg leading-none font-medium lowercase;
+			& > span {
+				@apply w-fit border-b-1 border-gray-300;
+			}
 		}
 
 		& summary {
@@ -23,19 +26,22 @@ section.genre {
 			text-indent: 0.8rem hanging;
 		}
 
-		& details summary::marker {
-			content: '+ ';
-			@apply font-bold;
-		}
 		& details[open] summary::marker {
 			content: '‒ ';
 		}
+		& details:not([open]) summary::marker {
+			content: '+ ';
+		}
 
 		ul.works {
+			@apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
 			@apply pl-1 font-serif text-sm;
 			list-style: '‒  ' inside;
+			& details:not([open]) summary::marker {
+				content: '+  ';
+			}
 			& a {
-				@apply text-blue-600 underline;
+				@apply text-blue-600;
 			}
 
 			& li:has(details) {
@@ -43,9 +49,7 @@ section.genre {
 			}
 
 			& details.work {
-				& summary {
-				}
-
+				@apply break-inside-avoid;
 				& ol {
 					@apply pl-2;
 					list-style: '‒  ' inside;

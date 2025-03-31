@@ -15,7 +15,7 @@
 
 @layer components {
 	.btn {
-		@apply cursor-pointer rounded-sm px-1 leading-tight text-blue-700 outline-1 outline-blue-700 hover:bg-blue-50 active:bg-blue-100;
+		@apply font-sans-sc cursor-pointer rounded-sm px-1 leading-tight text-blue-700 lowercase outline-1 outline-blue-700 hover:bg-blue-50 active:bg-blue-100;
 		&.ghost {
 			@apply outline-none;
 		}

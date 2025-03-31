@@ -1,0 +1,30 @@
+oxytone.xyz {
+	# Handle API requests
+	handle_path /api/* {
+		reverse_proxy localhost:8000
+	}
+
+	# Handle static files at the root and all other requests
+	handle {
+		root * /root/paroxytone/paroxytone/static
+		file_server
+		try_files {path} /index.html
+		reverse_proxy localhost:3000 {
+			@notStatic not file {
+				root /root/paroxytone/paroxytone/static
+			}
+			handle @notStatic
+		}
+	}
+
+	# Enable compression
+	encode gzip zstd
+
+	# Log settings
+	log {
+		output file /var/log/caddy/oxytone.log {
+			roll_size 10MB
+			roll_keep 10
+		}
+	}
+}
