@@ -1,20 +1,19 @@
-oxytone.xyz {
+{$DOMAIN:localhost} {
 	# Handle API requests
 	handle_path /api/* {
 		reverse_proxy localhost:8000
 	}
 
+	@notStatic not file {
+		root {$WEBROOT:/var/www}/static
+	}
+
 	# Handle static files at the root and all other requests
 	handle {
-		root * /root/paroxytone/paroxytone/static
+		root * {$WEBROOT:/var/www}/static
 		file_server
 		try_files {path} /index.html
-		reverse_proxy localhost:3000 {
-			@notStatic not file {
-				root /root/paroxytone/paroxytone/static
-			}
-			handle @notStatic
-		}
+		reverse_proxy @notStatic localhost:3000
 	}
 
 	# Enable compression

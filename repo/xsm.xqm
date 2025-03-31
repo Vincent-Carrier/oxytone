@@ -37,6 +37,6 @@ declare function xsm:attr($name as xs:string, $value as xs:string) as element() 
 
 declare function xsm:keep($select as xs:string := "@*|node()") as element() {
   <xsl:copy>
-  <xsl:apply-templates select="{$select}" />
+    <xsl:apply-templates select="{$select}" />
   </xsl:copy>
 };

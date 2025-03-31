@@ -4,6 +4,10 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare variable $def:xslt := xsm:stylesheet(
   {
+    "body":
+      <div>
+        <xsl:apply-templates select="lemma" />
+      </div>,
     "lemma":
       <dl>
         <xsl:apply-templates select="entryFree" />
@@ -18,11 +22,20 @@ declare variable $def:xslt := xsm:stylesheet(
       </dt>,
       <div class="meanings">
         <xsl:apply-templates select="../shortdef" />
-        <xsl:for-each select=".//sense">
-          <dd>
-            <xsl:apply-templates />
-          </dd>
-        </xsl:for-each>
+        <xsl:choose>
+          <xsl:when test=".//sense">
+            <xsl:for-each select=".//sense">
+              <dd>
+                <xsl:apply-templates />
+              </dd>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <dd>
+              <xsl:apply-templates select="*[not(self::orth)]"/>
+            </dd>
+          </xsl:otherwise>
+        </xsl:choose>
       </div>),
     "tr":
       <strong>
@@ -31,18 +44,22 @@ declare variable $def:xslt := xsm:stylesheet(
     "bibl":
       <span class="bibl">
         <xsl:value-of select="." />
-      </span>
+      </span>,
+    '*[@lang="greek"]':
+      <span class="font-serif">
+        <xsl:value-of select="." />
+      </span>,
+    "*[not(normalize-space())]": ()
   },
-  <xsl:preserve-space elements="*" />
+  indent := "yes"
 );
 
 declare
   %rest:path("define/lsj/{$lemma}")
-  %rest:GET
-  %output:method("html")
-  function def:getDefinition($lemma) {
+  %output:method("xml")
+  function def:get-definition($lemma) {
     let $_ := store:read("lsj_shortdefs")
-    let $entry := <div>
+    let $entry := <body>
       {
         for $path in db:list("lsj", $lemma)
           let $shortdef := store:get($path)
@@ -51,6 +68,6 @@ declare
             {db:get("lsj", $path)}
           </lemma>
       }
-    </div>
+    </body>
     return xslt:transform($entry, $def:xslt)
 };

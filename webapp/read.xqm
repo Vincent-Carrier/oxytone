@@ -17,22 +17,27 @@ declare variable $r:xslt := xsm:stylesheet({
         <p class="author">
           <xsl:value-of select="head/author" />
         </p>
+        <xsl:apply-templates select="head/books" />
       </hgroup>
       <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
     </div>,
+  "books":
+    <ol class="books">
+      <xsl:apply-templates select="book" />
+    </ol>,
+  "book":
+    <li>
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="concat('./', @id)" />
+        </xsl:attribute>
+        <xsl:value-of select="." />
+      </a>
+    </li>,
   "sentence":
     <span class="sentence">
-      <a class="sentence-nbr">
-        <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', @id)" />
-        </xsl:attribute>
-        <xsl:attribute name="id">
-          <xsl:value-of select="@id" />
-        </xsl:attribute>
-        <xsl:value-of select="@id" />
-      </a>
       <xsl:apply-templates />
     </span>,
   "chapter":

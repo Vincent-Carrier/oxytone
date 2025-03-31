@@ -1,7 +1,7 @@
 @reference '$/app.css';
 
 ox-w {
-	@apply cursor-pointer text-gray-700;
+	@apply cursor-pointer text-gray-800;
 
 	&.selected {
 		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;

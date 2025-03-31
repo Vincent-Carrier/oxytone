@@ -9,6 +9,9 @@ dl {
 
 	& dt {
 		@apply sticky top-0 -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
+		dl + dl & {
+			@apply mt-4 border-t-1;
+		}
 	}
 
 	& dd {

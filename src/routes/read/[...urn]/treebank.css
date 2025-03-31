@@ -1,12 +1,21 @@
 @reference '$/app.css';
 
 .treebank > hgroup {
-	@apply font-sc mb-4 ml-14 text-balance lowercase;
+	@apply font-sc mb-8 ml-14 text-balance lowercase;
 	& h1 {
-		@apply text-2xl text-gray-800 underline;
+		@apply text-3xl text-gray-800;
 	}
 	& .author {
 		@apply text-gray-800;
+	}
+	& .books {
+		@apply columns-2 md:columns-4;
+		& li {
+			list-style: '‒  ' inside;
+			& a {
+				@apply text-blue-600;
+			}
+		}
 	}
 }
 
@@ -49,10 +58,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 
 .stephanus-nbr,
 .sentence-nbr {
-	@apply float-left -ml-12 block bg-gray-50 p-1 text-gray-400;
-	&:target {
-		@apply outline-1;
-	}
+	@apply float-left -ml-14 block w-10 border-r-1 border-gray-200 bg-gray-50 p-1 text-right text-gray-400;
 }
 
 .section-nbr {
@@ -68,6 +74,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 
 .sentence-nbr {
 	&:not([id$='0'], [id$='5']),
+	section &,
 	p & {
 		@apply hidden;
 	}
@@ -91,7 +98,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 		@apply sticky top-4 -z-50 float-right -mt-5 -mr-12 block w-8 bg-white text-gray-500;
 	}
 	&.mask {
-		@apply float-right -mt-5 -mr-22 block h-20 w-8 bg-white text-transparent;
+		@apply float-right -mt-5 -mr-12 block h-20 w-8 bg-white text-transparent;
 	}
 }
 

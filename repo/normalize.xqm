@@ -59,6 +59,14 @@ declare function n:normalize-prose($tb) as element()* {
        			    return n:sentence($sen)
             }</section>
         }</chapter>
+  else if (exists ($tb//word/@div_section)) then
+    for tumbling window $section in $tb//sentence
+      end $e next $n
+      when ($e/word/@div_section)[1] != ($n/word/@div_section)[1]
+      return <chapter id="{($e/word/@div_section)[1]}">{
+  		  for $sen in $section
+ 			    return n:sentence($sen)
+      }</chapter>
   else if (exists ($tb//word/@div_fable)) then
    	for tumbling window $fable in $tb//sentence
   		end $e next $n
@@ -85,14 +93,14 @@ declare function n:normalize($tb, $style := "prose") as element() {
   </treebank>
 };
 
-declare function n:word($w, $pad-right) {
+declare function n:word($w) {
   element w {
     $w/@*[name()=("id", "head", "relation")],
     attribute sentence {$w/../@id},
     attribute lemma {normalize-unicode($w/@lemma, 'NFC')},
     if (matches($w/@form, "-$")) then attribute hidden {},
     if ($w/@postag) then pt:expand($w/@postag),
-    concat(replace($w/@form, '^-(.*)', '$1'), if ($pad-right) then " ")
+    concat(replace($w/@form, '^-(.*)', '$1'))
   }
 };
 
@@ -109,7 +117,8 @@ declare function n:sentence($sen) {
       start $w at $i end $n at $j
       when $j - $i = 1
       return (
-        n:word($w, n:pad-right($w, $n)),
+        n:word($w),
+        if (n:pad-right($w, $n)) then "&#x20;",
         if ($w/@div_stephanus_section != $n/@div_stephanus_section)
           then <stephanus id="{$n/@div_stephanus_section}" />
       ),
@@ -122,7 +131,10 @@ declare function n:line($line, $id) {
     for sliding window $win in $line
       start $w at $i end $n at $j
       when $j - $i = 1
-      return n:word($w, n:pad-right($w, $n))
+      return (
+        n:word($w),
+        if (n:pad-right($w, $n)) then "&#x20;"
+      )
   }</ln>
 };
 
@@ -148,6 +160,10 @@ declare %updating %public function n:get-normalized($author, $work, $page := ())
         insert node <head>
           <title>{$meta?english-title}</title>
           <author>{$meta?english-author}</author>
+          {if (exists($pager)) then <books>
+            {for $n in $pager?list
+              return <book id="{$n}">{$pager?format($n)}</book>}
+            </books>}
         </head> as first into .
       }
       let $_ := if (not(db:option('debug'))) then db:put('normalized', $merged, $urn)
