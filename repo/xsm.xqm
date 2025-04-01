@@ -11,6 +11,14 @@ declare function xsm:stylesheet(
 ) as element() {
   <xsl:stylesheet version="3.0" xmlns:oxy="http://oxytone.xyz/functions">
     <xsl:output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
+    <xsl:function name="oxy:normalize-punct">
+      <xsl:param name="text"/>
+      <xsl:value-of select="$text
+        => replace(',\s+', ', ')
+        => replace('\.\s+', '. ')
+        => replace(';\s+', '; ')
+        => replace(':\s+', ': ')" />
+    </xsl:function>
     <xsl:function name="oxy:strip-diacritics">
       <xsl:param name="text"/>
       <xsl:value-of select="replace($text, '\p{{M}}', '')" />

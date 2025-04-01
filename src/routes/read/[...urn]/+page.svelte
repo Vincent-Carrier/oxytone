@@ -69,7 +69,7 @@
 	});
 </script>
 
-<div class="relative flex h-screen flex-col">
+<div class="flex h-screen flex-col">
 	<nav
 		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 px-14 py-1 text-sm"
 	>
@@ -79,10 +79,12 @@
 		<VerbsButton />
 		<ColorsButton />
 	</nav>
-	<div class="absolute top-0 bottom-0 left-0 z-10 w-10 border-r-1 border-gray-200 bg-gray-50"></div>
+	<div
+		class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50"
+	></div>
 	<article
 		id="treebank"
-		class="verbs syntax relative h-full scroll-pt-8 overflow-y-scroll scroll-smooth bg-white pt-4 pb-12 leading-relaxed"
+		class="verbs syntax h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed"
 	>
 		<div bind:this={tb} class="max-w-[60ch] font-serif">
 			{@html data.treebank}

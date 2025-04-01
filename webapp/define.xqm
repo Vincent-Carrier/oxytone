@@ -46,12 +46,10 @@ declare variable $def:xslt := xsm:stylesheet(
         <xsl:value-of select="." />
       </span>,
     '*[@lang="greek"]':
-      <span class="font-serif">
+      <span class="greek">
         <xsl:value-of select="." />
-      </span>,
-    "*[not(normalize-space())]": ()
-  },
-  indent := "yes"
+      </span>
+  }
 );
 
 declare

@@ -38,7 +38,7 @@
 	{#if help}
 		<Tooltip>
 			<p class="">Each word is colored according to its case:</p>
-			<div class="syntax flex flex-wrap justify-center gap-x-4 font-bold">
+			<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
 				<div class="text-emerald-700">Nominative</div>
 				<div class="text-sky-700">Accusative</div>
 				<div class="text-yellow-700">Dative</div>

@@ -26,14 +26,6 @@
 	}
 }
 
-.body {
-	@apply relative z-10;
-	.theater &,
-	.verse & {
-		@apply max-w-fit;
-	}
-}
-
 section {
 	@apply mb-8;
 }
@@ -66,7 +58,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 }
 
 .chapter-nbr {
-	@apply sticky top-0 z-50 float-left mt-1 -ml-14 w-10 pr-1 text-right text-gray-400;
+	@apply sticky top-0 float-left mt-1 -ml-14 w-10 p-1 pr-2 text-right text-gray-500;
 	&:target {
 		@apply border-r-1 border-blue-500;
 	}
@@ -94,11 +86,18 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 	&.long {
 		@apply bg-white text-gray-700 underline;
 	}
+	&.short,
+	&.mask {
+		@apply float-right block w-8 border-gray-400 px-1 max-md:hidden;
+	}
 	&.short {
-		@apply sticky top-4 -z-50 float-right -mt-5 -mr-12 block w-8 bg-white text-gray-500;
+		@apply sticky -top-4 -mr-12 border-b-1 border-l-1 bg-white text-gray-500;
 	}
 	&.mask {
-		@apply float-right -mt-5 -mr-12 block h-20 w-8 bg-white text-transparent;
+		@apply relative z-10 -mr-22 h-32 bg-white text-transparent;
+		.dialogue & {
+			@apply -mr-12;
+		}
 	}
 }
 
@@ -111,7 +110,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 
 blockquote {
 	@apply my-2;
-	& .line-nbr {
+	& .a {
 		@apply mr-6;
 	}
 	& .line {

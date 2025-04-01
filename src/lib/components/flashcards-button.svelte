@@ -25,7 +25,7 @@
 
 <div class="relative">
 	{#if selection}
-		<button onclick={() => (selection = null)} class="btn ghost danger"> cancel </button>
+		<button onclick={() => (selection = null)} class="btn ghost danger mr-2"> cancel </button>
 		<button class="btn" inert={count == 0} popovertarget="flashcards-help">
 			<a href={`http://localhost:8000/flashcards?${searchParams}`} download="greek-flashcards.apkg">
 				{`export ${count} word${count === 1 ? '' : 's'}`}</a
