@@ -1,10 +1,13 @@
 {$DOMAIN:localhost} {
-	# Handle API requests
-	handle_path /api/* {
+	# Handle Python API requests
+	handle_path /python/* {
 		reverse_proxy localhost:8000
 	}
+	handle_path /basex/* {
+		reverse_proxy localhost:8080
+	}
 
-	@notStatic not file {
+	@dynamic not file {
 		root {$WEBROOT:/var/www}/static
 	}
 
@@ -13,7 +16,7 @@
 		root * {$WEBROOT:/var/www}/static
 		file_server
 		try_files {path} /index.html
-		reverse_proxy @notStatic localhost:3000
+		reverse_proxy @dynamic localhost:3000
 	}
 
 	# Enable compression

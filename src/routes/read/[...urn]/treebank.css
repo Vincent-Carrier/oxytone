@@ -19,11 +19,8 @@
 	}
 }
 
-.treebank.dialogue,
-.treebank.prose {
-	& > .body {
-		@apply ml-14 text-justify;
-	}
+.body {
+	@apply ml-14 text-justify;
 }
 
 section {
@@ -55,9 +52,22 @@ section {
 }
 
 .chapter-nbr {
-	@apply sticky top-0 float-left mt-1 -ml-14 w-10 p-1 pr-2 text-right text-gray-500;
+	@apply sticky top-0;
+}
+.line-nbr {
+	@apply clear-left;
+	&:not([id$='0'], [id$='5']) {
+		@apply text-transparent;
+	}
+	&:hover {
+		@apply text-gray-500;
+	}
+}
+.chapter-nbr,
+.line-nbr {
+	@apply float-left -ml-14 w-10 border-r-3 border-transparent pt-1 pr-1 text-right text-xs text-gray-500;
 	&:target {
-		@apply border-r-1 border-blue-500;
+		@apply border-blue-500 text-blue-500;
 	}
 }
 
@@ -69,39 +79,25 @@ section {
 	}
 }
 
-.line-nbr {
-	@apply mr-4 inline-block w-10 border-r-1 border-transparent pt-1 pr-1 text-right text-gray-300;
-}
-
 .line {
 	text-indent: 3.5rem hanging;
 	@apply leading-snug;
 }
 
 .speaker {
-	@apply mt-4 uppercase;
+	@apply uppercase;
 	&.long {
-		@apply bg-white text-gray-700 underline;
+		@apply mt-4 bg-white text-gray-700 underline;
 	}
 	&.short,
 	&.mask {
-		@apply float-right block w-8 border-gray-400 px-1 max-md:hidden;
+		@apply float-right -mr-12 block w-8 border-gray-400 px-1 max-md:hidden;
 	}
 	&.short {
-		@apply sticky -top-4 -mr-12 border-b-1 border-l-1 bg-white text-gray-500;
+		@apply sticky -top-4 bg-white text-gray-500;
 	}
 	&.mask {
-		@apply relative z-10 -mr-22 h-32 bg-white text-transparent;
-		.dialogue & {
-			@apply -mr-12;
-		}
-	}
-}
-
-.treebank.verse,
-.treebank.theater {
-	& .speaker {
-		@apply ml-14;
+		@apply relative z-10 h-32 bg-gradient-to-b from-white from-80% to-transparent text-transparent;
 	}
 }
 

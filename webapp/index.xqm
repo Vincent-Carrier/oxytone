@@ -44,11 +44,11 @@ declare function idx:work($work) {
           <ol class="pages">
           {for $n in $pager?list
             return <li>
-              <a href="{`read/{substring($work?tlg, 1, 14)}/{$n}`}">{$pager?format($n)}</a>
+              <a data-sveltekit-preload-code="" href="{`read/{substring($work?tlg, 1, 14)}/{$n}`}">{$pager?format($n)}</a>
             </li>}
           </ol>
         </details>
       else
-        <a href="{`read/{substring($work?tlg, 1, 14)}`}">{$work?english-title}</a>}
+        <a data-sveltekit-preload-code="" href="{`read/{substring($work?tlg, 1, 14)}`}">{$work?english-title}</a>}
     </li>
 };

@@ -69,3 +69,9 @@ saxon:
 release:
   zip -r corpus.zip glaux/ tei/ lsj/
   gh release create corpus.zip
+
+[script]
+build:
+  pnpm build
+  node build/ &
+  basexhttp &

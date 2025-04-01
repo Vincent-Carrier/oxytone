@@ -61,7 +61,7 @@
 		tb.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
 			anchor.addEventListener('click', (ev) => {
 				let a = ev.target as HTMLAnchorElement;
-				if (a.hash == location.hash) location.replace('#');
+				if (a.hash === location.hash) location.replace('#');
 				else location.replace(a.hash);
 				ev.preventDefault();
 			});

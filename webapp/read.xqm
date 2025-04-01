@@ -82,6 +82,16 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:apply-templates />
       </span>
     </div>,
+  "stephanus":
+    <a class="stephanus-nbr">
+      <xsl:attribute name="href">
+        <xsl:value-of select="concat('#', @id)" />
+      </xsl:attribute>
+      <xsl:attribute name="id">
+        <xsl:value-of select="@id" />
+      </xsl:attribute>
+      <xsl:value-of select="@id" />
+    </a>,
   "speaker":
     <xsl:sequence>
       <div class="speaker long">
@@ -94,23 +104,12 @@ declare variable $r:xslt := xsm:stylesheet({
           <xsl:value-of select="concat(substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2), '.')"/>
       </div>
     </xsl:sequence>,
-  "stephanus":
-    <a class="stephanus-nbr">
-      <xsl:attribute name="href">
-        <xsl:value-of select="concat('#', @id)" />
-      </xsl:attribute>
-      <xsl:attribute name="id">
-        <xsl:value-of select="@id" />
-      </xsl:attribute>
-      <xsl:value-of select="@id" />
-    </a>,
   "w":
     <ox-w>
       <xsl:copy-of select="@*" />
       <xsl:value-of select="oxy:strip-smooth-breathings(.)" />
     </ox-w>,
-  "blockquote|p": xsm:keep("node()"),
-  "br": xsm:keep()
+  "blockquote|p": xsm:keep("node()")
 });
 
 
