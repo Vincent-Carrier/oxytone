@@ -29,9 +29,6 @@
 section {
 	@apply mb-8;
 }
-p:not(p:has(ox-w:nth-of-type(60))) {
-	@apply inline;
-}
 
 .dialogue p {
 	@apply mb-2;
@@ -110,7 +107,7 @@ p:not(p:has(ox-w:nth-of-type(60))) {
 
 blockquote {
 	@apply my-2;
-	& .a {
+	& .line-nbr {
 		@apply mr-6;
 	}
 	& .line {
