@@ -7,12 +7,12 @@
 	import ColorsButton from '$lib/components/colors-button.svelte';
 	import Morphology from '$lib/components/morphology.svelte';
 	import Definition from '$lib/components/definition.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import VerbsButton from '$/lib/components/verbs-button.svelte';
 
 	let { data }: PageProps = $props();
-	let tb: HTMLElement;
+	let tb: HTMLElement | null = $state(null);
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
 
@@ -28,10 +28,11 @@
 		}
 	});
 
-	onMount(() => {
+	$effect(() => {
+		if (tb === null) return;
 		document.title = document.querySelector('h1')?.textContent ?? 'Oxytone';
 
-		let hash = page.url.hash;
+		let hash = untrack(() => page.url.hash);
 		if (hash) document.querySelector(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' });
 
 		// Don't add line / chapter anchors to history stack
@@ -44,7 +45,7 @@
 			});
 		});
 
-		tb!.addEventListener('w-click', async (ev) => {
+		tb.addEventListener('w-click', async (ev) => {
 			let w = ev.target as Word;
 			if (selection === null) {
 				w.defined = !w.defined;
@@ -59,6 +60,8 @@
 			}
 		});
 	});
+
+	onMount(() => {});
 </script>
 
 <div class="flex h-screen flex-col">
@@ -74,14 +77,22 @@
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50"
 	></div>
-	<article
-		id="treebank"
-		class="verbs syntax h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed"
-	>
-		<div bind:this={tb} class="max-w-[60ch] font-serif">
-			{@html data.treebank}
-		</div>
-	</article>
+	<div id="treebank-container" class="contents">
+		{#await data.treebank}
+			<p class="font-sc mt-32 self-center text-2xl lowercase">Loading ...</p>
+		{:then treebank}
+			<article
+				id="treebank"
+				class="verbs syntax h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed"
+			>
+				<div bind:this={tb} class="max-w-[60ch] font-serif">
+					{@html treebank}
+				</div>
+			</article>
+		{:catch}
+			<p class="font-sc mt-32 self-center text-2xl lowercase">Something went wrong</p>
+		{/await}
+	</div>
 	{#if defined}
 		<Morphology word={defined} />
 	{/if}

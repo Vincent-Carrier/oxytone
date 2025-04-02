@@ -1,4 +1,8 @@
 @import 'tailwindcss' source('.');
+@plugin "@iconify/tailwind4" {
+	prefix: 'i';
+	prefixes: solar;
+}
 
 @theme {
 	--font-serif: 'Alegreya', serif;
@@ -27,15 +31,20 @@
 
 @layer components {
 	.btn {
-		@apply font-sans-sc cursor-pointer rounded-sm border-1 border-blue-700 px-1 leading-tight text-blue-700 lowercase hover:bg-blue-50 active:bg-blue-100;
-		&.ghost {
-			@apply border-none;
+		@apply font-sans-sc cursor-pointer leading-tight text-blue-700 lowercase;
+		@apply rounded-sm border-1 border-blue-700 px-1 hover:bg-blue-50 active:bg-blue-100;
+		@apply flex items-center gap-x-1;
+		& span {
+			@apply mt-px;
 		}
 		&.danger {
 			@apply border-red-700 text-red-700 hover:bg-red-50 active:bg-red-100;
 		}
 		&[inert] {
 			@apply border-gray-600 text-gray-600;
+		}
+		&.ghost {
+			@apply border-transparent;
 		}
 	}
 }

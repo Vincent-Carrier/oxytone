@@ -116,7 +116,6 @@ declare variable $r:xslt := xsm:stylesheet({
 declare
   %updating
   %rest:path("/read/{$author}/{$work-page=.+}")
-  %rest:single
   %output:method("html")
   function r:get-page($author, $work-page) {
     let $wp := tokenize($work-page, '/')

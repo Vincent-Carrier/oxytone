@@ -20,7 +20,7 @@
 </svelte:head>
 
 <img
-	class="mx-auto max-w-4xl px-4 grayscale"
+	class="mx-auto w-full max-w-4xl px-4 grayscale"
 	srcset="/greek_heroes@0.5x.webp 1x, /greek_heroes.webp 2x"
 	src="/greek_heroes.webp"
 	alt=""

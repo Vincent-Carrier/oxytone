@@ -75,6 +75,7 @@ release:
   gh release create corpus.zip
   rm -f corpus.zip
 
+# NOTE: Some changes may not take effect until Cloudflare cache is purged or `normalized` DB is reset
 build:
   git pull
   pnpm build

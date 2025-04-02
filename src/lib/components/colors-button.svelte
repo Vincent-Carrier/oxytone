@@ -1,43 +1,31 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Tooltip from './tooltip.svelte';
-
-	interface Props {}
-
-	let {}: Props = $props();
 
 	let help = $state(false);
 	let colors = $state(true);
-	let tb: HTMLElement | null;
 
 	function onclick() {
 		colors = !colors;
-		tb?.classList.toggle('syntax');
+		document.getElementById('treebank-container')?.classList.toggle('syntax');
 	}
-
-	function onmouseenter() {
-		help = true;
-	}
-	function onmouseleave() {
-		help = false;
-	}
-
-	onMount(() => {
-		tb = document?.getElementById('treebank');
-	});
 </script>
 
-<button {onclick} {onmouseenter} {onmouseleave} class="btn relative flex items-center gap-x-1"
-	>colors
-	<div
+<button
+	{onclick}
+	onmouseenter={() => (help = true)}
+	onmouseleave={() => (help = false)}
+	class="btn ghost relative flex items-center gap-x-1"
+>
+	colors
+	<span
 		class={[
-			'h-1 w-1 rounded-full border-1 border-blue-700 bg-blue-600',
-			colors || 'bg-transparent'
+			'mb-px',
+			colors ? 'i-[solar--check-square-bold-duotone]' : 'i-[solar--minus-square-line-duotone]'
 		]}
-	></div>
+	></span>
 	{#if help}
-		<Tooltip>
-			<p class="">Each word is colored according to its case:</p>
+		<Tooltip class="w-56">
+			<p>Each word is colored according to its case:</p>
 			<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
 				<div class="text-emerald-700">Nominative</div>
 				<div class="text-sky-700">Accusative</div>
