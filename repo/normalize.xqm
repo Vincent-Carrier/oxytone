@@ -138,35 +138,29 @@ declare function n:line($line, $id) {
   }</ln>
 };
 
-declare %updating %public function n:get-normalized($author, $work, $page := ()) {
-  let $urn := trace(string-join(($author, $work, $page), '/'), "URN: ")
-  return db:get('normalized', $urn)[1]
-    otherwise (
-      let $tb := db:get('glaux', `{$author}/{$work}/`)[1]
-      let $style := trace(n:style($author, $work), "STYLE: ")
-      let $pager := p:pager(`{$author}/{$work}`)
-      let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
-      let $fixed := $paged update {
-        replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
-      } update {
-        replace value of node .//word[@form = '"']/@form with '”'
-      } update {
-        replace value of node .//word[@form = 'G?']/@form with '[…]'
-      }
-      let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
-      let $_ := store:read('glaux')
-      let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
-      let $merged := $normalized update {
-        insert node <head>
-          <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
-          <author>{$meta?english-author}</author>
-          {if (exists($pager)) then <books>
-            {for $n in $pager?list
-              return <book id="{$n}">{$pager?format($n)}</book>}
-            </books>}
-        </head> as first into .
-      }
-      let $_ := if (not(db:option('debug'))) then db:put('normalized', $merged, $urn)
-      return $merged
-  )
+declare %public function n:get-normalized($author, $work, $page := ()) {
+  let $tb := db:get('glaux', `{$author}/{$work}/`)[1]
+  let $style := trace(n:style($author, $work), "STYLE: ")
+  let $pager := p:pager(`{$author}/{$work}`)
+  let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
+  let $fixed := $paged update {
+    replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
+  } update {
+    replace value of node .//word[@form = '"']/@form with '”'
+  } update {
+    replace value of node .//word[@form = 'G?']/@form with '[…]'
+  }
+  let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
+  let $_ := store:read('glaux')
+  let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
+  return $normalized update {
+    insert node <head>
+      <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
+      <author>{$meta?english-author}</author>
+      {if (exists($pager)) then <books>
+        {for $n in $pager?list
+          return <book id="{$n}">{$pager?format($n)}</book>}
+        </books>}
+    </head> as first into .
+  }
 };

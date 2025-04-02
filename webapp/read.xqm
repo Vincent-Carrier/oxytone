@@ -114,12 +114,21 @@ declare variable $r:xslt := xsm:stylesheet({
 
 
 declare
+  %updating
   %rest:path("/read/{$author}/{$work-page=.+}")
   %rest:single
   %output:method("html")
   function r:get-page($author, $work-page) {
     let $wp := tokenize($work-page, '/')
     let $path := string-join(($author, $work-page), '/')
-    let $tb := n:get-normalized($author, $wp[1], $wp[2])
+    let $tb := if (db:option('debug'))
+      then n:get-normalized($author, $wp[1], $wp[2])
+      else
+        db:get('normalized', $path)[1]
+        otherwise (
+          let $normalized := n:get-normalized($author, $wp[1], $wp[2])
+          let $_ := db:put('normalized', $normalized, $path)
+          return $normalized
+        )
     return xslt:transform($tb, $r:xslt)
 };

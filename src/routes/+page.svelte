@@ -19,7 +19,12 @@
 	<title>Oxytone</title>
 </svelte:head>
 
-<img class="px-4 grayscale" src="/greek_heroes.webp" alt="" />
+<img
+	class="mx-auto max-w-4xl px-4 grayscale"
+	srcset="/greek_heroes@0.5x.webp 1x, /greek_heroes.webp 2x"
+	src="/greek_heroes.webp"
+	alt=""
+/>
 <hgroup class="font-sc -mt-8 text-center">
 	<h1 class="relative text-6xl text-gray-900">oxytone</h1>
 	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
