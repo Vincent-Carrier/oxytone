@@ -43,12 +43,31 @@
 
 	function extend(constructor: new () => HTMLElement) {
 		return class extends constructor {
-			selected = false;
 			clearComplements = () => {};
 
-			toggleSelected() {
-				this.selected = !this.selected;
-				this.classList.toggle('selected');
+			get selected() {
+				return this.classList.contains('selected');
+			}
+			set selected(val: boolean) {
+				if (val) {
+					this.defined = false;
+					this.classList.add('selected');
+				} else {
+					this.classList.remove('selected');
+				}
+			}
+
+			get defined() {
+				return this.classList.contains('defined');
+			}
+			set defined(val: boolean) {
+				if (val) {
+					this.selected = false;
+					this.classList.add('defined');
+				} else {
+					this.clearComplements();
+					this.classList.remove('defined');
+				}
 			}
 
 			*sentenceWords(this: Word) {

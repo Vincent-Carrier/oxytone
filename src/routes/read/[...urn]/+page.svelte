@@ -15,56 +15,43 @@
 	let tb: HTMLElement;
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
-	let lemma: string | null = $state(null);
 
-	$effect(() => {
-		if (selection === null) {
-			defined = null;
-			lemma = null;
+	function clearSelection() {
+		for (let w of selection ?? []) {
+			w.selected = false;
 		}
-	});
-
-	function select(w: Word) {
-		defined?.clearComplements();
-		w.toggleSelected();
-		if (w.selected) {
-			defined = w;
-			lemma = defined.lemma ?? null;
-		} else {
-			defined = null;
-			lemma = null;
-		}
-		if (selection) {
-			if (defined) selection.push(defined);
-			else selection.splice(selection.indexOf(w));
-		} else {
-			let selection = tb.querySelectorAll(`ox-w.selected:not([id="${w?.id}"])`);
-			for (let el of selection) {
-				(el as Word).toggleSelected();
-			}
-		}
-		if (selection === null && defined) {
-			defined.highlightComplements();
-		}
+		selection = null;
 	}
 
 	onMount(() => {
 		document.title = document.querySelector('h1')?.textContent ?? 'Oxytone';
+
 		let hash = page.url.hash;
 		if (hash) document.querySelector(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' });
-		tb!.addEventListener('w-click', async (ev) => {
-			let w = ev.target as Word;
-			select(w);
-		});
 
 		// Don't add line / chapter anchors to history stack
 		tb.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
 			anchor.addEventListener('click', (ev) => {
 				let a = ev.target as HTMLAnchorElement;
-				if (a.hash === location.hash) location.replace('#');
+				if (a.hash === hash) location.replace('#');
 				else location.replace(a.hash);
 				ev.preventDefault();
 			});
+		});
+
+		tb!.addEventListener('w-click', async (ev) => {
+			let w = ev.target as Word;
+			if (selection === null) {
+				w.defined = !w.defined;
+				if (defined && defined !== w) defined.defined = false;
+				defined = w === defined ? null : w;
+				defined?.highlightComplements();
+			} else {
+				defined = null;
+				w.selected = !w.selected;
+				if (w.selected) selection.push(w);
+				else selection.splice(selection.indexOf(w));
+			}
 		});
 	});
 </script>
@@ -75,7 +62,7 @@
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>
-		<FlashcardsButton bind:selection />
+		<FlashcardsButton bind:selection bind:defined />
 		<VerbsButton />
 		<ColorsButton />
 	</nav>
@@ -95,6 +82,6 @@
 	{/if}
 </div>
 
-{#if lemma}
-	<Definition {lemma} />
+{#if defined?.lemma}
+	<Definition lemma={defined.lemma} />
 {/if}

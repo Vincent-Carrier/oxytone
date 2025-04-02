@@ -20,7 +20,11 @@
 }
 
 .body {
-	@apply ml-14 text-justify;
+	@apply ml-14 leading-relaxed;
+}
+.treebank.dialogue,
+.treebank.prose {
+	@apply text-justify;
 }
 
 section {
@@ -31,31 +35,21 @@ section {
 	@apply mb-2;
 }
 
-.chapter-nbr,
-.section-nbr,
-.line-nbr,
-.sentence-nbr,
-.stephanus-nbr {
-	@apply font-sans text-sm select-none;
+.nbr {
+	@apply font-sans select-none;
 	&:target {
-		@apply border-blue-500 bg-blue-50 text-blue-500;
+		@apply border-blue-600 bg-blue-50 text-blue-500;
 	}
 }
 
-.stephanus-nbr,
-.sentence-nbr {
-	@apply float-left -ml-14 block w-10 border-r-1 border-gray-200 bg-gray-50 p-1 text-right text-gray-400;
+:where(.nbr:not(.section-nbr)) {
+	@apply float-left mt-[7px] -ml-14 block w-10 border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500;
 }
-
-.section-nbr {
-	@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
-}
-
-.chapter-nbr {
-	@apply sticky top-0;
+.chapter-nbr,
+.stephanus-nbr {
+	@apply sticky top-4;
 }
 .line-nbr {
-	@apply clear-left;
 	&:not([id$='0'], [id$='5']) {
 		@apply text-transparent;
 	}
@@ -63,12 +57,13 @@ section {
 		@apply text-gray-500;
 	}
 }
-.chapter-nbr,
-.line-nbr {
-	@apply float-left -ml-14 w-10 border-r-3 border-transparent pt-1 pr-1 text-right text-xs text-gray-500;
-	&:target {
-		@apply border-blue-500 text-blue-500;
-	}
+
+.section-nbr {
+	@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
+}
+
+:not(section) p {
+	@apply inline;
 }
 
 .sentence-nbr {
@@ -80,8 +75,7 @@ section {
 }
 
 .line {
-	text-indent: 3.5rem hanging;
-	@apply leading-snug;
+	text-indent: 0.5rem hanging;
 }
 
 .speaker {

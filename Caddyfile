@@ -1,6 +1,6 @@
 {$DOMAIN:localhost} {
 	# Handle Python API requests
-	handle_path /python/* {
+	handle_path /fastapi/* {
 		reverse_proxy localhost:8000
 	}
 	handle_path /basex/* {

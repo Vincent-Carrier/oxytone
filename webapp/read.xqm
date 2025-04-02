@@ -42,7 +42,7 @@ declare variable $r:xslt := xsm:stylesheet({
     </span>,
   "chapter":
     <section>
-      <a class="chapter-nbr">
+      <a class="nbr chapter-nbr">
         <xsl:attribute name="href">
           <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
@@ -55,7 +55,7 @@ declare variable $r:xslt := xsm:stylesheet({
     </section>,
   "section":
     <p>
-      <a class="section-nbr">
+      <a class="nbr section-nbr">
         <xsl:attribute name="href">
           <xsl:value-of select="concat('#', @id)" />
         </xsl:attribute>
@@ -68,7 +68,7 @@ declare variable $r:xslt := xsm:stylesheet({
     </p>,
   "ln":
     <div class="line">
-      <a class="line-nbr">
+      <a class="nbr line-nbr">
         <xsl:copy-of select="@id" />
         <xsl:attribute name="id">
           <xsl:value-of select="@id" />
@@ -83,7 +83,7 @@ declare variable $r:xslt := xsm:stylesheet({
       </span>
     </div>,
   "stephanus":
-    <a class="stephanus-nbr">
+    <a class="nbr stephanus-nbr">
       <xsl:attribute name="href">
         <xsl:value-of select="concat('#', @id)" />
       </xsl:attribute>

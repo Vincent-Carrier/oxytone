@@ -1,23 +1,32 @@
 @reference '$/app.css';
 
 section.century {
-	@apply mx-4 my-8 text-gray-800;
+	@apply my-8 text-gray-800;
 	&:first-of-type {
 		@apply mt-0;
 	}
 	& h2 {
-		@apply font-sc sticky top-12 float-left text-xl font-bold;
+		@apply font-sc w-20 text-xl font-bold max-sm:mb-2 max-sm:ml-4;
+		@apply sm:sticky sm:top-4 sm:float-left sm:-mt-[6px] sm:text-right;
 	}
 	& ul.authors {
-		@apply ml-24;
-		& > li {
-			@apply mb-4;
-		}
+		@apply relative rounded-sm border-1 border-gray-300 sm:ml-24;
 
-		& details.author > summary {
-			@apply font-sc sticky top-0 mt-4 mb-2 bg-white py-1 text-lg leading-none font-medium lowercase;
-			& > span {
-				@apply w-fit border-b-1 border-gray-300;
+		& details.author {
+			:has(&) {
+				pointer-events: none;
+			}
+			& > summary {
+				@apply font-sc pointer-events-auto relative -z-10 border-t-1 border-gray-300 bg-gray-50 px-4 pb-1 text-lg leading-none font-medium lowercase;
+			}
+			li:first-of-type & > summary {
+				@apply border-t-0;
+			}
+			&[open] > summary {
+				@apply border-b-1;
+			}
+			& * {
+				@apply pointer-events-auto;
 			}
 		}
 
@@ -35,7 +44,7 @@ section.century {
 
 		ul.works {
 			@apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
-			@apply pl-1 font-serif text-sm;
+			@apply py-2 pl-4 font-serif text-sm;
 			list-style: '‒  ' inside;
 			& details:not([open]) summary::marker {
 				content: '+  ';

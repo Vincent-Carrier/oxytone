@@ -10,6 +10,7 @@
 @layer base {
 	:root {
 		font-size: 125%;
+		@apply text-gray-800;
 	}
 }
 

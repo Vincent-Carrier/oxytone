@@ -3,8 +3,24 @@
 ox-w {
 	@apply cursor-pointer text-gray-800;
 
-	&.selected {
-		@apply bg-gray-100 outline -outline-offset-1 outline-gray-200;
+	&.defined,
+	&.selected,
+	&.sbj,
+	&.acc-obj,
+	&.dat-obj,
+	&.gen-obj {
+		@apply relative;
+		&::before {
+			content: '';
+			@apply absolute -inset-x-0.5 inset-y-0 -z-10 rounded-xs outline-1;
+		}
+	}
+
+	&.defined::before {
+		@apply bg-gray-50 outline-gray-200;
+	}
+	&.selected::before {
+		@apply bg-blue-50 outline-1 outline-blue-700;
 	}
 
 	.verbs &[pos='verb'] {
@@ -14,29 +30,29 @@ ox-w {
 	.syntax &[case='nom.'] {
 		@apply text-emerald-700;
 	}
-	&.sbj {
-		@apply bg-emerald-50;
+	&.sbj::before {
+		@apply bg-emerald-50 outline-emerald-200;
 	}
 
 	.syntax &[case='acc.'] {
 		@apply text-sky-700;
 	}
-	&.acc-obj {
-		@apply bg-sky-50;
+	&.acc-obj::before {
+		@apply bg-sky-50 outline-sky-200;
 	}
 
 	.syntax &[case='dat.'] {
 		@apply text-yellow-700;
 	}
-	&.dat-obj {
-		@apply bg-yellow-50;
+	&.dat-obj::before {
+		@apply bg-yellow-50 outline-yellow-200;
 	}
 
 	.syntax &[case='gen.'] {
 		@apply text-purple-700;
 	}
-	&.gen-obj {
-		@apply bg-purple-50;
+	&.gen-obj::before {
+		@apply bg-purple-50 outline-purple-200;
 	}
 
 	.syntax &[case='voc.'] {

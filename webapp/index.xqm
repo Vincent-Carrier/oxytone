@@ -21,8 +21,7 @@ declare %rest:path("")
         group by $author := $author-in-date?english-author
           return
             <li>
-              <details class="author">
-                {if (count($author-in-date) <= 20) then attribute open {}}
+              <details class="author" open="">
                 <summary><span>{$author}</span></summary>
                 <ul class="works">
                   {for $work in $author-in-date return idx:work($work)}
@@ -39,7 +38,6 @@ declare function idx:work($work) {
     <li>
       {if (exists($pager)) then
         <details class="work">
-          {if (count($pager?list) <= 5 ) then attribute open {}}
           <summary>{$work?english-title}</summary>
           <ol class="pages">
           {for $n in $pager?list

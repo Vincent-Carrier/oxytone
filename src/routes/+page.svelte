@@ -15,12 +15,25 @@
 	}
 </script>
 
-<hgroup class="font-sc mt-16 text-center">
-	<h1 class="text-6xl text-gray-900">oxytone</h1>
+<svelte:head>
+	<title>Oxytone</title>
+</svelte:head>
+
+<img class="px-4 grayscale" src="/greek_heroes.webp" alt="" />
+<hgroup class="font-sc -mt-8 text-center">
+	<h1 class="relative text-6xl text-gray-900">oxytone</h1>
 	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
 </hgroup>
-<div class="mx-auto max-w-4xl px-4 py-12 text-gray-800">
-	<button class="btn ml-auto block" onclick={expandAll}>
+<div class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-gray-800">
+	<div class="mb-12 rounded-sm border-1 border-gray-300 bg-gray-50 p-4 pt-2 text-gray-800 sm:ml-24">
+		<h2 class="font-sans-sc font-bold lowercase">About</h2>
+		<p class="">
+			Oxytone is a web application that aims to provide a comprehensive reading environment for the
+			reading of Ancient Greek literature. It offers a wide range of features and tools to help
+			users improve their language skills and gain a deeper understanding of the language.
+		</p>
+	</div>
+	<button class="btn ghost pointer-events-auto mb-2 ml-auto block" onclick={expandAll}>
 		{expanded ? 'Collapse all' : 'Expand all'}
 	</button>
 	{@html data.body}

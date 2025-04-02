@@ -352,7 +352,8 @@ declare function p:book-pager($list) {
   }
 };
 
-declare function p:greek-numeral($n as xs:integer) as xs:string {
+declare function p:greek-numeral($num) as xs:string {
+  let $n := $num cast as xs:integer
   let $char := if ($n < 18) then $n - 1 else $n (: skip sigma alternate :)
   return char(0x0391 + $char)
 };
