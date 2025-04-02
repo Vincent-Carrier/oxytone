@@ -6,7 +6,7 @@
 
 	function onclick() {
 		colors = !colors;
-		document.getElementById('treebank-container')?.classList.toggle('syntax');
+		document.getElementById('treebank')?.classList.toggle('syntax');
 	}
 </script>
 

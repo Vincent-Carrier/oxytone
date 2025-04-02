@@ -6,7 +6,7 @@
 
 	function onclick() {
 		verbs = !verbs;
-		document.getElementById('treebank-container')?.classList.toggle('verbs');
+		document.getElementById('treebank')?.classList.toggle('verbs');
 	}
 </script>
 

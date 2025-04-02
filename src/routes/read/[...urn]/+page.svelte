@@ -77,22 +77,20 @@
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50"
 	></div>
-	<div id="treebank-container" class="contents">
-		{#await data.treebank}
-			<p class="font-sc mt-32 self-center text-2xl lowercase">Loading ...</p>
-		{:then treebank}
-			<article
-				id="treebank"
-				class="verbs syntax h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed"
-			>
-				<div bind:this={tb} class="max-w-[60ch] font-serif">
-					{@html treebank}
-				</div>
-			</article>
-		{:catch}
-			<p class="font-sc mt-32 self-center text-2xl lowercase">Something went wrong</p>
-		{/await}
-	</div>
+	{#await data.treebank}
+		<p class="font-sc mt-32 self-center text-2xl lowercase">Loading ...</p>
+	{:then treebank}
+		<article
+			id="treebank"
+			class="verbs syntax h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed"
+		>
+			<div bind:this={tb} class="max-w-[60ch] font-serif">
+				{@html treebank}
+			</div>
+		</article>
+	{:catch}
+		<p class="font-sc mt-32 self-center text-2xl lowercase">Something went wrong</p>
+	{/await}
 	{#if defined}
 		<Morphology word={defined} />
 	{/if}
