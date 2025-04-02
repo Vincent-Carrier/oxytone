@@ -7,6 +7,8 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+.logs/
+.zip
 
 # OS
 .DS_Store
@@ -37,5 +39,3 @@ glaux/
 .ropeproject/
 .venv/
 .pyc
-
-.zip

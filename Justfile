@@ -74,8 +74,7 @@ release:
   zip -r corpus.zip glaux/ tei/ lsj/
   gh release create corpus.zip
 
-[script]
 build:
+  git pull
   pnpm build
-  node build/ &
-  basexhttp &
+  systemctl restart paroxytone.target
