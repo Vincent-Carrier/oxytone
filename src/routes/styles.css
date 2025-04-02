@@ -6,13 +6,16 @@ section.century {
 		@apply mt-0;
 	}
 	& h2 {
-		@apply font-sc w-20 text-xl font-bold max-sm:mb-2 max-sm:ml-4;
+		@apply font-sc w-20 text-xl font-bold;
+		@variant max-sm {
+			@apply mb-2 ml-4;
+		}
 		@variant sm {
 			@apply sticky top-4 float-left -mt-[6px] text-right;
 		}
 	}
 	& ul.authors {
-		@apply relative rounded-sm border-1 border-gray-300 sm:ml-24;
+		@apply card relative bg-transparent sm:ml-24;
 
 		& details.author {
 			:has(&) {
