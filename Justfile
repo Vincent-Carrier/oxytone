@@ -73,6 +73,7 @@ saxon:
 release:
   zip -r corpus.zip glaux/ tei/ lsj/
   gh release create corpus.zip
+  rm -f corpus.zip
 
 build:
   git pull
