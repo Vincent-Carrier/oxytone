@@ -7,7 +7,9 @@ section.century {
 	}
 	& h2 {
 		@apply font-sc w-20 text-xl font-bold max-sm:mb-2 max-sm:ml-4;
-		@apply sm:sticky sm:top-4 sm:float-left sm:-mt-[6px] sm:text-right;
+		@variant sm {
+			@apply sticky top-4 float-left -mt-[6px] text-right;
+		}
 	}
 	& ul.authors {
 		@apply relative rounded-sm border-1 border-gray-300 sm:ml-24;
@@ -31,8 +33,7 @@ section.century {
 		}
 
 		& summary {
-			@apply cursor-pointer;
-			text-indent: 0.8rem hanging;
+			@apply indent-hanging cursor-pointer;
 		}
 
 		& details[open] summary::marker {
@@ -44,8 +45,7 @@ section.century {
 
 		ul.works {
 			@apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
-			@apply py-2 pl-4 font-serif text-sm;
-			list-style: '‒  ' inside;
+			@apply list-dash indent-hanging py-2 pl-4 font-serif text-sm;
 			& details:not([open]) summary::marker {
 				content: '+  ';
 			}
@@ -54,14 +54,13 @@ section.century {
 			}
 
 			& li:has(details) {
-				list-style: none;
+				@apply list-none;
 			}
 
 			& details.work {
 				@apply break-inside-avoid;
 				& ol {
-					@apply pl-2;
-					list-style: '‒  ' inside;
+					@apply list-dash pl-2;
 				}
 				& li {
 					@apply capitalize;

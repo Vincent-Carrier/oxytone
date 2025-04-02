@@ -26,11 +26,11 @@ async def create_flashcards(
                 tags=[f"author-{author}", f"work-{work}"],
             )
         )
-        with tempfile.NamedTemporaryFile(delete=False) as f:
-            deck.write_to_file(f.name)
-            response = FileResponse(
-                f.name,
-                filename="greek-flashcards.apkg",
-                media_type="application/octet-stream",
-            )
-            return response
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        deck.write_to_file(f.name)
+        response = FileResponse(
+            f.name,
+            filename="greek-flashcards.apkg",
+            media_type="application/octet-stream",
+        )
+        return response

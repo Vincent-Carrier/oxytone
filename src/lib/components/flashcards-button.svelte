@@ -29,7 +29,7 @@
 		selection = [];
 	}
 
-	function cancel() {
+	function clearSelection() {
 		for (let w of selection!) {
 			w.classList.remove('selected');
 		}
@@ -42,7 +42,7 @@
 		class="fixed top-10 right-2 max-h-96 w-32 overflow-y-scroll rounded-md border-1 border-r-3 border-b-3 border-gray-300 max-sm:hidden"
 	>
 		<div class="sticky top-0 border-b-1 border-gray-300 bg-gray-50 px-4 lowercase">Selection</div>
-		<ul style="list-style: '– ' inside;" class="px-4 py-2 font-serif text-gray-800">
+		<ul class="list-dash px-4 py-2 font-sans text-gray-800">
 			{#each selection as w}
 				<li>{w.lemma}</li>
 			{/each}
@@ -51,14 +51,18 @@
 {/if}
 <div class="relative max-sm:hidden">
 	{#if selection}
-		<button onclick={cancel} class="btn ghost danger mr-2">cancel</button>
+		<button onclick={clearSelection} class="btn ghost danger mr-2">cancel</button>
 		<button class="btn" inert={count == 0} popovertarget="flashcards-help">
-			<a href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`} download="greek-flashcards.apkg">
+			<a
+				href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`}
+				download="greek-flashcards.apkg"
+				onclick={clearSelection}
+			>
 				{`export ${count} word${count === 1 ? '' : 's'}`}</a
 			>
 		</button>
 	{:else}
-		<button onclick={() => (selection = [])} class="btn ghost">flashcards</button>
+		<button onclick={select} class="btn ghost">flashcards</button>
 	{/if}
 	{#if selection?.length == 0}
 		<Tooltip>

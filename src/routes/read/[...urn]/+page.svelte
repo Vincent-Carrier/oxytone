@@ -16,12 +16,17 @@
 	let selection: Word[] | null = $state(null);
 	let defined: Word | null = $state(null);
 
-	function clearSelection() {
-		for (let w of selection ?? []) {
-			w.selected = false;
+	$effect(() => {
+		if (defined === null) {
+			let old = tb?.querySelector<Word>('ox-w.defined');
+			if (old) old.defined = false;
 		}
-		selection = null;
-	}
+		if (selection === null) {
+			for (let w of tb?.querySelectorAll<Word>('ox-w.selected') ?? []) {
+				w.selected = false;
+			}
+		}
+	});
 
 	onMount(() => {
 		document.title = document.querySelector('h1')?.textContent ?? 'Oxytone';
@@ -58,7 +63,7 @@
 
 <div class="flex h-screen flex-col">
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 px-14 py-1 text-sm"
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-14 text-sm"
 	>
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>

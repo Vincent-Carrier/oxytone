@@ -11,7 +11,7 @@
 	& .books {
 		@apply columns-2 md:columns-4;
 		& li {
-			list-style: '‒  ' inside;
+			@apply list-dash;
 			& a {
 				@apply text-blue-600;
 			}

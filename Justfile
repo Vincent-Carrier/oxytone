@@ -19,6 +19,10 @@ syntax:
         -Q seed/syntax.xq
 
 [group('db')]
+normalized:
+  basex -c "CREATE DB normalized"
+
+[group('db')]
 glaux:
   basex -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
         -c "CREATE DB glaux glaux/"
