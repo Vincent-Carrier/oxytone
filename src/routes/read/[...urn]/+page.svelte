@@ -102,7 +102,7 @@
 			verbs
 			{#snippet tooltip()}
 				<Tooltip class="w-max">
-					<p>Each verb is shown in bold</p>
+					<p>Each verb is shown in <strong>bold</strong></p>
 				</Tooltip>
 			{/snippet}
 		</Toggle>

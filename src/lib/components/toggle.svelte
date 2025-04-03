@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, type Snippet } from 'svelte'
+	import { type Snippet } from 'svelte'
 	import LocalStore from '$lib/local-storage.svelte'
 
 	type Props = {
@@ -22,11 +22,10 @@
 	onclick={() => (toggle.value = !toggle.value)}
 	onpointerenter={() => (help = true)}
 	onpointerleave={() => (help = false)}
-	class="btn ghost relative flex items-center gap-x-1">
+	class={['btn ghost relative flex items-center gap-x-1', !toggle.value && 'text-gray-600']}>
 	{@render children()}
 	<span
 		class={[
-			'mb-px',
 			toggle.value ? 'i-[solar--check-square-outline]' : 'i-[solar--minus-square-line-duotone]'
 		]}></span>
 	{#if help}

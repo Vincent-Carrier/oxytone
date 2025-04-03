@@ -67,7 +67,7 @@ declare variable $r:xslt := xsm:stylesheet({
       <xsl:apply-templates />
     </p>,
   "ln":
-    <div class="line">
+    <xsl:sequence>
       <a class="nbr line-nbr">
         <xsl:copy-of select="@id" />
         <xsl:attribute name="id">
@@ -78,10 +78,12 @@ declare variable $r:xslt := xsm:stylesheet({
         </xsl:attribute>
         <xsl:value-of select="replace(@id, '\d+\.(\d+)$', '$1')" />
       </a>
-      <span class="verse">
-        <xsl:apply-templates />
-      </span>
-    </div>,
+      <div class="line">
+        <span class="verse">
+          <xsl:apply-templates />
+        </span>
+      </div>
+    </xsl:sequence>,
   "stephanus":
     <a class="nbr stephanus-nbr">
       <xsl:attribute name="href">

@@ -56,6 +56,7 @@ declare
   %rest:path("define/lsj/{$lemma}")
   %output:method("xml")
   function def:get-definition($lemma) {
+    let $_ := prof:sleep(1500)
     let $_ := store:read("lsj_shortdefs")
     let $entry := <body>
       {
