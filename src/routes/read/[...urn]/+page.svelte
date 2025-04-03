@@ -4,12 +4,12 @@
 	import '$lib/components/word.svelte';
 	import type { Word } from '$lib/components/word.svelte';
 	import FlashcardsButton from '$lib/components/flashcards-button.svelte';
-	import ColorsButton from '$lib/components/colors-button.svelte';
 	import Morphology from '$lib/components/morphology.svelte';
 	import Definition from '$lib/components/definition.svelte';
 	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
-	import VerbsButton from '$/lib/components/verbs-button.svelte';
+	import Tooltip from '$/lib/components/tooltip.svelte';
+	import Toggle from '$/lib/components/toggle.svelte';
 
 	let { data }: PageProps = $props();
 	let tb: HTMLElement | null = $state(null);
@@ -71,8 +71,31 @@
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>
 		<FlashcardsButton bind:selection bind:defined />
-		<VerbsButton />
-		<ColorsButton />
+		<Toggle
+			>verbs
+			{#snippet tooltip()}
+				<Tooltip class="w-max">
+					<p>Each verb is shown in bold</p>
+				</Tooltip>
+			{/snippet}
+		</Toggle>
+		<Toggle>
+			colors
+			{#snippet tooltip()}
+				<Tooltip class="w-56">
+					<p>Each word is colored according to its case:</p>
+					<div
+						class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase"
+					>
+						<div class="text-emerald-700">Nominative</div>
+						<div class="text-sky-700">Accusative</div>
+						<div class="text-yellow-700">Dative</div>
+						<div class="text-purple-700">Genitive</div>
+						<div class="text-pink-700">Vocative</div>
+					</div>
+				</Tooltip>
+			{/snippet}
+		</Toggle>
 	</nav>
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50"

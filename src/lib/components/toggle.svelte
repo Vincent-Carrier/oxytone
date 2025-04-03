@@ -2,11 +2,13 @@
 	import Tooltip from './tooltip.svelte';
 
 	let help = $state(false);
-	let verbs = $state(true);
+	let toggle = $state(true);
+
+	let { tooltip, children } = $props();
 
 	function onclick() {
-		verbs = !verbs;
-		document.getElementById('treebank')?.classList.toggle('verbs');
+		toggle = !toggle;
+		document.getElementById('treebank')?.classList.toggle('syntax');
 	}
 </script>
 
@@ -15,16 +17,15 @@
 	onmouseenter={() => (help = true)}
 	onmouseleave={() => (help = false)}
 	class="btn ghost relative flex items-center gap-x-1"
-	>verbs
+>
+	{@render children()}
 	<span
 		class={[
 			'mb-px',
-			verbs ? 'i-[solar--check-square-bold-duotone]' : 'i-[solar--minus-square-line-duotone]'
+			toggle ? 'i-[solar--check-square-bold-duotone]' : 'i-[solar--minus-square-line-duotone]'
 		]}
 	></span>
 	{#if help}
-		<Tooltip class="w-max">
-			<p>Each verb is shown in bold</p>
-		</Tooltip>
+		{@render tooltip()}
 	{/if}
 </button>
