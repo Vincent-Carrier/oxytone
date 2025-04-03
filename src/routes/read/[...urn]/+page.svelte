@@ -65,38 +65,7 @@
 </script>
 
 <div class="flex h-screen flex-col">
-	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-14 text-sm"
-	>
-		<a href="/" class="text-gray-800">oxytone</a>
-		<div class="grow"></div>
-		<FlashcardsButton bind:selection bind:defined />
-		<Toggle
-			>verbs
-			{#snippet tooltip()}
-				<Tooltip class="w-max">
-					<p>Each verb is shown in bold</p>
-				</Tooltip>
-			{/snippet}
-		</Toggle>
-		<Toggle>
-			colors
-			{#snippet tooltip()}
-				<Tooltip class="w-56">
-					<p>Each word is colored according to its case:</p>
-					<div
-						class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase"
-					>
-						<div class="text-emerald-700">Nominative</div>
-						<div class="text-sky-700">Accusative</div>
-						<div class="text-yellow-700">Dative</div>
-						<div class="text-purple-700">Genitive</div>
-						<div class="text-pink-700">Vocative</div>
-					</div>
-				</Tooltip>
-			{/snippet}
-		</Toggle>
-	</nav>
+	{@render nav()}
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50"
 	></div>
@@ -122,3 +91,44 @@
 {#if defined?.lemma}
 	<Definition lemma={defined.lemma} />
 {/if}
+
+{#snippet nav()}
+	<nav
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-14 text-sm"
+	>
+		<a href="/" class="text-gray-800">oxytone</a>
+		<div class="grow"></div>
+		<FlashcardsButton bind:selection bind:defined />
+		<Toggle
+			key="verbs"
+			onclick={() => document.getElementById('treebank')?.classList.toggle('verbs')}
+		>
+			verbs
+			{#snippet tooltip()}
+				<Tooltip class="w-max">
+					<p>Each verb is shown in bold</p>
+				</Tooltip>
+			{/snippet}
+		</Toggle>
+		<Toggle
+			key="colors"
+			onclick={() => document.getElementById('treebank')?.classList.toggle('syntax')}
+		>
+			colors
+			{#snippet tooltip()}
+				<Tooltip class="w-56">
+					<p>Each word is colored according to its case:</p>
+					<div
+						class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase"
+					>
+						<div class="text-emerald-700">Nominative</div>
+						<div class="text-sky-700">Accusative</div>
+						<div class="text-yellow-700">Dative</div>
+						<div class="text-purple-700">Genitive</div>
+						<div class="text-pink-700">Vocative</div>
+					</div>
+				</Tooltip>
+			{/snippet}
+		</Toggle>
+	</nav>
+{/snippet}

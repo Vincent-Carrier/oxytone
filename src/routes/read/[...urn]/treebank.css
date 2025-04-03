@@ -19,6 +19,10 @@
 	}
 }
 
+.treebank ::selection {
+	@apply bg-blue-50;
+}
+
 .body {
 	@apply ml-14 leading-relaxed;
 }

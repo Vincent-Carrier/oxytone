@@ -1,28 +1,33 @@
 <script lang="ts">
-	import Tooltip from './tooltip.svelte';
+	import { onMount } from 'svelte';
 
 	let help = $state(false);
 	let toggle = $state(true);
 
-	let { tooltip, children } = $props();
+	let { tooltip, children, key, onclick: onClick } = $props();
 
-	function onclick() {
-		toggle = !toggle;
-		document.getElementById('treebank')?.classList.toggle('syntax');
-	}
+	onMount(() => {
+		let val = localStorage.getItem(key);
+		toggle = val !== 'false';
+	});
+
+	$effect(() => {
+		localStorage.setItem(key, String(toggle));
+		onClick();
+	});
 </script>
 
 <button
-	{onclick}
-	onmouseenter={() => (help = true)}
-	onmouseleave={() => (help = false)}
+	onclick={() => (toggle = !toggle)}
+	onpointerenter={() => (help = true)}
+	onpointerleave={() => (help = false)}
 	class="btn ghost relative flex items-center gap-x-1"
 >
 	{@render children()}
 	<span
 		class={[
 			'mb-px',
-			toggle ? 'i-[solar--check-square-bold-duotone]' : 'i-[solar--minus-square-line-duotone]'
+			toggle ? 'i-[solar--check-square-outline]' : 'i-[solar--minus-square-line-duotone]'
 		]}
 	></span>
 	{#if help}
