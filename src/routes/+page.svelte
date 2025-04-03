@@ -1,17 +1,17 @@
 <script lang="ts">
-	import './styles.css';
-	import type { PageProps } from './$types';
-	import '$lib/components/word.svelte';
+	import './styles.css'
+	import type { PageProps } from './$types'
+	import '$lib/components/word.svelte'
 
-	let { data }: PageProps = $props();
+	let { data }: PageProps = $props()
 
-	let expanded = $state(false);
+	let expanded = $state(false)
 
 	function expandAll() {
 		for (let details of document.querySelectorAll<HTMLDetailsElement>('details')) {
-			details.open = !expanded;
+			details.open = !expanded
 		}
-		expanded = !expanded;
+		expanded = !expanded
 	}
 </script>
 
@@ -23,8 +23,7 @@
 	class="mx-auto w-full max-w-4xl px-4 grayscale"
 	srcset="/greek_heroes@0.5x.webp 1x, /greek_heroes.webp 2x"
 	src="/greek_heroes.webp"
-	alt=""
-/>
+	alt="" />
 <hgroup class="font-sc -mt-8 text-center">
 	<h1 class="relative text-6xl text-gray-900">oxytone</h1>
 	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
