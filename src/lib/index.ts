@@ -1,1 +1,9 @@
-// place files you want to import through the `$lib` alias in this folder.
+import { browser } from '$app/environment'
+
+export function q<T extends HTMLElement>(selector: string) {
+	if (browser) return document.querySelector<T>(selector)
+}
+
+export function qq<T extends HTMLElement>(selector: string) {
+	if (browser) return document.querySelectorAll<T>(selector)
+}

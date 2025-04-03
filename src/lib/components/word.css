@@ -24,7 +24,7 @@ ox-w {
 	}
 
 	.verbs &[pos='verb'] {
-		@apply font-bold text-gray-600;
+		@apply font-bold;
 	}
 
 	.syntax &[case='nom.'] {
