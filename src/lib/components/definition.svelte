@@ -20,8 +20,9 @@
 			<a
 				target="_blank"
 				href={`https://lsj.gr/wiki/${lemma}`}
-				class="mt-4 mb-2 block text-right text-blue-600">
-				<span class="underline">lsj.gr/</span> 🡽
+				class="mt-4 mb-2 ml-auto flex w-fit items-center gap-x-1 text-blue-600">
+				<span class="underline">lsj.gr/</span>
+				<span class="i-[solar--square-arrow-right-up-outline] mt-px inline-block"></span>
 			</a>
 		</div>
 	{/await}
