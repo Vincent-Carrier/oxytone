@@ -24,7 +24,7 @@ dl {
 			}
 		}
 		&.shortdef {
-			@apply font-bold text-gray-800;
+			@apply text-sm leading-snug font-bold text-gray-800;
 		}
 		& .bibl {
 			@apply text-gray-400;

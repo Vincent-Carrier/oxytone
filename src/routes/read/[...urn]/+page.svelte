@@ -25,14 +25,15 @@
 		let { hash } = location
 		if (hash) q(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' })
 
-		qq('a[href^="#"]').forEach(anchor => {
+		// allow hash anchors to be unselected and remove them from browser history
+		for (let anchor of qq('a[href^="#"]')) {
 			anchor.addEventListener('click', ev => {
 				let a = ev.target as HTMLAnchorElement
-				if (a.hash === hash) location.replace('#')
+				if (a.hash === location.hash) location.replace('#')
 				else location.replace(a.hash)
 				ev.preventDefault()
 			})
-		})
+		}
 
 		tb.addEventListener('w-click', async ev => {
 			let w = ev.target as Word
@@ -63,9 +64,10 @@
 	})
 </script>
 
-<div class="flex h-screen flex-col">
+<div class="flex h-screen flex-col overflow-x-hidden">
 	{@render nav()}
-	<div class="absolute top-0 bottom-0 left-0 -z-10 w-10 border-r-1 border-gray-200 bg-gray-50">
+	<div
+		class="absolute top-0 bottom-0 left-0 -z-10 w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50">
 	</div>
 	<div id="tb-container" bind:this={container} class="contents">
 		{#await data.treebank}
@@ -86,15 +88,14 @@
 	{#if defined}
 		<Morphology word={defined} />
 	{/if}
+	{#if defined?.lemma}
+		<Definition lemma={defined.lemma} />
+	{/if}
 </div>
-
-{#if defined?.lemma}
-	<Definition lemma={defined.lemma} />
-{/if}
 
 {#snippet nav()}
 	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-14 text-sm">
+		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-[var(--padded-margin-w)] text-sm">
 		<a href="/" class="text-gray-800">oxytone</a>
 		<div class="grow"></div>
 		<FlashcardsButton bind:selection bind:defined />

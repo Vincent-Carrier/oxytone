@@ -20,7 +20,7 @@
 
 <button
 	onclick={() => (toggle.value = !toggle.value)}
-	onpointerenter={() => (help = true)}
+	onpointerover={ev => ev.pointerType === 'mouse' && (help = true)}
 	onpointerleave={() => (help = false)}
 	class={['btn ghost relative flex items-center gap-x-1', !toggle.value && 'text-gray-600']}>
 	{@render children()}

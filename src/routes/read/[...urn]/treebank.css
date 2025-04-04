@@ -1,7 +1,16 @@
 @reference '$/app.css';
 
+:root {
+	--margin-w: calc(var(--spacing) * 10);
+	--padded-margin-w: calc(var(--spacing) * 14);
+	@variant max-sm {
+		--margin-w: 0;
+		--padded-margin-w: calc(var(--spacing) * 4);
+	}
+}
+
 .treebank > hgroup {
-	@apply font-sc mb-8 ml-14 text-balance lowercase;
+	@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
 	& h1 {
 		@apply text-3xl text-gray-800;
 	}
@@ -24,7 +33,7 @@
 }
 
 .body {
-	@apply ml-14 leading-relaxed;
+	@apply ml-[var(--padded-margin-w)] leading-relaxed;
 }
 .treebank.dialogue,
 .treebank.prose {
@@ -55,7 +64,7 @@ section {
 }
 
 :where(.nbr:not(.section-nbr)) {
-	@apply float-left mt-[7px] -ml-14 block w-10 border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500;
+	@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500 max-sm:hidden;
 }
 .chapter-nbr,
 .stephanus-nbr {
