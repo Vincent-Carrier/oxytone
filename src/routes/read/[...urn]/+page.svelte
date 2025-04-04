@@ -16,14 +16,16 @@
 	let selection: Word[] | null = $state(null)
 	let defined: Word | null = $state(null)
 
+	function loadTreebank() {
+		defined = null
+		selection = null
+		return data.treebank
+	}
+
 	$inspect(tb)
 
 	$effect(() => {
-		if (tb === null) {
-			selection = null
-			defined = null
-			return
-		}
+		if (tb === null) return
 
 		const q = (sel: string) => tb!.querySelector(sel)
 		const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
@@ -78,7 +80,10 @@
 		class="absolute top-0 bottom-0 left-0 -z-10 w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50">
 	</div>
 	<div id="tb-container" bind:this={container} class="contents">
-		{#await data.treebank}
+		{#await data.treebank.finally(() => {
+			selection = null
+			defined = null
+		})}
 			<p
 				transition:fade|global
 				class="font-sc absolute inset-x-0 top-1/3 text-center text-2xl lowercase">
@@ -103,7 +108,7 @@
 	{#if defined}
 		<div
 			transition:slide
-			class="absolute inset-x-0 bottom-0 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
+			class="fixed inset-x-0 bottom-0 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
 			<Morphology word={defined} />
 		</div>
 	{/if}
