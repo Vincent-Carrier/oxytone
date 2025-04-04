@@ -19,8 +19,8 @@ GLAUX_TEXT_ID	TLG	STARTDATA	ENDDATE	AUTHOR_STANDARD	TITLE_STANDARD	GENRE_STANDAR
 23	1444-001	-700	-601	Ilias Parva	Ilias parva	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	390	1407	Little Iliad	Little Iliad
 24	1445-001	-700	-601	Iliu Persis	Iliu persis	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	96	13807	Sack of Ilium	Sack of Ilium
 25	0013-001	-700	-601	Hymni Homerici	Fragmenta hymni in Bacchum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	180	2304	Homeric Hymns	Fragments of the Hymn to Dionysus
-26	0013-005	-700	-601	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	2393	11435	Homeric Hymns	To Aphrodite
-27	0013-009	-700	-601	Hymni Homerici	In Dianam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	67	11438	Homeric Hymns	To Artemis
+26	0013-005	-700	-601	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	2393	11435	Homeric Hymns	Hymn to Aphrodite
+27	0013-009	-700	-601	Hymni Homerici	In Dianam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	67	11438	Homeric Hymns	Hymn to Artemis
 29	0255-002	-700	-601	Mimnermus	Epigramma	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	17	12614	Mimnermus	Epigram
 32	0299-001	-700	-601	Terpander	Fragmenta	Lyric poetry	Doric	https://archive.org/details/greekmelicpoets00smytuoft	NA	TXT	70	10428	Terpander	Fragments
 33	1737-001	-700	-601	Titanomachia	Titanomachia	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	125	13812	Titanomachia	Titanomachia
@@ -31,25 +31,25 @@ GLAUX_TEXT_ID	TLG	STARTDATA	ENDDATE	AUTHOR_STANDARD	TITLE_STANDARD	GENRE_STANDAR
 43	1274-002	-700	-501	Cleobulus	Epigrammata	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	72	12606	Cleobulus	Epigrams
 44	0364-001	-700	-501	Danaïs vel Danaïdes	Danaïs vel Danaïdes	Epic poetry	Ionic/Epic	http://remacle.org	NA	TXT	13	13792	Danaïs or Danaïdes	Danaïs or Danaïdes
 45	1541-001	-700	-501	Nostoi	Nostoi	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	38	13808	Returns	Returns
-46	0013-006	-700	-501	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	153	11436	Homeric Hymns	To Aphrodite
-47	0013-007	-700	-501	Hymni Homerici	In Bacchum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	508	11430	Homeric Hymns	To Dionysus
-48	0013-010	-700	-501	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	47	11439	Homeric Hymns	To Aphrodite
-49	0013-011	-700	-501	Hymni Homerici	In Minervam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	42	11440	Homeric Hymns	To Athena
-50	0013-012	-700	-501	Hymni Homerici	In Junonem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	35	11441	Homeric Hymns	To Hera
-51	0013-013	-700	-501	Hymni Homerici	In Cererem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	29	11442	Homeric Hymns	To Demeter
-52	0013-014	-700	-501	Hymni Homerici	In matrem deorum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	51	11443	Homeric Hymns	To the Mother of the Gods
-53	0013-016	-700	-501	Hymni Homerici	In Aesculapium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	42	11445	Homeric Hymns	To Aesclepius
-54	0013-017	-700	-501	Hymni Homerici	In Dioscuros	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	35	11446	Homeric Hymns	To the Dioscuri
-55	0013-021	-700	-501	Hymni Homerici	In Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	46	11450	Homeric Hymns	To Apollo
-56	0013-022	-700	-501	Hymni Homerici	In Neptunum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	58	11451	Homeric Hymns	To Poseidon
-57	0013-023	-700	-501	Hymni Homerici	In Jovem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	30	11452	Homeric Hymns	To Zeus
-58	0013-024	-700	-501	Hymni Homerici	In Vestam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	39	11453	Homeric Hymns	To Hestia
-59	0013-025	-700	-501	Hymni Homerici	In Musas et Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	61	11454	Homeric Hymns	To the Muses and Apollo
-60	0013-026	-700	-501	Hymni Homerici	In Bacchum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	103	11431	Homeric Hymns	To Dionysus
-61	0013-027	-700	-501	Hymni Homerici	In Dianam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	156	11455	Homeric Hymns	To Artemis
-62	0013-028	-700	-501	Hymni Homerici	In Minervam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	138	11456	Homeric Hymns	To Athena
-63	0013-029	-700	-501	Hymni Homerici	In Vestam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	116	11457	Homeric Hymns	To Hestia
-64	0013-030	-700	-501	Hymni Homerici	In Tellurem matrem omnium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	158	11458	Homeric Hymns	To Gaia, Mother of All
+46	0013-006	-700	-501	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	153	11436	Homeric Hymns	Hymn to Aphrodite
+47	0013-007	-700	-501	Hymni Homerici	In Bacchum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	508	11430	Homeric Hymns	Hymn to Dionysus
+48	0013-010	-700	-501	Hymni Homerici	In Venerem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	47	11439	Homeric Hymns	Hymn to Aphrodite
+49	0013-011	-700	-501	Hymni Homerici	In Minervam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	42	11440	Homeric Hymns	Hymn to Athena
+50	0013-012	-700	-501	Hymni Homerici	In Junonem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	35	11441	Homeric Hymns	Hymn to Hera
+51	0013-013	-700	-501	Hymni Homerici	In Cererem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	29	11442	Homeric Hymns	Hymn to Demeter
+52	0013-014	-700	-501	Hymni Homerici	In matrem deorum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	51	11443	Homeric Hymns	Hymn to the Mother of the Gods
+53	0013-016	-700	-501	Hymni Homerici	In Aesculapium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	42	11445	Homeric Hymns	Hymn to Aesclepius
+54	0013-017	-700	-501	Hymni Homerici	In Dioscuros	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	35	11446	Homeric Hymns	Hymn to the Dioscuri
+55	0013-021	-700	-501	Hymni Homerici	In Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	46	11450	Homeric Hymns	Hymn to Apollo
+56	0013-022	-700	-501	Hymni Homerici	In Neptunum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	58	11451	Homeric Hymns	Hymn to Poseidon
+57	0013-023	-700	-501	Hymni Homerici	In Jovem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	30	11452	Homeric Hymns	Hymn to Zeus
+58	0013-024	-700	-501	Hymni Homerici	In Vestam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	39	11453	Homeric Hymns	Hymn to Hestia
+59	0013-025	-700	-501	Hymni Homerici	In Musas et Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	61	11454	Homeric Hymns	Hymn to the Muses and Apollo
+60	0013-026	-700	-501	Hymni Homerici	In Bacchum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	103	11431	Homeric Hymns	Hymn to Dionysus
+61	0013-027	-700	-501	Hymni Homerici	In Dianam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	156	11455	Homeric Hymns	Hymn to Artemis
+62	0013-028	-700	-501	Hymni Homerici	In Minervam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	138	11456	Homeric Hymns	Hymn to Athena
+63	0013-029	-700	-501	Hymni Homerici	In Vestam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	116	11457	Homeric Hymns	Hymn to Hestia
+64	0013-030	-700	-501	Hymni Homerici	In Tellurem matrem omnium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	158	11458	Homeric Hymns	Hymn to Gaia, Mother of All
 66	1607-002	-700	-501	Phoronis	Phoronis	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	92	14084	Phoronis	Phoronis
 67	0288-001	-700	-501	Pisander	Heraclea	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	30	15965	Pisander	Heraclea
 68	0288-003	-700	-501	Pisander	Epigramma	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	37	12737	Pisander	Epigram
@@ -72,11 +72,11 @@ GLAUX_TEXT_ID	TLG	STARTDATA	ENDDATE	AUTHOR_STANDARD	TITLE_STANDARD	GENRE_STANDAR
 95	0249-001	-600	-501	Echembrotus	Fragmentum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	TXT	19	10574	Echembrotus	Fragment
 96	4163-001	-600	-501	Telegonia	Telegonia	Epic poetry	Ionic/Epic	https://sententiaeantiquae.com	NA	TXT	9	16023	Telegony	Telegony
 97	1433-001	-600	-501	Hipparchus	Fragmenta	Lyric poetry		Perseus	CC BY-SA 4.0	TXT	8	10814	Hipparchus	Fragments
-99	0013-002	-600	-501	Hymni Homerici	In Cererem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	3946	11432	Homeric Hymns	To Demeter
-100	0013-003	-600	-501	Hymni Homerici	In Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	4488	11433	Homeric Hymns	To Apollo
-101	0013-004	-600	-501	Hymni Homerici	In Mercurium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	4779	11434	Homeric Hymns	To Mercury
-102	0013-015	-600	-501	Hymni Homerici	In Herculem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	72	11444	Homeric Hymns	To Hercules
-103	0013-018	-600	-501	Hymni Homerici	In Mercurium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	95	11447	Homeric Hymns	To Mercury
+99	0013-002	-600	-501	Hymni Homerici	In Cererem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	3946	11432	Homeric Hymns	Hymn to Demeter
+100	0013-003	-600	-501	Hymni Homerici	In Apollinem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	4488	11433	Homeric Hymns	Hymn to Apollo
+101	0013-004	-600	-501	Hymni Homerici	In Mercurium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	4779	11434	Homeric Hymns	Hymn to Hermes
+102	0013-015	-600	-501	Hymni Homerici	In Herculem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	72	11444	Homeric Hymns	Hymn to Heracles
+103	0013-018	-600	-501	Hymni Homerici	In Mercurium	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	95	11447	Homeric Hymns	Hymn to Mercury
 106	0366-001	-600	-501	Lasus	Fragmentum	Lyric poetry	Doric	Perseus	CC BY-SA 4.0	TXT	15	8085	Lasus	Fragment
 108	1241-002	-600	-501	Carmen Naupactium	Carmen Naupactium	Epic poetry	Ionic/Epic	https://zenodo.org/record/437896	CC BY 4.0	TXT	67	13803 / 15972	Naupactian Song	Naupactian Song
 109	0630-002	-600	-501	Pherecydes	Fragmenta	Philosophy	Ionic	Perseus	CC BY-SA 4.0	TXT	22	1795	Pherecydes	Fragments
@@ -146,11 +146,11 @@ GLAUX_TEXT_ID	TLG	STARTDATA	ENDDATE	AUTHOR_STANDARD	TITLE_STANDARD	GENRE_STANDAR
 181	0006-019	-500	-401	Euripides	Rhesus	Tragedy	Attic	Perseus	CC BY-SA 4.0	XML	6606	755	Euripides	Rhesus
 182	0006-031	-500	-401	Euripides	Epigrammata	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	29	12611	Euripides	Epigrams
 183	0016-001	-500	-401	Herodotus	Historiae	History	Ionic	Perseus	CC BY-SA 4.0	XML	209843	176	Herodotus	Histories
-184	0013-019	-500	-401	Hymni Homerici	In Pana	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	396	11448	Homeric Hymns	To Pan
-185	0013-020	-500	-401	Hymni Homerici	In Volcanum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	60	11449	Homeric Hymns	To Hephaistos
-186	0013-031	-500	-401	Hymni Homerici	In Solem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	154	11459	Homeric Hymns	To Helios
-187	0013-032	-500	-401	Hymni Homerici	In Lunam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	153	11460	Homeric Hymns	To Selene
-188	0013-033	-500	-401	Hymni Homerici	In Dioscuros	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	137	11461	Homeric Hymns	To the Dioscuri
+184	0013-019	-500	-401	Hymni Homerici	In Pana	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	396	11448	Homeric Hymns	Hymn to Pan
+185	0013-020	-500	-401	Hymni Homerici	In Volcanum	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	60	11449	Homeric Hymns	Hymn to Hephaistos
+186	0013-031	-500	-401	Hymni Homerici	In Solem	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	154	11459	Homeric Hymns	Hymn to Helios
+187	0013-032	-500	-401	Hymni Homerici	In Lunam	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	153	11460	Homeric Hymns	Hymn to Selene
+188	0013-033	-500	-401	Hymni Homerici	In Dioscuros	Lyric poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	XML	137	11461	Homeric Hymns	Hymn to the Dioscuri
 189	1260-002	-500	-401	Chersias	Fragmentum epicum	Epic poetry	Ionic/Epic	Perseus	CC BY-SA 4.0	TXT	13	14059	Chersias	Epic Fragment
 190	0032-015	-500	-401	Pseudo-Xenophon	Atheniensium respublica	Philosophy	Attic	http://remacle.org	NA	TXT	3609	5976 / 15996	Pseudo-Xenophon	Constitution of the Athenians
 191	2600-001	-500	-401	Simon (Scriptor De Re Equestri)	De forma et delectu equorum	Biology	Attic	https://www.hs-augsburg.de/~harsch/augustana.html	NA	TXT	618	16006	Simon (Writer on Horsemanship)	On the Form and Selection of Horses

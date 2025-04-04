@@ -22,7 +22,7 @@ section.century {
 				pointer-events: none;
 			}
 			& > summary {
-				@apply font-sc pointer-events-auto relative -z-10 border-t-1 border-gray-300 bg-gray-50 px-4 pb-1 text-lg leading-none font-medium lowercase;
+				@apply font-sans-sc pointer-events-auto relative -z-10 border-t-1 border-gray-300 bg-gray-50 px-4 py-1 text-lg leading-none font-medium lowercase;
 			}
 			li:first-of-type & > summary {
 				@apply border-t-0;
@@ -48,7 +48,7 @@ section.century {
 
 		ul.works {
 			@apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
-			@apply list-dash indent-hanging py-2 pl-4 font-serif text-sm;
+			@apply list-dash indent-hanging py-2 pl-4 font-sans text-sm;
 			& details:not([open]) summary::marker {
 				content: '+  ';
 			}
