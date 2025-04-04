@@ -11,6 +11,11 @@
 	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
 }
 
+:root {
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+		env(safe-area-inset-left);
+}
+
 @utility list-dash {
 	list-style: '‒  ' inside;
 }

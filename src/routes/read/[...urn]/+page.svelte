@@ -8,6 +8,7 @@
 	import Definition from '$lib/components/definition.svelte'
 	import Tooltip from '$/lib/components/tooltip.svelte'
 	import Toggle from '$/lib/components/toggle.svelte'
+	import { fade, slide } from 'svelte/transition'
 
 	let { data }: PageProps = $props()
 	let container: HTMLElement | null = $state(null)
@@ -15,8 +16,15 @@
 	let selection: Word[] | null = $state(null)
 	let defined: Word | null = $state(null)
 
+	$inspect(tb)
+
 	$effect(() => {
-		if (tb === null) return
+		if (tb === null) {
+			selection = null
+			defined = null
+			return
+		}
+
 		const q = (sel: string) => tb!.querySelector(sel)
 		const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
 
@@ -71,9 +79,14 @@
 	</div>
 	<div id="tb-container" bind:this={container} class="contents">
 		{#await data.treebank}
-			<p class="font-sc mt-32 self-center text-2xl lowercase">Loading ...</p>
+			<p
+				transition:fade|global
+				class="font-sc absolute inset-x-0 top-1/3 text-center text-2xl lowercase">
+				Loading ...
+			</p>
 		{:then treebank}
 			<article
+				transition:fade|global
 				bind:this={tb}
 				id="treebank"
 				class="h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed">
@@ -82,11 +95,17 @@
 				</div>
 			</article>
 		{:catch}
-			<p class="font-sc mt-32 self-center text-2xl lowercase">Something went wrong</p>
+			<p transition:fade|global class="font-sc mt-32 self-center text-2xl lowercase">
+				Something went wrong
+			</p>
 		{/await}
 	</div>
 	{#if defined}
-		<Morphology word={defined} />
+		<div
+			transition:slide
+			class="absolute inset-x-0 bottom-0 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
+			<Morphology word={defined} />
+		</div>
 	{/if}
 	{#if defined?.lemma}
 		<Definition lemma={defined.lemma} />
