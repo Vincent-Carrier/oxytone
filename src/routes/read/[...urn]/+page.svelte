@@ -126,8 +126,12 @@
 		<Toggle key="verbs" set={val => container?.classList.toggle('verbs', val)}>
 			verbs
 			{#snippet tooltip()}
-				<Tooltip class="w-max">
+				<Tooltip class="w-56">
 					<p>Each verb is shown in <strong>bold</strong></p>
+					<p class="italic">
+						<strong>N.B.</strong>: Much of the corpus has been automated automatically and may not
+						be 100% accurate.
+					</p>
 				</Tooltip>
 			{/snippet}
 		</Toggle>
@@ -144,6 +148,10 @@
 						<div class="text-purple-700">Genitive</div>
 						<div class="text-pink-700">Vocative</div>
 					</div>
+					<p class="italic">
+						<strong>N.B.</strong>: Much of the corpus has been automated automatically and may not
+						be 100% accurate.
+					</p>
 				</Tooltip>
 			{/snippet}
 		</Toggle>

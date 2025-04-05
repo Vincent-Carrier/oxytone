@@ -41,7 +41,7 @@
 {#if selection?.length}
 	<div
 		transition:fly={{ x: 300 }}
-		class="fixed top-10 right-2 max-h-96 w-32 overflow-y-scroll rounded-md border-1 border-r-3 border-b-3 border-gray-300 max-sm:hidden">
+		class="fixed top-10 right-2 max-h-5/6 w-40 overflow-y-scroll rounded-md border-1 border-r-3 border-b-3 border-gray-300 max-lg:hidden">
 		<div class="sticky top-0 border-b-1 border-gray-300 bg-gray-50 px-4 lowercase">Selection</div>
 		<ul class="list-dash px-4 py-2 font-sans text-gray-800">
 			{#each selection as w}

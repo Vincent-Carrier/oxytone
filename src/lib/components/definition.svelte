@@ -2,6 +2,7 @@
 	import './definition.css'
 	import { basex } from '$lib/api'
 	import { fade } from 'svelte/transition'
+	import ky from 'ky'
 
 	type Props = { lemma: string }
 	let { lemma }: Props = $props()
@@ -16,14 +17,35 @@
 		{:then definition}
 			<div transition:fade|global>
 				{@html definition}
-				<a
-					target="_blank"
-					href={`https://lsj.gr/wiki/${lemma}`}
-					class="mt-4 mb-2 ml-auto flex w-fit items-center gap-x-1 text-blue-600">
-					<span class="underline">lsj.gr/</span>
-					<span class="i-[solar--square-arrow-right-up-outline] mt-px inline-block"></span>
-				</a>
+				<div class="mt-4 mb-2">
+					{@render validatedLink('lsj.gr', 'https://lsj.gr/wiki/')}
+					{@render validatedLink('wiktionary.org', 'https://en.wiktionary.org/wiki/')}
+				</div>
 			</div>
 		{/await}
 	</div>
 {/if}
+
+{#snippet externalLink(text: string, baseUrl: string, disabled = false)}
+	<a
+		target="_blank"
+		href={disabled ? undefined : `${baseUrl}${lemma}`}
+		class={[
+			'ml-auto flex w-fit items-center gap-x-1',
+			disabled ? 'text-gray-600' : 'text-blue-600'
+		]}>
+		<span class="underline">{text}</span>
+		<span class="i-[solar--square-arrow-right-up-outline] mt-px inline-block"></span>
+	</a>
+{/snippet}
+
+{#snippet validatedLink(text: string, baseUrl: string)}
+	{@const searchParams = new URLSearchParams({ url: `${baseUrl}${lemma}` })}
+	{#await ky.head(`/validate?${searchParams}`, { fetch })}
+		{@render externalLink(text, baseUrl)}
+	{:then _}
+		{@render externalLink(text, baseUrl)}
+	{:catch _}
+		{@render externalLink(text, baseUrl, true)}
+	{/await}
+{/snippet}

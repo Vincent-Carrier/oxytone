@@ -9,132 +9,135 @@
 	}
 }
 
-.treebank > hgroup {
-	@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
-	& h1 {
-		@apply text-3xl text-gray-800;
-	}
-	& .author {
-		@apply text-gray-800;
-	}
-	& .books {
-		@apply columns-2 md:columns-4;
-		& li {
-			@apply list-dash;
-			& a {
-				@apply text-blue-600;
+.treebank {
+	& > hgroup {
+		@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
+		& h1 {
+			@apply text-3xl text-gray-800;
+		}
+		& .author {
+			@apply text-gray-800;
+		}
+		& .books {
+			@apply columns-2 md:columns-4;
+			& li {
+				@apply list-dash;
+				& a {
+					@apply text-blue-600;
+				}
 			}
 		}
 	}
-}
 
-.treebank ::selection {
-	@apply bg-blue-50;
+	&.dialogue .body,
+	&.prose .body {
+		@apply text-justify;
+	}
 }
 
 .body {
 	@apply ml-[var(--padded-margin-w)] leading-relaxed;
-}
-.treebank.dialogue,
-.treebank.prose {
-	@apply text-justify;
-}
 
-section {
-	@apply mb-8;
-}
-
-.dialogue p {
-	@apply mb-2;
-}
-
-.line-nbr {
-	&:not([id$='0'], [id$='5']) {
-		@apply text-transparent;
+	& ::selection {
+		@apply bg-blue-50;
 	}
-	&:hover {
-		@apply text-gray-500;
-	}
-}
-.nbr {
-	@apply font-sans select-none;
-	&:target {
-		@apply border-blue-600 bg-blue-100 !text-blue-600;
-	}
-}
 
-:where(.nbr:not(.section-nbr)) {
-	@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500 max-sm:hidden;
-}
-.chapter-nbr,
-.stephanus-nbr {
-	@apply sticky top-4;
-}
-
-.section-nbr {
-	@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
-}
-
-:not(section) p {
-	@apply inline;
-}
-
-.sentence-nbr {
-	&:not([id$='0'], [id$='5']),
-	section &,
-	p & {
-		@apply hidden;
+	& section {
+		@apply mb-8;
 	}
-}
 
-.line {
-	text-indent: 0.5rem hanging;
-}
+	& .dialogue p {
+		@apply mb-2;
+	}
 
-.speaker {
-	@apply uppercase;
-	&.long {
-		@apply mt-4 bg-white text-gray-700 underline;
-	}
-	&.short,
-	&.mask {
-		@apply float-right -mr-12 block w-8 border-gray-400 px-1 max-md:hidden;
-	}
-	&.short {
-		@apply sticky -top-4 bg-white text-gray-500;
-	}
-	&.mask {
-		@apply relative z-10 h-32 bg-gradient-to-b from-white from-80% to-transparent text-transparent;
-	}
-}
-
-blockquote {
-	@apply my-2;
 	& .line-nbr {
-		@apply mr-6;
-	}
-	& .line {
-		@apply italic;
-		&:first-of-type ox-w:first-of-type {
-			@apply relative;
-			&::before {
-				@apply absolute -left-4 text-2xl !font-normal text-gray-300;
-				content: '“';
-			}
+		&:not([id$='0'], [id$='5']) {
+			@apply text-transparent;
 		}
-		&:last-of-type ox-w:last-of-type {
-			@apply relative;
-			&::after {
-				@apply absolute -right-3 text-2xl !font-normal text-gray-300;
-				content: '”';
-			}
+		&:hover {
+			@apply text-gray-500;
 		}
 	}
-}
+	& .nbr {
+		@apply font-sans select-none;
+		&:target {
+			@apply border-blue-600 bg-blue-100 !text-blue-600;
+		}
+	}
 
-hr {
-	@apply mx-8 my-4 w-48 border-gray-300;
-	.body :first-child & {
-		@apply hidden;
+	& :where(.nbr:not(.section-nbr)) {
+		@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500 max-sm:hidden;
+	}
+	& .chapter-nbr,
+	& .stephanus-nbr {
+		@apply sticky top-4;
+	}
+
+	& .section-nbr {
+		@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-gray-400;
+	}
+
+	& :not(section) p {
+		@apply inline;
+	}
+
+	& .sentence-nbr {
+		&:not([id$='0'], [id$='5']),
+		section &,
+		p & {
+			@apply hidden;
+		}
+	}
+
+	& .line {
+		text-indent: 0.5rem hanging;
+	}
+
+	& .speaker {
+		@apply uppercase;
+		&.long {
+			@apply mt-4 bg-white text-gray-700 underline;
+		}
+		&.short,
+		&.mask {
+			@apply float-right -mr-12 block w-8 border-gray-400 px-1 max-md:hidden;
+		}
+		&.short {
+			@apply sticky -top-4 bg-white text-gray-500;
+		}
+		&.mask {
+			@apply relative z-10 h-32 bg-gradient-to-b from-white from-80% to-transparent text-transparent;
+		}
+	}
+
+	& blockquote {
+		@apply my-2;
+		& .line-nbr {
+			@apply mr-6;
+		}
+		& .line {
+			@apply italic;
+			&:first-of-type ox-w:first-of-type {
+				@apply relative;
+				&::before {
+					@apply absolute -left-4 text-2xl !font-normal text-gray-300;
+					content: '“';
+				}
+			}
+			&:last-of-type ox-w:last-of-type {
+				@apply relative;
+				&::after {
+					@apply absolute -right-3 text-2xl !font-normal text-gray-300;
+					content: '”';
+				}
+			}
+		}
+	}
+
+	& hr {
+		@apply mx-8 my-4 w-48 border-gray-300;
+		.body :first-child & {
+			@apply hidden;
+		}
 	}
 }
