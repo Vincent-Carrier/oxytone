@@ -3,26 +3,16 @@
 	import type { PageProps } from './$types'
 	import '$lib/components/word.svelte'
 	import type { Word } from '$lib/components/word.svelte'
-	import FlashcardsButton from '$lib/components/flashcards-button.svelte'
 	import Morphology from '$lib/components/morphology.svelte'
 	import Definition from '$lib/components/definition.svelte'
-	import Tooltip from '$/lib/components/tooltip.svelte'
-	import Toggle from '$/lib/components/toggle.svelte'
 	import { fade, slide } from 'svelte/transition'
+	import Nav from '$/lib/components/nav.svelte'
 
 	let { data }: PageProps = $props()
 	let container: HTMLElement | null = $state(null)
 	let tb: HTMLElement | null = $state(null)
 	let selection: Word[] | null = $state(null)
 	let defined: Word | null = $state(null)
-
-	function loadTreebank() {
-		defined = null
-		selection = null
-		return data.treebank
-	}
-
-	$inspect(tb)
 
 	$effect(() => {
 		if (tb === null) return
@@ -75,7 +65,7 @@
 </script>
 
 <div class="flex h-screen flex-col overflow-x-hidden">
-	{@render nav()}
+	<Nav {container} bind:selection bind:defined />
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50">
 	</div>
@@ -116,44 +106,3 @@
 		<Definition lemma={defined.lemma} />
 	{/if}
 </div>
-
-{#snippet nav()}
-	<nav
-		class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-[var(--padded-margin-w)] text-sm">
-		<a href="/" class="text-gray-800">oxytone</a>
-		<div class="grow"></div>
-		<FlashcardsButton bind:selection bind:defined />
-		<Toggle key="verbs" set={val => container?.classList.toggle('verbs', val)}>
-			verbs
-			{#snippet tooltip()}
-				<Tooltip class="w-56">
-					<p>Each verb is shown in <strong>bold</strong></p>
-					<p class="italic">
-						<strong>N.B.</strong>: Much of the corpus has been automated automatically and may not
-						be 100% accurate.
-					</p>
-				</Tooltip>
-			{/snippet}
-		</Toggle>
-		<Toggle key="colors" set={val => container?.classList.toggle('syntax', val)}>
-			colors
-			{#snippet tooltip()}
-				<Tooltip class="w-56">
-					<p>Each word is colored according to its case:</p>
-					<div
-						class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
-						<div class="text-emerald-700">Nominative</div>
-						<div class="text-sky-700">Accusative</div>
-						<div class="text-yellow-700">Dative</div>
-						<div class="text-purple-700">Genitive</div>
-						<div class="text-pink-700">Vocative</div>
-					</div>
-					<p class="italic">
-						<strong>N.B.</strong>: Much of the corpus has been automated automatically and may not
-						be 100% accurate.
-					</p>
-				</Tooltip>
-			{/snippet}
-		</Toggle>
-	</nav>
-{/snippet}

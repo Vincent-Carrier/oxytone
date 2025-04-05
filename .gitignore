@@ -39,4 +39,4 @@ glaux/
 # Python
 .ropeproject/
 .venv/
-.pyc
+*.pyc

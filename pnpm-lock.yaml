@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource-variable/alegreya':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@fontsource/alegreya':
         specifier: ^5.2.5
         version: 5.2.5
@@ -300,6 +303,9 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource-variable/alegreya@5.2.5':
+    resolution: {integrity: sha512-j3gDsSJmjWPwtuDxa0TBi0YULttywpB7BzKxdm585LtSbfzYkGb7Th1gX/hzmIack96H9tnFAQjeJL1Ubessgw==}
 
   '@fontsource/alegreya-sans-sc@5.2.5':
     resolution: {integrity: sha512-oqpW0rkC4oEp51I2xu88JkZqsIHqtVXeElrtTtku9FbhSH0AG5snP1b1laIpCQ5yJKMIxiSf3jHarw3tUKjOkw==}
@@ -1685,6 +1691,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.13.0
       levn: 0.4.1
+
+  '@fontsource-variable/alegreya@5.2.5': {}
 
   '@fontsource/alegreya-sans-sc@5.2.5': {}
 

@@ -22,10 +22,14 @@
 	onclick={() => (toggle.value = !toggle.value)}
 	onpointerover={ev => ev.pointerType === 'mouse' && (help = true)}
 	onpointerleave={() => (help = false)}
-	class={['btn ghost relative flex items-center gap-x-1', !toggle.value && 'text-gray-600']}>
+	class={[
+		'btn ghost relative flex items-center gap-x-1',
+		!toggle.value && 'text-gray-600 hover:bg-gray-100'
+	]}>
 	{@render children()}
 	<span
 		class={[
+			'mt-px',
 			toggle.value ? 'i-[solar--check-square-outline]' : 'i-[solar--minus-square-line-duotone]'
 		]}></span>
 	{#if help}
