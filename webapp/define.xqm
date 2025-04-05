@@ -5,17 +5,11 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 declare variable $def:xslt := xsm:stylesheet(
   {
     "body":
-      <div>
-        <xsl:apply-templates select="lemma" />
-      </div>,
+      <div><xsl:apply-templates select="lemma" /></div>,
     "lemma":
-      <dl>
-        <xsl:apply-templates select="entryFree" />
-      </dl>,
+      <dl><xsl:apply-templates select="entryFree" /></dl>,
     "shortdef":
-      <dd class="shortdef">
-        <xsl:value-of select="." />
-      </dd>,
+      <dd class="shortdef"><xsl:value-of select="." /></dd>,
     "entryFree": (
       <dt>
         <xsl:value-of select="orth"/>
@@ -38,17 +32,44 @@ declare variable $def:xslt := xsm:stylesheet(
         </xsl:choose>
       </div>),
     "tr":
-      <strong>
-        <xsl:value-of select="concat(' ', ., ' ')"/>
-      </strong>,
+      <strong><xsl:value-of select="concat(' ', ., ' ')"/></strong>,
     "bibl":
-      <span class="bibl">
-        <xsl:value-of select="." />
-      </span>,
+      <span class="bibl"><xsl:value-of select="." /></span>,
     '*[@lang="greek"]':
-      <span class="greek">
-        <xsl:value-of select="." />
-      </span>
+      <span class="greek"><xsl:value-of select="." /></span>,
+    "text()[contains(., 'gen.')]":
+      <xsl:sequence>
+        <xsl:analyze-string select="." regex="(gen\.)">
+          <xsl:matching-substring>
+            <span class="case gen"><xsl:value-of select="."/></span>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </xsl:sequence>,
+    "text()[contains(., 'dat.')]":
+      <xsl:sequence>
+        <xsl:analyze-string select="." regex="(dat\.)">
+          <xsl:matching-substring>
+            <span class="case dat"><xsl:value-of select="."/></span>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </xsl:sequence>,
+    "text()[contains(., 'acc.')]":
+      <xsl:sequence>
+        <xsl:analyze-string select="." regex="(acc\.)">
+          <xsl:matching-substring>
+            <span class="case acc"><xsl:value-of select="."/></span>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </xsl:sequence>
   }
 );
 
@@ -67,5 +88,6 @@ declare
           </lemma>
       }
     </body>
+    let $_ := message($def:xslt)
     return xslt:transform($entry, $def:xslt)
 };

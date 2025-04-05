@@ -16,6 +16,20 @@ dl {
 
 	& dd {
 		@apply text-gray-600;
+
+		.case {
+			@apply underline decoration-2;
+		}
+		.gen {
+			@apply text-purple-700;
+		}
+		.dat {
+			@apply text-yellow-700;
+		}
+		.acc {
+			@apply text-sky-700;
+		}
+
 		&:not(.shortdef) {
 			@apply pl-4 text-xs;
 			&::before {
