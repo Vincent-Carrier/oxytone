@@ -3,6 +3,10 @@
 ox-w {
 	@apply cursor-pointer text-gray-800;
 
+	&.head {
+		@apply underline decoration-2 underline-offset-8;
+	}
+
 	&[defined],
 	&[selected],
 	&.sbj,

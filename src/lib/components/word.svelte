@@ -29,14 +29,15 @@
 
 	const tb = document.getElementById('treebank')!
 	const analysis = document.getElementById('body')!.getAttribute('analysis') as 'auto' | 'manual'
+	const q = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelector<T>(sel)
 	const qq = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelectorAll<T>(sel)
-	const self = $host<WordElement>()
 	const { children } = $props()
+	const self = $host<WordElement>()
+	self.clear = []
 
 	self.onclick = () => {
 		let old = g.selected
-		old?.clearBounds?.()
-		old?.clearComplements?.()
+		for (let clear of old?.clear ?? []) clear()
 		if (old === self) {
 			g.selected = null
 			old.removeAttribute('defined')
@@ -51,6 +52,7 @@
 			if (analysis === 'manual') {
 				highlightComplements()
 				highlightBounds()
+				highlightHead()
 			}
 			if (g.selecting) {
 				self.setAttribute('selected', '')
@@ -86,8 +88,12 @@
 
 	function getBounds() {
 		let deps = [...dependencies(), self]
+		let start = minBy(deps, w => w.id)
+		if (start?.pos === 'punct.') {
+			start = deps.find(w => w.id === start!.id + 1)
+		}
 		return {
-			start: minBy(deps, w => w.id)!,
+			start,
 			end: maxBy(deps, w => w.id)!
 		}
 	}
@@ -96,9 +102,7 @@
 		let bounds = getBounds()
 		let cmap = new ClassMap([bounds.start, 'left-bound'], [bounds.end, 'right-bound'])
 		cmap.addClasses()
-		self.clearBounds = () => {
-			cmap.removeClasses()
-		}
+		self.clear.push(() => cmap.removeClasses())
 	}
 
 	function* complement(rel: string): Iterable<WordElement> {
@@ -108,9 +112,21 @@
 		}
 	}
 
+	function head(): WordElement | null {
+		return q(`ox-w[id="${self.head}"]`)
+	}
+
+	function highlightHead() {
+		let h = head()
+		if (h && !(h.relation?.startsWith('COORD') || h.relation?.startsWith('Aux'))) {
+			h.classList.add('head')
+			self.clear.push(() => h.classList.remove('head'))
+		}
+	}
+
 	function highlightComplements() {
 		let cmap = new ClassMap()
-		for (let w of complement('OBJ')) {
+		for (let w of [...complement('OBJ'), ...complement('OCOMP')]) {
 			cmap.set(
 				w,
 				// @ts-ignore
@@ -119,9 +135,7 @@
 		}
 		for (let w of complement('SBJ')) cmap.set(w, 'sbj')
 		cmap.addClasses()
-		self.clearComplements = () => {
-			cmap.removeClasses()
-		}
+		self.clear.push(() => cmap.removeClasses())
 	}
 
 	// function highlightHyperbatons() {
