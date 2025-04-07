@@ -88,6 +88,5 @@ declare
           </lemma>
       }
     </body>
-    let $_ := message($def:xslt)
     return xslt:transform($entry, $def:xslt)
 };

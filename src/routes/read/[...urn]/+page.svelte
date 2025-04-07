@@ -14,8 +14,6 @@
 	const q = (sel: string) => tb!.querySelector(sel)
 	const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
 
-	$inspect(g)
-
 	$effect(() => {
 		if (tb === null) return
 

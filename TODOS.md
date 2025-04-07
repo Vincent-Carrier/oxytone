@@ -2,3 +2,4 @@
 - Fix iPhone notch landscape mode
 - Allow definitions during flashcard selection mode
 - Get rid of Python server and generate flashcards with BaseX
+- Don't do syntax analysis on automatically annotated texts

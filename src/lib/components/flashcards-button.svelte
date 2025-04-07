@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SvelteSet, SvelteURLSearchParams } from 'svelte/reactivity'
+	import { SvelteURLSearchParams } from 'svelte/reactivity'
 	import { page } from '$app/state'
 	import Tooltip from './tooltip.svelte'
 	import { PUBLIC_FASTAPI_URL } from '$env/static/public'

@@ -143,6 +143,7 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
   let $style := trace(n:style($author, $work), "STYLE: ")
   let $pager := p:pager(`{$author}/{$work}`)
   let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
+  let $analysis := trace($paged/treebank/sentence[1]/@analysis, "===== ANALYSIS: ")
   let $fixed := $paged update {
     replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
   } update {
@@ -161,6 +162,7 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
         {for $n in $pager?list
           return <book id="{$n}">{$pager?format($n)}</book>}
         </books>}
+      <analysis>{$analysis/string()}</analysis>
     </head> as first into .
   }
 };

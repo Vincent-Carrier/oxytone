@@ -27,42 +27,37 @@
 	import ClassMap from '$lib/class-map'
 	import type { WordElement } from '../word'
 
-	let self = $host<WordElement>()
-	let { children } = $props()
-	let clearComplements: undefined | (() => void) = $state()
-	let clearBounds: undefined | (() => void) = $state()
-	let tb = document.getElementById('treebank')!
+	const tb = document.getElementById('treebank')!
+	const analysis = document.getElementById('body')!.getAttribute('analysis') as 'auto' | 'manual'
 	const qq = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelectorAll<T>(sel)
+	const self = $host<WordElement>()
+	const { children } = $props()
 
 	self.onclick = () => {
-		if (g.selected === self) {
+		let old = g.selected
+		old?.clearBounds?.()
+		old?.clearComplements?.()
+		if (old === self) {
 			g.selected = null
-		} else {
-			if (g.selected) {
+			old.removeAttribute('defined')
+			if (g.selecting) {
+				self.removeAttribute('selected')
+				g.selection.delete(self)
 			}
+		} else {
+			old?.removeAttribute('defined')
 			g.selected = self
-		}
-
-		if (g.selecting) {
-			if (g.selection.has(self)) g.selection.delete(self)
-			else g.selection.add(self)
+			self.setAttribute('defined', '')
+			if (analysis === 'manual') {
+				highlightComplements()
+				highlightBounds()
+			}
+			if (g.selecting) {
+				self.setAttribute('selected', '')
+				g.selection.add(self)
+			}
 		}
 	}
-
-	$effect(() => {
-		self.toggleAttribute('defined', g.selected === self)
-		if (g.selected === self) {
-			highlightComplements()
-			highlightBounds()
-		} else {
-			clearBounds?.()
-			clearComplements?.()
-		}
-	})
-
-	$effect(() => {
-		self.toggleAttribute('selected', g.selection?.has(self))
-	})
 
 	function* sentenceWords() {
 		yield* qq(`[sentence="${self.sentence}"]`)
@@ -101,7 +96,9 @@
 		let bounds = getBounds()
 		let cmap = new ClassMap([bounds.start, 'left-bound'], [bounds.end, 'right-bound'])
 		cmap.addClasses()
-		clearBounds = () => cmap.removeClasses()
+		self.clearBounds = () => {
+			cmap.removeClasses()
+		}
 	}
 
 	function* complement(rel: string): Iterable<WordElement> {
@@ -122,7 +119,9 @@
 		}
 		for (let w of complement('SBJ')) cmap.set(w, 'sbj')
 		cmap.addClasses()
-		clearComplements = () => cmap.removeClasses()
+		self.clearComplements = () => {
+			cmap.removeClasses()
+		}
 	}
 
 	// function highlightHyperbatons() {

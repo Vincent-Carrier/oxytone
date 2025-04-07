@@ -14,5 +14,7 @@ interface Props {
 	case?: string
 	degree?: string
 	children: string
+	clearBounds?: () => void
+	clearComplements?: () => void
 }
 export type WordElement = HTMLElement & Props
