@@ -13,30 +13,31 @@ ox-w {
 	&.acc-obj,
 	&.dat-obj,
 	&.gen-obj {
-		@apply relative;
-		&::before {
-			content: '';
-			@apply absolute -inset-x-0.5 inset-y-0 -z-30 rounded-xs outline-1;
-		}
+		@apply rounded-xs outline-1;
 	}
 
 	&.left-bound,
 	&.right-bound {
-		@apply relative border-gray-300;
+		@apply relative;
 	}
-	&.left-bound::before {
-		@apply absolute inset-x-0.5 inset-y-0 -left-1 rounded-xs border-l-2 font-sans text-gray-700;
-		content: '';
-	}
+	&.left-bound::before,
 	&.right-bound::after {
-		@apply absolute inset-x-0.5 inset-y-0 -right-1 rounded-xs border-r-2 font-sans text-gray-700;
-		content: '';
+		@apply absolute -bottom-1 rounded-xs font-sans font-normal text-gray-400 not-italic;
 	}
 
-	&[defined]::before {
+	&.left-bound::before {
+		@apply -top-1 -left-3;
+		content: '「';
+	}
+	&.right-bound::after {
+		@apply -right-3;
+		content: '」';
+	}
+
+	&[defined] {
 		@apply bg-gray-50 outline-gray-200;
 	}
-	&[selected]::before {
+	&[selected] {
 		@apply bg-blue-50 outline-1 outline-blue-700;
 	}
 
@@ -50,28 +51,28 @@ ox-w {
 	.syntax &[case='nom.'] {
 		@apply text-emerald-700;
 	}
-	&.sbj::before {
+	&.sbj {
 		@apply bg-emerald-50 outline-emerald-200;
 	}
 
 	.syntax &[case='acc.'] {
 		@apply text-sky-700;
 	}
-	&.acc-obj::before {
+	&.acc-obj {
 		@apply bg-sky-50 outline-sky-200;
 	}
 
 	.syntax &[case='dat.'] {
 		@apply text-yellow-700;
 	}
-	&.dat-obj::before {
+	&.dat-obj {
 		@apply bg-yellow-50 outline-yellow-200;
 	}
 
 	.syntax &[case='gen.'] {
 		@apply text-purple-700;
 	}
-	&.gen-obj::before {
+	&.gen-obj {
 		@apply bg-purple-50 outline-purple-200;
 	}
 
