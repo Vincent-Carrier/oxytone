@@ -3,19 +3,22 @@
 	import Toggle from './toggle.svelte'
 	import Tooltip from './tooltip.svelte'
 
-	let { selection = $bindable(), defined = $bindable(), container } = $props()
+	let { container } = $props()
 </script>
 
 <nav
 	class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-[var(--padded-margin-w)] text-sm">
 	<a href="/" class="text-gray-800">oxytone</a>
 	<div class="grow"></div>
-	<FlashcardsButton bind:selection bind:defined />
+	<FlashcardsButton />
 	<Toggle key="verbs" set={val => container?.classList.toggle('verbs', val)}>
 		verbs
 		{#snippet tooltip()}
-			<Tooltip class="w-56 text-balance">
-				<p>Each verb is shown in <strong>bold</strong></p>
+			<Tooltip class="w-48 text-balance">
+				<p>
+					Each verb is shown in <strong>bold</strong>. Finite verbs are in a bolder weight than
+					infinitives and participles.
+				</p>
 				{@render disclaimer()}
 			</Tooltip>
 		{/snippet}
@@ -39,8 +42,8 @@
 </nav>
 
 {#snippet disclaimer()}
-	<p class="mt-2 text-gray-600 italic">
-		<strong>N.B.</strong>: Much of the corpus has been automated automatically and may not be 100%
-		accurate.
+	<p class="mt-2 text-gray-500 italic">
+		<strong class="text-gray-700">N.B.</strong>: Much of the corpus has been automated automatically
+		and may not be 100% accurate.
 	</p>
 {/snippet}

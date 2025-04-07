@@ -6,12 +6,12 @@ section.century {
 		@apply mt-0;
 	}
 	& h2 {
-		@apply font-sc w-20 text-xl font-bold;
+		@apply font-sc w-20 text-xl font-bold underline decoration-2 underline-offset-8;
 		@variant max-sm {
 			@apply mb-2 ml-4;
 		}
 		@variant sm {
-			@apply sticky top-4 float-left -mt-[6px] text-right;
+			@apply sticky top-4 float-left mt-[7px] text-right;
 		}
 	}
 	& ul.authors {

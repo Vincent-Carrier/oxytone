@@ -1,3 +1,4 @@
 - Fix LSJ shortdefs when a word has more than one meaning
 - Fix iPhone notch landscape mode
 - Allow definitions during flashcard selection mode
+- Get rid of Python server and generate flashcards with BaseX

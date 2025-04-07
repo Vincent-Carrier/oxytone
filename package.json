@@ -47,6 +47,8 @@
 		"@fontsource/alegreya-sans": "^5.2.5",
 		"@fontsource/alegreya-sans-sc": "^5.2.5",
 		"@fontsource/alegreya-sc": "^5.2.5",
-		"ky": "^1.8.0"
+		"@types/lodash-es": "^4.17.12",
+		"ky": "^1.8.0",
+		"lodash-es": "^4.17.21"
 	}
 }

@@ -3,8 +3,8 @@
 ox-w {
 	@apply cursor-pointer text-gray-800;
 
-	&.defined,
-	&.selected,
+	&[defined],
+	&[selected],
 	&.sbj,
 	&.acc-obj,
 	&.dat-obj,
@@ -12,21 +12,34 @@ ox-w {
 		@apply relative;
 		&::before {
 			content: '';
-			@apply absolute -inset-x-0.5 inset-y-0 -z-10 rounded-xs outline-1;
+			@apply absolute -inset-x-0.5 inset-y-0 -z-30 rounded-xs outline-1;
 		}
 	}
 
-	&.defined::before {
+	&.left-bound,
+	&.right-bound {
+		@apply relative border-gray-300;
+	}
+	&.left-bound::before {
+		@apply absolute inset-x-0.5 inset-y-0 -left-1 rounded-xs border-l-2 font-sans text-gray-700;
+		content: '';
+	}
+	&.right-bound::after {
+		@apply absolute inset-x-0.5 inset-y-0 -right-1 rounded-xs border-r-2 font-sans text-gray-700;
+		content: '';
+	}
+
+	&[defined]::before {
 		@apply bg-gray-50 outline-gray-200;
 	}
-	&.selected::before {
+	&[selected]::before {
 		@apply bg-blue-50 outline-1 outline-blue-700;
 	}
 
 	.verbs &[pos='verb'] {
-		@apply font-medium;
+		@apply font-medium text-gray-950;
 		&[person] {
-			@apply font-bold;
+			@apply font-bold text-gray-800;
 		}
 	}
 

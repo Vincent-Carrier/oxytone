@@ -74,10 +74,10 @@
 	}
 
 	& .section-nbr {
-		@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-sm text-gray-400;
+		@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-xs text-gray-400;
 	}
 
-	& :not(section) p {
+	& p {
 		@apply inline;
 	}
 
@@ -94,7 +94,7 @@
 	}
 
 	& .speaker {
-		@apply uppercase;
+		@apply font-sc lowercase;
 		&.long {
 			@apply mt-4 bg-white text-gray-700 underline;
 		}
