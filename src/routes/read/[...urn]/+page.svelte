@@ -16,6 +16,10 @@
 	let { data }: PageProps = $props()
 
 	$effect(() => {
+		g.analysis = content?.dataset.analysis === 'manual'
+	})
+
+	$effect(() => {
 		if (tb === null) return
 
 		let { hash } = location

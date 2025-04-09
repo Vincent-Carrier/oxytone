@@ -1,10 +1,13 @@
-<script>
+<script lang="ts">
 	import FlashcardsButton from './flashcards-button.svelte'
 	import Toggle from './toggle.svelte'
 	import Tooltip from './tooltip.svelte'
 	import g from '$/lib/global-state.svelte'
 
-	let { content } = $props()
+	type Props = { content?: HTMLElement }
+	let { content }: Props = $props()
+	let manualAnalysis = $derived(content?.dataset.analysis === 'manual')
+	$inspect(manualAnalysis)
 </script>
 
 <nav
@@ -12,15 +15,18 @@
 	<a href="/" class="text-gray-800">oxytone</a>
 	<div class="grow"></div>
 	<FlashcardsButton />
-	<Toggle key="analysis" set={val => (g.analysis = val)}>
+	<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>
 		analysis
 		{#snippet tooltip()}
-			<Tooltip class="w-48 text-balance">
+			<Tooltip class="w-52 text-balance">
 				<p>
-					When selected, each word underlines its syntactical head and the bounds of its
-					dependencies are shown with brackets. Furthermore, verbs show their complements.
+					When selected, each word underlines its <span class="underline">syntactical head</span> and
+					the bounds of its dependencies are shown 「within brackets」. Furthermore, a verb's complements
+					will be highlighted.
 				</p>
-				{@render disclaimer()}
+				{#if !manualAnalysis}
+					{@render disclaimer()}
+				{/if}
 			</Tooltip>
 		{/snippet}
 	</Toggle>
@@ -54,7 +60,7 @@
 
 {#snippet disclaimer()}
 	<p class="mt-2 text-gray-500 italic">
-		<strong class="text-gray-700">N.B.</strong>: Much of the corpus has been automated automatically
-		and may not be 100% accurate.
+		<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically. Syntactical
+		analysis may not be very accurate. Enable at your own risk.
 	</p>
 {/snippet}

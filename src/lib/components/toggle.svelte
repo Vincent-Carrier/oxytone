@@ -4,18 +4,27 @@
 
 	type Props = {
 		children: Snippet
-		tooltip: Snippet
-		key: string
-		set: (value: boolean) => any
+		tooltip?: Snippet
+		get?: () => boolean
+		set?: (value: boolean) => void
+		key?: string
+		value?: boolean
 	}
-	let { tooltip, children, key, set }: Props = $props()
+	let { children, tooltip, set, get, key, value = true }: Props = $props()
 
-	let toggle = new LocalStore(key, true)
 	let help = $state(false)
+	let toggle = key
+		? new LocalStore(key, value)
+		: {
+				get value() {
+					return get!()
+				},
+				set value(v) {
+					set!(v)
+				}
+			}
 
-	$effect(() => {
-		set(toggle.value)
-	})
+	if (key) $effect(() => set?.(toggle.value))
 </script>
 
 <button
@@ -33,6 +42,6 @@
 			toggle.value ? 'i-[solar--check-square-outline]' : 'i-[solar--minus-square-line-duotone]'
 		]}></span>
 	{#if help}
-		{@render tooltip()}
+		{@render tooltip?.()}
 	{/if}
 </button>

@@ -105,6 +105,7 @@ declare function n:word($w) {
 declare function n:pad-right($w, $n) {
   not($n/@form = ("]", ")", "”", "·", ",", ";", ":", "."))
   and not($w/@form = ("[", "(", "“"))
+  and not(matches($w/@form, '’$'))
   and $n/@lemma != "τε"
 };
 

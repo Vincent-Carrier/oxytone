@@ -23,15 +23,15 @@ ox-w {
 	}
 	&.left-bound::before,
 	&.right-bound::after {
-		@apply absolute -bottom-1 rounded-xs font-sans font-normal text-gray-400 not-italic;
+		@apply absolute -bottom-1 rounded-xs font-sans font-normal text-gray-700 not-italic;
 	}
 
 	&.left-bound::before {
-		@apply -top-1 -left-3;
+		@apply -top-[6px] -left-3;
 		content: '「';
 	}
 	&.right-bound::after {
-		@apply -right-3;
+		@apply -right-3 -bottom-[9px];
 		content: '」';
 	}
 

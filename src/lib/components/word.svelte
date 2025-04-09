@@ -28,7 +28,6 @@
 	import type { WordElement } from '../word'
 
 	const tb = document.getElementById('tb-content')!
-	const analysis = tb.dataset.analysis as 'auto' | 'manual'
 	const q = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelector<T>(sel)
 	const qq = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelectorAll<T>(sel)
 	const { children } = $props()
@@ -49,7 +48,7 @@
 			old?.removeAttribute('defined')
 			g.selected = self
 			self.setAttribute('defined', '')
-			if (analysis === 'manual') {
+			if (g.analysis) {
 				highlightComplements()
 				highlightBounds()
 				highlightHead()
