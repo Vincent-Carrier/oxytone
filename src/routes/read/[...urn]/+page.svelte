@@ -8,10 +8,10 @@
 	import Nav from '$/lib/components/nav.svelte'
 	import g from '$/lib/global-state.svelte'
 
-	let tb: HTMLElement | undefined = $state()
+	let tb: Nullish<HTMLElement> = $state()
 	const q = (sel: string) => tb?.querySelector<HTMLElement>(sel)
 	const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
-	let content: HTMLElement | null | undefined = $derived(q('#tb-content'))
+	let content: Nullish<HTMLElement> = $derived(q('#tb-content'))
 	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
 	let { data }: PageProps = $props()
 

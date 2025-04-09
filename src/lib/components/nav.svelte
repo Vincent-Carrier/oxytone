@@ -4,7 +4,7 @@
 	import Tooltip from './tooltip.svelte'
 	import g from '$/lib/global-state.svelte'
 
-	type Props = { content?: HTMLElement }
+	type Props = { content?: Nullish<HTMLElement> }
 	let { content }: Props = $props()
 	let manualAnalysis = $derived(content?.dataset.analysis === 'manual')
 	$inspect(manualAnalysis)
@@ -25,7 +25,10 @@
 					will be highlighted.
 				</p>
 				{#if !manualAnalysis}
-					{@render disclaimer()}
+					<p class="mt-2 text-gray-500 italic">
+						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
+						Syntactical analysis may not be very accurate. Enable at your own risk.
+					</p>
 				{/if}
 			</Tooltip>
 		{/snippet}
@@ -57,10 +60,3 @@
 		{/snippet}
 	</Toggle>
 </nav>
-
-{#snippet disclaimer()}
-	<p class="mt-2 text-gray-500 italic">
-		<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically. Syntactical
-		analysis may not be very accurate. Enable at your own risk.
-	</p>
-{/snippet}

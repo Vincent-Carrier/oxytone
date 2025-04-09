@@ -8,6 +8,7 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	type Nullish<T> = T | null | undefined
 }
 
 export {}
