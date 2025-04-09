@@ -82,15 +82,13 @@ declare function n:normalize-prose($tb) as element()* {
 };
 
 declare function n:normalize($tb, $style := "prose") as element() {
-  <treebank style="{$style}">
-    <body>{
-      switch ($style)
-        case "verse" return n:normalize-verse($tb)
-        case "theater" return n:normalize-theater($tb)
-        case "dialogue" return n:normalize-dialogue($tb)
-        default return n:normalize-prose($tb)
-    }</body>
-  </treebank>
+  <body>{
+    switch ($style)
+      case "verse" return n:normalize-verse($tb)
+      case "theater" return n:normalize-theater($tb)
+      case "dialogue" return n:normalize-dialogue($tb)
+      default return n:normalize-prose($tb)
+  }</body>
 };
 
 declare function n:word($w) {
@@ -154,15 +152,17 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
   let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
   let $_ := store:read('glaux')
   let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
-  return $normalized update {
-    insert node <head>
+  return <treebank>
+    <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
       <author>{$meta?english-author}</author>
       {if (exists($pager)) then <books>
         {for $n in $pager?list
           return <book id="{$n}">{$pager?format($n)}</book>}
         </books>}
+      <style>{$style}</style>
       <analysis>{$analysis/string()}</analysis>
-    </head> as first into .
-  }
+    </head>
+    {$normalized}
+  </treebank>
 };

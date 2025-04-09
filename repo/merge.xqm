@@ -3,7 +3,7 @@ import module namespace p = "paginate";
 
 declare function m:merge-homer($tb, $tei, $book) {
   let $tei-book := $tei//div[lower-case(@subtype)="book" and @n=$book]
-  return <treebank>
+  return
     <body n="{$book}">
       {
         for $el in $tei-book/*
@@ -20,10 +20,7 @@ declare function m:merge-homer($tb, $tei, $book) {
           default return ()
         }
       }
-    </body>
-  </treebank> transform with {
-    delete nodes .//w[@lemma = '"']
-  }
+    </body> transform with { delete nodes .//w[@lemma = '"'] }
 };
 
 declare function m:merge($tb, $author, $work, $part := ()) {

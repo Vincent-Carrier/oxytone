@@ -10,6 +10,7 @@
 }
 
 .treebank {
+	@apply max-w-[60ch] font-serif;
 	& > hgroup {
 		@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
 		& h1 {

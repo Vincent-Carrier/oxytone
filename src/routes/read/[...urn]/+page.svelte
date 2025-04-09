@@ -7,17 +7,16 @@
 	import { fade, slide } from 'svelte/transition'
 	import Nav from '$/lib/components/nav.svelte'
 	import g from '$/lib/global-state.svelte'
-	let { data }: PageProps = $props()
-	let container: HTMLElement | null = $state(null)
-	let tb: HTMLElement | null = $state(null)
 
-	const q = (sel: string) => tb!.querySelector(sel)
+	let tb: HTMLElement | undefined = $state()
+	const q = (sel: string) => tb?.querySelector<HTMLElement>(sel)
 	const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
+	let content: HTMLElement | null | undefined = $derived(q('#tb-content'))
+	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
+	let { data }: PageProps = $props()
 
 	$effect(() => {
 		if (tb === null) return
-
-		document.title = q('h1')?.textContent ?? 'Oxytone'
 
 		let { hash } = location
 		if (hash) q(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' })
@@ -34,12 +33,16 @@
 	})
 </script>
 
+<svelte:head>
+	<title>{title}</title>
+</svelte:head>
+
 <div class="flex h-screen flex-col overflow-x-hidden">
-	<Nav {container} />
+	<Nav {content} />
 	<div
 		class="absolute top-0 bottom-0 left-0 -z-10 w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50">
 	</div>
-	<div id="tb-container" bind:this={container} class="contents">
+	<div class="contents">
 		{#await data.treebank}
 			<p
 				transition:fade|global
@@ -52,9 +55,7 @@
 				bind:this={tb}
 				id="treebank"
 				class="h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed">
-				<div class="max-w-[60ch] font-serif">
-					{@html treebank}
-				</div>
+				{@html treebank}
 			</article>
 		{:catch}
 			<p transition:fade|global class="font-sc mt-32 self-center text-2xl lowercase">

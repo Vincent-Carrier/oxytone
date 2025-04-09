@@ -6,10 +6,9 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
 declare variable $r:xslt := xsm:stylesheet({
   "/treebank":
-    <div>
-      <xsl:attribute name="class">
-        <xsl:value-of select="concat('treebank ', @style)" />
-      </xsl:attribute>
+    <div id="tb-content">
+      {xsm:attr('class', "concat('treebank ', head/style)")}
+      {xsm:attr('data-analysis', 'head/analysis')}
       <hgroup>
         <h1>
           <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />
@@ -19,10 +18,7 @@ declare variable $r:xslt := xsm:stylesheet({
         </p>
         <xsl:apply-templates select="head/books" />
       </hgroup>
-      <main class="body" id="body" lang="grc">
-        <xsl:attribute name="analysis">
-          <xsl:value-of select="head/analysis" />
-        </xsl:attribute>
+      <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
     </div>,
@@ -33,9 +29,7 @@ declare variable $r:xslt := xsm:stylesheet({
   "book":
     <li>
       <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="concat('./', @id)" />
-        </xsl:attribute>
+        {xsm:attr("href", "concat('./', @id)")}
         <xsl:value-of select="." />
       </a>
     </li>,
@@ -46,12 +40,8 @@ declare variable $r:xslt := xsm:stylesheet({
   "chapter":
     <section>
       <a class="nbr chapter-nbr">
-        <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', @id)" />
-        </xsl:attribute>
-        <xsl:attribute name="id">
-          <xsl:value-of select="@id" />
-        </xsl:attribute>
+        {xsm:attr("href", "concat('#', @id)")}
+        {xsm:attr("id", "@id")}
         <xsl:value-of select="@id" />
       </a>
       <xsl:apply-templates />
@@ -59,12 +49,8 @@ declare variable $r:xslt := xsm:stylesheet({
   "section":
     <p>
       <a class="nbr section-nbr">
-        <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', @id)" />
-        </xsl:attribute>
-        <xsl:attribute name="id">
-          <xsl:value-of select="@id" />
-        </xsl:attribute>
+        {xsm:attr("href", "concat('#', @id)")}
+        {xsm:attr("id", "@id")}
         <xsl:value-of select="@id" />
       </a>
       <xsl:apply-templates />
@@ -73,12 +59,8 @@ declare variable $r:xslt := xsm:stylesheet({
     <xsl:sequence>
       <a class="nbr line-nbr">
         <xsl:copy-of select="@id" />
-        <xsl:attribute name="id">
-          <xsl:value-of select="@id" />
-        </xsl:attribute>
-        <xsl:attribute name="href">
-          <xsl:value-of select="concat('#', @id)" />
-        </xsl:attribute>
+        {xsm:attr("href", "concat('#', @id)")}
+        {xsm:attr("id", "@id")}
         <xsl:value-of select="replace(@id, '\d+\.(\d+)$', '$1')" />
       </a>
       <div class="line">
@@ -89,12 +71,8 @@ declare variable $r:xslt := xsm:stylesheet({
     </xsl:sequence>,
   "stephanus":
     <a class="nbr stephanus-nbr">
-      <xsl:attribute name="href">
-        <xsl:value-of select="concat('#', @id)" />
-      </xsl:attribute>
-      <xsl:attribute name="id">
-        <xsl:value-of select="@id" />
-      </xsl:attribute>
+      {xsm:attr("href", "concat('#', @id)")}
+      {xsm:attr("id", "@id")}
       <xsl:value-of select="@id" />
     </a>,
   "speaker":

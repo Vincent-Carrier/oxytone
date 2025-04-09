@@ -27,8 +27,8 @@
 	import ClassMap from '$lib/class-map'
 	import type { WordElement } from '../word'
 
-	const tb = document.getElementById('treebank')!
-	const analysis = document.getElementById('body')!.getAttribute('analysis') as 'auto' | 'manual'
+	const tb = document.getElementById('tb-content')!
+	const analysis = tb.dataset.analysis as 'auto' | 'manual'
 	const q = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelector<T>(sel)
 	const qq = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelectorAll<T>(sel)
 	const { children } = $props()
@@ -59,10 +59,6 @@
 				g.selection.add(self)
 			}
 		}
-	}
-
-	function* sentenceWords() {
-		yield* qq(`[sentence="${self.sentence}"]`)
 	}
 
 	function* directDependencies({
@@ -125,18 +121,22 @@
 	}
 
 	function highlightComplements() {
-		let cmap = new ClassMap()
-		for (let w of [...complement('OBJ'), ...complement('OCOMP')]) {
-			cmap.set(
-				w,
-				// @ts-ignore
-				{ 'acc.': 'acc-obj', 'dat.': 'dat-obj', 'gen.': 'gen-obj' }[w.case ?? 'acc.']
-			)
-		}
-		for (let w of complement('SBJ')) cmap.set(w, 'sbj')
+		let cases = { 'acc.': 'acc-obj', 'dat.': 'dat-obj', 'gen.': 'gen-obj' } as any
+		for (let w of complement('OBJ')) highlightComplement(w, cases[w.case ?? 'acc.'])
+		for (let w of complement('OCOMP')) highlightComplement(w, 'comp-obj')
+		for (let w of complement('SBJ')) highlightComplement(w, 'sbj')
+	}
+
+	function highlightComplement(w: WordElement, klass: string) {
+		let cmap = new ClassMap([w, klass, 'head'])
+		for (let d of dependencies(w)) cmap.set(d, klass)
 		cmap.addClasses()
 		self.clear.push(() => cmap.removeClasses())
 	}
+
+	// function* sentenceWords() {
+	// 	yield* qq(`[sentence="${self.sentence}"]`)
+	// }
 
 	// function highlightHyperbatons() {
 	// 	if (

@@ -10,6 +10,7 @@ ox-w {
 	&[defined],
 	&[selected],
 	&.sbj,
+	&.comp-obj,
 	&.acc-obj,
 	&.dat-obj,
 	&.gen-obj {
@@ -49,17 +50,20 @@ ox-w {
 	}
 
 	.syntax &[case='nom.'] {
-		@apply text-emerald-700;
+		@apply text-green-700;
 	}
 	&.sbj {
-		@apply bg-emerald-50 outline-emerald-200;
+		@apply bg-green-50 outline-green-200;
 	}
 
 	.syntax &[case='acc.'] {
-		@apply text-sky-700;
+		@apply text-cyan-700;
 	}
 	&.acc-obj {
-		@apply bg-sky-50 outline-sky-200;
+		@apply bg-cyan-50 outline-cyan-200;
+	}
+	&.comp-obj {
+		@apply bg-blue-50 outline-blue-200;
 	}
 
 	.syntax &[case='dat.'] {
