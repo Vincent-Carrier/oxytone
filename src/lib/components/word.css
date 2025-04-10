@@ -31,7 +31,7 @@ ox-w {
 		content: '「';
 	}
 	&.right-bound::after {
-		@apply -right-3 -bottom-[9px];
+		@apply -right-3 -bottom-[11px];
 		content: '」';
 	}
 

@@ -29,20 +29,20 @@
 	}
 </script>
 
-{#if g.selection?.size}
-	<div
-		transition:fly={{ x: 300 }}
-		class="fixed top-10 right-2 max-h-5/6 w-40 overflow-y-scroll rounded-md border-1 border-r-3 border-b-3 border-gray-300 max-lg:hidden">
-		<div class="sticky top-0 border-b-1 border-gray-300 bg-gray-50 px-4 lowercase">Selection</div>
-		<ul class="list-dash px-4 py-2 font-sans text-gray-800">
-			{#each g.selection as w}
-				<li>{w.lemma}</li>
-			{/each}
-		</ul>
-	</div>
-{/if}
 <div class="contents max-md:hidden">
-	{#if g.selecting}
+	{#if !g.selecting}
+		<Button onclick={() => (g.selecting = true)}>
+			<StudentIcon />
+			flashcards
+			{#snippet tooltip()}
+				<p class="w-52">
+					Create a deck of flashcards from the words you select. Each card will have the lemma on
+					the front side and a full LSJ definition on its back side. The deck can be imported into
+					Anki or any other software compatible with the Anki format.
+				</p>
+			{/snippet}
+		</Button>
+	{:else}
 		<Button onclick={clearSelection} danger>
 			<CancelIcon />
 			cancel
@@ -55,20 +55,27 @@
 			<DownloadIcon />
 			{`export ${count} word${count === 1 ? '' : 's'}`}
 		</Button>
-	{:else}
-		<Button onclick={() => (g.selecting = true)}>
-			<StudentIcon />
-			flashcards
-		</Button>
 	{/if}
 </div>
+
 {#if g.selecting && g.selection?.size == 0}
 	<Tooltip class="fixed top-auto right-4 bottom-4 w-56">
 		<p>
-			Select words to create a deck of <a
-				href="https://apps.ankiweb.net/"
-				class="text-blue-700 underline">Anki</a> flashcards. Each card will have the lemma on the front
-			side and a full LSJ definition on its back side.
+			Select words to create a deck of <a href="https://apps.ankiweb.net/">Anki</a> flashcards. Each
+			card will have the lemma on the front side and a full LSJ definition on its back side.
 		</p>
 	</Tooltip>
+{/if}
+
+{#if g.selection?.size}
+	<div
+		transition:fly={{ x: 300 }}
+		class="fixed top-10 right-2 max-h-5/6 w-40 overflow-y-scroll rounded-md border-1 border-r-3 border-b-3 border-gray-300 max-lg:hidden">
+		<div class="sticky top-0 border-b-1 border-gray-300 bg-gray-50 px-4 lowercase">Selection</div>
+		<ul class="list-dash px-4 py-2 font-sans text-gray-800">
+			{#each g.selection as w}
+				<li>{w.lemma}</li>
+			{/each}
+		</ul>
+	</div>
 {/if}

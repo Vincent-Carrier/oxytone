@@ -20,16 +20,12 @@
 }
 
 @utility card {
-	@apply rounded-sm border-1 border-gray-300 bg-gray-50;
+	@apply rounded-sm border-1 border-gray-500 bg-gray-50;
 }
 
 @layer base {
 	:root {
 		font-size: 125%;
 		@apply text-gray-800;
-	}
-
-	svg {
-		@apply self-center;
 	}
 }

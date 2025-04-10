@@ -10,23 +10,30 @@
 </script>
 
 <nav
-	class="font-sans-sc sticky top-0 z-50 flex items-baseline gap-x-2 border-b border-gray-300 bg-gray-50 py-1 pr-4 pl-[var(--padded-margin-w)] text-sm">
+	class={[
+		'sticky top-0 z-50 flex items-baseline gap-x-2 py-1 pr-4 pl-[var(--padded-margin-w)]',
+		'font-sans-sc border-b border-gray-300 bg-gray-50 text-sm'
+	]}>
 	<a href="/" class="text-gray-800">oxytone</a>
 	<div class="grow"></div>
 	<FlashcardsButton />
 	<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>
 		analysis
 		{#snippet tooltip()}
-			<div class="w-52 text-balance">
-				<p>
-					When selected, each word underlines its <span class="underline">syntactical head</span> and
-					the bounds of its dependencies are shown 「within brackets」. Furthermore, a verb's complements
-					will be highlighted.
-				</p>
+			<div class="w-56">
+				<p>If enabled, whenever a word is selected:</p>
+				<ol>
+					<li>Its <span class="underline">syntactical head</span> is underlined.</li>
+					<li>The 「bounds of its dependencies」 are shown within brackets.</li>
+					<li>
+						If a verb, its <span class="rounded-xs bg-blue-50 outline outline-blue-300"
+							>complements</span> will be highlighted.
+					</li>
+				</ol>
 				{#if !manualAnalysis}
 					<p class="mt-2 text-gray-500 italic">
 						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
-						Syntactical analysis may not be very accurate. Enable at your own risk.
+						Accuracy may vary.
 					</p>
 				{/if}
 			</div>
@@ -35,7 +42,7 @@
 	<Toggle key="verbs" set={val => content?.classList.toggle('verbs', val)}>
 		verbs
 		{#snippet tooltip()}
-			<div class="w-48 text-balance">
+			<div class="w-60">
 				<p>
 					Each verb is shown in <strong>bold</strong>. Finite verbs are in a bolder weight than
 					infinitives and participles.
@@ -46,7 +53,7 @@
 	<Toggle key="colors" set={val => content?.classList.toggle('syntax', val)}>
 		colors
 		{#snippet tooltip()}
-			<div class="w-48 text-balance">
+			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
 				<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
 					<div class="text-green-700">Nominative</div>

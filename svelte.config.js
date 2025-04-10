@@ -15,7 +15,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			$: 'src'
-		}
+		},
+		inlineStyleThreshold: 2048
 	}
 }
 
