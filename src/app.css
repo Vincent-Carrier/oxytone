@@ -28,4 +28,8 @@
 		font-size: 125%;
 		@apply text-gray-800;
 	}
+
+	svg {
+		@apply self-center;
+	}
 }

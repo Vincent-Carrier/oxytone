@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { SvelteURLSearchParams } from 'svelte/reactivity'
 	import { page } from '$app/state'
-	import Tooltip from './tooltip.svelte'
 	import { PUBLIC_FASTAPI_URL } from '$env/static/public'
-	import { fly } from 'svelte/transition'
+	import Button from '$lib/components/button.svelte'
+	import Tooltip from '$lib/components/tooltip.svelte'
 	import g from '$lib/global-state.svelte'
-	import Button from './button.svelte'
-	import CancelIcon from '~icons/solar/close-square-line-duotone'
-	import DownloadIcon from '~icons/solar/download-square-line-duotone'
+	import { SvelteURLSearchParams } from 'svelte/reactivity'
+	import { fly } from 'svelte/transition'
+	import StudentIcon from '~icons/heroicons/academic-cap-16-solid'
+	import DownloadIcon from '~icons/heroicons/arrow-down-16-solid'
+	import CancelIcon from '~icons/heroicons/x-mark-16-solid'
 
 	let segments = page.url.pathname.split('/')
 	let count = $derived(g.selection?.size)
@@ -43,19 +44,22 @@
 <div class="contents max-md:hidden">
 	{#if g.selecting}
 		<Button onclick={clearSelection} danger>
+			<CancelIcon />
 			cancel
-			<CancelIcon class="-mb-px" />
 		</Button>
 		<Button
 			inert={count == 0}
 			href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`}
 			download="greek-flashcards.apkg"
 			onclick={clearSelection}>
+			<DownloadIcon />
 			{`export ${count} word${count === 1 ? '' : 's'}`}
-			<DownloadIcon class="-mb-[4px]" />
 		</Button>
 	{:else}
-		<Button onclick={() => (g.selecting = true)}>flashcards</Button>
+		<Button onclick={() => (g.selecting = true)}>
+			<StudentIcon />
+			flashcards
+		</Button>
 	{/if}
 </div>
 {#if g.selecting && g.selection?.size == 0}
