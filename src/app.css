@@ -1,8 +1,4 @@
 @import 'tailwindcss' source('.');
-@plugin "@iconify/tailwind4" {
-	prefix: 'i';
-	prefixes: solar;
-}
 
 @theme {
 	--font-serif: 'Alegreya Variable', serif;

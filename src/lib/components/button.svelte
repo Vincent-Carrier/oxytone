@@ -39,7 +39,7 @@
 {#snippet content()}
 	<div
 		class={[
-			'relative flex w-fit items-center gap-x-1',
+			'relative flex w-max items-center gap-x-1',
 			'font-sans-sc cursor-pointer leading-tight text-blue-700 lowercase',
 			'rounded-sm px-1 hover:bg-blue-50 active:bg-blue-100',
 			danger && 'text-red-700 hover:bg-red-50 active:bg-red-100',

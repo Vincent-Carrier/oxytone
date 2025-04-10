@@ -2,6 +2,8 @@
 	import { type Snippet } from 'svelte'
 	import LocalStore from '$lib/local-storage.svelte'
 	import Button from './button.svelte'
+	import Checkmark from '~icons/solar/check-square-outline'
+	import Unchecked from '~icons/solar/minus-square-line-duotone'
 
 	type Props = {
 		children: Snippet
@@ -32,9 +34,9 @@
 	onclick={() => (toggle.value = !toggle.value)}
 	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100']}>
 	{@render children()}
-	<span
-		class={[
-			'mt-px',
-			toggle.value ? 'i-[solar--check-square-outline]' : 'i-[solar--minus-square-line-duotone]'
-		]}></span>
+	{#if toggle.value}
+		<Checkmark class="mt-px" />
+	{:else}
+		<Unchecked class="mt-px" />
+	{/if}
 </Button>

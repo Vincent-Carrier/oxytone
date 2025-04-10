@@ -1,7 +1,6 @@
 <script lang="ts">
 	import FlashcardsButton from './flashcards-button.svelte'
 	import Toggle from './toggle.svelte'
-	import Tooltip from './tooltip.svelte'
 	import g from '$/lib/global-state.svelte'
 
 	type Props = { content?: Nullish<HTMLElement> }

@@ -6,6 +6,8 @@
 	import { fly } from 'svelte/transition'
 	import g from '$lib/global-state.svelte'
 	import Button from './button.svelte'
+	import Cancel from '~icons/solar/close-square-line-duotone'
+	import Download from '~icons/solar/download-square-line-duotone'
 
 	let segments = page.url.pathname.split('/')
 	let count = $derived(g.selection?.size)
@@ -38,11 +40,11 @@
 		</ul>
 	</div>
 {/if}
-<div class="contents max-sm:hidden">
+<div class="contents max-md:hidden">
 	{#if g.selecting}
 		<Button onclick={clearSelection} danger>
 			cancel
-			<span class="i-[solar--close-square-line-duotone] -mb-px"></span>
+			<Cancel class="-mb-px" />
 		</Button>
 		<Button
 			inert={count == 0}
@@ -50,7 +52,7 @@
 			download="greek-flashcards.apkg"
 			onclick={clearSelection}>
 			{`export ${count} word${count === 1 ? '' : 's'}`}
-			<span class="i-[solar--download-square-line-duotone] -mb-[4px]"></span>
+			<Download class="-mb-[4px]" />
 		</Button>
 	{:else}
 		<Button onclick={() => (g.selecting = true)}>flashcards</Button>
