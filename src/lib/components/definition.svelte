@@ -3,6 +3,7 @@
 	import { basex } from '$lib/api'
 	import { fade } from 'svelte/transition'
 	import ky from 'ky'
+	import ExternalIcon from '~icons/solar/square-arrow-right-up-outline'
 
 	type Props = { lemma: string }
 	let { lemma }: Props = $props()
@@ -35,7 +36,7 @@
 			disabled ? 'text-gray-600' : 'text-blue-600'
 		]}>
 		<span class="underline">{text}</span>
-		<span class="i-[solar--square-arrow-right-up-outline] mt-px inline-block"></span>
+		<ExternalIcon class="mt-px" />
 	</a>
 {/snippet}
 

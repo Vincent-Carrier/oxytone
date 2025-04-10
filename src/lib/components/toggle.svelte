@@ -2,8 +2,8 @@
 	import { type Snippet } from 'svelte'
 	import LocalStore from '$lib/local-storage.svelte'
 	import Button from './button.svelte'
-	import Checkmark from '~icons/solar/check-square-outline'
-	import Unchecked from '~icons/solar/minus-square-line-duotone'
+	import CheckmarkIcon from '~icons/solar/check-square-outline'
+	import UncheckedIcon from '~icons/solar/minus-square-line-duotone'
 
 	type Props = {
 		children: Snippet
@@ -35,8 +35,8 @@
 	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100']}>
 	{@render children()}
 	{#if toggle.value}
-		<Checkmark class="mt-px" />
+		<CheckmarkIcon class="mt-px" />
 	{:else}
-		<Unchecked class="mt-px" />
+		<UncheckedIcon class="mt-px" />
 	{/if}
 </Button>
