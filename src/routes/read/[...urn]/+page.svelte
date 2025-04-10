@@ -10,7 +10,7 @@
 
 	let tb: Nullish<HTMLElement> = $state()
 	const q = (sel: string) => tb?.querySelector<HTMLElement>(sel)
-	const qq = (sel: string) => tb!.querySelectorAll<HTMLElement>(sel)
+	const qq = (sel: string) => content!.querySelectorAll<HTMLElement>(sel)
 	let content: Nullish<HTMLElement> = $derived(q('#tb-content'))
 	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
 	let { data }: PageProps = $props()
@@ -20,17 +20,17 @@
 	})
 
 	$effect(() => {
-		if (tb === null) return
+		if (!tb) return
 
-		let { hash } = location
-		if (hash) q(`a[href="${hash}`)?.scrollIntoView({ behavior: 'smooth' })
+		let l = location
+		if (l.hash) q(`a[href="${l.hash}`)?.scrollIntoView({ behavior: 'smooth' })
 
 		// allow hash anchors to be unselected and remove them from browser history
 		for (let anchor of qq('a[href^="#"]')) {
 			anchor.addEventListener('click', ev => {
 				let a = ev.target as HTMLAnchorElement
-				if (a.hash === location.hash) location.replace('#')
-				else location.replace(a.hash)
+				if (a.hash === l.hash) l.replace('#')
+				else l.replace(a.hash)
 				ev.preventDefault()
 			})
 		}
@@ -43,9 +43,6 @@
 
 <div class="flex h-screen flex-col overflow-x-hidden">
 	<Nav {content} />
-	<div
-		class="absolute top-0 bottom-0 left-0 -z-10 w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50">
-	</div>
 	<div class="contents">
 		{#await data.treebank}
 			<p

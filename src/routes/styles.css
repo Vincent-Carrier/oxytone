@@ -63,7 +63,7 @@ section.century {
 			& details.work {
 				@apply break-inside-avoid;
 				& ol {
-					@apply list-dash pl-2;
+					@apply list-dash pl-2 text-xs;
 				}
 				& li {
 					@apply capitalize;

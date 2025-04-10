@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { WordElement } from '$lib/word.ts'
+	import type { WordElement } from '$lib/components/word.svelte'
 
 	interface Props {
 		word: WordElement

@@ -18,7 +18,7 @@
 	<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>
 		analysis
 		{#snippet tooltip()}
-			<Tooltip class="w-52 text-balance">
+			<div class="w-52 text-balance">
 				<p>
 					When selected, each word underlines its <span class="underline">syntactical head</span> and
 					the bounds of its dependencies are shown 「within brackets」. Furthermore, a verb's complements
@@ -30,24 +30,24 @@
 						Syntactical analysis may not be very accurate. Enable at your own risk.
 					</p>
 				{/if}
-			</Tooltip>
+			</div>
 		{/snippet}
 	</Toggle>
 	<Toggle key="verbs" set={val => content?.classList.toggle('verbs', val)}>
 		verbs
 		{#snippet tooltip()}
-			<Tooltip class="w-48 text-balance">
+			<div class="w-48 text-balance">
 				<p>
 					Each verb is shown in <strong>bold</strong>. Finite verbs are in a bolder weight than
 					infinitives and participles.
 				</p>
-			</Tooltip>
+			</div>
 		{/snippet}
 	</Toggle>
 	<Toggle key="colors" set={val => content?.classList.toggle('syntax', val)}>
 		colors
 		{#snippet tooltip()}
-			<Tooltip class="w-56 text-balance">
+			<div class="w-48 text-balance">
 				<p>Each word is colored according to its case:</p>
 				<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
 					<div class="text-green-700">Nominative</div>
@@ -56,7 +56,7 @@
 					<div class="text-purple-700">Genitive</div>
 					<div class="text-pink-700">Vocative</div>
 				</div>
-			</Tooltip>
+			</div>
 		{/snippet}
 	</Toggle>
 </nav>

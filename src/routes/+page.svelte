@@ -2,6 +2,8 @@
 	import './styles.css'
 	import type { PageProps } from './$types'
 	import '$lib/components/word.svelte'
+	import Button from '$/lib/components/button.svelte'
+	import Tooltip from '$/lib/components/tooltip.svelte'
 
 	let { data }: PageProps = $props()
 
@@ -45,8 +47,8 @@
 			>.
 		</p>
 	</div>
-	<button class="btn ghost pointer-events-auto mb-2 ml-auto block" onclick={expandAll}>
+	<Button class="pointer-events-auto mb-2 ml-auto" onclick={expandAll}>
 		{expanded ? 'Collapse all' : 'Expand all'}
-	</button>
+	</Button>
 	{@html data.body}
 </div>

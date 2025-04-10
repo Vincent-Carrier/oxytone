@@ -33,20 +33,3 @@
 		@apply text-gray-800;
 	}
 }
-
-@layer components {
-	.btn {
-		@apply font-sans-sc cursor-pointer leading-tight text-blue-700 lowercase;
-		@apply rounded-sm border-1 border-blue-700 px-1 hover:bg-blue-50 active:bg-blue-100;
-		@apply flex items-center gap-x-1;
-		&.danger {
-			@apply border-red-700 text-red-700 hover:bg-red-50 active:bg-red-100;
-		}
-		&[inert] {
-			@apply border-gray-600 text-gray-600;
-		}
-		&.ghost {
-			@apply border-transparent;
-		}
-	}
-}

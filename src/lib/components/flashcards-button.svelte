@@ -5,6 +5,7 @@
 	import { PUBLIC_FASTAPI_URL } from '$env/static/public'
 	import { fly } from 'svelte/transition'
 	import g from '$lib/global-state.svelte'
+	import Button from './button.svelte'
 
 	let segments = page.url.pathname.split('/')
 	let count = $derived(g.selection?.size)
@@ -39,21 +40,20 @@
 {/if}
 <div class="contents max-sm:hidden">
 	{#if g.selecting}
-		<button onclick={clearSelection} class="btn ghost danger">
+		<Button onclick={clearSelection} danger>
 			cancel
 			<span class="i-[solar--close-square-line-duotone] -mb-px"></span>
-		</button>
-		<button class="btn ghost" inert={count == 0} popovertarget="flashcards-help">
-			<a
-				href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`}
-				download="greek-flashcards.apkg"
-				onclick={clearSelection}>
-				{`export ${count} word${count === 1 ? '' : 's'}`}
-				<span class="i-[solar--download-square-line-duotone] -mb-[4px]"></span>
-			</a>
-		</button>
+		</Button>
+		<Button
+			inert={count == 0}
+			href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`}
+			download="greek-flashcards.apkg"
+			onclick={clearSelection}>
+			{`export ${count} word${count === 1 ? '' : 's'}`}
+			<span class="i-[solar--download-square-line-duotone] -mb-[4px]"></span>
+		</Button>
 	{:else}
-		<button onclick={() => (g.selecting = true)} class="btn ghost">flashcards</button>
+		<Button onclick={() => (g.selecting = true)}>flashcards</Button>
 	{/if}
 </div>
 {#if g.selecting && g.selection?.size == 0}

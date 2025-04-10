@@ -37,7 +37,7 @@
 }
 
 .body {
-	@apply ml-[var(--padded-margin-w)] leading-relaxed;
+	@apply mb-[40vh] ml-[var(--padded-margin-w)] leading-relaxed;
 
 	& ::selection {
 		@apply bg-blue-50;
@@ -62,12 +62,12 @@
 	& .nbr {
 		@apply tracking-tighter select-none;
 		&:target {
-			@apply border-blue-600 bg-blue-100 font-medium !text-blue-700;
+			@apply bg-blue-100 font-medium text-blue-700 outline;
 		}
 	}
 
 	& :where(.nbr:not(.section-nbr)) {
-		@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] border-r-1 border-gray-200 bg-gray-50 pr-1 text-right text-xs text-gray-500 max-sm:hidden;
+		@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] pr-1 text-right text-xs text-gray-500 max-sm:hidden;
 	}
 	& .chapter-nbr,
 	& .stephanus-nbr {
