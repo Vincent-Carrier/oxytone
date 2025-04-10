@@ -33,8 +33,8 @@
 	</h1>
 	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
 </hgroup>
-<div class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-gray-800">
-	<div class="card pointer-events-auto mb-12 p-4 pt-2 text-gray-800 sm:ml-24">
+<main class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-gray-800">
+	<div class="card pointer-events-auto mb-12 bg-gray-50 p-4 pt-2 text-gray-800 sm:ml-24">
 		<h2 class="font-sans-sc font-bold lowercase">About</h2>
 		<p>
 			Oxytone is a web application that aims to provide a comprehensive reading environment for the
@@ -51,4 +51,4 @@
 		{expanded ? 'Collapse all' : 'Expand all'}
 	</Button>
 	{@html data.body}
-</div>
+</main>

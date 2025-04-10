@@ -20,7 +20,11 @@
 }
 
 @utility card {
-	@apply rounded-sm border-1 border-gray-500 bg-gray-50;
+	@apply rounded-sm border-1 border-gray-300;
+}
+
+@utility elevated {
+	@apply rounded-sm border-1 border-r-4 border-b-3 border-gray-500;
 }
 
 @layer base {
