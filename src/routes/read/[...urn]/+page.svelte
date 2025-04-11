@@ -14,6 +14,8 @@
 	let content: Nullish<HTMLElement> = $derived(q('#tb-content'))
 	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
 	let { data }: PageProps = $props()
+	let lemma = $derived(g.selected?.lemma)
+	let voice = $derived(g.selected?.voice)
 
 	$effect(() => {
 		g.analysis = content?.dataset.analysis === 'manual'
@@ -41,7 +43,7 @@
 	<title>{title}</title>
 </svelte:head>
 
-<div class="flex h-screen flex-col overflow-x-hidden">
+<div class="flex h-screen flex-col overflow-x-hidden" onlemma={ev => (lemma = ev.detail.lemma)}>
 	<Nav {content} />
 	<div class="contents">
 		{#await data.treebank}
@@ -71,7 +73,7 @@
 			<Morphology word={g.selected} />
 		</div>
 	{/if}
-	{#if g.selected?.lemma}
-		<Definition lemma={g.selected.lemma} />
+	{#if lemma}
+		<Definition {lemma} {voice} />
 	{/if}
 </div>

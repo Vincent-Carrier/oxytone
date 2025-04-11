@@ -12,7 +12,8 @@ declare variable $def:xslt := xsm:stylesheet(
       <dd class="shortdef"><xsl:value-of select="." /></dd>,
     "entryFree": (
       <dt>
-        <xsl:value-of select="orth"/>
+        <xsl:value-of select="concat(.//gen[1], ' ')"/>
+        <xsl:value-of select="string-join(orth, ', ')"/>
       </dt>,
       <div class="meanings">
         <xsl:apply-templates select="../shortdef" />
@@ -33,10 +34,12 @@ declare variable $def:xslt := xsm:stylesheet(
       </div>),
     "tr":
       <strong><xsl:value-of select="concat(' ', ., ' ')"/></strong>,
+    "ref":
+      <ox-ref><xsl:value-of select="." /></ox-ref>,
     "bibl":
       <span class="bibl"><xsl:value-of select="." /></span>,
-    '*[@lang="greek"]':
-      <span class="greek"><xsl:value-of select="." /></span>,
+    "gram":
+      <span class="gram"><xsl:value-of select="." /></span>,
     "text()[contains(., 'gen.')]":
       <xsl:sequence>
         <xsl:analyze-string select="." regex="(gen\.)">
@@ -69,13 +72,14 @@ declare variable $def:xslt := xsm:stylesheet(
             <xsl:value-of select="."/>
           </xsl:non-matching-substring>
         </xsl:analyze-string>
-      </xsl:sequence>
+      </xsl:sequence>,
+    "text()":
+      <xsl:value-of select="normalize-space(.)" />
   }
 );
 
 declare
   %rest:path("define/lsj/{$lemma}")
-  %output:method("xml")
   function def:get-definition($lemma) {
     let $_ := store:read("lsj_shortdefs")
     let $entry := <body>

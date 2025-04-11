@@ -17,17 +17,17 @@ dl {
 	& dd {
 		@apply text-gray-600;
 
-		.case {
-			@apply underline decoration-2;
+		& .case {
+			@apply underline;
 		}
-		.gen {
-			@apply text-purple-700;
+		& .acc {
+			@apply text-acc-700;
 		}
-		.dat {
-			@apply text-yellow-700;
+		& .dat {
+			@apply text-dat-700;
 		}
-		.acc {
-			@apply text-sky-700;
+		& .gen {
+			@apply text-gen-700;
 		}
 
 		&:not(.shortdef) {
@@ -46,6 +46,14 @@ dl {
 
 		& strong {
 			@apply text-gray-800;
+		}
+
+		& ox-ref {
+			/* @apply cursor-pointer text-blue-700 underline; */
+		}
+
+		& .gram {
+			@apply italic underline;
 		}
 	}
 }

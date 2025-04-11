@@ -1,5 +1,5 @@
 - Fix LSJ shortdefs when a word has more than one meaning
 - Fix iPhone notch landscape mode
-- Allow definitions during flashcard selection mode
 - Get rid of Python server and generate flashcards with BaseX
-- Don't do syntax analysis on automatically annotated texts
+- Index of place and people names from english TEI, with links to Wikidata / Pleiades / ToposText, etc.
+- Pull notes from english TEI

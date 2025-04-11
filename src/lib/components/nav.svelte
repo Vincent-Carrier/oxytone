@@ -56,11 +56,11 @@
 			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
 				<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
-					<div class="text-green-700">Nominative</div>
-					<div class="text-cyan-700">Accusative</div>
-					<div class="text-yellow-700">Dative</div>
-					<div class="text-purple-700">Genitive</div>
-					<div class="text-pink-700">Vocative</div>
+					<div class="text-nom-700">Nominative</div>
+					<div class="text-acc-700">Accusative</div>
+					<div class="text-dat-700">Dative</div>
+					<div class="text-gen-700">Genitive</div>
+					<div class="text-voc-700">Vocative</div>
 				</div>
 			</div>
 		{/snippet}

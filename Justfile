@@ -33,6 +33,11 @@ tei:
         -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
         -c "CREATE DB tei tei/" \
 
+english:
+  basex -O STRIPNS=true \
+        -O FTINCLUDE=body \
+        -c "CREATE DB english eng/" \
+
 [group('db')]
 index:
   basex -Q seed/index.xq

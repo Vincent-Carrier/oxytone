@@ -1,9 +1,11 @@
 <script lang="ts">
-	import './definition.css'
 	import { basex } from '$lib/api'
-	import { fade, fly } from 'svelte/transition'
+	import '$lib/components/ref.svelte'
 	import ky from 'ky'
+	import { fly } from 'svelte/transition'
 	import ExternalIcon from '~icons/heroicons/arrow-top-right-on-square-16-solid'
+	import './definition.css'
+
 	type Props = { lemma: string }
 	let { lemma }: Props = $props()
 </script>

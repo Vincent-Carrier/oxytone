@@ -1,5 +1,4 @@
 import { SvelteSet } from 'svelte/reactivity'
-import type { WordElement } from './word'
 
 type GlobalState = {
 	selected: WordElement | null

@@ -50,37 +50,37 @@ ox-w {
 	}
 
 	.syntax &[case='nom.'] {
-		@apply text-green-700;
+		@apply text-nom-700;
 	}
 	&.sbj {
-		@apply bg-green-50 outline-green-200;
+		@apply bg-nom-50 outline-nom-200;
 	}
 
 	.syntax &[case='acc.'] {
-		@apply text-cyan-700;
+		@apply text-acc-700;
 	}
 	&.acc-obj {
-		@apply bg-cyan-50 outline-cyan-200;
+		@apply bg-acc-50 outline-acc-200;
 	}
 	&.comp-obj {
 		@apply bg-blue-50 outline-blue-200;
 	}
 
 	.syntax &[case='dat.'] {
-		@apply text-yellow-700;
+		@apply text-dat-700;
 	}
 	&.dat-obj {
-		@apply bg-yellow-50 outline-yellow-200;
+		@apply bg-dat-50 outline-dat-200;
 	}
 
 	.syntax &[case='gen.'] {
-		@apply text-purple-700;
+		@apply text-gen-700;
 	}
 	&.gen-obj {
-		@apply bg-purple-50 outline-purple-200;
+		@apply bg-gen-50 outline-gen-200;
 	}
 
 	.syntax &[case='voc.'] {
-		@apply text-pink-700;
+		@apply text-voc-700;
 	}
 }

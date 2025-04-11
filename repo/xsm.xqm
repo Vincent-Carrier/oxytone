@@ -14,10 +14,10 @@ declare function xsm:stylesheet(
     <xsl:function name="oxy:normalize-punct">
       <xsl:param name="text"/>
       <xsl:value-of select="$text
-        => replace(',\s+', ', ')
-        => replace('\.\s+', '. ')
-        => replace(';\s+', '; ')
-        => replace(':\s+', ': ')" />
+        => replace('\s*,\s*', ', ')
+        => replace('\s*\.\s*', '. ')
+        => replace('\s*;\s*', '; ')
+        => replace('\s*:\s*', ': ')" />
     </xsl:function>
     <xsl:function name="oxy:strip-diacritics">
       <xsl:param name="text"/>

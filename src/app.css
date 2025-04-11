@@ -5,11 +5,66 @@
 	--font-sans: 'Alegreya Sans', system-ui, sans-serif;
 	--font-sc: 'Alegreya SC', serif;
 	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
-}
 
-:root {
-	padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
-		env(safe-area-inset-left);
+	--color-nom-50: oklch(0.982 0.018 155.826);
+	--color-nom-100: oklch(0.962 0.044 156.743);
+	--color-nom-200: oklch(0.925 0.084 155.995);
+	--color-nom-300: oklch(0.871 0.15 154.449);
+	--color-nom-400: oklch(0.792 0.209 151.711);
+	--color-nom-500: oklch(0.723 0.219 149.579);
+	--color-nom-600: oklch(0.627 0.194 149.214);
+	--color-nom-700: oklch(0.527 0.154 150.069);
+	--color-nom-800: oklch(0.448 0.119 151.328);
+	--color-nom-900: oklch(0.393 0.095 152.535);
+	--color-nom-950: oklch(0.266 0.065 152.934);
+
+	--color-acc-50: oklch(0.984 0.019 200.873);
+	--color-acc-100: oklch(0.956 0.045 203.388);
+	--color-acc-200: oklch(0.917 0.08 205.041);
+	--color-acc-300: oklch(0.865 0.127 207.078);
+	--color-acc-400: oklch(0.789 0.154 211.53);
+	--color-acc-500: oklch(0.715 0.143 215.221);
+	--color-acc-600: oklch(0.609 0.126 221.723);
+	--color-acc-700: oklch(0.52 0.105 223.128);
+	--color-acc-800: oklch(0.45 0.085 224.283);
+	--color-acc-900: oklch(0.398 0.07 227.392);
+	--color-acc-950: oklch(0.302 0.056 229.695);
+
+	--color-dat-50: oklch(0.987 0.026 102.212);
+	--color-dat-100: oklch(0.973 0.071 103.193);
+	--color-dat-200: oklch(0.945 0.129 101.54);
+	--color-dat-300: oklch(0.905 0.182 98.111);
+	--color-dat-400: oklch(0.852 0.199 91.936);
+	--color-dat-500: oklch(0.795 0.184 86.047);
+	--color-dat-600: oklch(0.681 0.162 75.834);
+	--color-dat-700: oklch(0.554 0.135 66.442);
+	--color-dat-800: oklch(0.476 0.114 61.907);
+	--color-dat-900: oklch(0.421 0.095 57.708);
+	--color-dat-950: oklch(0.286 0.066 53.813);
+
+	--color-gen-50: oklch(0.977 0.014 308.299);
+	--color-gen-100: oklch(0.946 0.033 307.174);
+	--color-gen-200: oklch(0.902 0.063 306.703);
+	--color-gen-300: oklch(0.827 0.119 306.383);
+	--color-gen-400: oklch(0.714 0.203 305.504);
+	--color-gen-500: oklch(0.627 0.265 303.9);
+	--color-gen-600: oklch(0.558 0.288 302.321);
+	--color-gen-700: oklch(0.496 0.265 301.924);
+	--color-gen-800: oklch(0.438 0.218 303.724);
+	--color-gen-900: oklch(0.381 0.176 304.987);
+	--color-gen-950: oklch(0.291 0.149 302.717);
+
+	--color-voc-50: oklch(0.971 0.014 343.198);
+	--color-voc-100: oklch(0.948 0.028 342.258);
+	--color-voc-200: oklch(0.899 0.061 343.231);
+	--color-voc-300: oklch(0.823 0.12 346.018);
+	--color-voc-400: oklch(0.718 0.202 349.761);
+	--color-voc-500: oklch(0.656 0.241 354.308);
+	--color-voc-600: oklch(0.592 0.249 0.584);
+	--color-voc-700: oklch(0.525 0.223 3.958);
+	--color-voc-800: oklch(0.459 0.187 3.815);
+	--color-voc-900: oklch(0.408 0.153 2.432);
+	--color-voc-950: oklch(0.284 0.109 3.907);
 }
 
 @utility list-dash {
