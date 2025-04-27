@@ -1,9 +1,9 @@
 <script lang="ts">
-	import './styles.css'
-	import type { PageProps } from './$types'
-	import '$lib/components/word.svelte'
 	import Button from '$/lib/components/button.svelte'
-	import Tooltip from '$/lib/components/tooltip.svelte'
+	import '$lib/components/word.svelte'
+	import { onMount } from 'svelte'
+	import type { PageProps } from './$types'
+	import './styles.css'
 
 	let { data }: PageProps = $props()
 

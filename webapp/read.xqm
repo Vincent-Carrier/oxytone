@@ -64,9 +64,7 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:value-of select="replace(@id, '\d+\.(\d+)$', '$1')" />
       </a>
       <div class="line">
-        <span class="verse">
-          <xsl:apply-templates />
-        </span>
+        <xsl:apply-templates />
       </div>
     </xsl:sequence>,
   "stephanus":
@@ -94,7 +92,6 @@ declare variable $r:xslt := xsm:stylesheet({
     </ox-w>,
   "blockquote|p": xsm:keep("node()")
 });
-
 
 declare
   %updating

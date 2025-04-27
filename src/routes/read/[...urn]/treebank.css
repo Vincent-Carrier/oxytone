@@ -1,144 +1,167 @@
 @reference '$/app.css';
 
 :root {
-	--margin-w: calc(var(--spacing) * 10);
-	--padded-margin-w: calc(var(--spacing) * 14);
-	@variant max-sm {
-		--margin-w: 0;
-		--padded-margin-w: calc(var(--spacing) * 4);
-	}
+  --margin-w: calc(var(--spacing) * 10);
+  --padded-margin-w: calc(var(--spacing) * 14);
+
+  @variant max-sm {
+    --margin-w: 0;
+    --padded-margin-w: calc(var(--spacing) * 4);
+  }
 }
 
 .treebank {
-	@apply max-w-[60ch] font-serif;
-	& > hgroup {
-		@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
-		& h1 {
-			@apply text-3xl text-gray-800;
-		}
-		& .author {
-			@apply text-gray-800;
-		}
-		& .books {
-			@apply columns-2 md:columns-4;
-			& li {
-				@apply list-dash;
-				& a {
-					@apply text-blue-600;
-				}
-			}
-		}
-	}
+  @apply max-w-[60ch] font-serif;
 
-	&.dialogue .body,
-	&.prose .body {
-		@apply text-justify;
-	}
+  &>hgroup {
+    @apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
+
+    & h1 {
+      @apply text-3xl text-gray-800;
+    }
+
+    & .author {
+      @apply text-gray-800;
+    }
+
+    & .books {
+      @apply columns-2 md:columns-4;
+
+      & li {
+        @apply list-dash -mb-1;
+
+        & a {
+          @apply text-blue-600 font-sans-sc;
+        }
+      }
+    }
+  }
+
+  &.dialogue .body,
+  &.prose .body {
+    @apply text-justify;
+  }
 }
 
 .body {
-	@apply mb-[40vh] ml-[var(--padded-margin-w)] leading-relaxed;
+  @apply mb-[40vh] ml-[var(--padded-margin-w)] leading-relaxed;
 
-	& ::selection {
-		@apply bg-blue-50;
-	}
+  & ::selection {
+    @apply bg-blue-50;
+  }
 
-	& section {
-		@apply mb-8;
-	}
+  & section {
+    @apply mb-8;
+  }
 
-	& .dialogue p {
-		@apply mb-2;
-	}
+  & .dialogue p {
+    @apply mb-2;
+  }
 
-	& .line-nbr {
-		&:not([id$='0'], [id$='5']) {
-			@apply text-transparent;
-		}
-		&:hover {
-			@apply text-gray-500;
-		}
-	}
-	& .nbr {
-		@apply tracking-tighter select-none;
-		&:target {
-			@apply bg-blue-100 font-medium text-blue-700 outline;
-		}
-	}
+  & .line-nbr {
+    &:not([id$='0'], [id$='5']) {
+      @apply text-transparent;
+    }
 
-	& :where(.nbr:not(.section-nbr)) {
-		@apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] pr-1 text-right text-xs text-gray-500 max-sm:hidden;
-	}
-	& .chapter-nbr,
-	& .stephanus-nbr {
-		@apply sticky top-4;
-	}
+    &:hover {
+      @apply text-gray-500;
+    }
+  }
 
-	& .section-nbr {
-		@apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-xs text-gray-400;
-	}
+  & .nbr {
+    @apply tracking-tighter select-none font-sans;
 
-	& p {
-		@apply inline;
-	}
+    &:target {
+      @apply bg-blue-100 font-medium text-blue-700 outline;
+    }
+  }
 
-	& .sentence-nbr {
-		&:not([id$='0'], [id$='5']),
-		section &,
-		p & {
-			@apply hidden;
-		}
-	}
+  & :where(.nbr:not(.section-nbr)) {
+    @apply float-left mt-[7px] -ml-[var(--padded-margin-w)] block w-[var(--margin-w)] pr-1 text-right text-xs text-gray-500 max-sm:hidden;
+  }
 
-	& .line {
-		text-indent: 0.5rem hanging;
-	}
+  & .chapter-nbr,
+  & .stephanus-nbr {
+    @apply sticky top-4;
+  }
 
-	& .speaker {
-		@apply font-sc lowercase;
-		&.long {
-			@apply mt-4 bg-white text-gray-700 underline;
-		}
-		&.short,
-		&.mask {
-			@apply float-right -mr-12 block w-8 border-gray-400 px-1 max-md:hidden;
-		}
-		&.short {
-			@apply sticky -top-4 bg-white text-gray-500;
-		}
-		&.mask {
-			@apply relative z-10 h-32 bg-gradient-to-b from-white from-80% to-transparent text-transparent;
-		}
-	}
+  & .section-nbr {
+    @apply mr-2 inline-block border-r-1 border-gray-200 px-1 text-xs text-gray-400;
+  }
 
-	& blockquote {
-		@apply my-2;
-		& .line-nbr {
-			@apply mr-6;
-		}
-		& .line {
-			@apply italic;
-			&:first-of-type ox-w:first-of-type {
-				@apply relative;
-				&::before {
-					@apply absolute -left-4 text-2xl !font-normal text-gray-300;
-					content: '“';
-				}
-			}
-			&:last-of-type ox-w:last-of-type {
-				@apply relative;
-				&::after {
-					@apply absolute -right-3 text-2xl !font-normal text-gray-300;
-					content: '”';
-				}
-			}
-		}
-	}
+  & p {
+    @apply inline;
+  }
 
-	& hr {
-		@apply mx-8 my-4 w-48 border-gray-300;
-		.body :first-child & {
-			@apply hidden;
-		}
-	}
+  & .sentence-nbr {
+
+    &:not([id$='0'], [id$='5']),
+    section &,
+    p & {
+      @apply hidden;
+    }
+  }
+
+  & .line {
+    text-indent: 0.5rem hanging;
+  }
+
+  & .speaker {
+    @apply font-sc lowercase;
+
+    &.long {
+      @apply mt-4 bg-white text-gray-700 underline;
+    }
+
+    &.short,
+    &.mask {
+      @apply float-right -mr-12 block w-8 border-gray-400 px-1 select-none max-md:hidden;
+    }
+
+    &.short {
+      @apply sticky -top-4 bg-white text-gray-500;
+    }
+
+    &.mask {
+      @apply relative z-10 h-32 bg-gradient-to-b from-white from-80% to-transparent text-transparent;
+    }
+  }
+
+  & blockquote {
+    @apply my-2;
+
+    & .line-nbr {
+      @apply mr-6;
+    }
+
+    & .line {
+      @apply italic;
+
+      &:first-of-type ox-w:first-of-type {
+        @apply relative;
+
+        &::before {
+          @apply absolute -left-4 text-2xl !font-normal text-gray-300;
+          content: '“';
+        }
+      }
+
+      &:last-of-type ox-w:last-of-type {
+        @apply relative;
+
+        &::after {
+          @apply absolute -right-3 text-2xl !font-normal text-gray-300;
+          content: '”';
+        }
+      }
+    }
+  }
+
+  & hr {
+    @apply mx-8 my-4 w-48 border-gray-300;
+
+    .body :first-child & {
+      @apply hidden;
+    }
+  }
 }
