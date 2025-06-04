@@ -4,7 +4,7 @@ set script-interpreter := ["bash", "-euxo", "pipefail"]
 export BASEX_HOME := x"~/.local/share/basex"
 
 [group('db')]
-seed: lsj glaux tei index
+seed: lsj glaux tei index normalized
 
 [group('db')]
 lsj:

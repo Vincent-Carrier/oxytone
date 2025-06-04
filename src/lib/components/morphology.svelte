@@ -13,7 +13,7 @@
 			w.degree
 		].filter(Boolean)
 	)
-	let verbMorpho = $derived([w.tense, w.mood, w.voice].filter(Boolean))
+	let verbMorpho = $derived([w.mood, w.tense, w.voice].filter(Boolean))
 	let morpho = $derived([nounMorpho.join(' '), verbMorpho.join(' ')].filter(Boolean).join(', '))
 </script>
 
