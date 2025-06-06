@@ -4,7 +4,10 @@
 	import '@fontsource/alegreya-sans'
 	import '@fontsource/alegreya-sc'
 	import '@fontsource/alegreya-sans-sc'
+	import { Tooltip } from 'bits-ui'
 	let { children } = $props()
 </script>
 
-{@render children()}
+<Tooltip.Provider>
+	{@render children()}
+</Tooltip.Provider>

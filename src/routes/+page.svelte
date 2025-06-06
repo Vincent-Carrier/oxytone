@@ -41,7 +41,7 @@
 			reading of Ancient Greek literature. It offers a wide range of features and tools to help
 			users improve their language skills and gain a deeper understanding of the language. Source
 			code and more details can be found over on <a
-				href="https://github.com/Vincent-Carrier/paroxytone"
+				href="https://github.com/Vincent-Carrier/oxytone"
 				target="_blank"
 				class="text-blue-700 underline decoration-2">GitHub</a
 			>.

@@ -2,7 +2,6 @@
 	import { page } from '$app/state'
 	import { PUBLIC_FASTAPI_URL } from '$env/static/public'
 	import Button from '$lib/components/button.svelte'
-	import Tooltip from '$lib/components/tooltip.svelte'
 	import g from '$lib/global-state.svelte'
 	import { SvelteURLSearchParams } from 'svelte/reactivity'
 	import { fly } from 'svelte/transition'
@@ -34,13 +33,6 @@
 		<Button onclick={() => (g.selecting = true)}>
 			<StudentIcon />
 			flashcards
-			{#snippet tooltip()}
-				<p class="w-52">
-					Create a deck of flashcards from the words you select. Each card will have the lemma on
-					the front side and a full LSJ definition on its back side. The deck can be imported into
-					Anki or any other software compatible with the Anki format.
-				</p>
-			{/snippet}
 		</Button>
 	{:else}
 		<Button onclick={clearSelection} danger>
@@ -57,15 +49,6 @@
 		</Button>
 	{/if}
 </div>
-
-{#if g.selecting && g.selection?.size == 0}
-	<Tooltip class="fixed top-auto right-4 bottom-4 w-56">
-		<p>
-			Select words to create a deck of <a href="https://apps.ankiweb.net/">Anki</a> flashcards. Each
-			card will have the lemma on the front side and a full LSJ definition on its back side.
-		</p>
-	</Tooltip>
-{/if}
 
 {#if g.selection?.size}
 	<div

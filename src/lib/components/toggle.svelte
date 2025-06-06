@@ -7,13 +7,12 @@
 
 	type Props = {
 		children: Snippet
-		tooltip?: Snippet
 		get?: () => boolean
 		set?: (value: boolean) => void
 		key?: string
 		value?: boolean
 	}
-	let { children, tooltip, set, get, key, value = true }: Props = $props()
+	let { children, set, get, key, value = true }: Props = $props()
 
 	let toggle = key
 		? new LocalStore(key, value)
@@ -30,7 +29,6 @@
 </script>
 
 <Button
-	{tooltip}
 	onclick={() => (toggle.value = !toggle.value)}
 	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100']}>
 	{#if toggle.value}

@@ -1,22 +1,33 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition'
+	import { Tooltip } from 'bits-ui'
+	import type { Snippet } from 'svelte'
+	import { fade } from 'svelte/transition'
 
 	type Props = {
-		children: any
+		children: Snippet
+		tooltip: Snippet
 		class?: string
 	}
 
-	let { children, class: klass }: Props = $props()
+	let { children, tooltip, class: klass }: Props = $props()
 </script>
 
-<div
-	class={[
-		'elevated absolute top-7 right-0 bg-white px-2 py-1 text-left font-sans text-xs hyphens-auto text-gray-800 normal-case',
-		klass
-	]}
-	transition:fly|global={{ y: 50 }}>
-	{@render children()}
-</div>
+<Tooltip.Root>
+	<Tooltip.Trigger class="contents">
+		{@render children()}
+	</Tooltip.Trigger>
+	<Tooltip.Portal>
+		<div transition:fade>
+			<Tooltip.Content
+				class={[
+					'elevated absolute top-7 right-0 bg-white px-2 py-1 text-left font-sans text-xs hyphens-auto text-gray-800 normal-case',
+					klass
+				]}>
+				{@render tooltip()}
+			</Tooltip.Content>
+		</div>
+	</Tooltip.Portal>
+</Tooltip.Root>
 
 <style>
 	div :global(a) {

@@ -2,6 +2,7 @@
 	import FlashcardsButton from './flashcards-button.svelte'
 	import Toggle from './toggle.svelte'
 	import g from '$/lib/global-state.svelte'
+	import Tooltip from './tooltip.svelte'
 
 	type Props = { content?: Nullish<HTMLElement> }
 	let { content }: Props = $props()
@@ -16,9 +17,18 @@
 	]}>
 	<a href="/" class="text-gray-800">oxytone</a>
 	<div class="grow"></div>
-	<FlashcardsButton />
-	<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>
-		analysis
+	<Tooltip>
+		<FlashcardsButton />
+		{#snippet tooltip()}
+			<p class="w-52">
+				Create a deck of flashcards from the words you select. Each card will have the lemma on the
+				front side and a full LSJ definition on its back side. The deck can be imported into Anki or
+				any other software compatible with the Anki format.
+			</p>
+		{/snippet}
+	</Tooltip>
+	<Tooltip>
+		<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>analysis</Toggle>
 		{#snippet tooltip()}
 			<div class="w-56">
 				<p>If enabled, whenever a word is selected:</p>
@@ -38,9 +48,9 @@
 				{/if}
 			</div>
 		{/snippet}
-	</Toggle>
-	<Toggle key="verbs" set={val => content?.classList.toggle('verbs', val)}>
-		verbs
+	</Tooltip>
+	<Tooltip>
+		<Toggle key="verbs" set={val => content?.classList.toggle('verbs', val)}>verbs</Toggle>
 		{#snippet tooltip()}
 			<div class="w-60">
 				<p>
@@ -49,9 +59,9 @@
 				</p>
 			</div>
 		{/snippet}
-	</Toggle>
-	<Toggle key="colors" set={val => content?.classList.toggle('syntax', val)}>
-		colors
+	</Tooltip>
+	<Tooltip>
+		<Toggle key="colors" set={val => content?.classList.toggle('syntax', val)}>colors</Toggle>
 		{#snippet tooltip()}
 			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
@@ -64,5 +74,5 @@
 				</div>
 			</div>
 		{/snippet}
-	</Toggle>
+	</Tooltip>
 </nav>
