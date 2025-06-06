@@ -15,7 +15,6 @@
 	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
 	let { data }: PageProps = $props()
 	let lemma = $derived(g.selected?.lemma)
-	let voice = $derived(g.selected?.voice)
 
 	$effect(() => {
 		g.analysis = content?.dataset.analysis === 'manual'
@@ -69,11 +68,11 @@
 	{#if g.selected}
 		<div
 			transition:slide
-			class="fixed inset-x-0 bottom-0 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
+			class="fixed inset-x-0 bottom-0 z-20 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
 			<Morphology word={g.selected} />
 		</div>
 	{/if}
 	{#if lemma}
-		<Definition {lemma} {voice} />
+		<Definition {lemma} />
 	{/if}
 </div>
