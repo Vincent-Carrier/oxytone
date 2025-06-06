@@ -28,7 +28,7 @@
 	}
 </script>
 
-<div class="contents max-md:hidden">
+<div class="flex items-baseline gap-x-2 max-md:hidden">
 	{#if !g.selecting}
 		<Button onclick={() => (g.selecting = true)}>
 			<StudentIcon />

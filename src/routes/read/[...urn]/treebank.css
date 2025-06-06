@@ -82,7 +82,7 @@
 
   & .chapter-nbr,
   & .stephanus-nbr {
-    @apply sticky top-4;
+    @apply sticky top-4 bg-white;
   }
 
   & .section-nbr {
