@@ -30,7 +30,8 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle get={() => g.analysis} set={val => (g.analysis = val)}>analysis</Toggle>
+		<Toggle class="max-sm:hidden" get={() => g.analysis} set={val => (g.analysis = val)}
+			>analysis</Toggle>
 		{#snippet tooltip()}
 			<div class="w-56">
 				<p>If enabled, whenever a word is selected:</p>
@@ -80,9 +81,9 @@
 	<Tooltip>
 		<Toggle get={() => g.smoothBreathings} set={toggleSmoothBreathings}>breathings</Toggle>
 		{#snippet tooltip()}
-			<div class="w-48">
+			<div class="w-60">
+				<p>Remove unnecessary smooth breathing marks.</p>
 				<p>
-					Remove unnecessary smooth breathing marks.
 					<strong class="text-red-700"
 						><span class="font-sans-sc">caution</span>: May trigger dizziness, altered vision, eye
 						or muscle twitches, loss of awareness, disorientation, or convulsions. Discretion is

@@ -62,11 +62,20 @@
 			</p>
 		{/await}
 		<aside
-			class="ml-auto flow-root h-screen min-w-40 basis-96 overflow-y-auto border-l-1 border-l-gray-300 bg-gray-50 p-4 max-lg:hidden">
+			class="max-lg:elevated right-2 bottom-8 z-30 ml-auto flow-root h-screen max-w-96 min-w-40 grow basis-60 overflow-y-auto border-l-1 border-l-gray-300 bg-gray-50 p-2 max-lg:absolute max-lg:max-h-40 lg:p-4">
 			{#if lemma}
 				<Definition {lemma} />
 			{/if}
 		</aside>
+		<!-- <div
+			in:fly|global={{ y: 50 }}
+			class="elevated absolute right-2 bottom-8 z-30 max-h-40 min-h-40 w-72 overflow-y-scroll bg-white px-2 md:bottom-2 lg:max-h-[80%]">
+			{@html definition}
+			<div class="mt-4 mb-2">
+				{@render validatedLink('lsj.gr', 'https://lsj.gr/wiki/')}
+				{@render validatedLink('wiktionary.org', 'https://en.wiktionary.org/wiki/')}
+			</div>
+		</div> -->
 	</div>
 	{#if g.selected}
 		<div

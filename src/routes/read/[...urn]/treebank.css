@@ -10,8 +10,12 @@
   }
 }
 
+#tb-content {
+  @apply xl:mx-auto
+}
+
 .treebank {
-  @apply max-w-[60ch] font-serif;
+  @apply max-w-prose font-serif;
 
   &>hgroup {
     @apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
