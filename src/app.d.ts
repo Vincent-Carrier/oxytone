@@ -17,6 +17,7 @@ declare global {
     id: number
     head: number
     sentence: number
+    form?: string
     lemma?: string
     relation?: string
     pos?: string

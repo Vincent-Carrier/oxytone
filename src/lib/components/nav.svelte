@@ -1,10 +1,8 @@
 <script lang="ts">
 	import FlashcardsButton from './flashcards-button.svelte'
 	import Toggle from './toggle.svelte'
-	import g from '$/lib/global-state.svelte'
 	import Tooltip from './tooltip.svelte'
-
-	type Props = { content?: Nullish<HTMLElement>; tb?: Nullish<HTMLElement> }
+	import g from '$/lib/global-state.svelte'
 
 	function toggleSmoothBreathings(val: boolean) {
 		if (!g.content) return
@@ -80,10 +78,16 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle key="smooth_breathings" set={toggleSmoothBreathings}>breathings</Toggle>
+		<Toggle get={() => g.smoothBreathings} set={toggleSmoothBreathings}>breathings</Toggle>
 		{#snippet tooltip()}
 			<div class="w-48">
-				<p>When disabled, smooth breathing marks will be removed from the text</p>
+				<p>
+					Remove unnecessary smooth breathing marks.
+					<strong class="text-red-700"
+						><span class="font-sans-sc">caution</span>: May trigger dizziness, altered vision, eye
+						or muscle twitches, loss of awareness, disorientation, or convulsions. Discretion is
+						advised.</strong>
+				</p>
 			</div>
 		{/snippet}
 	</Tooltip>

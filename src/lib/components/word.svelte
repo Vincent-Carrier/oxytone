@@ -133,12 +133,16 @@
 		self.clear.push(() => cmap.removeClasses())
 	}
 
-	function toggleSmoothBreathing(this: WordElement, val: boolean) {
+	self.toggleSmoothBreathing = function (this: WordElement, val: boolean) {
+		g.smoothBreathings = val
 		if (!val) {
 			let stripped = this.textContent!.normalize('NFD')
 				.replace(/^([αεηιυοω]{1,2})\u0313/u, '$1')
 				.normalize('NFC')
+			if (!this.form) this.form = this.textContent!
 			this.textContent = stripped
+		} else {
+			this.textContent = this.form!
 		}
 	}
 

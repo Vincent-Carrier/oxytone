@@ -6,12 +6,14 @@ type GlobalState = {
   selecting: boolean
   selection: SvelteSet<WordElement>
   analysis: boolean
+  smoothBreathings: boolean
 }
 
 const global: GlobalState = $state({
   selecting: false,
   selection: new SvelteSet(),
-  analysis: true
+  analysis: true,
+  smoothBreathings: true
 })
 
 export default global
