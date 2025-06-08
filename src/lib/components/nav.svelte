@@ -4,10 +4,14 @@
 	import g from '$/lib/global-state.svelte'
 	import Tooltip from './tooltip.svelte'
 
-	type Props = { content?: Nullish<HTMLElement> }
-	let { content }: Props = $props()
-	let manualAnalysis = $derived(content?.dataset.analysis === 'manual')
-	$inspect(manualAnalysis)
+	type Props = { content?: Nullish<HTMLElement>; tb?: Nullish<HTMLElement> }
+
+	function toggleSmoothBreathings(val: boolean) {
+		if (!g.content) return
+		for (let w of g.content.querySelectorAll<WordElement>('ox-w')) {
+			w.toggleSmoothBreathing(val)
+		}
+	}
 </script>
 
 <nav
@@ -40,7 +44,7 @@
 							>complements</span> will be highlighted.
 					</li>
 				</ol>
-				{#if !manualAnalysis}
+				{#if !g.analysis}
 					<p class="mt-2 text-gray-500 italic">
 						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
 						Accuracy may vary.
@@ -50,7 +54,7 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle key="verbs" set={val => content?.classList.toggle('verbs', val)}>verbs</Toggle>
+		<Toggle key="verbs" set={val => g.content?.classList.toggle('verbs', val)}>verbs</Toggle>
 		{#snippet tooltip()}
 			<div class="w-60">
 				<p>
@@ -61,7 +65,7 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle key="colors" set={val => content?.classList.toggle('syntax', val)}>colors</Toggle>
+		<Toggle key="colors" set={val => g.content?.classList.toggle('syntax', val)}>colors</Toggle>
 		{#snippet tooltip()}
 			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
@@ -72,6 +76,14 @@
 					<div class="text-gen-700">Genitive</div>
 					<div class="text-voc-700">Vocative</div>
 				</div>
+			</div>
+		{/snippet}
+	</Tooltip>
+	<Tooltip>
+		<Toggle key="smooth_breathings" set={toggleSmoothBreathings}>breathings</Toggle>
+		{#snippet tooltip()}
+			<div class="w-48">
+				<p>When disabled, smooth breathing marks will be removed from the text</p>
 			</div>
 		{/snippet}
 	</Tooltip>

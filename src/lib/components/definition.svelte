@@ -12,7 +12,14 @@
 
 {#if lemma && /\p{L}+/u.test(lemma)}
 	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text() then definition}
-		<div
+		<div class="">
+			{@html definition}
+			<div class="mt-4 mb-2">
+				{@render validatedLink('lsj.gr', 'https://lsj.gr/wiki/')}
+				{@render validatedLink('wiktionary.org', 'https://en.wiktionary.org/wiki/')}
+			</div>
+		</div>
+		<!-- <div
 			in:fly|global={{ y: 50 }}
 			class="elevated absolute right-2 bottom-8 z-30 max-h-40 min-h-40 w-72 overflow-y-scroll bg-white px-2 md:bottom-2 lg:max-h-[80%]">
 			{@html definition}
@@ -20,7 +27,7 @@
 				{@render validatedLink('lsj.gr', 'https://lsj.gr/wiki/')}
 				{@render validatedLink('wiktionary.org', 'https://en.wiktionary.org/wiki/')}
 			</div>
-		</div>
+		</div> -->
 	{/await}
 {/if}
 

@@ -7,24 +7,23 @@
 	import { fade, slide } from 'svelte/transition'
 	import Nav from '$/lib/components/nav.svelte'
 	import g from '$/lib/global-state.svelte'
+	import type { Attachment } from 'svelte/attachments'
 
-	let tb: Nullish<HTMLElement> = $state()
-	const q = (sel: string) => tb?.querySelector<HTMLElement>(sel)
-	const qq = (sel: string) => content!.querySelectorAll<HTMLElement>(sel)
-	let content: Nullish<HTMLElement> = $derived(q('#tb-content'))
-	let title = $derived(q('h1')?.textContent ?? 'Oxytone')
 	let { data }: PageProps = $props()
 	let lemma = $derived(g.selected?.lemma)
 
-	$effect(() => {
-		g.analysis = content?.dataset.analysis === 'manual'
-	})
+	const onTbMount: Attachment = tb => {
+		const q = (sel: string) => tb.querySelector<HTMLElement>(sel)
+		let title = q('h1')?.textContent ?? 'Oxytone'
+		document.title = title
+		let content = q('#tb-content')
+		g.content = content
 
-	$effect(() => {
-		if (!tb) return
-
+		if (!g.content) return
+		const qq = (sel: string) => g.content!.querySelectorAll<HTMLElement>(sel)
 		let l = location
 		if (l.hash) q(`a[href="${l.hash}`)?.scrollIntoView({ behavior: 'smooth' })
+		g.analysis = g.content.dataset.analysis === 'manual'
 
 		// allow hash anchors to be unselected and remove them from browser history
 		for (let anchor of qq('a[href^="#"]')) {
@@ -35,16 +34,14 @@
 				ev.preventDefault()
 			})
 		}
-	})
+
+		return () => {}
+	}
 </script>
 
-<svelte:head>
-	<title>{title}</title>
-</svelte:head>
-
-<div class="flex h-screen flex-col overflow-x-hidden" onlemma={ev => (lemma = ev.detail.lemma)}>
-	<Nav {content} />
-	<div class="contents">
+<div class="flex h-screen flex-col" onlemma={ev => (lemma = ev.detail.lemma)}>
+	<Nav />
+	<div class="flex overflow-y-auto">
 		{#await data.treebank}
 			<p
 				transition:fade|global
@@ -54,9 +51,9 @@
 		{:then treebank}
 			<article
 				transition:fade|global
-				bind:this={tb}
 				id="treebank"
-				class="h-full scroll-pt-8 overflow-y-scroll scroll-smooth pt-4 pr-4 pb-12 leading-relaxed">
+				class="flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed"
+				{@attach onTbMount}>
 				{@html treebank}
 			</article>
 		{:catch}
@@ -64,15 +61,18 @@
 				Something went wrong
 			</p>
 		{/await}
+		<aside
+			class="ml-auto flow-root h-screen min-w-40 basis-96 overflow-y-auto border-l-1 border-l-gray-300 bg-gray-50 p-4 max-lg:hidden">
+			{#if lemma}
+				<Definition {lemma} />
+			{/if}
+		</aside>
 	</div>
 	{#if g.selected}
 		<div
 			transition:slide
-			class="fixed inset-x-0 bottom-0 z-20 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
+			class="z-20 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
 			<Morphology word={g.selected} />
 		</div>
-	{/if}
-	{#if lemma}
-		<Definition {lemma} />
 	{/if}
 </div>

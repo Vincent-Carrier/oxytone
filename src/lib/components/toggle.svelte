@@ -14,6 +14,7 @@
 	}
 	let { children, set, get, key, value = true }: Props = $props()
 
+	// use localStorage to remember the value if a key is given
 	let toggle = key
 		? new LocalStore(key, value)
 		: {
@@ -24,13 +25,12 @@
 					set!(v)
 				}
 			}
-
-	if (key) $effect(() => set?.(toggle.value))
 </script>
 
 <Button
 	onclick={() => (toggle.value = !toggle.value)}
-	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100']}>
+	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100']}
+	{@attach () => key && set?.(toggle.value)}>
 	{#if toggle.value}
 		<CheckmarkIcon class="mt-px" />
 	{:else}

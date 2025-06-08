@@ -25,7 +25,7 @@
     }
 
     & .books {
-      @apply columns-2 md:columns-4;
+      @apply columns-3 lg:columns-4 text-sm;
 
       & li {
         @apply list-dash -mb-1;

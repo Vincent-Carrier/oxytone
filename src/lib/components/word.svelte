@@ -6,6 +6,7 @@
 			id: { type: 'Number' },
 			head: { type: 'Number' },
 			sentence: { type: 'Number' },
+			form: { reflect: false },
 			lemma: {},
 			relation: {},
 			pos: {},
@@ -130,6 +131,15 @@
 		for (let d of dependencies(w)) cmap.set(d, klass)
 		cmap.addClasses()
 		self.clear.push(() => cmap.removeClasses())
+	}
+
+	function toggleSmoothBreathing(this: WordElement, val: boolean) {
+		if (!val) {
+			let stripped = this.textContent!.normalize('NFD')
+				.replace(/^([αεηιυοω]{1,2})\u0313/u, '$1')
+				.normalize('NFC')
+			this.textContent = stripped
+		}
 	}
 
 	// function* sentenceWords() {

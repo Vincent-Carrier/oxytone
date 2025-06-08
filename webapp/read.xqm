@@ -88,7 +88,7 @@ declare variable $r:xslt := xsm:stylesheet({
   "w":
     <ox-w>
       <xsl:copy-of select="@*" />
-      <xsl:value-of select="oxy:strip-smooth-breathings(.)" />
+      <xsl:value-of select="normalize-unicode(., 'NFC')" />
     </ox-w>,
   "blockquote|p": xsm:keep("node()")
 });

@@ -1,59 +1,66 @@
 @reference '$/app.css';
 
 dl {
-	@apply relative;
+  @apply relative;
 
-	& .meanings {
-		@apply flex flex-col gap-y-1;
-	}
+  & .meanings {
+    @apply flex flex-col gap-y-1;
+  }
 
-	& dt {
-		@apply sticky top-0 -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
-		dl + dl & {
-			@apply mt-4 border-t-1;
-		}
-	}
+  & dt {
+    @apply -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
 
-	& dd {
-		@apply text-gray-600;
+    dl+dl & {
+      @apply mt-4 border-t-1;
+    }
+  }
 
-		& .case {
-			@apply underline;
-		}
-		& .acc {
-			@apply text-acc-700;
-		}
-		& .dat {
-			@apply text-dat-700;
-		}
-		& .gen {
-			@apply text-gen-700;
-		}
+  & dd {
+    @apply text-gray-600;
 
-		&:not(.shortdef) {
-			@apply pl-4 text-xs;
-			&::before {
-				content: '‒';
-				@apply mr-2 -ml-4;
-			}
-		}
-		&.shortdef {
-			@apply text-sm leading-snug font-bold text-gray-800;
-		}
-		& .bibl {
-			@apply text-gray-400;
-		}
+    & .case {
+      @apply underline;
+    }
 
-		& strong {
-			@apply text-gray-800;
-		}
+    & .acc {
+      @apply text-acc-700;
+    }
 
-		& ox-ref {
-			/* @apply cursor-pointer text-blue-700 underline; */
-		}
+    & .dat {
+      @apply text-dat-700;
+    }
 
-		& .gram {
-			@apply italic underline;
-		}
-	}
+    & .gen {
+      @apply text-gen-700;
+    }
+
+    &:not(.shortdef) {
+      @apply pl-4 text-xs;
+
+      &::before {
+        content: '‒';
+        @apply mr-2 -ml-4;
+      }
+    }
+
+    &.shortdef {
+      @apply text-sm leading-snug font-bold text-gray-800;
+    }
+
+    & .bibl {
+      @apply text-gray-400;
+    }
+
+    & strong {
+      @apply text-gray-800;
+    }
+
+    & ox-ref {
+      /* @apply cursor-pointer text-blue-700 underline; */
+    }
+
+    & .gram {
+      @apply italic underline;
+    }
+  }
 }
