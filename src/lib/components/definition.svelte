@@ -2,7 +2,6 @@
 	import { basex } from '$lib/api'
 	import '$lib/components/ref.svelte'
 	import ky from 'ky'
-	import { fly } from 'svelte/transition'
 	import ExternalIcon from '~icons/heroicons/arrow-top-right-on-square-16-solid'
 	import './definition.css'
 

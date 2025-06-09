@@ -7,7 +7,7 @@
 
 	type Props = {
 		children: Snippet
-		class: string
+		class?: string
 		get?: () => boolean
 		set?: (value: boolean) => void
 		key?: string
@@ -30,7 +30,7 @@
 
 <Button
 	onclick={() => (toggle.value = !toggle.value)}
-	class={[!toggle.value && 'text-gray-600 hover:bg-gray-100', klass]}
+	class={[{ 'text-gray-600 hover:bg-gray-100': !toggle.value }, klass]}
 	{@attach () => key && set?.(toggle.value)}>
 	{#if toggle.value}
 		<CheckmarkIcon class="mt-px" />
