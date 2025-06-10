@@ -42,7 +42,7 @@
 	<Nav />
 	<div class="flex overflow-y-auto">
 		{#await data.treebank}
-			<p class="font-sc mt-32 self-center text-center text-2xl lowercase">Loading ...</p>
+			<p class="font-sc mx-auto mt-32 text-2xl lowercase">Loading ...</p>
 		{:then treebank}
 			<article
 				id="treebank"

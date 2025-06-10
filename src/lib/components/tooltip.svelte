@@ -19,7 +19,7 @@
 	<Tooltip.Portal>
 		<Tooltip.Content
 			class={[
-				'tooltip-content elevated absolute top-7 right-0 bg-white px-2 py-1 text-left font-sans text-xs hyphens-auto text-gray-800 normal-case',
+				'tooltip-content elevated absolute top-7 right-0 z-50 bg-white px-2 py-1 text-left font-sans text-xs hyphens-auto text-gray-800 normal-case',
 				klass
 			]}>
 			{@render tooltip()}

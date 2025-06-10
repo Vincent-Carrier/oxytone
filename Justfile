@@ -63,7 +63,7 @@ install: saxon corpus
 
 [group('install')]
 corpus:
-  wget https://github.com/Vincent-Carrier/paroxytone/releases/download/0.1/corpus.zip
+  wget https://github.com/Vincent-Carrier/oxytone/releases/download/0.1/corpus.zip
   unzip corpus.zip
 
 [group('install')]
