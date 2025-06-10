@@ -32,7 +32,7 @@ oxytone/
 Follow the installation instructions on their respective websites:
 
 - [`basex`](https://basex.org/download/): XML database
-- [`uv`](https://docs.astral.sh/uv/#installation): Python package manager
+- [`uv`](https://docs.astral.sh/uv/#installation): Python package manager (if you wish to work on the flashcards functionality)
 - [`pnpm`](https://pnpm.io/installation): JavaScript package manager
 - [`just`](https://just.systems/man/en/packages.html): Task runner
 - [Saxon-HE](https://github.com/Saxonica/Saxon-HE/): XSLT processor for BaseX (this can be installed automatically with `just saxon`)

@@ -29,6 +29,75 @@ Here is what a rendered treebank line might look on the frontend:
 <div class="line"><ox-w id="100004224" head="100004219" relation="ATR" sentence="1" lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</ox-w><ox-w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</ox-w> <ox-w id="100004226" head="100004241" relation="SBJ" sentence="1" lemma="ὅς" pos="pronoun" number="sg." gender="fem." case="nom.">ἣ</ox-w> <ox-w id="100004227" head="100004229" relation="ATR" sentence="1" lemma="μυρίος" pos="adj." number="pl." gender="neut." case="acc.">μυρί’</ox-w><ox-w id="100004228" head="100004230" relation="OBJ" sentence="1" lemma="Ἀχαιός" pos="adj." number="pl." gender="masc." case="dat.">Ἀχαιοῖς</ox-w> <ox-w id="100004229" head="100004230" relation="OBJ" sentence="1" lemma="ἄλγος" pos="noun" number="pl." gender="neut." case="acc.">ἄλγε’</ox-w><ox-w id="100004230" head="100004241" relation="ATR_CO" sentence="1" lemma="τίθημι" pos="verb" person="3rd" number="sg." tense="aor." mood="ind." voice="act.">ἔθηκε</ox-w><ox-w id="100004231" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</ox-w></div>
 ```
 
+Here is a sample "intermediate representation":
+```xml
+<treebank>
+  <head>
+    <title>Iliad, Book 1 (Α)</title>
+    <author>Homer</author>
+    <books>
+      <book id="1">Book 1 (Α)</book>
+      <book id="2">Book 2 (Β)</book>
+      <book id="3">Book 3 (Γ)</book>
+      <book id="4">Book 4 (Δ)</book>
+      <book id="5">Book 5 (Ε)</book>
+      <book id="6">Book 6 (Ζ)</book>
+      <book id="7">Book 7 (Η)</book>
+      <book id="8">Book 8 (Θ)</book>
+      <book id="9">Book 9 (Ι)</book>
+      <book id="10">Book 10 (Κ)</book>
+      <book id="11">Book 11 (Λ)</book>
+      <book id="12">Book 12 (Μ)</book>
+      <book id="13">Book 13 (Ν)</book>
+      <book id="14">Book 14 (Ξ)</book>
+      <book id="15">Book 15 (Ο)</book>
+      <book id="16">Book 16 (Π)</book>
+      <book id="17">Book 17 (Ρ)</book>
+      <book id="18">Book 18 (Σ)</book>
+      <book id="19">Book 19 (Τ)</book>
+      <book id="20">Book 20 (Υ)</book>
+      <book id="21">Book 21 (Φ)</book>
+      <book id="22">Book 22 (Χ)</book>
+      <book id="23">Book 23 (Ψ)</book>
+      <book id="24">Book 24 (Ω)</book>
+    </books>
+    <style>verse</style>
+    <analysis>manual</analysis>
+  </head>
+  <body n="1">
+    <hr/>
+    <ln id="1.1" xml:space="preserve"><w id="100004219" head="100004220" relation="OBJ" sentence="1" lemma="μῆνις" pos="noun" number="sg." gender="fem." case="acc.">μῆνιν</w> <w id="100004220" head="100004250" relation="PRED_CO" sentence="1" lemma="ἀείδω" pos="verb" person="2nd" number="sg." tense="pres." mood="imperative" voice="act.">ἄειδε</w> <w id="100004221" head="100004220" relation="ExD" sentence="1" lemma="θεά" pos="noun" number="sg." gender="fem." case="voc.">θεὰ</w> <w id="100004222" head="100004223" relation="ATR" sentence="1" lemma="Πηληϊάδης" pos="noun" number="sg." gender="masc." case="gen.">Πηληϊάδεω</w> <w id="100004223" head="100004219" relation="ATR" sentence="1" lemma="Ἀχιλλεύς" pos="noun" number="sg." gender="masc." case="gen.">Ἀχιλῆος</w> </ln>
+    <ln id="1.2" xml:space="preserve"><w id="100004224" head="100004219" relation="ATR" sentence="1" lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</w><w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w> <w id="100004226" head="100004241" relation="SBJ" sentence="1" lemma="ὅς" pos="pronoun" number="sg." gender="fem." case="nom.">ἣ</w> <w id="100004227" head="100004229" relation="ATR" sentence="1" lemma="μυρίος" pos="adj." number="pl." gender="neut." case="acc.">μυρί’</w><w id="100004228" head="100004230" relation="OBJ" sentence="1" lemma="Ἀχαιός" pos="adj." number="pl." gender="masc." case="dat.">Ἀχαιοῖς</w> <w id="100004229" head="100004230" relation="OBJ" sentence="1" lemma="ἄλγος" pos="noun" number="pl." gender="neut." case="acc.">ἄλγε’</w><w id="100004230" head="100004241" relation="ATR_CO" sentence="1" lemma="τίθημι" pos="verb" person="3rd" number="sg." tense="aor." mood="ind." voice="act.">ἔθηκε</w><w id="100004231" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w></ln>
+    <ln id="1.3" xml:space="preserve"><w id="100004232" head="100004235" relation="ATR" sentence="1" lemma="πολύς" pos="adj." number="pl." gender="fem." case="acc.">πολλὰς</w> <w id="100004233" head="100004241" relation="AuxY" sentence="1" lemma="δέ">δ’</w><w id="100004234" head="100004235" relation="ATR" sentence="1" lemma="ἴφθιμος" pos="adj." number="pl." gender="fem." case="acc.">ἰφθίμους</w> <w id="100004235" head="100004237" relation="OBJ" sentence="1" lemma="ψυχή" pos="noun" number="pl." gender="fem." case="acc.">ψυχὰς</w> <w id="100004236" head="100004237" relation="OBJ" sentence="1" lemma="ᾍδης" pos="noun" number="sg." gender="masc." case="dat.">Ἄϊδι</w> <w id="100004237" head="100004241" relation="ATR_CO" sentence="1" lemma="προϊάπτω" pos="verb" person="3rd" number="sg." tense="aor." mood="ind." voice="act.">προΐαψεν</w> </ln>
+    <ln id="1.4" xml:space="preserve"><w id="100004238" head="100004235" relation="ATR" sentence="1" lemma="ἥρως" pos="noun" number="pl." gender="masc." case="gen.">ἡρώων</w><w id="100004239" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w> <w id="100004240" head="100004243" relation="OBJ" sentence="1" lemma="αὐτός" pos="pronoun" number="pl." gender="masc." case="acc.">αὐτοὺς</w> <w id="100004241" head="100004219" relation="COORD" sentence="1" lemma="δέ">δὲ</w> <w id="100004242" head="100004243" relation="OCOMP" sentence="1" lemma="ἑλώριον" pos="noun" number="pl." gender="neut." case="acc.">ἑλώρια</w> <w id="100004243" head="100004241" relation="ATR_CO" sentence="1" lemma="τεύχω" pos="verb" person="3rd" number="sg." tense="imperf." mood="ind." voice="act.">τεῦχε</w> <w id="100004244" head="100004246" relation="OBJ_CO" sentence="1" lemma="κύων" pos="noun" number="pl." gender="masc." case="dat.">κύνεσσιν</w> </ln>
+    <ln id="1.5" xml:space="preserve"><w id="100004245" head="100004246" relation="OBJ_CO" sentence="1" lemma="οἰωνός" pos="noun" number="pl." gender="masc." case="dat.">οἰωνοῖσί</w><w id="100004246" head="100004243" relation="COORD" sentence="1" lemma="τε">τε</w> <w id="100004247" head="100004245" relation="ATR" sentence="1" lemma="πᾶς" pos="adj." number="pl." gender="masc." case="dat.">πᾶσι</w><w id="100004248" head="100004250" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w> <w id="100004249" head="100004252" relation="ATR" sentence="1" lemma="Ζεύς" pos="noun" number="sg." gender="masc." case="gen.">Διὸς</w> <w id="100004250" head="0" relation="COORD" sentence="1" lemma="δέ">δ’</w><w id="100004251" head="100004250" relation="PRED_CO" sentence="1" lemma="τελέω" pos="verb" person="3rd" number="sg." tense="imperf." mood="ind." voice="mid.">ἐτελείετο</w> <w id="100004252" head="100004251" relation="SBJ" sentence="1" lemma="βουλή" pos="noun" number="sg." gender="fem." case="nom.">βουλή</w><w id="100004253" head="100004259" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w></ln>
+```
+
+Here is what a source GLAUx treebank might look like:
+
+```xml
+<treebank version="2" xml:lang="grc">
+  <sentence struct_id="411" id="1" document_id="0012-001" analysis="manual">
+    <word id="100004219" form="μῆνιν" line="1.1" div_book="1" lemma="μῆνις" postag="n-s---fa-" head="100004220" relation="OBJ"/>
+    <word id="100004220" form="ἄειδε" line="1.1" div_book="1" lemma="ἀείδω" postag="v2spma---" head="100004250" relation="PRED_CO"/>
+    <word id="100004221" form="θεὰ" line="1.1" div_book="1" lemma="θεά" postag="n-s---fv-" head="100004220" relation="ExD"/>
+    <word id="100004222" form="Πηληϊάδεω" line="1.1" div_book="1" lemma="Πηληϊάδης" postag="n-s---mg-" head="100004223" relation="ATR"/>
+    <word id="100004223" form="Ἀχιλῆος" line="1.1" div_book="1" lemma="Ἀχιλλεύς" postag="n-s---mg-" head="100004219" relation="ATR"/>
+    <word id="100004224" form="οὐλομένην" line="1.2" div_book="1" lemma="ὄλλυμι" postag="a-s---fa-" head="100004219" relation="ATR"/>
+    <word id="100004225" form="," line="1.2" div_book="1" lemma="," postag="u--------" head="100004241" relation="AuxX"/>
+    <word id="100004226" form="ἣ" line="1.2" div_book="1" lemma="ὅς" postag="p-s---fn-" head="100004241" relation="SBJ"/>
+    <word id="100004227" form="μυρί’" line="1.2" div_book="1" lemma="μυρίος" postag="a-p---na-" head="100004229" relation="ATR"/>
+    <word id="100004228" form="Ἀχαιοῖς" line="1.2" div_book="1" lemma="Ἀχαιός" postag="a-p---md-" head="100004230" relation="OBJ"/>
+    <word id="100004229" form="ἄλγε’" line="1.2" div_book="1" lemma="ἄλγος" postag="n-p---na-" head="100004230" relation="OBJ"/>
+    <word id="100004230" form="ἔθηκε" line="1.2" div_book="1" lemma="τίθημι" postag="v3saia---" head="100004241" relation="ATR_CO"/>
+    <word id="100004231" form="," line="1.2" div_book="1" lemma="," postag="u--------" head="100004241" relation="AuxX"/>
+    <word id="100004232" form="πολλὰς" line="1.3" div_book="1" lemma="πολύς" postag="a-p---fa-" head="100004235" relation="ATR"/>
+    <word id="100004233" form="δ’" line="1.3" div_book="1" lemma="δέ" postag="b--------" head="100004241" relation="AuxY"/>
+    <word id="100004234" form="ἰφθίμους" line="1.3" div_book="1" lemma="ἴφθιμος" postag="a-p---fa-" head="100004235" relation="ATR"/>
+    <word id="100004235" form="ψυχὰς" line="1.3" div_book="1" lemma="ψυχή" postag="n-p---fa-" head="100004237" relation="OBJ"/>
+    <word id="100004236" form="Ἄϊδι" line="1.3" div_book="1" lemma="ᾍδης" postag="n-s---md-" head="100004237" relation="OBJ"/>
+```
+
 What follows is the documentation for Svelte 5 + SvelteKit.
 
 ## docs/svelte/01-introduction/01-overview.md

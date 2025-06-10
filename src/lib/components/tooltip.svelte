@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Tooltip } from 'bits-ui'
 	import type { Snippet } from 'svelte'
-	import { fade } from 'svelte/transition'
 
 	type Props = {
 		children: Snippet
