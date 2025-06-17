@@ -1,86 +1,105 @@
 @reference '$/app.css';
 
+.mem-mode {
+  .line ox-w:first-child {
+    @apply inline-block first-letter:text-black;
+  }
+
+  ox-w {
+    @apply !text-white;
+  }
+}
+
 ox-w {
-	@apply cursor-pointer text-gray-800;
+  @apply cursor-pointer text-gray-800;
 
-	&.head {
-		@apply underline decoration-2 underline-offset-8;
-	}
+  &.head {
+    @apply underline decoration-2 underline-offset-8;
+  }
 
-	&[defined],
-	&[selected],
-	&.sbj,
-	&.comp-obj,
-	&.acc-obj,
-	&.dat-obj,
-	&.gen-obj {
-		@apply rounded-xs outline-1;
-	}
+  &[defined],
+  &[selected],
+  &.sbj,
+  &.comp-obj,
+  &.acc-obj,
+  &.dat-obj,
+  &.gen-obj {
+    @apply rounded-xs outline-1;
+  }
 
-	&.left-bound,
-	&.right-bound {
-		@apply relative;
-	}
-	&.left-bound::before,
-	&.right-bound::after {
-		@apply absolute -bottom-1 rounded-xs font-sans font-normal text-gray-700 not-italic;
-	}
+  &.left-bound,
+  &.right-bound {
+    @apply relative;
+  }
 
-	&.left-bound::before {
-		@apply -top-[6px] -left-3;
-		content: '「';
-	}
-	&.right-bound::after {
-		@apply -right-3 -bottom-[11px];
-		content: '」';
-	}
+  &.left-bound::before,
+  &.right-bound::after {
+    @apply absolute -bottom-1 rounded-xs font-sans font-normal text-gray-700 not-italic;
+  }
 
-	&[defined] {
-		@apply bg-gray-50 outline-gray-200;
-	}
-	&[selected] {
-		@apply bg-blue-50 outline-1 outline-blue-700;
-	}
+  &.left-bound::before {
+    @apply -top-[6px] -left-3;
+    content: '「';
+  }
 
-	.verbs &[pos='verb'] {
-		@apply font-medium text-gray-950;
-		&[person] {
-			@apply font-bold text-gray-800;
-		}
-	}
+  &.right-bound::after {
+    @apply -right-3 -bottom-[11px];
+    content: '」';
+  }
 
-	.syntax &[case='nom.'] {
-		@apply text-nom-700;
-	}
-	&.sbj {
-		@apply bg-nom-50 outline-nom-200;
-	}
+  &[defined] {
+    @apply bg-gray-50 outline-gray-200;
+  }
 
-	.syntax &[case='acc.'] {
-		@apply text-acc-700;
-	}
-	&.acc-obj {
-		@apply bg-acc-50 outline-acc-200;
-	}
-	&.comp-obj {
-		@apply bg-blue-50 outline-blue-200;
-	}
+  &[selected] {
+    @apply bg-blue-50 outline-1 outline-blue-700;
+  }
 
-	.syntax &[case='dat.'] {
-		@apply text-dat-700;
-	}
-	&.dat-obj {
-		@apply bg-dat-50 outline-dat-200;
-	}
+  .verbs &[pos='verb'] {
+    @apply font-medium text-gray-950;
 
-	.syntax &[case='gen.'] {
-		@apply text-gen-700;
-	}
-	&.gen-obj {
-		@apply bg-gen-50 outline-gen-200;
-	}
+    &[person] {
+      @apply font-bold text-gray-800;
+    }
+  }
 
-	.syntax &[case='voc.'] {
-		@apply text-voc-700;
-	}
+  .syntax &[case='nom.'] {
+    @apply text-nom-700;
+  }
+
+  &.sbj {
+    @apply bg-nom-50 outline-nom-200;
+  }
+
+  .syntax &[case='acc.'] {
+    @apply text-acc-700;
+  }
+
+  &.acc-obj {
+    @apply bg-acc-50 outline-acc-200;
+  }
+
+  &.comp-obj {
+    @apply bg-blue-50 outline-blue-200;
+  }
+
+  .syntax &[case='dat.'] {
+    @apply text-dat-700;
+  }
+
+  &.dat-obj {
+    @apply bg-dat-50 outline-dat-200;
+  }
+
+  .syntax &[case='gen.'] {
+    @apply text-gen-700;
+  }
+
+  &.gen-obj {
+    @apply bg-gen-50 outline-gen-200;
+  }
+
+  .syntax &[case='voc.'] {
+    @apply text-voc-700;
+  }
 }

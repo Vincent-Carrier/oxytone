@@ -1,38 +1,34 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte'
-	import LocalStore from '$lib/local-storage.svelte'
 	import Button from '$lib/components/button.svelte'
 	import CheckmarkIcon from '~icons/heroicons/check-16-solid'
 	import UncheckedIcon from '~icons/heroicons/minus-16-solid'
+	import g from '$lib/global-state.svelte'
+	import type { Attachment } from 'svelte/attachments'
 
 	type Props = {
 		children: Snippet
 		class?: string
-		get?: () => boolean
-		set?: (value: boolean) => void
-		key?: string
-		value?: boolean
+		key: keyof typeof g
+		store?: boolean
 	}
-	let { children, class: klass, set, get, key, value = true }: Props = $props()
+	let { children, class: klass, key, store }: Props = $props()
 
-	// use localStorage to remember the value if a key is given
-	let toggle = key
-		? new LocalStore(key, value)
-		: {
-				get value() {
-					return get!()
-				},
-				set value(v) {
-					set!(v)
-				}
-			}
+	// @ts-ignore
+	let set = (val: boolean) => (g[key] = val)
+	let get = () => g[key]
+
+	const localStore: Attachment = () => {
+		if (!store) return
+		localStorage.setItem(key, JSON.stringify(get()))
+	}
 </script>
 
 <Button
-	onclick={() => (toggle.value = !toggle.value)}
-	class={[{ 'text-gray-600 hover:bg-gray-100': !toggle.value }, klass]}
-	{@attach () => key && set?.(toggle.value)}>
-	{#if toggle.value}
+	onclick={() => set(!get())}
+	class={[{ 'text-gray-600 hover:bg-gray-100': !get() }, klass]}
+	{@attach localStore}>
+	{#if get()}
 		<CheckmarkIcon class="mt-px" />
 	{:else}
 		<UncheckedIcon class="mt-px" />

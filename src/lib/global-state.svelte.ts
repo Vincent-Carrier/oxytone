@@ -1,19 +1,23 @@
+import { browser } from '$app/environment'
 import { SvelteSet } from 'svelte/reactivity'
 
-type GlobalState = {
-  content?: HTMLElement | null
-  selected?: WordElement | null
-  selecting: boolean
-  selection: SvelteSet<WordElement>
-  analysis: boolean
-  smoothBreathings: boolean
-}
-
-const global: GlobalState = $state({
+const g = $state({
+  content: null as HTMLElement | null,
+  selected: null as WordElement | null,
   selecting: false,
-  selection: new SvelteSet(),
+  selection: new SvelteSet<WordElement>(),
   analysis: true,
-  smoothBreathings: true
+  smoothBreathings: true,
+  verbs: stored('verbs'),
+  colors: stored('colors'),
+  memMode: false,
 })
 
-export default global
+export default g
+
+
+function stored(key: string): boolean {
+  if (!browser) return true
+  let store = localStorage.getItem(key)
+  return store ? JSON.parse(store) : true
+}

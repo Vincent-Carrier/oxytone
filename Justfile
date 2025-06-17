@@ -24,7 +24,7 @@ normalized:
 
 [group('db')]
 glaux:
-  basex -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
+  basex -O MAXCATS=10000 -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
         -c "CREATE DB glaux glaux/"
 
 [group('db')]

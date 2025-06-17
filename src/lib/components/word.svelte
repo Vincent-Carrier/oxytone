@@ -134,14 +134,13 @@
 	}
 
 	self.toggleSmoothBreathing = function (this: WordElement, val: boolean) {
-		g.smoothBreathings = val
 		if (!val) {
 			let stripped = this.textContent!.normalize('NFD')
 				.replace(/^([αεηιυοω]{1,2})\u0313/u, '$1')
 				.normalize('NFC')
 			if (!this.form) this.form = this.textContent!
 			this.textContent = stripped
-		} else {
+		} else if (this.form) {
 			this.textContent = this.form!
 		}
 	}

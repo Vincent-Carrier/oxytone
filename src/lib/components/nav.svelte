@@ -5,11 +5,12 @@
 	import g from '$/lib/global-state.svelte'
 
 	function toggleSmoothBreathings(val: boolean) {
-		if (!g.content) return
-		for (let w of g.content.querySelectorAll<WordElement>('ox-w')) {
+		for (let w of g.content?.querySelectorAll<WordElement>('ox-w') ?? []) {
 			w.toggleSmoothBreathing(val)
 		}
 	}
+
+	$effect(() => toggleSmoothBreathings(g.smoothBreathings))
 </script>
 
 <nav
@@ -30,8 +31,7 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle class="max-sm:hidden" get={() => g.analysis} set={val => (g.analysis = val)}
-			>analysis</Toggle>
+		<Toggle class="max-sm:hidden" key="memMode">memorize</Toggle>
 		{#snippet tooltip()}
 			<div class="w-56">
 				<p>If enabled, whenever a word is selected:</p>
@@ -53,7 +53,29 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle key="verbs" set={val => g.content?.classList.toggle('verbs', val)}>verbs</Toggle>
+		<Toggle class="max-sm:hidden" key="analysis">analysis</Toggle>
+		{#snippet tooltip()}
+			<div class="w-56">
+				<p>If enabled, whenever a word is selected:</p>
+				<ol>
+					<li>Its <span class="underline">syntactical head</span> is underlined.</li>
+					<li>The 「bounds of its dependencies」 are shown within brackets.</li>
+					<li>
+						If a verb, its <span class="rounded-xs bg-blue-50 outline outline-blue-300"
+							>complements</span> will be highlighted.
+					</li>
+				</ol>
+				{#if !g.analysis}
+					<p class="mt-2 text-gray-500 italic">
+						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
+						Accuracy may vary.
+					</p>
+				{/if}
+			</div>
+		{/snippet}
+	</Tooltip>
+	<Tooltip>
+		<Toggle key="verbs" store>verbs</Toggle>
 		{#snippet tooltip()}
 			<div class="w-60">
 				<p>
@@ -64,7 +86,7 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle key="colors" set={val => g.content?.classList.toggle('syntax', val)}>colors</Toggle>
+		<Toggle key="colors" store>colors</Toggle>
 		{#snippet tooltip()}
 			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
@@ -79,7 +101,7 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle get={() => g.smoothBreathings} set={toggleSmoothBreathings}>breathings</Toggle>
+		<Toggle key="smoothBreathings">breathings</Toggle>
 		{#snippet tooltip()}
 			<div class="w-60">
 				<p>Remove unnecessary smooth breathing marks.</p>

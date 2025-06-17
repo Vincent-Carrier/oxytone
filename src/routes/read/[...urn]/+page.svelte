@@ -46,7 +46,14 @@
 		{:then treebank}
 			<article
 				id="treebank"
-				class="flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed"
+				class={[
+					'flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed',
+					{
+						verbs: g.verbs,
+						syntax: g.colors,
+						'mem-mode': g.memMode
+					}
+				]}
 				{@attach onTbMount}>
 				{@html treebank}
 			</article>
