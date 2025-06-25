@@ -154,7 +154,7 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
   let $_ := store:read('glaux')
   let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
   return <treebank>
-    <head>
+     <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
       <author>{$meta?english-author}</author>
       {if (exists($pager)) then <books>

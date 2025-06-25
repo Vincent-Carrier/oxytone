@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="flex h-screen flex-col" onlemma={ev => (lemma = ev.detail.lemma)}>
+<div class="flex h-screen flex-col print:h-auto" onlemma={ev => (lemma = ev.detail.lemma)}>
 	<Nav />
 	<div class="flex overflow-y-auto">
 		{#await data.treebank}

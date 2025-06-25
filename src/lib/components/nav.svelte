@@ -15,7 +15,7 @@
 
 <nav
 	class={[
-		'sticky top-0 z-50 flex items-baseline gap-x-2 py-1 pr-4 pl-[var(--padded-margin-w)]',
+		'sticky top-0 z-50 flex items-baseline gap-x-2 py-1 pr-4 pl-[var(--padded-margin-w)] print:hidden',
 		'font-sans-sc border-b border-gray-300 bg-gray-50 text-sm'
 	]}>
 	<a href="/" class="text-gray-800">oxytone</a>
