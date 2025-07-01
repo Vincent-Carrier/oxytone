@@ -34,7 +34,8 @@
 	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
 </hgroup>
 <main class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-gray-800">
-	<div class="card pointer-events-auto mb-12 bg-gray-50 p-4 pt-2 text-gray-800 sm:ml-24">
+	<div
+		class="card pointer-events-auto mt-8 mb-24 bg-gray-50 p-4 pt-2 text-gray-800 md:ml-24 lg:mx-auto lg:max-w-[60ch]">
 		<h2 class="font-sans-sc font-bold lowercase">About</h2>
 		<p>
 			Oxytone is a web application that aims to provide a comprehensive reading environment for the
@@ -47,8 +48,14 @@
 			>.
 		</p>
 	</div>
-	<Button class="pointer-events-auto mb-2 ml-auto" onclick={expandAll}>
-		{expanded ? 'Collapse all' : 'Expand all'}
-	</Button>
+
+	<div class="ml-24 flex items-baseline">
+		<p class="text-right max-md:hidden">
+			<strong>Pro Tip: </strong> Use Cmd-F / Ctrl-F to search through the corpus.
+		</p>
+		<Button class="pointer-events-auto mb-2 ml-auto" onclick={expandAll}>
+			{expanded ? 'Collapse all' : 'Expand all'}
+		</Button>
+	</div>
 	{@html data.body}
 </main>
