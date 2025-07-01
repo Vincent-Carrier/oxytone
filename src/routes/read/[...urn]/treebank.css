@@ -10,6 +10,15 @@
   }
 }
 
+@page {
+  size: 8.5in 11in;
+  margin: 0.5in;
+
+  @bottom-center {
+    content: counter(page);
+  }
+}
+
 #tb-content {
   @apply xl:mx-auto
 }
