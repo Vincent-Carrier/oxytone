@@ -38,10 +38,10 @@
 		class="card pointer-events-auto mt-8 mb-24 bg-gray-50 p-4 pt-2 text-gray-800 md:ml-24 lg:mx-auto lg:max-w-[60ch]">
 		<h2 class="font-sans-sc font-bold lowercase">About</h2>
 		<p>
-			Oxytone is a web application that aims to provide a comprehensive reading environment for the
-			reading of Ancient Greek literature. It offers a wide range of features and tools to help
-			users improve their language skills and gain a deeper understanding of the language. Source
-			code and more details can be found over on <a
+			Oxytone is a web application that aims to provide a comprehensive reading environment for
+			reading Ancient Greek literature. It offers a wide range of features and tools to help users
+			improve their language skills and gain a deeper understanding of Ancient Greek. Source code
+			and more details can be found over on <a
 				href="https://github.com/Vincent-Carrier/oxytone"
 				target="_blank"
 				class="text-blue-700 underline decoration-2">GitHub</a
