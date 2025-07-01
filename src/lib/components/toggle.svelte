@@ -5,10 +5,11 @@
 	import UncheckedIcon from '~icons/heroicons/minus-16-solid'
 	import g from '$lib/global-state.svelte'
 	import type { Attachment } from 'svelte/attachments'
+	import type { ClassValue } from 'svelte/elements'
 
 	type Props = {
 		children: Snippet
-		class?: string
+		class?: ClassValue
 		key: keyof typeof g
 		store?: boolean
 	}

@@ -23,7 +23,7 @@
 	<Tooltip>
 		<FlashcardsButton />
 		{#snippet tooltip()}
-			<p class="w-52">
+			<p class="w-64">
 				Create a deck of flashcards from the words you select. Each card will have the lemma on the
 				front side and a full LSJ definition on its back side. The deck can be imported into Anki or
 				any other software compatible with the Anki format.
@@ -31,24 +31,15 @@
 		{/snippet}
 	</Tooltip>
 	<Tooltip>
-		<Toggle class="max-sm:hidden" key="memMode">memorize</Toggle>
+		<Toggle
+			class={{ 'max-sm:hidden': true, hidden: !g.content?.querySelector('.line') }}
+			key="memMode">memorize</Toggle>
 		{#snippet tooltip()}
-			<div class="w-56">
-				<p>If enabled, whenever a word is selected:</p>
-				<ol>
-					<li>Its <span class="underline">syntactical head</span> is underlined.</li>
-					<li>The 「bounds of its dependencies」 are shown within brackets.</li>
-					<li>
-						If a verb, its <span class="rounded-xs bg-blue-50 outline outline-blue-300"
-							>complements</span> will be highlighted.
-					</li>
-				</ol>
-				{#if !g.analysis}
-					<p class="mt-2 text-gray-500 italic">
-						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
-						Accuracy may vary.
-					</p>
-				{/if}
+			<div class="w-64">
+				<p>
+					Hides everything but the first letter of each line. This is a helpful way to challenge
+					your memory, in case you feel inclined to learn an entire poem by heart.
+				</p>
 			</div>
 		{/snippet}
 	</Tooltip>
