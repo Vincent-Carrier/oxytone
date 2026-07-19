@@ -1,3 +1,9 @@
+(: Appends work metadata (keyed by tlg path) to the shared store, on top of the
+   LSJ shortdefs written by seed/shortdefs.xq. This BaseX build keeps a single
+   on-disk store, so we read the existing contents first rather than clearing,
+   then write everything back. Metadata keys (tlg...) and shortdef keys (Greek
+   lemmas) never collide. Run shortdefs before index. :)
+let $_ := store:read('lsj_shortdefs')
 let $f := file:read-text('seed/glaux.tsv', 'utf-8', true())
 let $index := csv:parse($f, {'header': true(), 'separator': 'tab', 'format': 'xquery'})
 for $text in $index?records

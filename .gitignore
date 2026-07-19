@@ -29,6 +29,7 @@ vite.config.ts.timestamp-*
 data/
 .basex
 .basexgui
+.basexhistory
 
 lsj/
 tei/

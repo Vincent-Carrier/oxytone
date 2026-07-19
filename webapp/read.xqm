@@ -100,14 +100,23 @@ declare
   function r:get-page($author, $work-page) {
     let $wp := tokenize($work-page, '/')
     let $path := string-join(($author, $work-page), '/')
-    let $tb := if (db:option('debug'))
-      then n:get-normalized($author, $wp[1], $wp[2])
+    let $cached := db:get('normalized', $path)[1]
+    return
+      if (db:option('debug'))
+        then update:output(r:render(n:get-normalized($author, $wp[1], $wp[2])))
+      else if (exists($cached))
+        then update:output(r:render($cached))
       else
-        db:get('normalized', $path)[1]
-        otherwise (
-          let $normalized := n:get-normalized($author, $wp[1], $wp[2])
-          let $_ := db:put('normalized', $normalized, $path)
-          return $normalized
+        (: First request for this page: normalize, cache it, and emit the
+           rendered result. db:put and update:output are both updating
+           expressions, so the whole function stays updating (no MIXUPDATES). :)
+        let $normalized := n:get-normalized($author, $wp[1], $wp[2])
+        return (
+          db:put('normalized', $normalized, $path),
+          update:output(r:render($normalized))
         )
-    return xslt:transform($tb, $r:xslt)
+};
+
+declare function r:render($tb) {
+  xslt:transform($tb, $r:xslt)
 };

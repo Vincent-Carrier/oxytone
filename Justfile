@@ -1,7 +1,7 @@
 set unstable
 set script-interpreter := ["bash", "-euxo", "pipefail"]
 
-export BASEX_HOME := x"~/.local/share/basex"
+export BASEX_HOME := x"~/.basex"
 
 [group('db')]
 seed: lsj glaux tei index normalized
@@ -57,21 +57,32 @@ fastapi:
 
 
 [group('install')]
-install: saxon corpus
+install:
   uv pip sync pyproject.toml
   pnpm install
 
 [group('install')]
 corpus:
-  wget https://github.com/Vincent-Carrier/oxytone/releases/download/0.1/corpus.zip
+  wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.0/corpus.zip
   unzip corpus.zip
+
+# Rebuild glaux/ from the GLAUx source repo (corpus.zip ships without it).
+# Set GLAUX_SRC to override the default ../glaux clone location.
+[group('install')]
+glaux-rebuild:
+  bash seed/glaux-rebuild.sh
 
 [group('install')]
 saxon:
   wget https://github.com/Saxonica/Saxon-HE/releases/download/SaxonHE12-5/SaxonHE12-5J.zip
-  unzip SaxonHE12-5J.zip -d saxon-he/
+  unzip -o SaxonHE12-5J.zip -d saxon-he/
   mkdir -p "$BASEX_HOME/lib/custom/"
-  mv saxon-he/**.jar "$BASEX_HOME/lib/custom/"
+  # Saxon needs its main jar plus the xmlresolver jars (nested under lib/).
+  # Skip the test/xqj/jline jars: unused, and test/xqj can shadow classes.
+  cp saxon-he/saxon-he-12.5.jar \
+     saxon-he/lib/xmlresolver-5.2.2.jar \
+     saxon-he/lib/xmlresolver-5.2.2-data.jar \
+     "$BASEX_HOME/lib/custom/"
   rm -rf SaxonHE12-5J.zip saxon-he/
 
 

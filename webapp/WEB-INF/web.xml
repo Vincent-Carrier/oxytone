@@ -43,16 +43,6 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
 
-  <!-- WebDAV Service (can be disabled by removing this entry) -->
-  <servlet>
-    <servlet-name>WebDAV</servlet-name>
-    <servlet-class>org.basex.http.webdav.WebDAVServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>WebDAV</servlet-name>
-    <url-pattern>/webdav/*</url-pattern>
-  </servlet-mapping>
-
   <!-- Mapping for static resources (may be restricted to a sub path) -->
   <servlet>
     <servlet-name>default</servlet-name>
@@ -65,12 +55,4 @@
     <servlet-name>default</servlet-name>
     <url-pattern>/static/*</url-pattern>
   </servlet-mapping>
-  <filter>
-    <filter-name>cross-origin</filter-name>
-    <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>cross-origin</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
 </web-app>

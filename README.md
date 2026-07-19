@@ -27,6 +27,16 @@ oxytone/
   lsj/              # LSJ dictionary resources
 ```
 
+## Architecture
+
+Three services run side by side in development, tied together by a reverse proxy in production:
+
+- **SvelteKit frontend** (port 5173 in dev, 3000 in prod) — the reading UI.
+- **BaseX** (port 8080) — serves normalized treebank HTML and LSJ definitions from RESTXQ endpoints.
+- **FastAPI** (port 8000) — generates Anki `.apkg` flashcard decks. Optional unless you're working on flashcards.
+
+See [docs/architecture.md](docs/architecture.md) and [docs/data-pipeline.md](docs/data-pipeline.md) for details.
+
 ## Requirements
 
 Follow the installation instructions on their respective websites:
@@ -39,14 +49,109 @@ Follow the installation instructions on their respective websites:
 
 ## Getting Started
 
-```bash
-# Install dependencies
-uv venv # create Python venv
-source .venv/bin/activate.sh # might be different based on your shell
-just install
+### 1. Install dependencies
 
-# Seed the databases
-just seed
+```bash
+uv venv                       # create Python venv
+source .venv/bin/activate     # or activate.fish / activate.sh depending on your shell
+just install                  # uv pip sync + pnpm install
+just saxon                    # install Saxon-HE into BaseX (one time)
 ```
+
+### 2. Fetch the corpus
+
+```bash
+just corpus                   # download and unzip corpus.zip (tei/, lsj/)
+```
+
+`corpus.zip` ships **without** the `glaux/` directory. Reconstruct it from a local
+clone of the [GLAUx source repo](https://github.com/alekkeersmaekers/glaux):
+
+```bash
+git clone https://github.com/alekkeersmaekers/glaux ../glaux
+just glaux-rebuild            # rebuilds glaux/ from ../glaux
+```
+
+`glaux-rebuild` reads `metadata.txt` from the GLAUx clone and copies each source
+file into `glaux/tlg<author>/tlg<work>/<id>.xml` so the layout matches `tei/`.
+Set `GLAUX_SRC` to point at a clone in a different location:
+
+```bash
+GLAUX_SRC=/path/to/glaux just glaux-rebuild
+```
+
+### 3. Seed the databases
+
+```bash
+just seed                     # builds lsj, glaux, tei, index, and normalized DBs
+```
+
+The `seed` recipe runs its steps in order, and that order matters: `index` reads
+the store the `lsj` step (shortdefs) leaves behind and appends the work metadata to
+it. BaseX keeps a single on-disk key/value store, so both the LSJ shortdefs (keyed
+by Greek lemma) and the work metadata (keyed by `tlg…` path) live together in it —
+their keys never collide. Re-run the whole `seed` (or at least `lsj` then `index`)
+if the store ever looks wrong; running `index` alone on an empty store drops the
+shortdefs.
+
+### 4. Configure environment variables
+
+The frontend reads the BaseX and FastAPI URLs from a `.env` file (gitignored).
+Create one for local development:
+
+```bash
+cat > .env <<'EOF'
+PUBLIC_BASEX_URL=http://localhost:8080/
+PUBLIC_FASTAPI_URL=http://localhost:8000/
+EOF
+```
+
+The **trailing slashes are required** — the frontend's `ky` client uses these as a
+`prefixUrl`, so it must join cleanly with the relative RESTXQ paths it requests.
+
+### 5. Run the dev servers
+
+In separate terminals:
+
+```bash
+just basex                    # BaseX HTTP server on :8080
+just svelte                   # SvelteKit dev server on :5173
+just fastapi                  # FastAPI on :8000 (only for flashcards)
+```
+
+Then open http://localhost:5173.
+
+> **Port 8080 already in use?** BaseX binds to `0.0.0.0:8080`. If another service
+> (e.g. a system Apache Tomcat) holds that port, `just basex` fails with
+> `Address already in use`. Stop the other service first, or change BaseX's port.
+
+## Production
+
+The `build` recipe pulls, builds, and restarts the systemd target. In production a
+[Caddy](Caddyfile) reverse proxy routes `/basex/*` → BaseX, `/fastapi/*` → FastAPI,
+and everything else → SvelteKit — so the production `.env` uses those proxy prefixes
+(e.g. `PUBLIC_BASEX_URL=/basex/`) rather than direct ports.
+
+## Troubleshooting
+
+- **`pnpm dev` crashes with `Failed to parse URL` / `Invalid URL`.** The `.env`
+  file is missing, so `PUBLIC_BASEX_URL` is empty. See step 4 above. Remember the
+  trailing slashes.
+
+- **Every BaseX route returns `503 Service Unavailable`** (bare Jetty error page).
+  The RESTXQ web context failed to start. Check the `just basex` output for a
+  `ClassNotFoundException` — an outdated `webapp/WEB-INF/web.xml` can reference
+  servlet/filter classes that no longer exist in the bundled Jetty (e.g.
+  `CrossOriginFilter`, the WebDAV servlet). Remove the offending entries.
+
+- **`read`/`define` return 500 with `xslt:error … TransformerFactoryImpl could not
+  be instantiated`.** Saxon can't start because its `xmlresolver` dependency is
+  missing from `~/.basex/lib/custom/`. Re-run `just saxon` — it installs
+  `saxon-he`, `xmlresolver`, and `xmlresolver-…-data` (the resolver jars live under
+  `lib/` inside the Saxon zip and are easy to miss).
+
+- **`index` returns 500 with `Input of lookup must be map or array`**, or the index
+  page is empty. The shared store is missing the work metadata (or was overwritten
+  with only shortdefs). Re-seed — see the note under step 3.
 
 See [CLAUDE.md](./CLAUDE.md) for more detailed development guidelines.

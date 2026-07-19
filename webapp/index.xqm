@@ -8,8 +8,12 @@ declare %rest:path("")
   let $_ := store:read('glaux')
   for $k in store:keys()
     let $work := store:get($k)
+    (: The store also holds LSJ shortdefs (Greek lemma -> gloss string), so
+       skip anything that isn't a work-metadata map. :)
+    where $work instance of map(*)
     where $work?tokens > 2000
     group by $date := $work?date
+    order by $date
     return <section class="century">
       <h2>
         {abs(1 + round($date div 100)) * 100}
