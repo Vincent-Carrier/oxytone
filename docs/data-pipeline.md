@@ -1,0 +1,136 @@
+# Data pipeline
+
+## Source corpus
+
+Downloaded via `just corpus` (unzips `corpus.zip`) into:
+
+- `glaux/` — the [GLAUx](https://github.com/alekkeersmaekers/glaux) treebank
+  corpus. Most texts are machine-annotated
+  ([Keersmaekers 2021](https://aclanthology.org/2021.lchange-1.6/)); accuracy
+  varies. Built on Perseus/Perseids data.
+- `tei/` — TEI XML texts, laid out `tlg<author>/tlg<work>/…` (e.g.
+  `tlg0012/tlg001/`).
+- `lsj/` — LSJ dictionary ([Celano's Unicode version](https://github.com/gcelano/LSJ_GreekUnicode)).
+
+`just release` re-zips `glaux/ tei/ lsj/` and publishes a GitHub release.
+
+### Rebuilding `glaux/`
+
+`corpus.zip` currently ships **without** `glaux/`, so it must be reconstructed
+from a local clone of the [GLAUx source repo](https://github.com/alekkeersmaekers/glaux):
+
+```bash
+just glaux-rebuild            # expects ../glaux; override with GLAUX_SRC=…
+```
+
+The source files are named by their TLG id (`0012-001.xml`); the app expects
+them laid out to match `tei/`, i.e. `glaux/tlg<author>/tlg<work>/<id>.xml`. The
+script (`seed/glaux-rebuild.sh`) reads the authoritative TLG→path mapping from
+the source repo's `metadata.txt` (`TLG` column, e.g. `0012-001` →
+`tlg0012/tlg001`), the same remap used in `seed/index.xq`. Files are copied
+as-is — the GLAUx `<treebank>` XML is already the format `normalize.xqm`
+consumes. Only `metadata.txt` rows with a matching source file are copied.
+
+## BaseX databases
+
+`just seed` runs, in order: `lsj glaux tei index normalized`. Each recipe in the
+`Justfile` creates one database with specific indexing options:
+
+- **`lsj`** — the dictionary, plus short-defs (`seed/shortdefs.xq`, `seed/lsj.xq`).
+- **`glaux`** — the treebank corpus, indexed on the attributes the app queries
+  (`id, head, form, lemma, relation, speaker, div_*`, `analysis`).
+- **`tei`** — TEI texts with full-text index on `body` (diacritics-aware, case-sensitive).
+- **`index`** — the browse/search index (`seed/index.xq`).
+- **`normalized`** — starts empty; a **write-through cache** of rendered pages.
+
+Other recipes: `syntax` (syntax DB), `english` (English translations).
+
+## Normalization (`repo/normalize.xqm`)
+
+`n:get-normalized($author, $work, $page)` turns a raw GLAUx treebank into the
+`<treebank>` intermediate representation the XSLT consumes:
+
+1. Load the raw treebank from the `glaux` DB.
+2. Determine layout `style` from genre metadata: `verse`, `theater`,
+   `dialogue`, or `prose`.
+3. Paginate (`repo/paginate.xqm`) to the requested page.
+4. Fix quote/gap characters (`"` → `“`/`”`, `G?` → `[…]`).
+5. Normalize into lines/sentences/chapters per style, then merge
+   (`repo/merge.xqm`).
+6. Wrap with a `<head>` (title, author, book list, style, analysis).
+
+Each `<w>` keeps `id`/`head`/`relation`, gains a `sentence` attribute, has its
+`lemma` NFC-normalized, and expands its `postag` into morphology attributes
+(`repo/postag.xqm`). Padding/spacing between words is handled by `n:pad-right`.
+
+Results are cached in the `normalized` DB by `read.xqm`; in debug mode
+(`db:option('debug')`) they are recomputed every request instead. To force a
+rebuild, reset the `normalized` DB (`just normalized`).
+
+## Intermediate representation
+
+The normalized `<treebank>` (with `<head>`, `<ln>`/`<sentence>`, `<w>` elements)
+is what the `read.xqm` XSLT transforms into `<ox-w>`-based HTML.
+
+## Samples
+
+The same lines of the *Iliad* (1.1–1.3) at each stage of the pipeline.
+
+### 1. Source GLAUx treebank (`glaux/tlg0012/tlg001/0012-001.xml`)
+
+Raw dependency treebank. `postag` is a positional morphology string; `line` /
+`div_book` carry the reference.
+
+```xml
+<treebank version="2" xml:lang="grc">
+  <sentence struct_id="411" id="1" document_id="0012-001" analysis="manual">
+    <word id="100004219" form="μῆνιν" line="1.1" div_book="1" lemma="μῆνις" postag="n-s---fa-" head="100004220" relation="OBJ"/>
+    <word id="100004220" form="ἄειδε" line="1.1" div_book="1" lemma="ἀείδω" postag="v2spma---" head="100004250" relation="PRED_CO"/>
+    <word id="100004221" form="θεὰ" line="1.1" div_book="1" lemma="θεά" postag="n-s---fv-" head="100004220" relation="ExD"/>
+    <word id="100004222" form="Πηληϊάδεω" line="1.1" div_book="1" lemma="Πηληϊάδης" postag="n-s---mg-" head="100004223" relation="ATR"/>
+    <word id="100004223" form="Ἀχιλῆος" line="1.1" div_book="1" lemma="Ἀχιλλεύς" postag="n-s---mg-" head="100004219" relation="ATR"/>
+    <word id="100004224" form="οὐλομένην" line="1.2" div_book="1" lemma="ὄλλυμι" postag="a-s---fa-" head="100004219" relation="ATR"/>
+    <!-- … -->
+  </sentence>
+</treebank>
+```
+
+### 2. Normalized intermediate representation
+
+Output of `n:get-normalized` (`repo/normalize.xqm`): a `<head>` with English
+metadata + book list, and a `<body>` split into `<ln>` lines whose `<w>`
+elements carry expanded morphology (`postag` → `pos`/`number`/`gender`/`case`/…)
+and a `sentence` attribute. This is what gets cached in the `normalized` DB.
+
+```xml
+<treebank>
+  <head>
+    <title>Iliad, Book 1 (Α)</title>
+    <author>Homer</author>
+    <books>
+      <book id="1">Book 1 (Α)</book>
+      <!-- … -->
+      <book id="24">Book 24 (Ω)</book>
+    </books>
+    <style>verse</style>
+    <analysis>manual</analysis>
+  </head>
+  <body n="1">
+    <hr/>
+    <ln id="1.1" xml:space="preserve"><w id="100004219" head="100004220" relation="OBJ" sentence="1" lemma="μῆνις" pos="noun" number="sg." gender="fem." case="acc.">μῆνιν</w> <w id="100004220" head="100004250" relation="PRED_CO" sentence="1" lemma="ἀείδω" pos="verb" person="2nd" number="sg." tense="pres." mood="imperative" voice="act.">ἄειδε</w> <w id="100004221" head="100004220" relation="ExD" sentence="1" lemma="θεά" pos="noun" number="sg." gender="fem." case="voc.">θεὰ</w> <w id="100004222" head="100004223" relation="ATR" sentence="1" lemma="Πηληϊάδης" pos="noun" number="sg." gender="masc." case="gen.">Πηληϊάδεω</w> <w id="100004223" head="100004219" relation="ATR" sentence="1" lemma="Ἀχιλλεύς" pos="noun" number="sg." gender="masc." case="gen.">Ἀχιλῆος</w> </ln>
+    <ln id="1.2" xml:space="preserve"><w id="100004224" head="100004219" relation="ATR" sentence="1" lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</w><w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</w> <!-- … --></ln>
+  </body>
+</treebank>
+```
+
+### 3. Rendered frontend HTML
+
+The `read.xqm` XSLT maps each `<w>` to an `<ox-w>` custom element (copying every
+attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
+
+```html
+<div class="line"><ox-w id="100004224" head="100004219" relation="ATR" sentence="1" lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</ox-w><ox-w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</ox-w> <ox-w id="100004226" head="100004241" relation="SBJ" sentence="1" lemma="ὅς" pos="pronoun" number="sg." gender="fem." case="nom.">ἣ</ox-w> <ox-w id="100004227" head="100004229" relation="ATR" sentence="1" lemma="μυρίος" pos="adj." number="pl." gender="neut." case="acc.">μυρί’</ox-w><!-- … --></div>
+```
+
+See the full XSLT in `webapp/read.xqm` and the frontend rendering in
+[architecture.md](architecture.md).
