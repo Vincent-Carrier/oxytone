@@ -1,15 +1,13 @@
 # Architecture
 
-Three services behind a Caddy reverse proxy (`Caddyfile`):
+Two services behind a Caddy reverse proxy (`Caddyfile`):
 
 | Path prefix   | Service    | Port | Role                                  |
 | ------------- | ---------- | ---- | ------------------------------------- |
-| `/basex/*`    | BaseX      | 8080 | Serves normalized treebank HTML       |
-| `/fastapi/*`  | FastAPI    | 8000 | Generates Anki flashcard decks        |
+| `/basex/*`    | BaseX      | 8080 | Serves treebank HTML, LSJ definitions, and the flashcard CSV |
 | everything else | SvelteKit | 3000 | UI, static files, SPA fallback        |
 
-`src/lib/api.ts` exposes two `ky` clients, `basex` and `python`, pointed at
-`PUBLIC_BASEX_URL` / `PUBLIC_FASTAPI_URL`.
+`src/lib/api.ts` exposes a `ky` client, `basex`, pointed at `PUBLIC_BASEX_URL`.
 
 ## Request flow (reading a text)
 
@@ -41,7 +39,8 @@ expanded morphology (see `repo/postag.xqm` for postag → attribute expansion).
 - `word.svelte` — the `ox-w` custom element; interactivity per word.
 - `definition.svelte` — LSJ definition lookup (via `webapp/define.xqm`).
 - `morphology.svelte` — displays a word's parsed morphology.
-- `flashcards-button.svelte` — posts selected lemmas to FastAPI for an `.apkg`.
+- `flashcards-button.svelte` — links selected lemmas to the BaseX `/flashcards`
+  endpoint to download an Anki-importable CSV.
 - `nav.svelte`, `ref.svelte`, `tooltip.svelte`, `toggle.svelte`, `button.svelte` — UI.
 - `global-state.svelte.ts`, `local-storage.svelte.ts` — rune-based shared state.
 - `class-map.ts` — batch add/remove CSS classes across a set of elements
@@ -50,11 +49,15 @@ expanded morphology (see `repo/postag.xqm` for postag → attribute expansion).
 `WordElement` (typed in `src/app.d.ts`) documents the attributes and methods a
 word element exposes.
 
-## Flashcards (`app/main.py`)
+## Flashcards (`webapp/flashcards.xqm`)
 
-`GET /flashcards?author=&work=&w=<lemma>&w=<lemma>…` — for each lemma, fetches
-its short definition from BaseX `/define/lsj/<lemma>`, builds a `genanki` deck,
-and returns a downloadable `.apkg`.
+`GET /flashcards?author=&work=&w=<lemma>&w=<lemma>…` — for each lemma, builds a
+row whose Front is the lemma and Back is the LSJ definition HTML (via the shared
+`def:definition-html` helper in `webapp/define.xqm`, the same HTML the `/define`
+endpoint serves). The rows are tab-serialized with `csv:serialize` and prefixed
+with Anki's `#`-directives (`#notetype:Basic`, `#deck:Greek Vocabulary`,
+`#tags column`, …), returned as a downloadable `greek-flashcards.csv`. Imports
+into Anki as Basic notes tagged `author-… work-…`. No Python involved.
 
 ## Deploy
 

@@ -51,14 +51,9 @@ basex:
 svelte:
   pnpm dev
 
-[group('dev')]
-fastapi:
-  uv run fastapi dev
-
 
 [group('install')]
 install:
-  uv pip sync pyproject.toml
   pnpm install
 
 [group('install')]

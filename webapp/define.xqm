@@ -78,19 +78,23 @@ declare variable $def:xslt := xsm:stylesheet(
   }
 );
 
+declare function def:definition-html($lemma) {
+  let $_ := store:read("lsj_shortdefs")
+  let $entry := <body>
+    {
+      for $path in db:list("lsj", $lemma)
+        let $shortdef := store:get($path)
+        return <lemma key="{$path}">
+          {if ($shortdef) then <shortdef>{$shortdef}</shortdef>}
+          {db:get("lsj", $path)}
+        </lemma>
+    }
+  </body>
+  return xslt:transform($entry, $def:xslt)
+};
+
 declare
   %rest:path("define/lsj/{$lemma}")
   function def:get-definition($lemma) {
-    let $_ := store:read("lsj_shortdefs")
-    let $entry := <body>
-      {
-        for $path in db:list("lsj", $lemma)
-          let $shortdef := store:get($path)
-          return <lemma key="{$path}">
-            {if ($shortdef) then <shortdef>{$shortdef}</shortdef>}
-            {db:get("lsj", $path)}
-          </lemma>
-      }
-    </body>
-    return xslt:transform($entry, $def:xslt)
+    def:definition-html($lemma)
 };

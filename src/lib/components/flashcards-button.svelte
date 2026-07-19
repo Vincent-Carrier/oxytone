@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state'
-	import { PUBLIC_FASTAPI_URL } from '$env/static/public'
+	import { PUBLIC_BASEX_URL } from '$env/static/public'
 	import Button from '$lib/components/button.svelte'
 	import g from '$lib/global-state.svelte'
 	import { SvelteURLSearchParams } from 'svelte/reactivity'
@@ -41,8 +41,8 @@
 		</Button>
 		<Button
 			inert={count == 0}
-			href={`${PUBLIC_FASTAPI_URL}/flashcards?${searchParams}`}
-			download="greek-flashcards.apkg"
+			href={`${PUBLIC_BASEX_URL}flashcards?${searchParams}`}
+			download="greek-flashcards.csv"
 			onclick={clearSelection}>
 			<DownloadIcon />
 			{`export ${count} word${count === 1 ? '' : 's'}`}

@@ -19,7 +19,6 @@ oxytone/
   webapp/           # BaseX RESTXQ endpoints
   repo/             # XQuery modules
   seed/             # XQuery seeding scripts
-  app/              # Python FastAPI backend (for Anki flashcards)
   src/              # SvelteKit frontend
   static/           # Static assets for SvelteKit
   glaux/            # GLAUx corpus files
@@ -29,11 +28,11 @@ oxytone/
 
 ## Architecture
 
-Three services run side by side in development, tied together by a reverse proxy in production:
+Two services run side by side in development, tied together by a reverse proxy in production:
 
 - **SvelteKit frontend** (port 5173 in dev, 3000 in prod) — the reading UI.
-- **BaseX** (port 8080) — serves normalized treebank HTML and LSJ definitions from RESTXQ endpoints.
-- **FastAPI** (port 8000) — generates Anki `.apkg` flashcard decks. Optional unless you're working on flashcards.
+- **BaseX** (port 8080) — serves normalized treebank HTML and LSJ definitions from
+  RESTXQ endpoints, and generates the Anki flashcard CSV.
 
 See [docs/architecture.md](docs/architecture.md) and [docs/data-pipeline.md](docs/data-pipeline.md) for details.
 
@@ -42,7 +41,6 @@ See [docs/architecture.md](docs/architecture.md) and [docs/data-pipeline.md](doc
 Follow the installation instructions on their respective websites:
 
 - [`basex`](https://basex.org/download/): XML database
-- [`uv`](https://docs.astral.sh/uv/#installation): Python package manager (if you wish to work on the flashcards functionality)
 - [`pnpm`](https://pnpm.io/installation): JavaScript package manager
 - [`just`](https://just.systems/man/en/packages.html): Task runner
 - [Saxon-HE](https://github.com/Saxonica/Saxon-HE/): XSLT processor for BaseX (this can be installed automatically with `just saxon`)
@@ -52,9 +50,7 @@ Follow the installation instructions on their respective websites:
 ### 1. Install dependencies
 
 ```bash
-uv venv                       # create Python venv
-source .venv/bin/activate     # or activate.fish / activate.sh depending on your shell
-just install                  # uv pip sync + pnpm install
+just install                  # pnpm install
 just saxon                    # install Saxon-HE into BaseX (one time)
 ```
 
@@ -96,17 +92,14 @@ shortdefs.
 
 ### 4. Configure environment variables
 
-The frontend reads the BaseX and FastAPI URLs from a `.env` file (gitignored).
-Create one for local development:
+The frontend reads the BaseX URL from a `.env` file (gitignored). Create one for
+local development:
 
 ```bash
-cat > .env <<'EOF'
-PUBLIC_BASEX_URL=http://localhost:8080/
-PUBLIC_FASTAPI_URL=http://localhost:8000/
-EOF
+echo 'PUBLIC_BASEX_URL=http://localhost:8080/' > .env
 ```
 
-The **trailing slashes are required** — the frontend's `ky` client uses these as a
+The **trailing slash is required** — the frontend's `ky` client uses this as a
 `prefixUrl`, so it must join cleanly with the relative RESTXQ paths it requests.
 
 ### 5. Run the dev servers
@@ -116,7 +109,6 @@ In separate terminals:
 ```bash
 just basex                    # BaseX HTTP server on :8080
 just svelte                   # SvelteKit dev server on :5173
-just fastapi                  # FastAPI on :8000 (only for flashcards)
 ```
 
 Then open http://localhost:5173.
@@ -128,9 +120,9 @@ Then open http://localhost:5173.
 ## Production
 
 The `build` recipe pulls, builds, and restarts the systemd target. In production a
-[Caddy](Caddyfile) reverse proxy routes `/basex/*` → BaseX, `/fastapi/*` → FastAPI,
-and everything else → SvelteKit — so the production `.env` uses those proxy prefixes
-(e.g. `PUBLIC_BASEX_URL=/basex/`) rather than direct ports.
+[Caddy](Caddyfile) reverse proxy routes `/basex/*` → BaseX and everything else →
+SvelteKit — so the production `.env` uses that proxy prefix
+(e.g. `PUBLIC_BASEX_URL=/basex/`) rather than a direct port.
 
 ## Troubleshooting
 
