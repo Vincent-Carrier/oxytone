@@ -22,7 +22,7 @@ treebank corpus with LSJ definitions and Anki flashcard export.
 
 ## Code style
 
-- Prettier: **tabs, single quotes, no semicolons, 100 char width** (`.prettierrc`).
+- oxfmt: **tabs, single quotes, no semicolons, 100 char width** (`.oxfmtrc.json`).
 - TypeScript strict. Svelte 5 runes only.
 - `$` is aliased to `src/` (see `svelte.config.js`).
 - camelCase for vars/functions, PascalCase for components.

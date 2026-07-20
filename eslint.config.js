@@ -1,4 +1,3 @@
-import prettier from 'eslint-config-prettier'
 import js from '@eslint/js'
 import { includeIgnoreFile } from '@eslint/compat'
 import svelte from 'eslint-plugin-svelte'
@@ -12,8 +11,6 @@ export default ts.config(
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...svelte.configs['flat/recommended'],
-	prettier,
-	...svelte.configs['flat/prettier'],
 	{
 		languageOptions: {
 			globals: {

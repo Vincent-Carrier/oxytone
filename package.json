@@ -10,8 +10,9 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"format": "oxfmt .",
+		"format:check": "oxfmt --check .",
+		"lint": "eslint ."
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.9",
@@ -22,12 +23,9 @@
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@tailwindcss/vite": "^4.3.3",
 		"eslint": "^9.28.0",
-		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.21.0",
 		"globals": "^15.15.0",
-		"prettier": "^3.5.3",
-		"prettier-plugin-svelte": "^3.4.0",
-		"prettier-plugin-tailwindcss": "^0.6.12",
+		"oxfmt": "^0.59.0",
 		"svelte": "^5.56.6",
 		"svelte-check": "^4.2.1",
 		"tailwindcss": "^4.3.3",
@@ -45,6 +43,6 @@
 		"@types/lodash-es": "^4.17.12",
 		"bits-ui": "^2.4.1",
 		"ky": "^1.8.1",
-		"lodash-es": "^4.17.21"
+		"lodash-es": "^4.18.1"
 	}
 }
