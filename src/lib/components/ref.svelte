@@ -9,7 +9,12 @@
 	let self = $host()
 	self.onclick = () => {
 		self.dispatchEvent(
-			new CustomEvent('lemma', { detail: { lemma: self.textContent }, bubbles: true })
+			// textContent is nullable; normalize to undefined so consumers get one
+			// "absent" value rather than two.
+			new CustomEvent('lemma', {
+				detail: { lemma: self.textContent ?? undefined },
+				bubbles: true
+			})
 		)
 	}
 </script>

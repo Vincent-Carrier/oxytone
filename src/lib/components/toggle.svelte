@@ -15,7 +15,8 @@
 	}
 	let { children, class: klass, key, store }: Props = $props()
 
-	// @ts-ignore
+	// @ts-expect-error — `key` indexes the whole global state, whose values are
+	// not all booleans; the toggles only ever point at the boolean ones.
 	let set = (val: boolean) => (g[key] = val)
 	let get = () => g[key]
 

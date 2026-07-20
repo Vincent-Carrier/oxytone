@@ -4,7 +4,6 @@
 	import Button from '$lib/components/button.svelte'
 	import g from '$lib/global-state.svelte'
 	import { SvelteURLSearchParams } from 'svelte/reactivity'
-	import { fly } from 'svelte/transition'
 	import StudentIcon from '~icons/heroicons/academic-cap-16-solid'
 	import DownloadIcon from '~icons/heroicons/arrow-down-16-solid'
 	import CancelIcon from '~icons/heroicons/x-mark-16-solid'

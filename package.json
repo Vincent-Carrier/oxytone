@@ -22,8 +22,8 @@
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@tailwindcss/vite": "^4.3.3",
 		"eslint": "^9.28.0",
-		"eslint-config-prettier": "^10.1.5",
-		"eslint-plugin-svelte": "^2.46.1",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-svelte": "^3.21.0",
 		"globals": "^15.15.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
@@ -35,12 +35,6 @@
 		"typescript-eslint": "^8.33.1",
 		"unplugin-icons": "^23.0.1",
 		"vite": "^8.1.5"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@tailwindcss/oxide",
-			"esbuild"
-		]
 	},
 	"dependencies": {
 		"@fontsource-variable/alegreya": "^5.2.5",

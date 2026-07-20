@@ -120,7 +120,13 @@
 	}
 
 	function highlightComplements() {
-		let cases = { 'acc.': 'acc-obj', 'dat.': 'dat-obj', 'gen.': 'gen-obj' } as any
+		// Indexed by w.case, which is a free-form string from the treebank, so the
+		// map is typed to accept any key rather than just the three listed.
+		let cases: Record<string, string> = {
+			'acc.': 'acc-obj',
+			'dat.': 'dat-obj',
+			'gen.': 'gen-obj'
+		}
 		for (let w of complement('OBJ')) highlightComplement(w, cases[w.case ?? 'acc.'])
 		for (let w of complement('OCOMP')) highlightComplement(w, 'comp-obj')
 		for (let w of complement('SBJ')) highlightComplement(w, 'sbj')

@@ -18,6 +18,6 @@ export default g
 
 function stored(key: string): boolean {
   if (!browser) return true
-  let store = localStorage.getItem(key)
+  const store = localStorage.getItem(key)
   return store ? JSON.parse(store) : true
 }

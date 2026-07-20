@@ -10,7 +10,7 @@ export default class LocalStore<T> {
 		this.value = value
 
 		if (browser) {
-			let val = localStorage.getItem(key)
+			const val = localStorage.getItem(key)
 			if (val) this.value = JSON.parse(val)
 		}
 
