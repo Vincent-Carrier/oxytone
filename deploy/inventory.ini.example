@@ -1,0 +1,9 @@
+# Copy to inventory.ini and fill in — never commit inventory.ini (it holds the
+# droplet's IP and your SSH key path).
+#
+# Create the droplet + DNS out-of-band first; the A record for the domain in
+# vars.yml must point at this host before deploying, or Caddy's Let's Encrypt
+# issuance will fail.
+
+[oxytone]
+oxytone-prod ansible_host=<DROPLET_IP> ansible_user=root ansible_ssh_private_key_file=~/.ssh/<YOUR_KEY>

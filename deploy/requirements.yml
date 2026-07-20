@@ -1,0 +1,4 @@
+# Install with: ansible-galaxy collection install -r deploy/requirements.yml
+collections:
+  - name: ansible.posix       # provides the `synchronize` (rsync) module
+  - name: community.general    # provides the `ufw` module

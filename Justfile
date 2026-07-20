@@ -86,8 +86,30 @@ release:
   gh release create corpus.zip
   rm -f corpus.zip
 
-# NOTE: Some changes may not take effect until Cloudflare cache is purged or `normalized` DB is reset.
-build:
-  git pull
-  pnpm build
-  systemctl restart paroxytone.target
+# Build the SvelteKit adapter-node output for production. PUBLIC_BASEX_URL is a
+# build-time ($env/static/public) var, so it must be set here for the deployed
+# app to reach BaseX through Caddy. During SSR the relative prefix is swapped for
+# a direct localhost call (see src/lib/api.ts). Produces a self-contained build/
+# (see ssr.noExternal in vite.config.ts).
+[group('deploy')]
+build-local:
+  PUBLIC_BASEX_URL=/basex/ pnpm build
+
+# Deploy to the droplet in deploy/inventory.ini. Builds the frontend first, then
+# runs the Ansible playbook (which rsyncs webapp/, repo/, the prebuilt data/ DBs,
+# and build/). See DEPLOYMENT.md for the pre-flight checklist.
+[group('deploy')]
+deploy: build-local
+  ansible-playbook -i deploy/inventory.ini deploy/oxytone.yml -e @deploy/vars.yml
+
+[group('deploy')]
+logs-basex:
+  ansible oxytone -i deploy/inventory.ini -a 'journalctl -u oxytone-basex -f -n 200'
+
+[group('deploy')]
+logs-web:
+  ansible oxytone -i deploy/inventory.ini -a 'journalctl -u oxytone-web -f -n 200'
+
+[group('deploy')]
+status:
+  ansible oxytone -i deploy/inventory.ini -a 'systemctl status oxytone-basex oxytone-web --no-pager'

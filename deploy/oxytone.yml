@@ -1,0 +1,422 @@
+---
+# Configure an existing DigitalOcean droplet to run Oxytone.
+#
+# This playbook does NOT create the droplet or DNS — create those out-of-band
+# (DigitalOcean dashboard / MCP), put the IP in inventory.ini, and point the
+# oxytone.xyz A record at it before the first run (Caddy needs DNS resolving to
+# issue the Let's Encrypt cert).
+#
+# The app is shipped from your local working copy: BaseX runtime files and the
+# ~5 GB prebuilt `data/` databases are rsynced, and the SvelteKit build/ output
+# (produced locally by `just build-local` so PUBLIC_BASEX_URL=/basex/ is baked in)
+# is rsynced too. Nothing is built on the droplet except native deps that ship
+# inside the adapter-node bundle.
+- name: Deploy Oxytone
+  hosts: oxytone
+  vars:
+    app_dir: /opt/oxytone
+    web_dir: /opt/oxytone/web
+    basex_home: /opt/oxytone/basex
+    # Persistent BaseX databases. NOT wiped on redeploy — the `normalized` DB is a
+    # write-through render cache the server accumulates at runtime.
+    data_dir: /opt/oxytone/data
+    oxytone_domain: oxytone.xyz
+    basex_version: "12.4"
+    saxon_version: "12-5"
+    node_major: "24"
+    # Derived: BaseX release zips are named like BaseX124.zip for 12.4.
+    basex_zip: "BaseX{{ basex_version | replace('.', '') }}.zip"
+
+  tasks:
+    - name: Install system packages
+      apt:
+        name:
+          - curl
+          - git
+          - rsync
+          - unzip
+          - openjdk-25-jre-headless
+          - debian-keyring
+          - debian-archive-keyring
+          - apt-transport-https
+          - ufw
+        state: present
+        update_cache: true
+
+    # --- Firewall: only SSH + HTTP(S) reach the box. BaseX (8080) and the Node
+    # server (3000) bind localhost / stay behind Caddy and must never be public —
+    # BaseX runs with no auth password. ---
+    - name: Allow SSH, HTTP, HTTPS through ufw
+      community.general.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop:
+        - "22"
+        - "80"
+        - "443"
+
+    - name: Set default deny for incoming traffic
+      community.general.ufw:
+        direction: incoming
+        policy: deny
+
+    - name: Set default allow for outgoing traffic
+      community.general.ufw:
+        direction: outgoing
+        policy: allow
+
+    - name: Enable ufw
+      community.general.ufw:
+        state: enabled
+
+    # --- Caddy (reverse proxy + automatic HTTPS) from the official apt repo ---
+    - name: Add Caddy apt signing key
+      get_url:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        dest: /usr/share/keyrings/caddy-stable-archive-keyring.asc
+        mode: "0644"
+
+    - name: Add Caddy apt repository
+      deb822_repository:
+        name: caddy-stable
+        types: deb
+        uris: https://dl.cloudsmith.io/public/caddy/stable/deb/debian
+        suites: any-version
+        components: main
+        signed_by: /usr/share/keyrings/caddy-stable-archive-keyring.asc
+        state: present
+      register: caddy_repo
+
+    - name: Update apt cache after adding Caddy repo
+      apt:
+        update_cache: true
+      when: caddy_repo.changed
+
+    - name: Install Caddy
+      apt:
+        name: caddy
+        state: present
+
+    # --- Node.js (adapter-node runtime) from NodeSource ---
+    - name: Check installed Node major version
+      command: node --version
+      register: node_check
+      failed_when: false
+      changed_when: false
+
+    - name: Add NodeSource apt repo and install Node
+      when: node_check.rc != 0 or not node_check.stdout.startswith('v' ~ node_major ~ '.')
+      block:
+        - name: Fetch NodeSource setup script
+          get_url:
+            url: "https://deb.nodesource.com/setup_{{ node_major }}.x"
+            dest: /tmp/nodesource_setup.sh
+            mode: "0755"
+
+        - name: Run NodeSource setup script
+          command: bash /tmp/nodesource_setup.sh
+
+        - name: Install Node.js
+          apt:
+            name: nodejs
+            state: present
+            update_cache: true
+
+    # --- Directory layout ---
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ app_dir }}"
+        - "{{ web_dir }}"
+        - "{{ basex_home }}"
+        - "{{ data_dir }}"
+
+    # --- BaseX ---
+    - name: Download BaseX
+      get_url:
+        url: "https://files.basex.org/releases/{{ basex_version }}/{{ basex_zip }}"
+        dest: "/tmp/{{ basex_zip }}"
+        mode: "0644"
+      register: basex_download
+
+    - name: Unpack BaseX
+      # The zip has a top-level basex/ prefix, so extracting into app_dir lands it
+      # at {{ app_dir }}/basex — which is exactly basex_home. (unzip has no
+      # --strip-components; that's a tar-only flag.) The archive also ships a
+      # .basexhome marker in that dir, which is what makes BaseX treat it as home.
+      unarchive:
+        src: "/tmp/{{ basex_zip }}"
+        dest: "{{ app_dir }}"
+        remote_src: true
+        creates: "{{ basex_home }}/bin/basexhttp"
+
+    - name: Ensure BaseX scripts are executable
+      file:
+        path: "{{ basex_home }}/bin"
+        mode: "0755"
+        recurse: true
+
+    # --- Saxon-HE (mandatory: read/define/flashcards routes use XSLT via Saxon;
+    # without these jars those routes 500 with TransformerFactoryImpl errors) ---
+    - name: Download Saxon-HE
+      get_url:
+        url: "https://github.com/Saxonica/Saxon-HE/releases/download/SaxonHE{{ saxon_version }}/SaxonHE{{ saxon_version }}J.zip"
+        dest: "/tmp/SaxonHE{{ saxon_version }}J.zip"
+        mode: "0644"
+
+    - name: Create BaseX custom lib directory
+      file:
+        path: "{{ basex_home }}/lib/custom"
+        state: directory
+        mode: "0755"
+
+    - name: Create Saxon staging dir
+      file:
+        path: /tmp/saxon-he
+        state: directory
+        mode: "0755"
+
+    - name: Unpack Saxon into a staging dir
+      unarchive:
+        src: "/tmp/SaxonHE{{ saxon_version }}J.zip"
+        dest: /tmp/saxon-he
+        remote_src: true
+        creates: "/tmp/saxon-he/saxon-he-{{ saxon_version | replace('-', '.') }}.jar"
+
+    - name: Install Saxon + xmlresolver jars into BaseX custom lib
+      # Only the main jar and the two xmlresolver jars — the test/xqj/jline jars are
+      # unused and test/xqj can shadow classes (mirrors `just saxon`).
+      copy:
+        src: "{{ item }}"
+        dest: "{{ basex_home }}/lib/custom/"
+        remote_src: true
+        mode: "0644"
+      loop:
+        - "/tmp/saxon-he/saxon-he-{{ saxon_version | replace('-', '.') }}.jar"
+        - "/tmp/saxon-he/lib/xmlresolver-5.2.2.jar"
+        - "/tmp/saxon-he/lib/xmlresolver-5.2.2-data.jar"
+
+    # --- Ship BaseX RESTXQ modules + shared XQuery modules from local ---
+    - name: Sync webapp (RESTXQ endpoints) from this machine
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../webapp/"
+        dest: "{{ app_dir }}/webapp/"
+        delete: true
+
+    - name: Sync repo (shared XQuery modules) from this machine
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../repo/"
+        dest: "{{ app_dir }}/repo/"
+        delete: true
+
+    # --- BaseX config with droplet paths (replaces the local .basex whose paths are
+    # hardcoded to /home/vincent). basexhttp reads $BASEX_HOME/.basex. ---
+    - name: Write BaseX config
+      copy:
+        dest: "{{ basex_home }}/.basex"
+        mode: "0644"
+        content: |
+          # General Options
+          DEBUG = false
+          DBPATH = {{ data_dir }}
+          LOGPATH = .logs
+          REPOPATH = {{ app_dir }}/repo
+          LANG = English
+          FAIRLOCK = false
+          CACHETIMEOUT = 3600
+          WRITESTORE = true
+
+          # Client/Server Architecture
+          HOST = localhost
+          PORT = 1984
+          SERVERPORT = 1984
+          USER =
+          PASSWORD =
+          IGNORECERT = false
+          TIMEOUT = 30
+          KEEPALIVE = 600
+          PARALLEL = 8
+          LOG = data
+          LOGMSGMAXLEN = 1000
+
+          # HTTP Services
+          WEBPATH = {{ app_dir }}/webapp
+          GZIP = false
+          PARSERESTXQ = 3
+          RESTXQERRORS = true
+          HTTPLOCAL = false
+          STOPPORT = 8081
+          AUTHMETHOD = Basic
+
+          # Local Options
+          INTPARSE = true
+          MIXUPDATES = true
+
+    # --- Ship prebuilt databases (~5 GB). No `delete`: the runtime-accumulated
+    # `normalized` render cache must survive redeploys. Large first transfer;
+    # incremental thereafter. ---
+    - name: Sync prebuilt BaseX databases from this machine
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../data/"
+        dest: "{{ data_dir }}/"
+        delete: false
+
+    # --- Ship the locally-built SvelteKit adapter-node output. The build is fully
+    # self-contained (ky is bundled via ssr.noExternal in vite.config.ts), so it
+    # runs with `node build` and needs no node_modules on the droplet. ---
+    - name: Sync built frontend (adapter-node output) from this machine
+      ansible.posix.synchronize:
+        src: "{{ playbook_dir }}/../build/"
+        dest: "{{ web_dir }}/"
+        delete: true
+
+    # --- systemd units ---
+    - name: Install BaseX systemd service
+      copy:
+        dest: /etc/systemd/system/oxytone-basex.service
+        content: |
+          [Unit]
+          Description=Oxytone BaseX HTTP server
+          After=network.target
+
+          [Service]
+          Environment=BASEX_HOME={{ basex_home }}
+          WorkingDirectory={{ basex_home }}
+          # Foreground (not basexhttp -d) so systemd supervises the JVM directly.
+          ExecStart={{ basex_home }}/bin/basexhttp
+          ExecStop={{ basex_home }}/bin/basexhttpstop
+          Restart=on-failure
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Install web (SvelteKit) systemd service
+      copy:
+        dest: /etc/systemd/system/oxytone-web.service
+        content: |
+          [Unit]
+          Description=Oxytone SvelteKit server
+          After=network.target oxytone-basex.service
+
+          [Service]
+          WorkingDirectory={{ web_dir }}
+          Environment=PORT=3000
+          Environment=HOST=127.0.0.1
+          Environment=ORIGIN=https://{{ oxytone_domain }}
+          # build/ contents are synced directly into web_dir, so the entry is
+          # index.js here (not build/index.js).
+          ExecStart=/usr/bin/node index.js
+          Restart=on-failure
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and (re)start BaseX
+      systemd:
+        name: oxytone-basex
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+    - name: Wait for BaseX to come up
+      uri:
+        url: http://localhost:8080/
+        status_code: 200
+      register: basex_health
+      until: basex_health.status == 200
+      retries: 24
+      delay: 5
+
+    - name: Enable and (re)start web
+      systemd:
+        name: oxytone-web
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+    - name: Wait for web server to come up
+      uri:
+        url: http://localhost:3000/
+        status_code: 200
+      register: web_health
+      until: web_health.status == 200
+      retries: 24
+      delay: 5
+
+    # --- Caddy: /basex/* -> BaseX (prefix stripped), everything else -> Node.
+    # adapter-node serves its own static assets, so we proxy all non-/basex paths
+    # to :3000 rather than replicating a webroot. ---
+    - name: Ensure Caddy log directory exists
+      file:
+        path: /var/log/caddy
+        state: directory
+        owner: caddy
+        group: caddy
+        mode: "0755"
+
+    - name: Write Caddyfile
+      copy:
+        dest: /etc/caddy/Caddyfile
+        mode: "0644"
+        content: |
+          {{ oxytone_domain }} {
+              handle_path /basex/* {
+                  reverse_proxy localhost:8080
+              }
+
+              handle {
+                  reverse_proxy localhost:3000
+              }
+
+              encode gzip zstd
+
+              log {
+                  output file /var/log/caddy/oxytone.log {
+                      roll_size 10MB
+                      roll_keep 10
+                  }
+              }
+          }
+      notify: Reload Caddy
+
+    - name: Enable and start Caddy
+      systemd:
+        name: caddy
+        enabled: true
+        state: started
+
+    - name: Flush handlers so Caddy reloads before the HTTPS health check
+      meta: flush_handlers
+
+    - name: Wait for HTTPS endpoint (Let's Encrypt issuance may take a moment)
+      uri:
+        url: "https://{{ oxytone_domain }}/"
+        status_code: 200
+      register: https_health
+      until: https_health.status == 200
+      retries: 18
+      delay: 5
+
+    - name: Verify ufw is active
+      command: ufw status
+      register: ufw_status
+      changed_when: false
+
+    - name: Assert ufw is active
+      assert:
+        that:
+          - "'Status: active' in ufw_status.stdout"
+        fail_msg: "ufw is not active — firewall rules are not being enforced"
+        success_msg: "ufw is active"
+
+  handlers:
+    - name: Reload Caddy
+      systemd:
+        name: caddy
+        state: reloaded

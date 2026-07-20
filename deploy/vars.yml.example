@@ -1,0 +1,13 @@
+# Copy to vars.yml and fill in — never commit vars.yml.
+# Oxytone has no runtime API secrets (its only app var, PUBLIC_BASEX_URL, is baked
+# in at build time), so this file is just host-specific config.
+
+oxytone_domain: oxytone.xyz
+
+# BaseX / Saxon versions to install on the droplet. Keep in sync with local dev
+# (BaseX 12.4, Saxon-HE 12.5) so rendered output matches.
+basex_version: "12.4"
+saxon_version: "12-5"          # as it appears in the Saxonica release tag/zip name
+
+# Node major version for the SvelteKit (adapter-node) runtime — matches local dev.
+node_major: "24"

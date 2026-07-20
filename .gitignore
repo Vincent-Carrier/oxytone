@@ -25,6 +25,10 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 
+# Deploy
+deploy/vars.yml
+deploy/inventory.ini
+
 # BaseX
 data/
 .basex
