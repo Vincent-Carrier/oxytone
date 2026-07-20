@@ -24,9 +24,9 @@
 		<FlashcardsButton />
 		{#snippet tooltip()}
 			<p class="w-64">
-				Create a deck of flashcards from the words you select. Each card will have the lemma on the
-				front side and a full LSJ definition on its back side. The deck can be imported into Anki or
-				any other software compatible with the Anki format.
+				Create a deck of flashcards from the words you select. Each card will have the lemma
+				on the front side and a full LSJ definition on its back side. The deck can be
+				imported into Anki or any other software compatible with the Anki format.
 			</p>
 		{/snippet}
 	</Tooltip>
@@ -37,8 +37,9 @@
 		{#snippet tooltip()}
 			<div class="w-64">
 				<p>
-					Hides everything but the first letter of each line. This is a helpful way to challenge
-					your memory, in case you feel inclined to learn an entire poem by heart.
+					Hides everything but the first letter of each line. This is a helpful way to
+					challenge your memory, in case you feel inclined to learn an entire poem by
+					heart.
 				</p>
 			</div>
 		{/snippet}
@@ -58,8 +59,8 @@
 				</ol>
 				{#if !g.analysis}
 					<p class="mt-2 text-gray-500 italic">
-						<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
-						Accuracy may vary.
+						<strong class="text-gray-700">N.B.</strong>: This text was annotated
+						automatically. Accuracy may vary.
 					</p>
 				{/if}
 			</div>
@@ -70,8 +71,8 @@
 		{#snippet tooltip()}
 			<div class="w-60">
 				<p>
-					Each verb is shown in <strong>bold</strong>. Finite verbs are in a bolder weight than
-					infinitives and participles.
+					Each verb is shown in <strong>bold</strong>. Finite verbs are in a bolder weight
+					than infinitives and participles.
 				</p>
 			</div>
 		{/snippet}
@@ -81,7 +82,8 @@
 		{#snippet tooltip()}
 			<div class="w-48">
 				<p>Each word is colored according to its case:</p>
-				<div class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
+				<div
+					class="syntax font-sans-sc flex flex-wrap justify-center gap-x-4 font-bold lowercase">
 					<div class="text-nom-700">Nominative</div>
 					<div class="text-acc-700">Accusative</div>
 					<div class="text-dat-700">Dative</div>
@@ -98,9 +100,9 @@
 				<p>Remove unnecessary smooth breathing marks.</p>
 				<p>
 					<strong class="text-red-700"
-						><span class="font-sans-sc">caution</span>: May trigger dizziness, altered vision, eye
-						or muscle twitches, loss of awareness, disorientation, or convulsions. Discretion is
-						advised.</strong>
+						><span class="font-sans-sc">caution</span>: May trigger dizziness, altered
+						vision, eye or muscle twitches, loss of awareness, disorientation, or
+						convulsions. Discretion is advised.</strong>
 				</p>
 			</div>
 		{/snippet}

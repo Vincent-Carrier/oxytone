@@ -4,11 +4,11 @@ Oxytone runs on a single DigitalOcean droplet, configured reproducibly with
 Ansible (`deploy/`). The playbook **configures an existing droplet** — it does not
 create the droplet or DNS. Three services run behind Caddy:
 
-| Service | Port | systemd unit | Runs |
-|---|---|---|---|
-| BaseX (JVM) | 8080 (localhost) | `oxytone-basex` | `basexhttp` |
-| SvelteKit (Node) | 3000 (localhost) | `oxytone-web` | `node index.js` (adapter-node) |
-| Caddy | 80/443 | `caddy` | reverse proxy + automatic HTTPS |
+| Service          | Port             | systemd unit    | Runs                            |
+| ---------------- | ---------------- | --------------- | ------------------------------- |
+| BaseX (JVM)      | 8080 (localhost) | `oxytone-basex` | `basexhttp`                     |
+| SvelteKit (Node) | 3000 (localhost) | `oxytone-web`   | `node index.js` (adapter-node)  |
+| Caddy            | 80/443           | `caddy`         | reverse proxy + automatic HTTPS |
 
 Caddy routes `/basex/*` → BaseX (prefix stripped), everything else → the Node
 server. ufw denies all inbound except 22/80/443, so BaseX (which runs with no auth
@@ -63,6 +63,7 @@ just logs-web                                # clean
 ```
 
 Then smoke-test in a browser at `https://oxytone.xyz/`:
+
 - [ ] A treebank reading page renders (exercises BaseX `read` + Saxon XSLT).
 - [ ] A word definition opens (`define`).
 - [ ] Flashcard CSV export works (`flashcards.xqm`).

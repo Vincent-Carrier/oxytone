@@ -1,18 +1,14 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "useTabs": true,
-  "singleQuote": true,
-  "trailingComma": "none",
-  "arrowParens": "avoid",
-  "bracketSameLine": true,
-  "semi": false,
-  "printWidth": 100,
-  "sortPackageJson": false,
-  "sortTailwindcss": {},
-  "svelte": {},
-  "ignorePatterns": [
-    "package-lock.json",
-    "pnpm-lock.yaml",
-    "yarn.lock"
-  ]
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"useTabs": true,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"arrowParens": "avoid",
+	"bracketSameLine": true,
+	"semi": false,
+	"printWidth": 100,
+	"sortPackageJson": false,
+	"sortTailwindcss": {},
+	"svelte": {},
+	"ignorePatterns": ["package-lock.json", "pnpm-lock.yaml", "yarn.lock", "deploy/**"]
 }

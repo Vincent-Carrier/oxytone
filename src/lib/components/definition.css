@@ -1,66 +1,66 @@
 @reference '$/app.css';
 
 dl {
-  @apply relative;
+	@apply relative;
 
-  & .meanings {
-    @apply flex flex-col gap-y-1;
-  }
+	& .meanings {
+		@apply flex flex-col gap-y-1;
+	}
 
-  & dt {
-    @apply -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
+	& dt {
+		@apply -mx-2 mb-2 block border-b-1 border-gray-300 bg-gray-50 px-2 font-bold;
 
-    dl+dl & {
-      @apply mt-4 border-t-1;
-    }
-  }
+		dl + dl & {
+			@apply mt-4 border-t-1;
+		}
+	}
 
-  & dd {
-    @apply text-gray-600;
+	& dd {
+		@apply text-gray-600;
 
-    & .case {
-      @apply underline;
-    }
+		& .case {
+			@apply underline;
+		}
 
-    & .acc {
-      @apply text-acc-700;
-    }
+		& .acc {
+			@apply text-acc-700;
+		}
 
-    & .dat {
-      @apply text-dat-700;
-    }
+		& .dat {
+			@apply text-dat-700;
+		}
 
-    & .gen {
-      @apply text-gen-700;
-    }
+		& .gen {
+			@apply text-gen-700;
+		}
 
-    &:not(.shortdef) {
-      @apply pl-4 text-xs;
+		&:not(.shortdef) {
+			@apply pl-4 text-xs;
 
-      &::before {
-        content: '‒';
-        @apply mr-2 -ml-4;
-      }
-    }
+			&::before {
+				content: '‒';
+				@apply mr-2 -ml-4;
+			}
+		}
 
-    &.shortdef {
-      @apply text-sm leading-snug font-bold text-gray-800;
-    }
+		&.shortdef {
+			@apply text-sm leading-snug font-bold text-gray-800;
+		}
 
-    & .bibl {
-      @apply text-gray-400;
-    }
+		& .bibl {
+			@apply text-gray-400;
+		}
 
-    & strong {
-      @apply text-gray-800;
-    }
+		& strong {
+			@apply text-gray-800;
+		}
 
-    & ox-ref {
-      /* @apply cursor-pointer text-blue-700 underline; */
-    }
+		& ox-ref {
+			/* @apply cursor-pointer text-blue-700 underline; */
+		}
 
-    & .gram {
-      @apply italic underline;
-    }
-  }
+		& .gram {
+			@apply italic underline;
+		}
+	}
 }

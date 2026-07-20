@@ -1,89 +1,88 @@
 @reference '$/app.css';
 
 section.century {
-  @apply my-8 text-gray-800;
+	@apply my-8 text-gray-800;
 
-  &:first-of-type {
-    @apply mt-0;
-  }
+	&:first-of-type {
+		@apply mt-0;
+	}
 
-  & h2 {
-    @apply font-sans w-20 text-xl font-bold;
+	& h2 {
+		@apply w-20 font-sans text-xl font-bold;
 
-    @variant max-sm {
-      @apply mb-2 ml-4;
-    }
+		@variant max-sm {
+			@apply mb-2 ml-4;
+		}
 
-    @variant sm {
-      @apply sticky top-4 float-left text-right;
+		@variant sm {
+			@apply sticky top-4 float-left text-right;
+		}
+	}
 
-    }
-  }
+	& ul.authors {
+		@apply card relative bg-transparent sm:ml-24;
 
-  & ul.authors {
-    @apply card relative bg-transparent sm:ml-24;
+		& details.author {
+			:has(&) {
+				pointer-events: none;
+			}
 
-    & details.author {
-      :has(&) {
-        pointer-events: none;
-      }
+			& > summary {
+				@apply font-sans-sc pointer-events-auto relative -z-10 border-t-1 border-gray-300 bg-gray-50 px-4 py-1 text-lg leading-none font-medium lowercase;
+			}
 
-      &>summary {
-        @apply font-sans-sc pointer-events-auto relative -z-10 border-t-1 border-gray-300 bg-gray-50 px-4 py-1 text-lg leading-none font-medium lowercase;
-      }
+			li:first-of-type & > summary {
+				@apply border-t-0;
+			}
 
-      li:first-of-type &>summary {
-        @apply border-t-0;
-      }
+			&[open] > summary {
+				@apply border-b-1;
+			}
 
-      &[open]>summary {
-        @apply border-b-1;
-      }
+			& * {
+				@apply pointer-events-auto;
+			}
+		}
 
-      & * {
-        @apply pointer-events-auto;
-      }
-    }
+		& summary {
+			@apply indent-hanging cursor-pointer;
+		}
 
-    & summary {
-      @apply indent-hanging cursor-pointer;
-    }
+		& details[open] summary::marker {
+			content: '‒ ';
+		}
 
-    & details[open] summary::marker {
-      content: '‒ ';
-    }
+		& details:not([open]) summary::marker {
+			content: '+ ';
+		}
 
-    & details:not([open]) summary::marker {
-      content: '+ ';
-    }
+		ul.works {
+			@apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
+			@apply list-dash indent-hanging py-2 pl-4 font-sans text-sm;
 
-    ul.works {
-      @apply gap-8 sm:columns-1 md:columns-2 lg:columns-3 xl:columns-4;
-      @apply list-dash indent-hanging py-2 pl-4 font-sans text-sm;
+			& details:not([open]) summary::marker {
+				content: '+  ';
+			}
 
-      & details:not([open]) summary::marker {
-        content: '+  ';
-      }
+			& a {
+				@apply text-blue-600;
+			}
 
-      & a {
-        @apply text-blue-600;
-      }
+			& li:has(details) {
+				@apply list-none;
+			}
 
-      & li:has(details) {
-        @apply list-none;
-      }
+			& details.work {
+				@apply break-inside-avoid;
 
-      & details.work {
-        @apply break-inside-avoid;
+				& ol {
+					@apply list-dash pl-2 text-xs;
+				}
 
-        & ol {
-          @apply list-dash pl-2 text-xs;
-        }
-
-        & li {
-          @apply capitalize;
-        }
-      }
-    }
-  }
+				& li {
+					@apply capitalize;
+				}
+			}
+		}
+	}
 }

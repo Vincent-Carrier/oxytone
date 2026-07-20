@@ -137,7 +137,7 @@ SvelteKit — so the production `.env` uses that proxy prefix
   `CrossOriginFilter`, the WebDAV servlet). Remove the offending entries.
 
 - **`read`/`define` return 500 with `xslt:error … TransformerFactoryImpl could not
-  be instantiated`.** Saxon can't start because its `xmlresolver` dependency is
+be instantiated`.** Saxon can't start because its `xmlresolver` dependency is
   missing from `~/.basex/lib/custom/`. Re-run `just saxon` — it installs
   `saxon-he`, `xmlresolver`, and `xmlresolver-…-data` (the resolver jars live under
   `lib/` inside the Saxon zip and are easy to miss).

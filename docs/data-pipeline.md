@@ -74,7 +74,7 @@ is what the `read.xqm` XSLT transforms into `<ox-w>`-based HTML.
 
 ## Samples
 
-The same lines of the *Iliad* (1.1–1.3) at each stage of the pipeline.
+The same lines of the _Iliad_ (1.1–1.3) at each stage of the pipeline.
 
 ### 1. Source GLAUx treebank (`glaux/tlg0012/tlg001/0012-001.xml`)
 
@@ -129,7 +129,46 @@ The `read.xqm` XSLT maps each `<w>` to an `<ox-w>` custom element (copying every
 attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
 
 ```html
-<div class="line"><ox-w id="100004224" head="100004219" relation="ATR" sentence="1" lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</ox-w><ox-w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct.">,</ox-w> <ox-w id="100004226" head="100004241" relation="SBJ" sentence="1" lemma="ὅς" pos="pronoun" number="sg." gender="fem." case="nom.">ἣ</ox-w> <ox-w id="100004227" head="100004229" relation="ATR" sentence="1" lemma="μυρίος" pos="adj." number="pl." gender="neut." case="acc.">μυρί’</ox-w><!-- … --></div>
+<div class="line">
+	<ox-w
+		id="100004224"
+		head="100004219"
+		relation="ATR"
+		sentence="1"
+		lemma="ὄλλυμι"
+		pos="adj."
+		number="sg."
+		gender="fem."
+		case="acc."
+		>οὐλομένην</ox-w
+	><ox-w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct."
+		>,</ox-w
+	>
+	<ox-w
+		id="100004226"
+		head="100004241"
+		relation="SBJ"
+		sentence="1"
+		lemma="ὅς"
+		pos="pronoun"
+		number="sg."
+		gender="fem."
+		case="nom."
+		>ἣ</ox-w
+	>
+	<ox-w
+		id="100004227"
+		head="100004229"
+		relation="ATR"
+		sentence="1"
+		lemma="μυρίος"
+		pos="adj."
+		number="pl."
+		gender="neut."
+		case="acc."
+		>μυρί’</ox-w
+	><!-- … -->
+</div>
 ```
 
 See the full XSLT in `webapp/read.xqm` and the frontend rendering in

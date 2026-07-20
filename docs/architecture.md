@@ -2,10 +2,10 @@
 
 Two services behind a Caddy reverse proxy (`Caddyfile`):
 
-| Path prefix   | Service    | Port | Role                                  |
-| ------------- | ---------- | ---- | ------------------------------------- |
-| `/basex/*`    | BaseX      | 8080 | Serves treebank HTML, LSJ definitions, and the flashcard CSV |
-| everything else | SvelteKit | 3000 | UI, static files, SPA fallback        |
+| Path prefix     | Service   | Port | Role                                                         |
+| --------------- | --------- | ---- | ------------------------------------------------------------ |
+| `/basex/*`      | BaseX     | 8080 | Serves treebank HTML, LSJ definitions, and the flashcard CSV |
+| everything else | SvelteKit | 3000 | UI, static files, SPA fallback                               |
 
 `src/lib/api.ts` exposes a `ky` client, `basex`, pointed at `PUBLIC_BASEX_URL`.
 
@@ -27,8 +27,18 @@ The XSLT lives in `read.xqm` as `$r:xslt`, built with the `xsm` helper module
 A rendered word carries its full morphology and dependency info as attributes:
 
 ```html
-<ox-w id="100004224" head="100004219" relation="ATR" sentence="1"
-      lemma="ὄλλυμι" pos="adj." number="sg." gender="fem." case="acc.">οὐλομένην</ox-w>
+<ox-w
+	id="100004224"
+	head="100004219"
+	relation="ATR"
+	sentence="1"
+	lemma="ὄλλυμι"
+	pos="adj."
+	number="sg."
+	gender="fem."
+	case="acc."
+	>οὐλομένην</ox-w
+>
 ```
 
 `id`/`head` encode the dependency tree; `sentence` groups words; the rest is
