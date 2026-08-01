@@ -9,6 +9,7 @@ treebank corpus with LSJ definitions and Anki flashcard export.
 - **Frontend**: SvelteKit 5 + TypeScript + Tailwind 4 (`adapter-node`). Words render as `ox-w` custom elements.
 - **XML backend**: BaseX RESTXQ endpoints (XQuery) serve normalized treebank HTML, LSJ definitions, and the Anki flashcard CSV.
 - **Reverse proxy**: Caddy routes `/basex/*` → BaseX (8080), else → SvelteKit (3000).
+- **LLM**: browser-direct streaming calls to a user-supplied API key (`src/lib/llm/`). No accounts, no server involvement — the key stays in `localStorage`.
 
 ## Commands
 
@@ -31,6 +32,7 @@ treebank corpus with LSJ definitions and Anki flashcard export.
 ## Layout
 
 - `src/` — SvelteKit frontend ([docs/architecture.md](docs/architecture.md))
+- `src/lib/llm/` — provider adapters, SSE streaming, prompts. `providers.ts` is pure (describes requests); `stream.ts` holds the only fetch.
 - `webapp/` — BaseX RESTXQ endpoints (`.xqm`)
 - `repo/` — shared XQuery modules (normalize, paginate, postag, urn, …)
 - `seed/` — XQuery scripts that build the databases
