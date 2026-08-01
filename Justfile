@@ -4,7 +4,7 @@ set script-interpreter := ["bash", "-euxo", "pipefail"]
 export BASEX_HOME := x"~/.basex"
 
 [group('db')]
-seed: lsj glaux tei index normalized
+seed: lsj glaux tei wiktionary-seed index normalized
 
 [group('db')]
 lsj:
@@ -12,6 +12,13 @@ lsj:
   basex -O ATTRINCLUDE=id -O TEXTINDEX=false \
         -c "CREATE DB lsj" \
         -Q seed/lsj.xq
+
+# Load seed/wiktionary-defs.tsv into the shared store under 'wikt/' keys. Must run
+# after `lsj` (whose shortdefs.xq clears the store) and before `index` (which
+# writes the store out) — see the header comment in seed/wiktionary.xq.
+[group('db')]
+wiktionary-seed:
+  basex -Q seed/wiktionary.xq
 
 [group('db')]
 syntax:
@@ -105,6 +112,13 @@ dev:
 [group('install')]
 install:
   pnpm install
+
+# Refresh seed/wiktionary-defs.tsv from the kaikki.org dump (41.5 MB download).
+# Only needed to update the data: the TSV is tracked in git and `just seed` reads
+# it, not the dump. The upstream .jsonl is deprecated and may be removed.
+[group('install')]
+wiktionary:
+  python3 seed/wiktionary.py
 
 [group('install')]
 corpus:

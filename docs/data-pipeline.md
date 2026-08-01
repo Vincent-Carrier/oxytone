@@ -14,6 +14,20 @@ Downloaded via `just corpus` (unzips `corpus.zip`) into:
 
 `just release` re-zips `glaux/ tei/ lsj/` and publishes a GitHub release.
 
+### Wiktionary glosses
+
+`seed/wiktionary-defs.tsv` (`lemma`, `pos`, pipe-joined defs) is **tracked in
+git**, unlike the corpus above — the upstream [kaikki.org](https://kaikki.org/dictionary/Ancient%20Greek/)
+Ancient Greek `.jsonl` dump it derives from is marked deprecated and slated for
+removal (the replacement is a 23 GB all-languages extract). `just seed` reads
+the TSV, never the dump.
+
+`just wiktionary` (`seed/wiktionary.py`) regenerates it: streams the 41.5 MB
+gzipped dump, drops `character`/`symbol` entries and inflected-form stubs
+(`form_of`/`alt_of`), prefers `raw_glosses` over `glosses` to keep register
+labels, and sorts for clean diffs. This covers 5.4k lemmas that have no LSJ
+entry at all — mostly Koine and Biblical proper nouns.
+
 ### Rebuilding `glaux/`
 
 `corpus.zip` currently ships **without** `glaux/`, so it must be reconstructed
@@ -33,10 +47,14 @@ consumes. Only `metadata.txt` rows with a matching source file are copied.
 
 ## BaseX databases
 
-`just seed` runs, in order: `lsj glaux tei index normalized`. Each recipe in the
-`Justfile` creates one database with specific indexing options:
+`just seed` runs, in order: `lsj glaux tei wiktionary-seed index normalized`. Each
+recipe in the `Justfile` creates one database with specific indexing options:
 
 - **`lsj`** — the dictionary, plus short-defs (`seed/shortdefs.xq`, `seed/lsj.xq`).
+- **`wiktionary-seed`** — not a database: it appends Wiktionary glosses to the
+  shared store under `wikt/` keys (`seed/wiktionary.xq`). Order matters — it must
+  run after `lsj` (whose `shortdefs.xq` clears the store) and before `index`
+  (which writes the store out).
 - **`glaux`** — the treebank corpus, indexed on the attributes the app queries
   (`id, head, form, lemma, relation, speaker, div_*`, `analysis`).
 - **`tei`** — TEI texts with full-text index on `body` (diacritics-aware, case-sensitive).
