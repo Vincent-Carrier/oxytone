@@ -2,19 +2,29 @@
 	import { Tooltip } from 'bits-ui'
 	import type { Snippet } from 'svelte'
 
+	type TriggerProps = Record<string, unknown>
+
 	type Props = {
-		children: Snippet
+		children?: Snippet
 		tooltip: Snippet
 		class?: string
+		// Wrap interactive content (anything containing a button or link) in this
+		// instead of `children`: the default trigger renders its own <button>, and
+		// nesting one inside another is invalid HTML the browser silently repairs.
+		child?: Snippet<[{ props: TriggerProps }]>
 	}
 
-	let { children, tooltip, class: klass }: Props = $props()
+	let { children, tooltip, class: klass, child }: Props = $props()
 </script>
 
 <Tooltip.Root delayDuration={100}>
-	<Tooltip.Trigger>
-		{@render children()}
-	</Tooltip.Trigger>
+	{#if child}
+		<Tooltip.Trigger {child} />
+	{:else}
+		<Tooltip.Trigger>
+			{@render children?.()}
+		</Tooltip.Trigger>
+	{/if}
 	<Tooltip.Portal>
 		<Tooltip.Content
 			class={[
