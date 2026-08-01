@@ -4,12 +4,29 @@
 	import '$lib/components/word.svelte'
 	import Morphology from '$lib/components/morphology.svelte'
 	import Definition from '$lib/components/definition.svelte'
-	import Nav from '$/lib/components/nav.svelte'
-	import g from '$/lib/global-state.svelte'
+	import Nav from '$lib/components/nav.svelte'
+	import AskPopover from '$lib/components/ask-popover.svelte'
+	import g from '$lib/global-state.svelte'
 	import type { Attachment } from 'svelte/attachments'
 
 	let { data }: PageProps = $props()
 	let lemma = $derived(g.selected?.lemma)
+	let popover = $state<AskPopover>()
+
+	// `selectionchange` fires continuously while dragging, so act on the gestures
+	// that end a selection instead.
+	function onSelectionEnd(event: Event) {
+		// The listener is on the document, so it also sees clicks inside the
+		// popover itself — which would re-run show(), wiping the answer on every
+		// button press and reopening the popover the moment it's dismissed.
+		const target = event.target as Node | null
+		if (target && !g.content?.contains(target)) return
+
+		// Both events fire before the browser finalises the selection, so read it a
+		// tick later. A timeout rather than requestAnimationFrame: rAF is throttled
+		// to zero in background tabs, which would silently drop the popover.
+		setTimeout(() => popover?.show())
+	}
 
 	const onTbMount: Attachment = tb => {
 		const q = (sel: string) => tb.querySelector<HTMLElement>(sel)
@@ -37,6 +54,10 @@
 		return () => {}
 	}
 </script>
+
+<svelte:document onpointerup={onSelectionEnd} onkeyup={onSelectionEnd} />
+
+<AskPopover bind:this={popover} />
 
 <div class="flex h-screen flex-col print:h-auto" onlemma={ev => (lemma = ev.detail.lemma)}>
 	<Nav />

@@ -35,6 +35,12 @@
 	self.clear = []
 
 	self.onclick = () => {
+		// A drag across words ends with a click on whichever word the pointer was
+		// released over. Without this guard every text selection would also select
+		// that word, opening the definition aside and repainting the tree.
+		let sel = getSelection()
+		if (sel && !sel.isCollapsed) return
+
 		let old = g.selected
 		for (let clear of old?.clear ?? []) clear()
 		if (old === self) {
