@@ -1,0 +1,25 @@
+# Local development only — the production config is `Caddyfile`.
+#
+# Exists because BaseX sends no CORS headers, so the browser blocks a page on
+# :5173 from fetching :8080 directly. Serving both under one origin sidesteps
+# that, and matches how Caddy routes things in production.
+#
+# Differences from the production Caddyfile: an unprivileged port, the Vite dev
+# server (5173) instead of adapter-node (3000), no static file root (Vite serves
+# its own assets), and logging to stdout rather than /var/log.
+:5000 {
+	handle_path /basex/* {
+		reverse_proxy localhost:8080
+	}
+
+	handle {
+		reverse_proxy localhost:5173
+	}
+
+	# Per-request access logging would bury Vite's output; errors still surface.
+	log {
+		output stdout
+		format console
+		level ERROR
+	}
+}

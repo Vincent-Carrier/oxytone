@@ -51,6 +51,56 @@ basex:
 svelte:
   pnpm dev
 
+# Run the whole stack behind Caddy on http://localhost:5000.
+#
+# Going through Caddy (rather than hitting `pnpm dev` on :5173) is what makes
+# /basex/* same-origin: BaseX sends no CORS headers, so the browser blocks a
+# direct cross-port fetch. PUBLIC_BASEX_URL is baked in at build time, so it has
+# to be set here too — same reason as `build-local`.
+#
+# BaseX is started only if it isn't already running, and is left running on exit;
+# Caddy and Vite are stopped with the recipe.
+[group('dev')]
+dev:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  # Job control, so each background job leads its own process group and can be
+  # killed as a group (see cleanup below).
+  set -m
+  if ! curl -sf -o /dev/null http://localhost:8080/; then
+    # -S detaches; plain `basexhttp` (and `-d`, which only enables debug output)
+    # runs in the foreground and would block the rest of this recipe.
+    echo "starting basex ..."
+    basexhttp -S
+    until curl -sf -o /dev/null http://localhost:8080/; do sleep 0.5; done
+  fi
+  caddy run --config Caddyfile.dev &
+  caddy_pid=$!
+  PUBLIC_BASEX_URL=/basex/ pnpm dev --port 5173 --strictPort &
+  vite_pid=$!
+  # Kill each child's whole process group: pnpm spawns vite as a grandchild, so
+  # signalling pnpm alone would strand the dev server holding port 5173.
+  cleanup() {
+    trap - EXIT INT TERM
+    for pid in $caddy_pid $vite_pid; do
+      kill -- -$pid 2>/dev/null || kill $pid 2>/dev/null || true
+    done
+    # Escalate: both hold their listening sockets open briefly after SIGTERM, and
+    # a lingering vite keeps :5173 bound so the next `just dev` fails to start.
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+      if ! kill -0 $caddy_pid 2>/dev/null && ! kill -0 $vite_pid 2>/dev/null; then
+        return 0
+      fi
+      sleep 0.2
+    done
+    for pid in $caddy_pid $vite_pid; do
+      kill -9 -- -$pid 2>/dev/null || kill -9 $pid 2>/dev/null || true
+    done
+  }
+  trap cleanup EXIT INT TERM
+  echo "oxytone -> http://localhost:5000"
+  wait -n $caddy_pid $vite_pid
+
 
 [group('install')]
 install:

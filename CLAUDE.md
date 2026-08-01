@@ -12,7 +12,8 @@ treebank corpus with LSJ definitions and Anki flashcard export.
 
 ## Commands
 
-- `pnpm dev` — SvelteKit dev server (or `just svelte`)
+- `just dev` — whole stack behind Caddy on http://localhost:5000 (**preferred**: makes `/basex/*` same-origin, which BaseX needs since it sends no CORS headers)
+- `pnpm dev` — SvelteKit alone on :5173 (or `just svelte`); BaseX fetches fail cross-origin
 - `pnpm build` / `pnpm check` / `pnpm lint` / `pnpm format`
 - `just basex` — start BaseX HTTP server
 - `just seed` — build all BaseX databases from the corpus (see [docs/data-pipeline.md](docs/data-pipeline.md))
