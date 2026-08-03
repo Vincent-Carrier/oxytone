@@ -39,7 +39,8 @@
 		const qq = (sel: string) => g.content!.querySelectorAll<HTMLElement>(sel)
 		let l = location
 		if (l.hash) q(`a[href="${l.hash}`)?.scrollIntoView({ behavior: 'smooth' })
-		g.analysis = g.content.dataset.analysis === 'manual'
+		g.autoAnnotated = g.content.dataset.analysis !== 'manual'
+		g.analysis = !g.autoAnnotated
 
 		// allow hash anchors to be unselected and remove them from browser history
 		for (let anchor of qq('a[href^="#"]')) {

@@ -2,10 +2,8 @@
 	import { DropdownMenu } from 'bits-ui'
 	import type { Snippet } from 'svelte'
 	import Button from '$lib/components/button.svelte'
-	import Tooltip from '$lib/components/tooltip.svelte'
 	import g from '$lib/global-state.svelte'
 	import DisplayIcon from '~icons/heroicons/adjustments-horizontal-16-solid'
-	import HelpIcon from '~icons/heroicons/question-mark-circle-16-solid'
 
 	// Only `verbs` and `colors` persist, matching the previous behaviour.
 	function persist(key: string, value: boolean) {
@@ -34,6 +32,8 @@
 	<DropdownMenu.Portal>
 		<DropdownMenu.Content
 			sideOffset={6}
+			align="end"
+			collisionPadding={8}
 			class={['elevated z-50 w-72 bg-white p-1', 'font-sans text-sm text-gray-800']}>
 			<DropdownMenu.CheckboxItem
 				bind:checked={g.memMode}
@@ -55,7 +55,8 @@
 						'analysis',
 						checked,
 						"Marks the selected word's head, dependency bounds, and complements.",
-						analysisHelp
+						undefined,
+						analysisDetail
 					)}
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
@@ -80,7 +81,13 @@
 				closeOnSelect={false}
 				class={item}>
 				{#snippet children({ checked })}
-					{@render row('colors', checked, 'Colours each word according to its case.')}
+					{@render row(
+						'colors',
+						checked,
+						'Colours each word according to its case.',
+						undefined,
+						caseLegend
+					)}
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
 
@@ -100,39 +107,49 @@
 	</DropdownMenu.Portal>
 </DropdownMenu.Root>
 
-{#snippet row(label: string, checked: boolean, help: string, extra?: Snippet)}
+{#snippet row(label: string, checked: boolean, help: string, extra?: Snippet, below?: Snippet)}
 	<div class="flex w-full items-baseline gap-x-2">
 		<span class="w-4 shrink-0 self-center text-blue-700">{checked ? '✓' : ''}</span>
 		<div class="grow">
 			<div class="font-sans-sc lowercase">{label}</div>
 			<p class="text-xs text-gray-600">{help}</p>
+			{@render below?.()}
 		</div>
 		{@render extra?.()}
 	</div>
 {/snippet}
 
-<!-- The one help text too long for an inline row, kept as a tooltip. -->
-{#snippet analysisHelp()}
-	<Tooltip class="w-56">
-		<HelpIcon class="shrink-0 self-center text-gray-500" />
-		{#snippet tooltip()}
-			<div>
-				<p>If enabled, whenever a word is selected:</p>
-				<ol>
-					<li>Its <span class="underline">syntactical head</span> is underlined.</li>
-					<li>The 「bounds of its dependencies」 are shown within brackets.</li>
-					<li>
-						If a verb, its <span class="rounded-xs bg-blue-50 outline outline-blue-300"
-							>complements</span> will be highlighted.
-					</li>
-				</ol>
-				{#if !g.analysis}
-					<p class="mt-2 text-gray-500 italic">
-						<strong class="text-gray-700">N.B.</strong>: This text was annotated
-						automatically. Accuracy may vary.
-					</p>
-				{/if}
-			</div>
-		{/snippet}
-	</Tooltip>
+<!-- Inline rather than behind a tooltip: this is the key to what the toggle
+does, so it belongs next to it while you're deciding whether to turn it on. -->
+{#snippet caseLegend()}
+	<div class="font-sans-sc flex flex-wrap gap-x-2 pt-1 text-xs font-bold lowercase">
+		<span class="text-nom-700">nominative</span>
+		<span class="text-acc-700">accusative</span>
+		<span class="text-dat-700">dative</span>
+		<span class="text-gen-700">genitive</span>
+		<span class="text-voc-700">vocative</span>
+	</div>
+{/snippet}
+
+<!-- Inlined rather than nested in a tooltip: a hover-triggered popover inside a
+menu item fights the item's own highlight and portals a second layer over the
+menu. The markings are easier to recognise shown than described, so each one is
+rendered in the style it takes on the page. -->
+{#snippet analysisDetail()}
+	<ul class="list-disc pt-1 pl-4 text-xs text-gray-600 marker:text-gray-400">
+		<li>Its <span class="underline">syntactical head</span> is underlined.</li>
+		<li>The 「bounds of its dependencies」 are bracketed.</li>
+		<li>
+			A verb's <span class="rounded-xs bg-blue-50 outline outline-blue-300">complements</span>
+			are highlighted.
+		</li>
+	</ul>
+	<!-- Only for machine-annotated texts: on a hand-annotated one the caveat is
+	simply false, and it undersells the markings it sits beneath. -->
+	{#if g.autoAnnotated}
+		<p class="pt-1 text-xs text-gray-500 italic">
+			<strong class="text-gray-700">N.B.</strong>: This text was annotated automatically.
+			Accuracy may vary.
+		</p>
+	{/if}
 {/snippet}

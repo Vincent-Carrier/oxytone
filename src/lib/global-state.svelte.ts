@@ -7,6 +7,10 @@ const g = $state({
 	selecting: false,
 	selection: new SvelteSet<WordElement>(),
 	analysis: true,
+	// Whether the loaded text's treebank was machine-annotated (GLAUx marks each
+	// sentence `auto` or `manual`). Distinct from `analysis`, which is the user's
+	// toggle and only takes its *initial* value from this.
+	autoAnnotated: false,
 	smoothBreathings: true,
 	verbs: stored('verbs'),
 	colors: stored('colors'),
