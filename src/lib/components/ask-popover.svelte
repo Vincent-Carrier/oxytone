@@ -51,7 +51,9 @@
 		rect
 			? {
 					getBoundingClientRect: () => {
-						const top = navBottom() + 4
+						// Enough clearance that the panel reads as floating over the text
+						// rather than hanging off the nav's bottom border.
+						const top = navBottom() + 16
 						return new DOMRect(rect!.x, top, rect!.width, 0)
 					}
 				}
@@ -92,6 +94,11 @@
 		// Word-clicking builds a flashcard deck in this mode; a popover on top of
 		// that flow is just noise.
 		if (g.selecting) return
+
+		// Without a provider and key there's nothing the panel can do, so it stays
+		// out of the way of ordinary reading rather than interrupting every
+		// selection to advertise a setting.
+		if (!configured()) return
 
 		let next = readSelection()
 		if (!next) return
@@ -223,8 +230,7 @@
 						style={dragged
 							? `${panelStyle};position:fixed;left:${dragged.x}px;top:${dragged.y}px;margin:0`
 							: panelStyle}>
-						<!-- Doubles as the drag handle. Outside the configured() branch so the
-			popover stays dismissable and movable even when there's no key set. -->
+						<!-- Doubles as the drag handle. -->
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 						<div
 							onpointerdown={startDrag}
@@ -239,73 +245,66 @@
 							</Button>
 						</div>
 
-						{#if !configured()}
-							<p class="text-gray-600">
-								Set an API key in <span class="font-sans-sc lowercase"
-									>settings</span> to translate or ask about a passage.
-							</p>
-						{:else}
-							<!-- Only the answer scrolls; the actions and input below stay pinned so
+						<!-- Only the answer scrolls; the actions and input below stay pinned so
 				they remain reachable however long the response gets. -->
-							{#if output || status === 'error'}
-								<div class="min-h-0 grow overflow-y-auto overscroll-contain">
-									{#if output}
-										<!-- Rendered as text, never with {@html}. The Greek in the page is
+						{#if output || status === 'error'}
+							<div class="min-h-0 grow overflow-y-auto overscroll-contain">
+								{#if output}
+									<!-- Rendered as text, never with {@html}. The Greek in the page is
 							the prompt, so this output is attacker-influenceable, and an API key
 							sits in localStorage for injected script to exfiltrate. -->
-										<p class="whitespace-pre-wrap">{output}</p>
-									{/if}
+									<p class="whitespace-pre-wrap">{output}</p>
+								{/if}
 
-									{#if status === 'error'}
-										<p class="flex items-baseline gap-x-1 text-red-700">
-											<WarningIcon class="self-center" />
-											{error}
-										</p>
-									{/if}
-								</div>
-							{/if}
-
-							<!-- Translate is the one-click entry point, so it only shows before
-				there's an answer; afterwards the follow-up input carries the thread. -->
-							{#if status === 'streaming'}
-								<div class="flex shrink-0 items-baseline gap-x-2">
-									<Button onclick={abort} danger>
-										<StopIcon />
-										stop
-									</Button>
-								</div>
-							{:else if !output}
-								<div class="flex shrink-0 items-baseline gap-x-2">
-									<Button onclick={translate}>
-										<TranslateIcon />
-										translate
-									</Button>
-									<!-- The panel stays put while the selection is extended, so this
-					count is the only feedback that what translate would send has changed. -->
-									{#if ctx && ctx.wordCount > 0}
-										<span class="font-sans-sc text-gray-500 lowercase">
-											{ctx.wordCount}
-											{ctx.wordCount === 1 ? 'word' : 'words'} selected
-										</span>
-									{/if}
-								</div>
-							{/if}
-
-							<div
-								class="flex shrink-0 items-baseline gap-x-1 border-t border-gray-300 pt-2">
-								<input
-									bind:value={question}
-									{onkeydown}
-									placeholder={output ? 'ask a follow-up…' : 'ask a question…'}
-									class={[
-										'min-w-0 grow bg-transparent px-1 py-0.5 outline-none',
-										'placeholder:text-gray-500'
-									]} />
-								<Button onclick={ask} inert={!question.trim()}>
-									<SendIcon />
-								</Button>
+								{#if status === 'error'}
+									<p class="flex items-baseline gap-x-1 text-red-700">
+										<WarningIcon class="self-center" />
+										{error}
+									</p>
+								{/if}
 							</div>
 						{/if}
+
+						<!-- Translate is the one-click entry point, so it only shows before
+				there's an answer; afterwards the follow-up input carries the thread. -->
+						{#if status === 'streaming'}
+							<div class="flex shrink-0 items-baseline gap-x-2">
+								<Button onclick={abort} danger>
+									<StopIcon />
+									stop
+								</Button>
+							</div>
+						{:else if !output}
+							<div class="flex shrink-0 items-baseline gap-x-2">
+								<Button onclick={translate}>
+									<TranslateIcon />
+									translate
+								</Button>
+								<!-- The panel stays put while the selection is extended, so this
+					count is the only feedback that what translate would send has changed. -->
+								{#if ctx && ctx.wordCount > 0}
+									<span class="font-sans-sc text-gray-500 lowercase">
+										{ctx.wordCount}
+										{ctx.wordCount === 1 ? 'word' : 'words'} selected
+									</span>
+								{/if}
+							</div>
+						{/if}
+
+						<div
+							class="flex shrink-0 items-baseline gap-x-1 border-t border-gray-300 pt-2">
+							<input
+								bind:value={question}
+								{onkeydown}
+								placeholder={output ? 'ask a follow-up…' : 'ask a question…'}
+								class={[
+									'min-w-0 grow bg-transparent px-1 py-0.5 outline-none',
+									'placeholder:text-gray-500'
+								]} />
+							<Button onclick={ask} inert={!question.trim()}>
+								<SendIcon />
+							</Button>
+						</div>
 					</div>
 				</div>
 			{/snippet}
