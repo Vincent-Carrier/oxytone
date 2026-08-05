@@ -105,6 +105,55 @@ dl {
 			}
 		}
 
+		/* Inflection and etymology preceding the first sense. It introduces the
+		   senses rather than standing alongside them, so it takes no bullet and
+		   sits flush with the headword. */
+		&.preamble {
+			@apply mb-1 pl-0 text-xs text-gray-500;
+
+			&::before {
+				content: none;
+			}
+		}
+
+		/* The sense letter (A. II. 2. b.) replaces the generic bullet, and the
+		   level it sits at carries the hierarchy LSJ encodes in @level. */
+		&.sense {
+			&::before {
+				content: none;
+			}
+
+			&[data-level='2'] {
+				@apply ml-3;
+			}
+
+			&[data-level='3'] {
+				@apply ml-6;
+			}
+
+			&[data-level='4'] {
+				@apply ml-9;
+			}
+		}
+
+		& .sense-n {
+			@apply mr-1 -ml-4 font-semibold text-gray-500;
+		}
+
+		& .grc {
+			@apply text-gray-800;
+		}
+
+		& .lbl,
+		& .etym {
+			@apply text-gray-500 italic;
+		}
+
+		& .pron,
+		& .date {
+			@apply text-gray-400;
+		}
+
 		&.shortdef {
 			@apply text-sm leading-snug font-bold text-gray-800;
 		}
@@ -117,8 +166,20 @@ dl {
 			@apply text-gray-800;
 		}
 
+		/* Cross-references swap the panel to that entry (the bubbled `lemma`
+		   event, handled in routes/read/[...urn]/+page.svelte), so they need to
+		   read as clickable. Dotted rather than solid to stay distinct from the
+		   external source links at the foot of each section. */
 		& ox-ref {
-			/* @apply cursor-pointer text-blue-700 underline; */
+			@apply cursor-pointer text-blue-700 underline decoration-dotted underline-offset-2;
+
+			&:hover {
+				@apply decoration-solid;
+			}
+
+			&:focus-visible {
+				@apply decoration-solid outline-1 outline-offset-2 outline-blue-700;
+			}
 		}
 
 		& .gram {
