@@ -1,19 +1,179 @@
-let $glaux := map:build(db:list('glaux'), value := fn { db:get('glaux', .) })
+(: Curated book lists, keyed by URN. Written into the store under a "books/"
+   prefix, where p:book-list reads them.
+
+   These were extracted from the ~320-line switch that used to live in
+   repo/paginate.xqm. Most are plain ranges, but a good number are not — books
+   are missing (Diodorus jumps 1-8 then 11-20), labelled ("praef", "priora",
+   "17/18"), zero-based, or deliberately out of order (Manetho) — so the list is
+   kept verbatim rather than regenerated from the corpus. Adding a work here is
+   what gives it hand-tuned pagination; anything not listed falls back to
+   p:auto-pager and the division picked by seed/divisions.xq. :)
+declare variable $BOOKS := {
+  'tlg0001/tlg001': array { 1, 2, 3, 4 },
+  'tlg0002/tlg001': array { 1, 2 },
+  'tlg0003/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0004/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0008/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
+  'tlg0012/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 },
+  'tlg0012/tlg002': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 },
+  'tlg0015/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0016/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+  'tlg0018/tlg019': array { 1, 2 },
+  'tlg0018/tlg022': array { 1, 2 },
+  'tlg0018/tlg025': array { 1, 2, 3, 4 },
+  'tlg0018/tlg026': array { 1, 2 },
+  'tlg0023/tlg001': array { 1, 2, 3, 4, 5 },
+  'tlg0024/tlg001': array { 1, 2, 3, 4 },
+  'tlg0032/tlg001': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0032/tlg002': array { 1, 2, 3, 4 },
+  'tlg0032/tlg006': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0032/tlg007': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0057/tlg008': array { 1, 2 },
+  'tlg0057/tlg009': array { 1, 2, 3 },
+  'tlg0057/tlg010': array { 1, 2, 3 },
+  'tlg0057/tlg011': array { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+  'tlg0057/tlg017': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 },
+  'tlg0057/tlg018': array { 1, 2 },
+  'tlg0057/tlg021': array { 1, 2 },
+  'tlg0057/tlg032': array { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+  'tlg0057/tlg036': array { 1, 2, 3, 4, 5, 6 },
+  'tlg0057/tlg044': array { 1, 2, 3 },
+  'tlg0057/tlg045': array { 1, 2 },
+  'tlg0057/tlg056': array { 1, 2, 3 },
+  'tlg0057/tlg057': array { 1, 2, 3, 4, 5, 6 },
+  'tlg0057/tlg059': array { 1, 2, 3, 4 },
+  'tlg0057/tlg060': array { 1, 2, 3, 4 },
+  'tlg0057/tlg061': array { 1, 2, 3, 4 },
+  'tlg0057/tlg062': array { 1, 2, 3, 4 },
+  'tlg0057/tlg064': array { 1, 2, 3 },
+  'tlg0057/tlg065': array { 1, 2, 3 },
+  'tlg0057/tlg066': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+  'tlg0057/tlg067': array { 1, 2 },
+  'tlg0057/tlg075': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 },
+  'tlg0057/tlg076': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0057/tlg077': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0057/tlg078': array { 1, 2 },
+  'tlg0057/tlg085': array { 1, 2 },
+  'tlg0057/tlg087': array { 1, 2, 3, 4 },
+  'tlg0057/tlg089': array { 1, 3, 6 },
+  'tlg0057/tlg092': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0057/tlg095': array { 1, 2, 3, 4 },
+  'tlg0057/tlg099': array { 1, 2, 3 },
+  'tlg0057/tlg100': array { 1, 2, 3 },
+  'tlg0057/tlg101': array { 1, 2, 3 },
+  'tlg0059/tlg030': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0059/tlg034': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+  'tlg0060/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
+  'tlg0062/tlg001': array { 1, 2 },
+  'tlg0062/tlg012': array { 1, 2 },
+  'tlg0062/tlg066': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 },
+  'tlg0062/tlg067': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
+  'tlg0062/tlg068': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26 },
+  'tlg0062/tlg069': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
+  'tlg0067/tlg001': array { 1, 5 },
+  'tlg0074/tlg001': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0081/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, '17/18', 19, 20 },
+  'tlg0082/tlg004': array { 1, 2, 3, 4 },
+  'tlg0086/tlg001': array { 'priora', 'posteriora' },
+  'tlg0086/tlg002': array { 1, 2, 3 },
+  'tlg0086/tlg005': array { 1, 2, 3, 4 },
+  'tlg0086/tlg009': array { 1, 2, 3, 7, 8 },
+  'tlg0086/tlg010': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0086/tlg012': array { 1, 2, 3, 4, 5 },
+  'tlg0086/tlg013': array { 1, 2 },
+  'tlg0086/tlg014': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0086/tlg022': array { 1, 2 },
+  'tlg0086/tlg025': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+  'tlg0086/tlg026': array { 1, 2, 3, 4 },
+  'tlg0086/tlg030': array { 1, 2, 3, 4 },
+  'tlg0086/tlg031': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0086/tlg036': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 },
+  'tlg0086/tlg038': array { 1, 2, 3 },
+  'tlg0086/tlg044': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0094/tlg003': array { 1, 2, 3, 4, 5 },
+  'tlg0098/tlg001': array { 1, 2, 3, 4, 5, 6 },
+  'tlg0099/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 },
+  'tlg0284/tlg056': array { 1, 2 },
+  'tlg0385/tlg001': array { 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 },
+  'tlg0525/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0526/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
+  'tlg0526/tlg003': array { 1, 2 },
+  'tlg0526/tlg004': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0532/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0542/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0543/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 },
+  'tlg0544/tlg001': array { 1, 2, 3 },
+  'tlg0545/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 },
+  'tlg0545/tlg002': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+  'tlg0548/tlg001': array { 1, 2, 3 },
+  'tlg0551/tlg017': array { 1, 2, 3, 4, 5 },
+  'tlg0552/tlg001': array { 1, 2 },
+  'tlg0552/tlg005': array { 1, 2 },
+  'tlg0553/tlg001': array { 1, 2, 3, 4, 5 },
+  'tlg0554/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0555/tlg002': array { 1, 2, 3 },
+  'tlg0555/tlg004': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0557/tlg001': array { 0, 1, 2, 3, 4 },
+  'tlg0557/tlg003': array { 0, 1, 2 },
+  'tlg0559/tlg001': array { 1, 2 },
+  'tlg0559/tlg002': array { 1, 2 },
+  'tlg0559/tlg004': array { 1, 2, 3 },
+  'tlg0559/tlg006': array { 1, 2, 3 },
+  'tlg0559/tlg010': array { 1, 2 },
+  'tlg0561/tlg001': array { 1, 2, 3, 4 },
+  'tlg0562/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+  'tlg0563/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 },
+  'tlg0592/tlg004': array { 1, 2 },
+  'tlg0613/tlg001': array { 1, 2, 3, 4, 5 },
+  'tlg0614/tlg001': array { 1, 2 },
+  'tlg0616/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0627/tlg006': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0627/tlg012': array { 1, 2, 3, 4, 5, 6, 7 },
+  'tlg0627/tlg016': array { 1, 2 },
+  'tlg0627/tlg023': array { 1, 2, 3, 4 },
+  'tlg0627/tlg031': array { 1, 2, 3, 4 },
+  'tlg0627/tlg036': array { 1, 2, 3 },
+  'tlg0638/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg0638/tlg003': array { 'praef', 1, 2 },
+  'tlg0638/tlg006': array { 1, 2 },
+  'tlg0641/tlg001': array { 1, 2, 3, 4, 5 },
+  'tlg0656/tlg001': array { 1, 2, 3, 4, 5 },
+  'tlg0658/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg0719/tlg001': array { 1, 2 },
+  'tlg0719/tlg002': array { 1, 2 },
+  'tlg0719/tlg003': array { 1, 2 },
+  'tlg0719/tlg004': array { 1, 2 },
+  'tlg0732/tlg012': array { 1, 2, 3 },
+  'tlg1210/tlg002': array { 1, 2 },
+  'tlg1272/tlg001': array { 1, 2 },
+  'tlg1386/tlg001': array { 1, 2, 3 },
+  'tlg1419/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 },
+  'tlg1431/tlg003': array { 1, 2, 3 },
+  'tlg1600/tlg001': array { 1, 2 },
+  'tlg1725/tlg001': array { 1, 2, 3 },
+  'tlg1799/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 },
+  'tlg2000/tlg001': array { 1, 2, 3, 4, 5, 6 },
+  'tlg2034/tlg003': array { 1, 2, 3, 4 },
+  'tlg2042/tlg001': array { 'praef', 1, 2, 3, 4, 5, 6, 7, 8 },
+  'tlg2042/tlg005': array { 1, 2, 4, 5, 6, 10, 13, 19, 20, 28, 32 },
+  'tlg2042/tlg029': array { 10, 11 },
+  'tlg2042/tlg030': array { 12, 13, 14, 15, 16, 17 },
+  'tlg2042/tlg079': array { 19, 20, 28, 32 },
+  'tlg2046/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 },
+  'tlg2115/tlg060': array { 1, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg2135/tlg001': array { 1, 2, 3, 4 },
+  'tlg2236/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+  'tlg2583/tlg001': array { 2, 3, 4, 5, 1, 6 },
+  'tlg4029/tlg001': array { 1, 2, 3, 4, 5, 6, 7, 8 }
+};
+
 let $_ := store:read('glaux')
-for key $path value $tb in $glaux
-  where $tb[.//word/@div_book]
-  (: The tlg path is the first two segments; slicing to a fixed 14 chars dropped
-     the suffix on works split into parts (tlg0096/tlg002a). :)
-  let $urn := string-join(tokenize($path, '/')[position() le 2], '/')
-  let $meta := store:get($urn)
-  let $books := distinct-values($tb//word/@div_book)
-    =!> fn { if (. castable as xs:integer) then . cast as xs:integer else . }()
-  let $range := if (every($books, fn { . castable as xs:integer })) then
-    min($books) to max($books)
-  let $list := if (deep-equal($range, $books))
-    then `{min($range)} to {max($range)}` else `({string-join($books =!> fn { if (. instance of xs:integer) then . else `"{.}"`}(), ', ')})`
-  where count($books) > 1
-  where $meta?tokens > 3000
-  return
-`case '{$urn}' (: {$meta?author}, {$meta?title} :)
-  return p:book-pager({$list})`
+(: Clear stale entries so a URN dropped from the list above stops paginating by
+   book rather than keeping its old pages forever. :)
+let $_ := store:keys()[starts-with(., 'books/')] ! store:remove(.)
+let $_ := message(`{map:size($BOOKS)} book lists stored`)
+return (
+  for key $urn value $books in $BOOKS
+    return store:put('books/' || $urn, $books),
+  store:write('glaux')
+)

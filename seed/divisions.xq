@@ -7,6 +7,8 @@
    made it unusable. Deciding it once here keeps p:pager a map lookup.
 
    Run after seed/index.xq, which writes the metadata this reads and extends. :)
+import module namespace urn = "urn";
+
 let $_ := store:read('glaux')
 
 (: Structural units only — the divisions a work is actually composed of.
@@ -29,7 +31,7 @@ let $divisions := (
 )
 
 for $path in db:list('glaux')
-  let $urn := string-join(tokenize($path, '/')[position() le 2], '/')
+  let $urn := urn:work($path)
   let $meta := store:get($urn)
   (: Only works long enough that a single page is unreadable. :)
   where $meta?tokens > 25000
@@ -52,13 +54,10 @@ for $path in db:list('glaux')
      10, and labels with no number at all sort first, which is where a preface
      belongs. Testing every value for castability instead meant one "100b"
      dropped the whole work back to string order: 1, 10, 100, 100b, 101. :)
-  let $sorted :=
-    for $v in $vals
-      let $num := replace($v, '^(\d*).*$', '$1')
-      order by
-        (if ($num = '') then -1 else xs:integer($num)),
-        $v
-      return $v
+  let $sorted := sort($vals, (), fn($v) {
+    let $num := replace($v, '^(\d*).*$', '$1')
+    return ((if ($num = '') then -1 else xs:integer($num)), string($v))
+  })
   let $_ := if (exists($div))
     then message(`{$urn} {$div} ({count($sorted)} pages)`)
     else ()

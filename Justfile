@@ -4,7 +4,7 @@ set script-interpreter := ["bash", "-euxo", "pipefail"]
 export BASEX_HOME := x"~/.basex"
 
 [group('db')]
-seed: lsj glaux tei wiktionary-seed index divisions normalized
+seed: lsj glaux tei wiktionary-seed index divisions pagers normalized
 
 [group('db')]
 lsj:
@@ -54,6 +54,12 @@ index:
 [group('db')]
 divisions:
   basex -Q seed/divisions.xq
+
+# Store the hand-curated per-work book lists that `p:cased-pager` reads. Writes
+# into the same store as `index`, so it has to run after it.
+[group('db')]
+pagers:
+  basex -Q seed/pagers.xq
 
 
 [group('dev')]
