@@ -34,12 +34,22 @@
 		     A lookup normally answers in 30-60ms, so the placeholder would other-
 		     wise flicker in and straight back out on nearly every word; this way
 		     it only ever appears when something is actually slow. -->
+		<!-- Enough lines to fill a panel rather than three bars stranded at the top.
+		     They stack at an even rhythm and leave whatever is left over as a gap
+		     at the bottom — stretching them to the full height reads as a grid
+		     rather than text. The ragged widths read as prose: the short ones land
+		     where a sense ends. -->
 		<div class="skeleton" aria-busy="true" aria-label="Loading definition">
 			<div class="skeleton-label"></div>
 			<div class="skeleton-lines">
 				<div class="skeleton-line w-11/12"></div>
 				<div class="skeleton-line w-4/5"></div>
 				<div class="skeleton-line w-9/12"></div>
+				<div class="skeleton-line w-full"></div>
+				<div class="skeleton-line w-5/6"></div>
+				<div class="skeleton-line w-2/3"></div>
+				<div class="skeleton-line w-11/12"></div>
+				<div class="skeleton-line w-3/4"></div>
 			</div>
 		</div>
 	{:then definition}
