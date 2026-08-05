@@ -2,7 +2,9 @@ let $glaux := map:build(db:list('glaux'), value := fn { db:get('glaux', .) })
 let $_ := store:read('glaux')
 for key $path value $tb in $glaux
   where $tb[.//word/@div_book]
-  let $urn := substring($path, 1, 14)
+  (: The tlg path is the first two segments; slicing to a fixed 14 chars dropped
+     the suffix on works split into parts (tlg0096/tlg002a). :)
+  let $urn := string-join(tokenize($path, '/')[position() le 2], '/')
   let $meta := store:get($urn)
   let $books := distinct-values($tb//word/@div_book)
     =!> fn { if (. castable as xs:integer) then . cast as xs:integer else . }()

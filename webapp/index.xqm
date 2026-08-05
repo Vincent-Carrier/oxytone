@@ -46,11 +46,15 @@ declare function idx:work($work) {
           <ol class="pages">
           {for $n in $pager?list
             return <li>
-              <a data-sveltekit-preload-code="" href="{`read/{substring($work?tlg, 1, 14)}/{$n}`}">{$pager?format($n)}</a>
+              <a data-sveltekit-preload-code="" href="{`read/{$work?tlg}/{$n}`}">{$pager?format($n)}</a>
             </li>}
           </ol>
         </details>
       else
-        <a data-sveltekit-preload-code="" href="{`read/{substring($work?tlg, 1, 14)}`}">{$work?english-title}</a>}
+        (: ?tlg is already the URN. It used to be truncated to 14 chars, which
+           silently dropped the suffix on the 23 works split into parts
+           (tlg0096/tlg002a -> tlg0096/tlg002), linking them all to a work that
+           does not exist. :)
+        <a data-sveltekit-preload-code="" href="{`read/{$work?tlg}`}">{$work?english-title}</a>}
     </li>
 };
