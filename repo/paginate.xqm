@@ -13,39 +13,17 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
       $tb
 }; :)
 
-(: Division attributes that make a reasonable page, best first: structural units
-   (book, oration, fable) before editorial ones (Stephanus/Bekker pages), which
-   are only a sensible fallback when a text carries no structure of its own. :)
-declare variable $p:divisions := (
-  'div_book', 'div_oration', 'div_fable', 'div_fabula', 'div_homily', 'div_psalm',
-  'div_chapter', 'div_letter', 'div_poem', 'div_epigram', 'div_speech',
-  'div_declamation', 'div_life', 'div_essay', 'div_fragment', 'div_section',
-  'div_stephanus_page', 'div_bekker_page', 'div_jebb_page', 'div_page',
-  'div_olpage', 'div_reiskpage', 'div_perseus_section', 'div_manuscriptpage'
-);
-
 (: Works big enough that one page is unreadable, but with no hand-written case
-   below. Picks whichever division the text actually carries, so texts divided by
-   fable or oration paginate like those divided by book. :)
+   below, so texts divided by fable or oration paginate like those divided by
+   book. The division and its page list are decided once by seed/divisions.xq —
+   working them out here meant opening the treebank and scanning //word for two
+   dozen candidate attributes, which the index then did for every work on the
+   site. :)
 declare function p:auto-pager($urn as xs:string) {
-  let $path := db:list('glaux')[starts-with(., $urn || '/')][1]
-  let $tb := if (exists($path)) then db:get('glaux', $path) else ()
   let $_ := store:read('glaux')
-  let $tokens := store:get($urn)?tokens
-  where exists($tb) and $tokens > 25000
-  let $div := head(
-    for $d in $p:divisions
-      let $vals := distinct-values($tb/treebank//word/@*[name() = $d])
-      where count($vals) > 1 and count($vals) <= 600
-      return $d
-  )
-  where exists($div)
-  let $vals := distinct-values($tb/treebank//word/@*[name() = $div])
-  let $sorted :=
-    if (every($vals, fn { . castable as xs:integer }))
-    then for $v in $vals order by xs:integer($v) return $v
-    else for $v in $vals order by $v return $v
-  return p:div-pager($div, $sorted)
+  let $meta := store:get($urn)
+  where exists($meta?division)
+  return p:div-pager($meta?division, $meta?pages?*)
 };
 
 declare function p:pager($urn as xs:string) {

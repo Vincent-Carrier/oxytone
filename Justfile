@@ -4,7 +4,7 @@ set script-interpreter := ["bash", "-euxo", "pipefail"]
 export BASEX_HOME := x"~/.basex"
 
 [group('db')]
-seed: lsj glaux tei wiktionary-seed index normalized
+seed: lsj glaux tei wiktionary-seed index divisions normalized
 
 [group('db')]
 lsj:
@@ -48,6 +48,12 @@ english:
 [group('db')]
 index:
   basex -Q seed/index.xq
+
+# Decide the page division for works that paginate automatically. Extends the
+# metadata `index` writes, so it has to run after it.
+[group('db')]
+divisions:
+  basex -Q seed/divisions.xq
 
 
 [group('dev')]
