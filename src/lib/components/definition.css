@@ -81,6 +81,13 @@ ul.senses {
 		skeleton-pulse 2s ease-in-out 300ms infinite;
 }
 
+/* Same placeholder, no delay: used where the wait is always long enough to be
+   worth showing (an LLM's first token takes seconds, not milliseconds), so
+   holding it back would just leave the panel looking dead after a click. */
+.skeleton-immediate {
+	animation: skeleton-pulse 2s ease-in-out infinite;
+}
+
 @keyframes skeleton-fade-in {
 	from {
 		opacity: 0;
@@ -104,6 +111,11 @@ ul.senses {
 @media (prefers-reduced-motion: reduce) {
 	.skeleton {
 		animation: skeleton-fade-in 150ms ease-out 300ms both;
+	}
+
+	/* Nothing to delay here, so it simply holds still. */
+	.skeleton-immediate {
+		animation: none;
 	}
 }
 

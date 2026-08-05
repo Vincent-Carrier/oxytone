@@ -245,6 +245,24 @@
 							</Button>
 						</div>
 
+						<!-- The same skeleton the definition panel uses, minus its 150ms
+				delay: an LLM's first token takes seconds, so there is nothing to
+				debounce and holding it back would leave the panel looking dead.
+				It only covers the gap before any text arrives — once the stream
+				produces a token the real answer takes over. -->
+						{#if status === 'streaming' && !output}
+							<div
+								class="skeleton-immediate min-h-0 grow"
+								aria-busy="true"
+								aria-label="Waiting for a response">
+								<div class="skeleton-lines">
+									<div class="skeleton-line w-11/12"></div>
+									<div class="skeleton-line w-4/5"></div>
+									<div class="skeleton-line w-9/12"></div>
+								</div>
+							</div>
+						{/if}
+
 						<!-- Only the answer scrolls; the actions and input below stay pinned so
 				they remain reachable however long the response gets. -->
 						{#if output || status === 'error'}
