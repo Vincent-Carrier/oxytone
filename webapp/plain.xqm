@@ -1,6 +1,7 @@
 module namespace pl = "oxytone/plain";
 import module namespace xsm = "xsm";
 import module namespace n = "normalize";
+import module namespace urn = "urn";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
@@ -73,8 +74,7 @@ declare
   %rest:path("/plain/{$author}/{$work-page=.+}")
   %output:method("html")
   function pl:get-page($author, $work-page) {
-    let $wp := tokenize($work-page, '/')
-    let $path := string-join(($author, $work-page), '/')
-    let $tb := n:get-normalized($author, $wp[1], $wp[2])
+    let $wp := urn:work-page($work-page)
+    let $tb := n:get-normalized($author, $wp?work, $wp?page)
     return xslt:transform($tb, $pl:xslt)
 };

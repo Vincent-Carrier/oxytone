@@ -1,6 +1,7 @@
 module namespace r = "oxytone/read";
 import module namespace xsm = "xsm";
 import module namespace n = "normalize";
+import module namespace urn = "urn";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
@@ -100,19 +101,19 @@ declare
   %rest:path("/read/{$author}/{$work-page=.+}")
   %output:method("html")
   function r:get-page($author, $work-page) {
-    let $wp := tokenize($work-page, '/')
+    let $wp := urn:work-page($work-page)
     let $path := string-join(($author, $work-page), '/')
     let $cached := db:get('normalized', $path)[1]
     return
       if (db:option('debug'))
-        then update:output(r:render(n:get-normalized($author, $wp[1], $wp[2])))
+        then update:output(r:render(n:get-normalized($author, $wp?work, $wp?page)))
       else if (exists($cached))
         then update:output(r:render($cached))
       else
         (: First request for this page: normalize, cache it, and emit the
            rendered result. db:put and update:output are both updating
            expressions, so the whole function stays updating (no MIXUPDATES). :)
-        let $normalized := n:get-normalized($author, $wp[1], $wp[2])
+        let $normalized := n:get-normalized($author, $wp?work, $wp?page)
         return (
           db:put('normalized', $normalized, $path),
           update:output(r:render($normalized))

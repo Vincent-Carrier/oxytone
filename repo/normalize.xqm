@@ -139,10 +139,13 @@ declare function n:line($line, $id) {
 
 declare %public function n:get-normalized($author, $work, $page := ()) {
   let $tb := db:get('glaux', `{$author}/{$work}/`)[1]
-  let $style := trace(n:style($author, $work), "STYLE: ")
+  let $style := n:style($author, $work)
   let $pager := p:pager(`{$author}/{$work}`)
+  (: A paginated work requested with no page (read/tlg0012/tlg001) falls back to
+     its first page, so the title and the body agree on which one was rendered. :)
+  let $page := if (exists($pager)) then ($page otherwise head($pager?list)) else $page
   let $paged := if (exists($pager)) then $pager?get($tb, $page) else $tb
-  let $analysis := trace($paged/treebank/sentence[1]/@analysis, "===== ANALYSIS: ")
+  let $analysis := $paged/treebank/sentence[1]/@analysis
   let $fixed := $paged update {
     replace value of node filter(.//word[@form = '"'], fn ($w, $i) { $i mod 2 = 1 })/@form with '“'
   } update {
@@ -152,7 +155,7 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
   }
   let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
   let $_ := store:read('glaux')
-  let $meta := trace(store:get(`{$author}/{$work}`), "METADATA: ")
+  let $meta := store:get(`{$author}/{$work}`)
   return <treebank>
      <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
