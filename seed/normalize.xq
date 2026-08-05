@@ -1,8 +1,15 @@
+(: Warms the `normalized` write-through cache offline, so the first visitor to a
+   page does not pay for normalizing it. webapp/read.xqm fills the same cache
+   lazily on each cold request, so this is optional — but running it after a
+   reseed means nobody hits an empty cache.
+
+   Caches the default (first) page of each work; other pages are cached as they
+   are requested. db:put is updating, so it has to be the return expression: as
+   a `let` it raised XUST0001 and this script never ran. :)
+import module namespace urn = 'urn';
 import module namespace n = 'normalize';
 
 for $path in db:list('glaux')
-  let $urn := tokenize($path, '/')
-  let $doc := n:get-normalized($urn[1], $urn[2])
-  let $_ := trace(`{$urn[1]}/{$urn[2]}`)
-  let $_ := db:put('normalized', $doc, `{$urn[1]}/{$urn[2]}`)
-  return ()
+  let $work := urn:work($path)
+  let $parts := tokenize($work, '/')
+  return db:put('normalized', n:get-normalized($parts[1], $parts[2]), $work)

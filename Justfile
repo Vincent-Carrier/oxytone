@@ -21,11 +21,6 @@ wiktionary-seed:
   basex -Q seed/wiktionary.xq
 
 [group('db')]
-syntax:
-  basex -c "CREATE DB syntax" \
-        -Q seed/syntax.xq
-
-[group('db')]
 normalized:
   basex -c "CREATE DB normalized"
 
