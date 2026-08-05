@@ -62,6 +62,24 @@ ul.senses {
 	@apply mt-2 ml-auto flex w-fit items-center gap-x-1 text-xs;
 }
 
+/* Placeholder shown while a definition loads. Mirrors the source-label rule and
+   a few lines of body text, so the panel doesn't jump when the real one lands. */
+.skeleton-label {
+	@apply mb-2 h-2 w-16 rounded-sm border-b-1 border-gray-300 bg-gray-200 pb-1;
+}
+
+.skeleton-lines {
+	@apply flex flex-col gap-y-2;
+}
+
+.skeleton-line {
+	@apply h-2.5 rounded-sm bg-gray-200;
+}
+
+.definition-error {
+	@apply text-sm text-gray-500 italic;
+}
+
 dl {
 	@apply relative;
 

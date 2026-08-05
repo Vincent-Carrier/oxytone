@@ -29,7 +29,18 @@
 </script>
 
 {#if lemma && /\p{L}+/u.test(lemma)}
-	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text() then definition}
+	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text()}
+		<!-- Long LSJ articles still take a moment to render server-side, so stand in
+		     with the shape of a source section rather than a blank panel. -->
+		<div class="animate-pulse" aria-busy="true" aria-label="Loading definition">
+			<div class="skeleton-label"></div>
+			<div class="skeleton-lines">
+				<div class="skeleton-line w-11/12"></div>
+				<div class="skeleton-line w-4/5"></div>
+				<div class="skeleton-line w-9/12"></div>
+			</div>
+		</div>
+	{:then definition}
 		{@const sources = parseSources(definition)}
 		<div>
 			{#each sources as { source, html } (source)}
@@ -45,6 +56,10 @@
 				</div>
 			{/each}
 		</div>
+	{:catch}
+		<!-- Previously a rejected fetch rendered nothing at all, leaving an empty
+		     panel that was indistinguishable from a lemma with no entry. -->
+		<p class="definition-error">Could not load this definition.</p>
 	{/await}
 {/if}
 
