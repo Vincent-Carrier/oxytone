@@ -22,8 +22,10 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:apply-templates select="body" />
       </main>
     </div>,
+  (: data-terse drives the dense numeral grid in treebank.css. :)
   "books":
     <ol class="books">
+      {xsm:attr("data-terse", "@terse")}
       <xsl:apply-templates select="book" />
     </ol>,
   "book":

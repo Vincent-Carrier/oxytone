@@ -61,7 +61,8 @@ declare function p:cased-pager($urn as xs:string) {
           $tb transform with { delete nodes .//sentence[./word[1]/@div_book != $n] }
         },
         'list': 1 to 24,
-        'format': fn($n) { `Book {$n} ({p:greek-numeral($n)})` }
+        'format': fn($n) { `Book {$n} ({p:greek-numeral($n)})` },
+        'label': fn($n) { `Book {$n} ({p:greek-numeral($n)})` }
       }
     case 'tlg0001/tlg001' (: Apollonius Rhodius, Argonautica :)
       return p:book-pager(1 to 4)
@@ -377,7 +378,13 @@ declare function p:cased-pager($urn as xs:string) {
 (: Same shape as p:book-pager, but filters on whichever division attribute the
    text uses rather than assuming @div_book. :)
 declare function p:div-pager($div as xs:string, $list) {
-  map {
+  let $label := replace(replace($div, '^div_', ''), '_', ' ')
+  let $name := `{upper-case(substring($label, 1, 1))}{substring($label, 2)}`
+  (: Past a couple of dozen entries the noun is repeated more than it is read,
+     and at 359 fables it was three times the width of the number it labels. Long
+     numbered runs get the bare numeral; short lists keep the word. :)
+  let $terse := count($list) > 24 and every($list, fn { string(.) castable as xs:integer })
+  return map {
     'get': fn($tb, $n) {
       let $page := if (exists($n)) then $n else head($list)
       return $tb transform with {
@@ -385,28 +392,32 @@ declare function p:div-pager($div as xs:string, $list) {
       }
     },
     'list': $list,
-    'format': fn($n) {
-      let $label := replace(replace($div, '^div_', ''), '_', ' ')
-      return `{upper-case(substring($label, 1, 1))}{substring($label, 2)} {$n}`
-    }
+    'terse': $terse,
+    (: The heading always spells the division out ("Fables, Fable 7"); only the
+       nav list goes terse, where the noun is repeated hundreds of times. :)
+    'format': fn($n) { `{$name} {$n}` },
+    'label': fn($n) { if ($terse) then string($n) else `{$name} {$n}` }
   }
 };
 
 declare function p:book-pager($list) {
-  map {
+  let $format := fn($n) {
+    typeswitch ($n) {
+      case xs:integer return `Book {$n}`
+      default return switch ($n) {
+        case 'praef' return "Preface"
+        default return $n
+      }
+    }
+  }
+  (: Book lists are short enough that the nav reads the same as the heading. :)
+  return map {
     'get': fn($tb, $n) {
       $tb transform with { delete nodes .//sentence[./word[1]/@div_book != $n] }
     },
     'list': $list,
-    'format': fn($n) {
-      typeswitch ($n) {
-        case xs:integer return `Book {$n}`
-        default return switch ($n) {
-          case 'praef' return "Preface"
-          default return $n
-        }
-      }
-    }
+    'format': $format,
+    'label': $format
   }
 };
 

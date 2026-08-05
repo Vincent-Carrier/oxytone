@@ -50,6 +50,20 @@
 					@apply font-sans-sc text-blue-600;
 				}
 			}
+
+			/* Hundreds of bare numerals pack into a grid instead: the dash and the
+			   column width were sized for "Fable 137", not "137". */
+			&[data-terse='yes'] {
+				@apply grid columns-auto grid-cols-[repeat(auto-fill,minmax(2.5rem,1fr))] gap-x-1;
+
+				& li {
+					@apply mb-0 list-none text-right tabular-nums;
+
+					&::before {
+						content: none;
+					}
+				}
+			}
 		}
 	}
 
