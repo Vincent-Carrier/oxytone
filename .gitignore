@@ -14,6 +14,9 @@ node_modules
 .DS_Store
 Thumbs.db
 
+# Local search config
+.rgignore
+
 # Claude Code — shared config is tracked, machine-local state is not
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
