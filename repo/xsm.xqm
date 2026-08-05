@@ -9,9 +9,13 @@ declare function xsm:stylesheet(
   $method as xs:string := "xml",
   $indent as xs:string := "no"
 ) as element() {
+  (: exclude-result-prefixes keeps these declarations off the output element.
+     Every caller shares this stylesheet, so without it the treebank's
+     #tb-content div carries stray xmlns:* attributes too. :)
   <xsl:stylesheet version="3.0" xmlns:oxy="http://oxytone.xyz/functions"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    exclude-result-prefixes="oxy map xs">
     <xsl:output method="{$method}" indent="{$indent}" encoding="UTF-8"/>
     <xsl:function name="oxy:normalize-punct">
       <xsl:param name="text"/>

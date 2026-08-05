@@ -35,24 +35,33 @@
 		let content = q('#tb-content')
 		g.content = content
 
-		if (!g.content) return
-		const qq = (sel: string) => g.content!.querySelectorAll<HTMLElement>(sel)
+		if (!content) return
 		let l = location
-		if (l.hash) q(`a[href="${l.hash}`)?.scrollIntoView({ behavior: 'smooth' })
-		g.autoAnnotated = g.content.dataset.analysis !== 'manual'
+		// Matched on href rather than #id: the id is a line number ("1.30"), which
+		// would need escaping to be a valid CSS identifier.
+		if (l.hash) q(`a[href="${l.hash}"]`)?.scrollIntoView({ behavior: 'smooth' })
+		g.autoAnnotated = content.dataset.analysis !== 'manual'
 		g.analysis = !g.autoAnnotated
 
-		// allow hash anchors to be unselected and remove them from browser history
-		for (let anchor of qq('a[href^="#"]')) {
-			anchor.addEventListener('click', ev => {
-				let a = ev.target as HTMLAnchorElement
-				if (a.hash === l.hash) l.replace('#')
-				else l.replace(a.hash)
-				ev.preventDefault()
-			})
+		// Allow hash anchors to be toggled off, without pushing every line number
+		// onto the history stack.
+		//
+		// Delegated to the container and cleaned up on teardown. This attachment
+		// re-runs whenever the state in the article's class expression changes,
+		// and it also writes g.analysis below, so it re-entered on its own. When
+		// it bound a listener per anchor with a no-op cleanup, every re-run added
+		// another: the first set the hash, the second saw `a.hash === l.hash`
+		// (l is live) and immediately cleared it, so clicking a line number left
+		// a bare "#".
+		const onAnchorClick = (ev: MouseEvent) => {
+			let a = (ev.target as Element).closest<HTMLAnchorElement>('a[href^="#"]')
+			if (!a || !content.contains(a)) return
+			ev.preventDefault()
+			l.replace(a.hash === l.hash ? '#' : a.hash)
 		}
+		content.addEventListener('click', onAnchorClick)
 
-		return () => {}
+		return () => content.removeEventListener('click', onAnchorClick)
 	}
 </script>
 
