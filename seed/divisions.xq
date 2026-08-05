@@ -33,14 +33,25 @@ for $path in db:list('glaux')
   )
   where exists($div)
   let $vals := distinct-values($tb/treebank//word/@*[name() = $div])
+  (: Natural sort. Page labels are mostly numbers, but many texts mix in a
+     suffixed variant (100b, 1252a, 17/18) or a leading preface (praef, pr).
+     Sorting on the leading integer keeps 100b next to 100 rather than beside
+     10, and labels with no number at all sort first, which is where a preface
+     belongs. Testing every value for castability instead meant one "100b"
+     dropped the whole work back to string order: 1, 10, 100, 100b, 101. :)
   let $sorted :=
-    if (every($vals, fn { . castable as xs:integer }))
-    then for $v in $vals order by xs:integer($v) return $v
-    else for $v in $vals order by $v return $v
+    for $v in $vals
+      let $num := replace($v, '^(\d*).*$', '$1')
+      order by
+        (if ($num = '') then -1 else xs:integer($num)),
+        $v
+      return $v
   let $_ := message(`{$urn} {$div} ({count($sorted)} pages)`)
+  (: use-last so re-running overwrites a previously stored division; the default
+     keeps the first value, which made this script a no-op on any second run. :)
   return store:put($urn, map:merge((
     $meta,
     { 'division': $div, 'pages': array { $sorted } }
-  ))),
+  ), { 'duplicates': 'use-last' })),
 
 store:write('glaux')
