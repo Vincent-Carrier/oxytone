@@ -20,6 +20,12 @@
 <nav
 	class={[
 		'sticky top-0 z-50 flex items-baseline gap-x-2 py-1 pr-4 pl-[var(--padded-margin-w)] print:hidden',
+		// On mobile the button labels go sr-only, which breaks both axes of the
+		// desktop layout: baseline alignment centres the icons on a text baseline
+		// that is no longer there (leaving them riding high in the bar), and gap-x-2
+		// between bare icons reads as half the edge padding, bunching them together.
+		// Centre them and match the gap to the padding so the spacing is even.
+		'max-sm:items-center max-sm:gap-x-4',
 		'font-sans-sc border-b border-gray-300 bg-gray-50 text-sm'
 	]}>
 	<a href="/" class="text-gray-800">oxytone</a>
