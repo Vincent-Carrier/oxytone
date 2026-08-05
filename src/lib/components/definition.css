@@ -66,19 +66,19 @@ ul.senses {
    a few lines of body text, so the panel doesn't jump when the real one lands.
 
    A lookup usually answers in 30-60ms, fast enough that showing anything at all
-   reads as a flicker. The 300ms animation-delay with `both` fill keeps it at
+   reads as a flicker. The 150ms animation-delay with `both` fill keeps it at
    opacity 0 until then, so it stays invisible on every normal lookup and only
    fades in when one is genuinely slow. Doing this in CSS rather than with a
    setTimeout means there is no timer to clear when the lemma changes mid-flight.
 
-   The pulse is a separate animation starting 150ms after the fade so the two
-   never overlap on opacity — run together, the later one wins and the fade
-   never shows. It also holds a steady opacity for one beat before dimming,
-   which reads calmer than pulsing the instant it appears. */
+   The pulse is a separate animation starting where the fade ends (delay + its
+   own 150ms duration) so the two never overlap on opacity — run together, the
+   later one wins and the fade never shows. Keep the two delays in step if the
+   threshold changes. */
 .skeleton {
 	animation:
-		skeleton-fade-in 150ms ease-out 300ms both,
-		skeleton-pulse 2s ease-in-out 450ms infinite;
+		skeleton-fade-in 150ms ease-out 150ms both,
+		skeleton-pulse 2s ease-in-out 300ms infinite;
 }
 
 @keyframes skeleton-fade-in {

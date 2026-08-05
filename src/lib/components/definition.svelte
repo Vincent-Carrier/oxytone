@@ -30,7 +30,7 @@
 
 {#if lemma && /\p{L}+/u.test(lemma)}
 	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text()}
-		<!-- Held invisible for the first 300ms (see .skeleton in definition.css).
+		<!-- Held invisible for the first 150ms (see .skeleton in definition.css).
 		     A lookup normally answers in 30-60ms, so the placeholder would other-
 		     wise flicker in and straight back out on nearly every word; this way
 		     it only ever appears when something is actually slow. -->
