@@ -9,14 +9,23 @@
    Run after seed/index.xq, which writes the metadata this reads and extends. :)
 let $_ := store:read('glaux')
 
-(: Best first: structural units before editorial page numbers, which are only a
-   sensible page boundary when a text carries no structure of its own. :)
+(: Structural units only — the divisions a work is actually composed of.
+   Deliberately excludes edition page numbers (Stephanus, Bekker, Jebb, Reiske,
+   olpage, manuscript pages) and Perseus' section ids. Those are coordinates into
+   a printed edition, not parts of the text: a Stephanus page is a spot in
+   Estienne's 1578 folio, and paginating the Gorgias on it produced 81 pages of
+   roughly a paragraph each, against ~10,000 tokens for a book of the Republic.
+   A work with no structural division is better read whole than sliced at
+   arbitrary marks.
+
+   div_section and div_fragment are out for the same reason — they are citation
+   coordinates, and Demosthenes' On the Crown came out as 324 pages of 81 tokens,
+   a sentence or two apiece. div_chapter stays: a chapter of Genesis is a unit
+   people actually read. :)
 let $divisions := (
   'div_book', 'div_oration', 'div_fable', 'div_fabula', 'div_homily', 'div_psalm',
   'div_chapter', 'div_letter', 'div_poem', 'div_epigram', 'div_speech',
-  'div_declamation', 'div_life', 'div_essay', 'div_fragment', 'div_section',
-  'div_stephanus_page', 'div_bekker_page', 'div_jebb_page', 'div_page',
-  'div_olpage', 'div_reiskpage', 'div_perseus_section', 'div_manuscriptpage'
+  'div_declamation', 'div_life', 'div_essay'
 )
 
 for $path in db:list('glaux')
@@ -31,8 +40,12 @@ for $path in db:list('glaux')
       where count($vals) > 1 and count($vals) <= 600
       return $d
   )
-  where exists($div)
-  let $vals := distinct-values($tb/treebank//word/@*[name() = $div])
+  (: Emitted even when nothing matches, so that a work which used to paginate on
+     a division since removed from the list gets its stale entry cleared rather
+     than keeping it forever. :)
+  let $vals := if (exists($div))
+    then distinct-values($tb/treebank//word/@*[name() = $div])
+    else ()
   (: Natural sort. Page labels are mostly numbers, but many texts mix in a
      suffixed variant (100b, 1252a, 17/18) or a leading preface (praef, pr).
      Sorting on the leading integer keeps 100b next to 100 rather than beside
@@ -46,12 +59,15 @@ for $path in db:list('glaux')
         (if ($num = '') then -1 else xs:integer($num)),
         $v
       return $v
-  let $_ := message(`{$urn} {$div} ({count($sorted)} pages)`)
+  let $_ := if (exists($div))
+    then message(`{$urn} {$div} ({count($sorted)} pages)`)
+    else ()
   (: use-last so re-running overwrites a previously stored division; the default
      keeps the first value, which made this script a no-op on any second run. :)
-  return store:put($urn, map:merge((
-    $meta,
-    { 'division': $div, 'pages': array { $sorted } }
-  ), { 'duplicates': 'use-last' })),
+  return store:put($urn,
+    if (exists($div))
+    then map:merge(($meta, { 'division': $div, 'pages': array { $sorted } }),
+                   { 'duplicates': 'use-last' })
+    else map:remove($meta, ('division', 'pages'))),
 
 store:write('glaux')
