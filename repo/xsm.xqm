@@ -39,9 +39,14 @@ declare function xsm:stylesheet(
          synthesize the gap: true when something precedes this node, and
          neither this node opens with punctuation nor the previous one ends
          with an opening bracket. -->
+    <!-- preceding:: is a reverse axis, so [1] is the *nearest* preceding text
+         node and the walk stops there. Wrapping the step in parentheses first,
+         as ($node/preceding::text()[...])[last()], forces the whole axis to be
+         materialised on every call — O(n^2) over the entry, and 93% of the cost
+         of rendering a long LSJ article (993ms -> 71ms for λόγος). -->
     <xsl:function name="oxy:gap">
       <xsl:param name="node"/>
-      <xsl:variable name="prev" select="($node/preceding::text()[normalize-space()])[last()]"/>
+      <xsl:variable name="prev" select="$node/preceding::text()[normalize-space()][1]"/>
       <xsl:sequence select="exists($prev) and not(matches(normalize-space($node), '^[,;:.!?)]')) and not(matches(normalize-space($prev), '[(]$'))"/>
     </xsl:function>
     <!-- xsl:text would lose its space to XQuery boundary-space stripping. -->
