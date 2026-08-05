@@ -30,9 +30,11 @@
 
 {#if lemma && /\p{L}+/u.test(lemma)}
 	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text()}
-		<!-- Long LSJ articles still take a moment to render server-side, so stand in
-		     with the shape of a source section rather than a blank panel. -->
-		<div class="animate-pulse" aria-busy="true" aria-label="Loading definition">
+		<!-- Held invisible for the first 300ms (see .skeleton in definition.css).
+		     A lookup normally answers in 30-60ms, so the placeholder would other-
+		     wise flicker in and straight back out on nearly every word; this way
+		     it only ever appears when something is actually slow. -->
+		<div class="skeleton" aria-busy="true" aria-label="Loading definition">
 			<div class="skeleton-label"></div>
 			<div class="skeleton-lines">
 				<div class="skeleton-line w-11/12"></div>
