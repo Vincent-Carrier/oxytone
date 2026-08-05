@@ -37,8 +37,11 @@
 			@apply text-gray-800;
 		}
 
+		/* Texts divided by fable or psalm run to hundreds of pages, and at full
+		   height that list pushed the text itself off the screen. Cap it and let
+		   the list scroll; works with a dozen books are unaffected. */
 		& .books {
-			@apply columns-3 text-sm lg:columns-4 print:hidden;
+			@apply max-h-[40vh] columns-3 overflow-y-auto text-sm lg:columns-4 print:hidden;
 
 			& li {
 				@apply list-dash -mb-1;

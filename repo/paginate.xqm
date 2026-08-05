@@ -13,7 +13,47 @@ declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
       $tb
 }; :)
 
+(: Division attributes that make a reasonable page, best first: structural units
+   (book, oration, fable) before editorial ones (Stephanus/Bekker pages), which
+   are only a sensible fallback when a text carries no structure of its own. :)
+declare variable $p:divisions := (
+  'div_book', 'div_oration', 'div_fable', 'div_fabula', 'div_homily', 'div_psalm',
+  'div_chapter', 'div_letter', 'div_poem', 'div_epigram', 'div_speech',
+  'div_declamation', 'div_life', 'div_essay', 'div_fragment', 'div_section',
+  'div_stephanus_page', 'div_bekker_page', 'div_jebb_page', 'div_page',
+  'div_olpage', 'div_reiskpage', 'div_perseus_section', 'div_manuscriptpage'
+);
+
+(: Works big enough that one page is unreadable, but with no hand-written case
+   below. Picks whichever division the text actually carries, so texts divided by
+   fable or oration paginate like those divided by book. :)
+declare function p:auto-pager($urn as xs:string) {
+  let $path := db:list('glaux')[starts-with(., $urn || '/')][1]
+  let $tb := if (exists($path)) then db:get('glaux', $path) else ()
+  let $_ := store:read('glaux')
+  let $tokens := store:get($urn)?tokens
+  where exists($tb) and $tokens > 25000
+  let $div := head(
+    for $d in $p:divisions
+      let $vals := distinct-values($tb/treebank//word/@*[name() = $d])
+      where count($vals) > 1 and count($vals) <= 600
+      return $d
+  )
+  where exists($div)
+  let $vals := distinct-values($tb/treebank//word/@*[name() = $div])
+  let $sorted :=
+    if (every($vals, fn { . castable as xs:integer }))
+    then for $v in $vals order by xs:integer($v) return $v
+    else for $v in $vals order by $v return $v
+  return p:div-pager($div, $sorted)
+};
+
 declare function p:pager($urn as xs:string) {
+  let $cased := p:cased-pager($urn)
+  return if (exists($cased)) then $cased else p:auto-pager($urn)
+};
+
+declare function p:cased-pager($urn as xs:string) {
   switch ($urn)
     case ('tlg0012/tlg001', 'tlg0012/tlg002')
       return {
@@ -332,6 +372,24 @@ declare function p:pager($urn as xs:string) {
     case 'tlg4029/tlg001' (: Procopius, De bellis :)
       return p:book-pager(1 to 8)
     default return ()
+};
+
+(: Same shape as p:book-pager, but filters on whichever division attribute the
+   text uses rather than assuming @div_book. :)
+declare function p:div-pager($div as xs:string, $list) {
+  map {
+    'get': fn($tb, $n) {
+      let $page := if (exists($n)) then $n else head($list)
+      return $tb transform with {
+        delete nodes .//sentence[(./word/@*[name() = $div])[1] != $page]
+      }
+    },
+    'list': $list,
+    'format': fn($n) {
+      let $label := replace(replace($div, '^div_', ''), '_', ' ')
+      return `{upper-case(substring($label, 1, 1))}{substring($label, 2)} {$n}`
+    }
+  }
 };
 
 declare function p:book-pager($list) {
