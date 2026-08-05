@@ -29,16 +29,17 @@ glaux:
   basex -O MAXCATS=10000 -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
         -c "CREATE DB glaux glaux/"
 
+# Homer only. m:merge is the sole reader of this DB, and it switches on
+# 'tlg0012', so the other 88 authors in tei/ were 98% of the database (216 MB ->
+# 5 MB) and were never queried. Speaker labels for the tragedians and Plato come
+# from @speaker on the GLAUx treebank, not from TEI.
+#
+# Added under an explicit tlg0012 path rather than `CREATE DB tei tei/tlg0012`,
+# which would strip that segment and break the `{$author}/{$work}` lookup.
 [group('db')]
 tei:
-  basex -O STRIPNS=true \
-        -O FTINCLUDE=body -O DIACRITICS=true -O CASESENS=true \
-        -c "CREATE DB tei tei/" \
-
-english:
-  basex -O STRIPNS=true \
-        -O FTINCLUDE=body \
-        -c "CREATE DB english eng/" \
+  basex -O STRIPNS=true -c "CREATE DB tei"
+  basex -O STRIPNS=true -c "OPEN tei; ADD TO tlg0012 tei/tlg0012"
 
 [group('db')]
 index:
@@ -152,8 +153,11 @@ saxon:
   rm -rf SaxonHE12-5J.zip saxon-he/
 
 
+# Only Homer's TEI is shipped: m:merge is the sole consumer of tei/ and switches
+# on tlg0012, so the other 88 authors were 175 MB of the archive that nothing
+# ever read. Speaker labels come from @speaker on the treebank, not from TEI.
 release:
-  zip -r corpus.zip glaux/ tei/ lsj/
+  zip -r corpus.zip glaux/ tei/tlg0012/ lsj/
   gh release create corpus.zip
   rm -f corpus.zip
 

@@ -8,7 +8,7 @@ node_modules
 /.svelte-kit
 /build
 .logs/
-.zip
+*.zip
 
 # OS
 .DS_Store
