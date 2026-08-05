@@ -85,20 +85,27 @@
 			{@attach onTbMount}>
 			{@html data.treebank}
 		</article>
+		<!-- The morphology bar sits at the top of this column rather than in a
+		full-width strip below: it describes the selected word, as does the
+		definition beneath it, so the two read as one panel. It is pinned while the
+		definition scrolls, since the lemma and parse are the fixed reference you
+		read the entry against. -->
 		<aside
 			class={[
-				'max-lg:elevated right-2 bottom-8 z-30 ml-auto flow-root max-w-96 min-w-40 grow basis-60 overflow-y-auto border-l-1 border-l-gray-300 bg-gray-50 p-2 max-lg:absolute max-lg:max-h-40 lg:p-4',
-				{ 'bg-white max-lg:hidden': !lemma }
+				'max-lg:elevated right-2 bottom-8 z-30 ml-auto flex max-w-96 min-w-40 grow basis-60 flex-col overflow-hidden border-l-1 border-l-gray-300 bg-gray-50 max-lg:absolute max-lg:max-h-40',
+				{ 'bg-white max-lg:hidden': !g.selected && !lemma }
 			]}>
+			{#if g.selected}
+				<div
+					class="flex shrink-0 items-baseline gap-x-2 border-b-1 border-gray-300 bg-gray-100 px-2 py-1 text-xs lg:px-4">
+					<Morphology word={g.selected} />
+				</div>
+			{/if}
 			{#if lemma}
-				<Definition {lemma} />
+				<div class="flow-root overflow-y-auto p-2 lg:p-4">
+					<Definition {lemma} />
+				</div>
 			{/if}
 		</aside>
 	</div>
-	{#if g.selected}
-		<div
-			class="z-20 flex items-baseline gap-x-2 border-t-1 border-gray-300 bg-gray-100 py-1 pr-2 pl-[var(--padded-margin-w)] text-xs">
-			<Morphology word={g.selected} />
-		</div>
-	{/if}
 </div>
