@@ -72,25 +72,19 @@
 <div class="flex h-screen flex-col print:h-auto" onlemma={ev => (lemma = ev.detail.lemma)}>
 	<Nav />
 	<div class="flex overflow-y-auto">
-		{#await data.treebank}
-			<p class="font-sc mx-auto mt-32 text-2xl lowercase">Loading ...</p>
-		{:then treebank}
-			<article
-				id="treebank"
-				class={[
-					'flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed',
-					{
-						verbs: g.verbs,
-						syntax: g.colors,
-						'mem-mode': g.memMode
-					}
-				]}
-				{@attach onTbMount}>
-				{@html treebank}
-			</article>
-		{:catch}
-			<p class="font-sc mt-32 self-center text-2xl lowercase">Something went wrong</p>
-		{/await}
+		<article
+			id="treebank"
+			class={[
+				'flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed',
+				{
+					verbs: g.verbs,
+					syntax: g.colors,
+					'mem-mode': g.memMode
+				}
+			]}
+			{@attach onTbMount}>
+			{@html data.treebank}
+		</article>
 		<aside
 			class={[
 				'max-lg:elevated right-2 bottom-8 z-30 ml-auto flow-root max-w-96 min-w-40 grow basis-60 overflow-y-auto border-l-1 border-l-gray-300 bg-gray-50 p-2 max-lg:absolute max-lg:max-h-40 lg:p-4',
