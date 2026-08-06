@@ -2,13 +2,17 @@
 	import { DropdownMenu } from 'bits-ui'
 	import type { Snippet } from 'svelte'
 	import Button from '$lib/components/button.svelte'
-	import g from '$lib/global-state.svelte'
+	import g, { analysisChosen } from '$lib/global-state.svelte'
 	import DisplayIcon from '~icons/heroicons/adjustments-horizontal-16-solid'
 
-	// Only `verbs` and `colors` persist, matching the previous behaviour.
-	function persist(key: string, value: boolean) {
-		localStorage.setItem(key, JSON.stringify(value))
-	}
+	// These toggles persist across reloads; the write lives next to the state in
+	// global-state.svelte.ts, since a value bound with `bind:checked` never
+	// reaches an `onCheckedChange` callback here.
+	//
+	// `analysis` additionally records *that* it was chosen, so the read route
+	// stops applying its per-text default. onSelect rather than an effect on the
+	// value: only a real interaction should count, and the route assigns to
+	// g.analysis itself.
 
 	// Verse-only feature; greyed rather than hidden, since a menu has room and a
 	// disabled row explains itself where a vanishing one does not.
@@ -49,7 +53,11 @@
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
 
-			<DropdownMenu.CheckboxItem bind:checked={g.analysis} closeOnSelect={false} class={item}>
+			<DropdownMenu.CheckboxItem
+				bind:checked={g.analysis}
+				onSelect={() => (analysisChosen.current = true)}
+				closeOnSelect={false}
+				class={item}>
 				{#snippet children({ checked })}
 					{@render row(
 						'analysis',
@@ -61,11 +69,7 @@
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
 
-			<DropdownMenu.CheckboxItem
-				bind:checked={g.verbs}
-				onCheckedChange={v => persist('verbs', v)}
-				closeOnSelect={false}
-				class={item}>
+			<DropdownMenu.CheckboxItem bind:checked={g.verbs} closeOnSelect={false} class={item}>
 				{#snippet children({ checked })}
 					{@render row(
 						'verbs',
@@ -75,11 +79,7 @@
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
 
-			<DropdownMenu.CheckboxItem
-				bind:checked={g.colors}
-				onCheckedChange={v => persist('colors', v)}
-				closeOnSelect={false}
-				class={item}>
+			<DropdownMenu.CheckboxItem bind:checked={g.colors} closeOnSelect={false} class={item}>
 				{#snippet children({ checked })}
 					{@render row(
 						'colors',
@@ -122,12 +122,17 @@
 <!-- Inline rather than behind a tooltip: this is the key to what the toggle
 does, so it belongs next to it while you're deciding whether to turn it on. -->
 {#snippet caseLegend()}
-	<div class="font-sans-sc flex flex-wrap gap-x-2 pt-1 text-xs font-bold lowercase">
-		<span class="text-nom-700">nominative</span>
-		<span class="text-acc-700">accusative</span>
-		<span class="text-dat-700">dative</span>
-		<span class="text-gen-700">genitive</span>
-		<span class="text-voc-700">vocative</span>
+	<!-- One line, not wrapped: the five cases read as a single legend, and a
+	second row makes the menu item look like it has grown a paragraph. The names
+	are abbreviated to the forms a reader already knows from a grammar, which is
+	what lets them fit. -->
+	<div
+		class="font-sans-sc flex justify-between gap-x-1 pt-1 text-xs font-bold whitespace-nowrap lowercase">
+		<span class="text-nom-700">nom.</span>
+		<span class="text-acc-700">acc.</span>
+		<span class="text-dat-700">dat.</span>
+		<span class="text-gen-700">gen.</span>
+		<span class="text-voc-700">voc.</span>
 	</div>
 {/snippet}
 
@@ -136,7 +141,9 @@ menu item fights the item's own highlight and portals a second layer over the
 menu. The markings are easier to recognise shown than described, so each one is
 rendered in the style it takes on the page. -->
 {#snippet analysisDetail()}
-	<ul class="list-disc pt-1 pl-4 text-xs text-gray-600 marker:text-gray-400">
+	<!-- list-inside rather than the default outside marker: it keeps the bullets
+	flush with the help text above instead of indenting the list as a block. -->
+	<ul class="list-inside list-disc pt-1 text-xs text-gray-600 marker:text-gray-400">
 		<li>Its <span class="underline">syntactical head</span> is underlined.</li>
 		<li>The 「bounds of its dependencies」 are bracketed.</li>
 		<li>
