@@ -8,25 +8,61 @@
 	import AskPopover from '$lib/components/ask-popover.svelte'
 	import Button from '$lib/components/button.svelte'
 	import CloseIcon from '~icons/heroicons/x-mark-16-solid'
-	import g from '$lib/global-state.svelte'
+	import g, { analysisChosen } from '$lib/global-state.svelte'
 	import type { Attachment } from 'svelte/attachments'
-	import { fly } from 'svelte/transition'
-	import { MediaQuery } from 'svelte/reactivity'
+	import { fade, fly } from 'svelte/transition'
 
 	let { data }: PageProps = $props()
 	let lemma = $derived(g.selected?.lemma)
 	let popover = $state<AskPopover>()
 
-	// Below lg the aside is a bottom sheet that flies up and back down; at lg it
-	// is the static sidebar and must not move. `transition:` can't be applied
-	// conditionally, so the distance is zeroed out on desktop instead — a fly of
-	// 0 over 0ms is a no-op.
-	let mobile = new MediaQuery('width < 64rem')
-	let sheet = $derived(
-		mobile.current
-			? { y: '100%', duration: 250, opacity: 1 }
+	// Below lg the aside is a bottom sheet that slides up when it appears and back
+	// down when it goes; at lg it is the static sidebar and must not animate at
+	// all. `transition:` can't be applied conditionally, so the desktop branch
+	// passes `duration: 0`.
+	//
+	// It must also pass `opacity: 1` there. fly's opacity parameter is where the
+	// fade *starts*, and with fill: forwards it holds the element at that value
+	// for the whole (zero-length) animation — so `opacity: 0` at `duration: 0`
+	// pins the desktop sidebar at invisible forever rather than being a no-op.
+	//
+	// matchMedia is read here, inside a function, rather than through Svelte's
+	// MediaQuery: that is a lazily-subscribed ReactiveValue, so the first read
+	// returns its fallback, and the first read is exactly when the transition
+	// params are evaluated. It reported false on a phone-width viewport and every
+	// slide was built with duration 0 — created, pinned at the start offset, and
+	// never run. A function is re-evaluated per transition, so it cannot go stale.
+	function sheetParams() {
+		return matchMedia('(width < 64rem)').matches
+			? { y: '100%', duration: 250, opacity: 0 }
 			: { y: 0, duration: 0, opacity: 1 }
-	)
+	}
+
+	// The sheet is fixed, so it covers the lower half of the text rather than
+	// displacing it — selecting a word down there hides the very word you tapped.
+	// Scroll the article by exactly the overlap so it clears the sheet's top edge.
+	//
+	// Reads the sheet's own rect rather than assuming 50vh: it is the element that
+	// defines the obstruction, and this stays right if its height ever changes.
+	// Runs after a tick so the sheet is in the DOM on the selection that opens it.
+	$effect(() => {
+		let word = g.selected
+		if (!word || !matchMedia('(width < 64rem)').matches) return
+
+		setTimeout(() => {
+			let article = document.getElementById('treebank')
+			let aside = document.querySelector('aside')
+			if (!article || !aside) return
+
+			// The sheet slides up, so its rect is mid-animation here. `bottom` minus
+			// the height is where it comes to rest, which is what to clear.
+			let sheetTop = innerHeight - aside.getBoundingClientRect().height
+			let overlap = word.getBoundingClientRect().bottom - sheetTop
+			// A little past the edge, so the word doesn't sit flush against it. The
+			// article carries `scroll-smooth`, so this animates without asking.
+			if (overlap > 0) article.scrollTop += overlap + 16
+		})
+	})
 
 	// Tapping the selected word again clears it, so the sheet has a natural close.
 	// The button gives it an explicit affordance, and a reachable one: on a phone
@@ -65,7 +101,11 @@
 		// would need escaping to be a valid CSS identifier.
 		if (l.hash) q(`a[href="${l.hash}"]`)?.scrollIntoView({ behavior: 'smooth' })
 		g.autoAnnotated = content.dataset.analysis !== 'manual'
-		g.analysis = !g.autoAnnotated
+		// Machine-annotated texts default to analysis off, since the markings are
+		// less trustworthy there — but only until the user states a preference.
+		// After that their choice holds across texts, rather than being reset by
+		// whichever one they happen to open next.
+		if (!analysisChosen.current) g.analysis = !g.autoAnnotated
 
 		// Allow hash anchors to be toggled off, without pushing every line number
 		// onto the history stack.
@@ -136,8 +176,11 @@
 		so including it here would hold the sheet open after a deselect and leave the
 		exit transition never running. -->
 		{#if g.selected}
+			<!-- The slide belongs to this {#if}: the panel appearing and disappearing
+			is what it animates. The lemma-change fade lives on the {#key} inside, so
+			the two never compete for one element's transition. -->
 			<aside
-				transition:fly={sheet}
+				transition:fly={sheetParams()}
 				class={[
 					'sheet z-30 ml-auto flex flex-col overflow-hidden bg-gray-50',
 					// --sheet-pad is both the interior bottom padding and the distance the
@@ -168,13 +211,27 @@
 						<CloseIcon />
 					</Button>
 				</div>
-				{#if lemma}
-					<!-- min-h-0 lets this shrink below its content inside the flex column,
-					so a long entry scrolls here instead of pushing the sheet taller. -->
-					<div class="min-h-0 grow overflow-y-auto p-2 lg:p-4">
-						<Definition {lemma} />
+				<!-- Keyed so picking another word while the panel is already open fades
+				the entry in rather than swapping it instantly.
+
+				The {#key} is outside the {#if}, not inside it, and the transitioning
+				element is the key block's direct child. With the nesting the other way
+				round the fade silently never fires — a Svelte bug where a transition
+				inside a {#key} that wraps another block is skipped
+				(sveltejs/svelte#11935). |global because the enclosing {#if g.selected}
+				already owns the mount, so a local intro would not run here either.
+
+				min-h-0 lets this shrink below its content inside the flex column, so a
+				long entry scrolls here instead of pushing the sheet taller. -->
+				{#key lemma}
+					<div
+						in:fade|global={{ duration: 200 }}
+						class="min-h-0 grow overflow-y-auto p-2 lg:p-4">
+						{#if lemma}
+							<Definition {lemma} />
+						{/if}
 					</div>
-				{/if}
+				{/key}
 			</aside>
 		{/if}
 	</div>
