@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Popover } from 'bits-ui'
+	import { MediaQuery } from 'svelte/reactivity'
 	import { page } from '$app/state'
 	import Button from '$lib/components/button.svelte'
 	import g from '$lib/global-state.svelte'
@@ -31,6 +32,15 @@
 	// flip/shift whenever the content resizes — which is exactly what happens as a
 	// response streams in — and would snap a dragged panel back over the text.
 	let moved = $state<{ x: number; y: number } | null>(null)
+
+	// Below lg the panel is the same bottom sheet the definition uses, rather than
+	// a floating card: `side="right"` on a w-96 panel has nowhere to go on a phone,
+	// so floating-ui pushed it off screen. A sheet is anchored to the viewport, not
+	// to the selection, so this branch takes over positioning entirely — the same
+	// escape hatch the dragged branch uses below.
+	let mobile = new MediaQuery('width < 64rem')
+	// Dragging is a desktop affordance; on a sheet there is nowhere to drag to.
+	let sheet = $derived(mobile.current)
 
 	// Measured rather than hardcoded so the panel stays put if the nav's height
 	// changes. Falls back to a sensible guess before the nav is in the DOM.
@@ -197,8 +207,19 @@
 			trapFocus={false}
 			preventOverflowTextSelection={false}
 			class={[
-				'elevated z-50 flex w-96 max-w-[90vw] flex-col gap-y-2 bg-white p-2',
+				'elevated z-50 flex flex-col gap-y-2 bg-white p-2',
 				'font-sans text-sm text-gray-800',
+				// Matches the definition sheet: full-width less a small margin, half
+				// the viewport, flush with the bottom edge and hanging below it by its
+				// own padding so the bottom border falls out of sight. The geometry
+				// itself is set inline in the child snippet below (floating-ui's inline
+				// styles would otherwise win); these are only the parts it doesn't set.
+				sheet
+					? [
+							'[--sheet-pad:max(0.5rem,env(safe-area-inset-bottom))]',
+							'rounded-t-lg pb-[var(--sheet-pad)]'
+						]
+					: 'w-96 max-w-[90vw]',
 				// Cap to the space floating-ui measured between the anchor and the
 				// viewport edge, so a long answer scrolls instead of overflowing off
 				// screen. The var is unset until the first measurement, hence the
@@ -206,10 +227,13 @@
 				// The cap is generous because the anchor sits just below the nav, so
 				// that measured space is nearly the whole viewport.
 				// Once dragged the panel is fixed-positioned, so fall back to a plain
-				// viewport cap — the floating-ui var no longer tracks it.
-				moved
-					? 'max-h-[85vh] min-h-0'
-					: 'max-h-[min(var(--bits-floating-available-height,85vh),85vh)] min-h-0'
+				// viewport cap — the floating-ui var no longer tracks it. The sheet
+				// sets its own height, so it takes neither.
+				sheet
+					? 'min-h-0'
+					: moved
+						? 'max-h-[85vh] min-h-0'
+						: 'max-h-[min(var(--bits-floating-available-height,85vh),85vh)] min-h-0'
 			]}>
 			<!-- The `child` snippet is required for dragging: Popover.Content merges
 			its own `style` and drops any we pass as a prop, so a `style` attribute set
@@ -223,19 +247,35 @@
 				{@const panelStyle = (props as { style?: string }).style ?? ''}
 				<div
 					{...wrapperProps}
-					style={dragged ? 'position:static;transform:none;min-width:0' : wrapStyle}>
+					style={dragged || sheet
+						? 'position:static;transform:none;min-width:0'
+						: wrapStyle}>
 					<div
 						{...props}
 						data-oxy-panel
-						style={dragged
-							? `${panelStyle};position:fixed;left:${dragged.x}px;top:${dragged.y}px;margin:0`
-							: panelStyle}>
-						<!-- Doubles as the drag handle. -->
+						style={sheet
+							? // Positioned inline rather than by class: floating-ui writes an
+								// inline transform and coordinates, and inline always wins over a
+								// class, so the sheet's geometry has to be inline as well.
+								`${panelStyle};position:fixed;transform:none;margin:0;` +
+								`left:0.5rem;right:0.5rem;top:auto;width:auto;` +
+								`height:calc(50vh + var(--sheet-pad));` +
+								`bottom:calc(var(--sheet-pad) * -1)`
+							: dragged
+								? `${panelStyle};position:fixed;left:${dragged.x}px;top:${dragged.y}px;margin:0`
+								: panelStyle}>
+						<!-- Doubles as the drag handle, except as a sheet: it is pinned to the
+						viewport there, so there is nowhere to drag it to. -->
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 						<div
-							onpointerdown={startDrag}
-							class="flex shrink-0 cursor-grab items-baseline gap-x-2 active:cursor-grabbing">
-							<DragIcon class="self-center text-gray-400" />
+							onpointerdown={sheet ? undefined : startDrag}
+							class={[
+								'flex shrink-0 items-baseline gap-x-2',
+								!sheet && 'cursor-grab active:cursor-grabbing'
+							]}>
+							{#if !sheet}
+								<DragIcon class="self-center text-gray-400" />
+							{/if}
 							<div class="grow"></div>
 							<Button
 								onclick={close}
