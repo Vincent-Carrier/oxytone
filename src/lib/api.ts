@@ -2,20 +2,17 @@ import ky from 'ky'
 import { browser } from '$app/environment'
 import { PUBLIC_BASEX_URL } from '$env/static/public'
 
-// Universal `load` functions run both in the browser and on the server, so this
-// base URL has to work in both places.
+// Universal `load` functions run in both the browser and the server, so this base
+// URL has to work in both places.
 //
-// In the browser a relative prefix (the production `/basex/`) is correct: it
-// resolves against the page origin and Caddy proxies it to BaseX, stripping the
-// `/basex` prefix on the way.
+// In the browser the production `/basex/` prefix resolves against the page origin,
+// where Caddy proxies it to BaseX and strips the prefix. On the server there is no
+// origin to resolve a relative URL against (ky/undici reject it outright), so SSR
+// goes straight to BaseX on localhost — bypassing Caddy, and with it the
+// proxy-only prefix.
 //
-// On the server there is no origin to resolve against — ky/undici reject a
-// relative URL with `Failed to parse URL` — so SSR talks to BaseX directly on
-// localhost. That bypasses Caddy, so the proxy-only `/basex/` prefix must be
-// dropped rather than appended.
-//
-// An absolute PUBLIC_BASEX_URL (the dev default, http://localhost:8080/) is
-// already valid in both contexts and is passed through untouched.
+// An absolute PUBLIC_BASEX_URL (the dev default) is valid in both and passes
+// through untouched.
 const SSR_BASEX_URL = 'http://localhost:8080/'
 
 const prefixUrl =

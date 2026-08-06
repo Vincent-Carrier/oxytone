@@ -51,7 +51,7 @@ index:
 divisions:
   basex -Q seed/divisions.xq
 
-# Store the hand-curated per-work book lists that `p:cased-pager` reads. Writes
+# Store the hand-curated per-work book lists that `p:curated-pager` reads. Writes
 # into the same store as `index`, so it has to run after it.
 [group('db')]
 pagers:

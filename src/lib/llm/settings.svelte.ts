@@ -13,10 +13,10 @@ const defaults: Settings = {
 	model: providers.anthropic.defaultModel
 }
 
-// Read once at init and write explicitly on change, matching the existing
-// `stored()` helper in global-state. `LocalStore` can't be used here: its
-// constructor registers an `$effect`, so a module-level instance throws
-// `effect_orphan`, and this module has to be readable from `stream.ts`.
+// Read once at init and written explicitly by `save()`, rather than through
+// `LocalStore`: its constructor registers an `$effect`, which throws
+// `effect_orphan` at module level, and `stream.ts` imports this outside any
+// component.
 const settings = $state<Settings>(load())
 
 export default settings

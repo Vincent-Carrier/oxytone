@@ -1,6 +1,9 @@
 module namespace idx = "oxytone/index";
 import module namespace p = "paginate";
 
+(: The corpus index: every work of substance, grouped by century and then author.
+   Works below 2000 tokens are left out — mostly fragments and spurious
+   attributions, which crowd out the texts anyone came to read. :)
 declare %rest:path("")
         %rest:GET
         %output:method("html")
@@ -14,6 +17,8 @@ declare %rest:path("")
     where $work?tokens > 2000
     group by $date := $work?date
     order by $date
+    (: GLAUx dates are signed years, negative for BC. Rounded to the century and
+       made positive, they read as a decade label ("400s BC"). :)
     return <section class="century">
       <h2>
         {abs(1 + round($date div 100)) * 100}
@@ -51,10 +56,8 @@ declare function idx:work($work) {
           </ol>
         </details>
       else
-        (: ?tlg is already the URN. It used to be truncated to 14 chars, which
-           silently dropped the suffix on the 23 works split into parts
-           (tlg0096/tlg002a -> tlg0096/tlg002), linking them all to a work that
-           does not exist. :)
+        (: Works short enough to read whole link straight to the text. ?tlg is
+           already the full URN, suffix included — see urn:work. :)
         <a data-sveltekit-preload-code="" href="{`read/{$work?tlg}`}">{$work?english-title}</a>}
     </li>
 };

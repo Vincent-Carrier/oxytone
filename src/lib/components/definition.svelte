@@ -30,15 +30,14 @@
 
 {#if lemma && /\p{L}+/u.test(lemma)}
 	{#await basex.get(`define/lsj/${lemma}`, { fetch }).text()}
-		<!-- Held invisible for the first 150ms (see .skeleton in definition.css).
-		     A lookup normally answers in 30-60ms, so the placeholder would other-
-		     wise flicker in and straight back out on nearly every word; this way
-		     it only ever appears when something is actually slow. -->
-		<!-- Enough lines to fill a panel rather than three bars stranded at the top.
-		     They stack at an even rhythm and leave whatever is left over as a gap
-		     at the bottom — stretching them to the full height reads as a grid
-		     rather than text. The ragged widths read as prose: the short ones land
-		     where a sense ends. -->
+		<!-- Held invisible for the first 150ms (see .skeleton in definition.css), so
+		     it only appears when a lookup is actually slow. The usual 30-60ms answer
+		     would otherwise flicker a placeholder in and out on nearly every word.
+
+		     Enough lines to fill a panel, at an even rhythm, leaving the remainder as
+		     a gap at the bottom; stretched to full height they read as a grid rather
+		     than text. The ragged widths read as prose, the short ones landing where
+		     a sense ends. -->
 		<div class="skeleton" aria-busy="true" aria-label="Loading definition">
 			<div class="skeleton-label"></div>
 			<div class="skeleton-lines">
@@ -69,8 +68,8 @@
 			{/each}
 		</div>
 	{:catch}
-		<!-- Previously a rejected fetch rendered nothing at all, leaving an empty
-		     panel that was indistinguishable from a lemma with no entry. -->
+		<!-- Distinguishes a failed lookup from a lemma that genuinely has no entry,
+		     which is what an empty panel would read as. -->
 		<p class="definition-error">Could not load this definition.</p>
 	{/await}
 {/if}
@@ -85,6 +84,10 @@
 	</a>
 {/snippet}
 
+<!-- An external link greyed out unless the target actually exists. LSJ and
+     Wiktionary both hold lemmas the other does not, so a link built by string
+     concatenation lands on a 404 often enough to be worth checking. The HEAD goes
+     through /validate because neither site allows a cross-origin request. -->
 {#snippet validatedLink(text: string, baseUrl: string)}
 	{@const searchParams = new URLSearchParams({ url: `${baseUrl}${lemma}` })}
 	{#await ky.head(`/validate?${searchParams}`, { fetch, retry: 0 })}

@@ -27,17 +27,16 @@
 	let history = $state<ChatMessage[]>([])
 	let controller: AbortController | null = null
 
-	// Once dragged, the popover stops being anchor-positioned and becomes a fixed
-	// panel at `moved`. Keeping floating-ui in charge doesn't work: it re-runs
-	// flip/shift whenever the content resizes — which is exactly what happens as a
-	// response streams in — and would snap a dragged panel back over the text.
+	// Set once the panel is dragged, which switches it from anchor-positioned to a
+	// fixed panel at these coordinates. floating-ui can't stay in charge past that
+	// point: it re-runs flip/shift on every content resize, so a streaming
+	// response would snap a dragged panel back over the text.
 	let moved = $state<{ x: number; y: number } | null>(null)
 
-	// Below lg the panel is the same bottom sheet the definition uses, rather than
-	// a floating card: `side="right"` on a w-96 panel has nowhere to go on a phone,
-	// so floating-ui pushed it off screen. A sheet is anchored to the viewport, not
-	// to the selection, so this branch takes over positioning entirely — the same
-	// escape hatch the dragged branch uses below.
+	// Below lg the panel is the same bottom sheet the definition uses. `side="right"`
+	// on a w-96 panel has nowhere to go on a phone, and a sheet is anchored to the
+	// viewport rather than the selection — so this branch, like the dragged one,
+	// takes positioning over from floating-ui entirely.
 	let mobile = new MediaQuery('width < 64rem')
 	// Dragging is a desktop affordance; on a sheet there is nowhere to drag to.
 	let sheet = $derived(mobile.current)
@@ -48,21 +47,20 @@
 		return document.querySelector('nav')?.getBoundingClientRect().bottom ?? 32
 	}
 
-	// A snapshotted rect, not the live Range: clicking into the input below clears
-	// the document selection, which would collapse a Range anchor to a zero-size
-	// box at the origin and throw the popover across the screen.
+	// Anchors the panel to the snapshotted `rect` rather than the live Range:
+	// clicking into the input clears the document selection, which collapses a
+	// Range anchor to a zero-size box at the origin.
 	//
-	// Horizontally this tracks the selection, so the panel still reads as attached
-	// to the words it's about. Vertically it's pinned just under the sticky nav:
-	// anchoring to the selection would start the panel wherever in the page you
-	// happened to be reading, leaving a long answer only a sliver of room before
-	// it hit the viewport floor and had to scroll internally.
+	// Only the horizontal position comes from the selection, so the panel still
+	// reads as attached to the words it's about. Vertically it is pinned just under
+	// the sticky nav, which leaves a long answer the full viewport height instead
+	// of however much happened to be below the selection.
 	let anchor = $derived(
 		rect
 			? {
 					getBoundingClientRect: () => {
-						// Enough clearance that the panel reads as floating over the text
-						// rather than hanging off the nav's bottom border.
+						// Clearance so the panel floats over the text rather than hanging
+						// off the nav's bottom border.
 						const top = navBottom() + 16
 						return new DOMRect(rect!.x, top, rect!.width, 0)
 					}
@@ -100,6 +98,9 @@
 		addEventListener('pointerup', up)
 	}
 
+	// Opens the panel on the current selection, discarding any answer already in
+	// it. Called on every completed selection inside the text, so it declines the
+	// cases where a panel would be unwelcome rather than expecting callers to.
 	export function show() {
 		// Word-clicking builds a flashcard deck in this mode; a popover on top of
 		// that flow is just noise.
@@ -120,11 +121,9 @@
 		question = ''
 		history = []
 		ctx = next
-		// Only the horizontal position comes from the selection (the anchor pins
-		// the top to just below the nav), and even that is frozen once open:
-		// extending a selection would otherwise slide the panel sideways with it,
-		// which reads as it running away from the cursor. The word count next to
-		// the translate button is what signals the selection changed.
+		// The position is frozen while the panel is open, so extending a selection
+		// doesn't slide the panel sideways as if running from the cursor. The word
+		// count by the translate button is what signals the selection changed.
 		rect = open && rect ? rect : next.rect
 		if (!open) moved = null
 		open = true
@@ -140,6 +139,8 @@
 		open = false
 	}
 
+	// Streams a completion into `output`, replacing whatever was there. Cancels any
+	// request still in flight, so a second ask can't interleave with the first.
 	async function run(messages: ChatMessage[]) {
 		abort()
 		controller = new AbortController()
@@ -183,14 +184,14 @@
 		}
 	}
 
-	// Navigating away closes the popover and stops any in-flight request. Only a
-	// genuine change may close it — running `close()` unconditionally would undo
-	// every `show()` on the effect's next run.
-	let seen = page.url.pathname
+	// Navigating away closes the popover and stops any in-flight request. Compared
+	// against the previous path rather than closing unconditionally, which would
+	// undo every `show()` on the effect's next run.
+	let lastPath = page.url.pathname
 	$effect(() => {
 		const path = page.url.pathname
-		if (path === seen) return
-		seen = path
+		if (path === lastPath) return
+		lastPath = path
 		close()
 	})
 </script>
@@ -210,37 +211,32 @@
 				'elevated z-50 flex flex-col gap-y-2 bg-white p-2',
 				'font-sans text-sm text-gray-800',
 				// Matches the definition sheet: full-width less a small margin, half
-				// the viewport, flush with the bottom edge and hanging below it by its
-				// own padding so the bottom border falls out of sight. The geometry
-				// itself is set inline in the child snippet below (floating-ui's inline
-				// styles would otherwise win); these are only the parts it doesn't set.
+				// the viewport, hanging below the bottom edge by its own padding so the
+				// bottom border falls out of sight. Only the parts the child snippet
+				// below doesn't set — its geometry has to be inline to beat floating-ui.
 				sheet
 					? [
 							'[--sheet-pad:max(0.5rem,env(safe-area-inset-bottom))]',
 							'rounded-t-lg pb-[var(--sheet-pad)]'
 						]
 					: 'w-96 max-w-[90vw]',
-				// Cap to the space floating-ui measured between the anchor and the
-				// viewport edge, so a long answer scrolls instead of overflowing off
-				// screen. The var is unset until the first measurement, hence the
-				// fallback. min-h-0 lets the flex child below actually shrink.
-				// The cap is generous because the anchor sits just below the nav, so
-				// that measured space is nearly the whole viewport.
-				// Once dragged the panel is fixed-positioned, so fall back to a plain
-				// viewport cap — the floating-ui var no longer tracks it. The sheet
-				// sets its own height, so it takes neither.
+				// Cap the height so a long answer scrolls instead of running off screen.
+				// Anchored, that is the space floating-ui measured between the anchor and
+				// the viewport edge — nearly the whole viewport, since the anchor sits
+				// just under the nav — with a fallback for before it has measured.
+				// Dragged, the panel is fixed-positioned and that var no longer tracks
+				// it, so cap against the viewport. The sheet sets its own height.
 				sheet
 					? 'min-h-0'
 					: moved
 						? 'max-h-[85vh] min-h-0'
 						: 'max-h-[min(var(--bits-floating-available-height,85vh),85vh)] min-h-0'
 			]}>
-			<!-- The `child` snippet is required for dragging: Popover.Content merges
-			its own `style` and drops any we pass as a prop, so a `style` attribute set
-			above never reaches the DOM. Here we own the final element. The wrapper's
-			transform is also cleared while dragging — a transformed ancestor becomes
-			the containing block for `position: fixed`, which would make our viewport
-			coordinates resolve against the wrapper instead. -->
+			<!-- The `child` snippet is what makes dragging possible: Popover.Content
+			merges its own `style` and drops any passed as a prop, so only here do we
+			own the final element. The wrapper's transform is cleared while dragging
+			too — a transformed ancestor becomes the containing block for
+			`position: fixed`, resolving our viewport coordinates against it. -->
 			{#snippet child({ props, wrapperProps })}
 				{@const dragged = moved}
 				{@const wrapStyle = (wrapperProps as { style?: string }).style ?? ''}
@@ -285,11 +281,9 @@
 							</Button>
 						</div>
 
-						<!-- The same skeleton the definition panel uses, minus its 150ms
-				delay: an LLM's first token takes seconds, so there is nothing to
-				debounce and holding it back would leave the panel looking dead.
-				It only covers the gap before any text arrives — once the stream
-				produces a token the real answer takes over. -->
+						<!-- The definition panel's skeleton without its 150ms delay: an
+				LLM's first token takes seconds, so there is nothing to debounce
+				and holding it back would leave the panel looking dead. -->
 						{#if status === 'streaming' && !output}
 							<div
 								class="skeleton-immediate min-h-0 grow"

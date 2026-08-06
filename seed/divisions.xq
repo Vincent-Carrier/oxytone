@@ -1,10 +1,9 @@
 (: Precomputes the page division for works that need automatic pagination, and
    appends it to the shared store next to the work metadata.
 
-   p:auto-pager used to work this out per request by opening the glaux document
-   and scanning //word for each candidate attribute. The index calls p:pager for
-   every one of ~1400 works, so that scan ran on every visit to the home page and
-   made it unusable. Deciding it once here keeps p:pager a map lookup.
+   Deciding it here keeps p:auto-pager a map lookup. Working it out per request
+   means scanning //word for each candidate attribute, and the index calls p:pager
+   for every one of ~1400 works.
 
    Run after seed/index.xq, which writes the metadata this reads and extends. :)
 import module namespace urn = "urn";
@@ -42,18 +41,17 @@ for $path in db:list('glaux')
       where count($vals) > 1 and count($vals) <= 600
       return $d
   )
-  (: Emitted even when nothing matches, so that a work which used to paginate on
-     a division since removed from the list gets its stale entry cleared rather
-     than keeping it forever. :)
+  (: Computed even when no division matched, so the store:put below clears a stale
+     entry rather than leaving the work paginated on a division no longer listed. :)
   let $vals := if (exists($div))
     then distinct-values($tb/treebank//word/@*[name() = $div])
     else ()
-  (: Natural sort. Page labels are mostly numbers, but many texts mix in a
-     suffixed variant (100b, 1252a, 17/18) or a leading preface (praef, pr).
-     Sorting on the leading integer keeps 100b next to 100 rather than beside
-     10, and labels with no number at all sort first, which is where a preface
-     belongs. Testing every value for castability instead meant one "100b"
-     dropped the whole work back to string order: 1, 10, 100, 100b, 101. :)
+  (: Natural sort, on the leading integer with the whole label as a tiebreak. Page
+     labels are mostly numbers, but many texts mix in a suffixed variant (100b,
+     1252a, 17/18) or a leading preface (praef, pr) — so sorting them as numbers is
+     not an option, and as strings gives 1, 10, 100, 100b, 101. This keeps 100b next
+     to 100, and sorts a label with no number at all first, where a preface
+     belongs. :)
   let $sorted := sort($vals, (), fn($v) {
     let $num := replace($v, '^(\d*).*$', '$1')
     return ((if ($num = '') then -1 else xs:integer($num)), string($v))
@@ -61,8 +59,8 @@ for $path in db:list('glaux')
   let $_ := if (exists($div))
     then message(`{$urn} {$div} ({count($sorted)} pages)`)
     else ()
-  (: use-last so re-running overwrites a previously stored division; the default
-     keeps the first value, which made this script a no-op on any second run. :)
+  (: use-last so re-running overwrites the stored division. map:merge keeps the
+     first value by default, which would make this a no-op on every later run. :)
   return store:put($urn,
     if (exists($div))
     then map:merge(($meta, { 'division': $div, 'pages': array { $sorted } }),

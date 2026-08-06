@@ -96,6 +96,11 @@ declare variable $r:xslt := xsm:stylesheet({
   "blockquote|p": xsm:keep("node()")
 });
 
+(: One page of a text, as the #tb-content markup the frontend hydrates into ox-w
+   elements. Normalizing is the expensive half, so it is cached in the `normalized`
+   database write-through: the first request for a page pays for it and every later
+   one is a lookup plus the XSLT. Set the `debug` option to bypass the cache while
+   working on the XQuery. :)
 declare
   %updating
   %rest:path("/read/{$author}/{$work-page=.+}")
@@ -110,9 +115,8 @@ declare
       else if (exists($cached))
         then update:output(r:render($cached))
       else
-        (: First request for this page: normalize, cache it, and emit the
-           rendered result. db:put and update:output are both updating
-           expressions, so the whole function stays updating (no MIXUPDATES). :)
+        (: db:put and update:output are both updating expressions, so the whole
+           function is %updating and needs no MIXUPDATES. :)
         let $normalized := n:get-normalized($author, $wp?work, $wp?page)
         return (
           db:put('normalized', $normalized, $path),

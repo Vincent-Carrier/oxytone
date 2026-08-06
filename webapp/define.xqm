@@ -136,6 +136,10 @@ declare variable $def:xslt := xsm:stylesheet(
     (: Whitespace-only nodes are pure indentation; dropping them keeps oxy:gap
        from doubling up with a space that is already there. :)
     "text()[not(normalize-space())]": (),
+    (: LSJ writes the case a sense governs as bare text in the running prose, so it
+       is picked out here and coloured to match the case colours in the text itself.
+       One template per case rather than a single pattern: a match pattern cannot be
+       parameterised, and the class has to name the case. :)
     "text()[contains(., 'gen.')]": (
       <xsl:call-template name="gap"/>,
       <xsl:sequence>
@@ -178,10 +182,14 @@ declare variable $def:xslt := xsm:stylesheet(
   }
 );
 
+(: The dictionary entry for a lemma, as an HTML fragment: the Wiktionary gloss
+   first as a quick answer, then the full LSJ article. Both are optional, and a
+   lemma with neither yields an empty document.
+
+   LSJ is looked up by prefix, since homographs are stored numbered (λόγος1,
+   λόγος2) and all of them are wanted; the Wiktionary key is exact. :)
 declare function def:definition-html($lemma) {
   let $_ := store:read("lsj_shortdefs")
-  (: Exact key match, unlike the prefix match db:list does below: a lemma either
-     has a Wiktionary entry or it doesn't. :)
   let $wikt := store:get(`wikt/{$lemma}`)
   let $entry := <body>
     {

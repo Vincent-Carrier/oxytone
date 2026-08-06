@@ -5,12 +5,15 @@
 let $_ := store:clear()
 let $f := file:read-text('seed/lsj-shortdefs.tsv', 'utf-8', true())
 let $defs := csv:parse($f, {'header': true(), 'separator': 'tab', 'format': 'xquery'})
-for $w in $defs?records
-  let $lemma := $w?1
-  let $def := $w?2
-  let $w := tokenize($lemma, '\d+$')
-  let $n := tokenize($lemma, '^\D+')
-  let $path := string-join(($w[1], if ($n != "") then foot($n)), '/')
+for $record in $defs?records
+  let $key := $record?1
+  let $def := $record?2
+  (: Keyed the same way as seed/lsj.xq: a trailing homograph number becomes its own
+     path segment, so the bare lemma is a prefix of all its entries. :)
+  let $lemma := tokenize($key, '\d+$')
+  let $homograph := tokenize($key, '^\D+')
+  let $path := string-join(
+    ($lemma[1], if ($homograph != "") then foot($homograph)), '/')
   let $_ := message($path)
   return store:put(`{$path}`, $def),
 

@@ -1,9 +1,14 @@
 import g from '$lib/global-state.svelte'
 
 export type SelectionContext = {
+	// The Greek the reader actually selected, snapped out to whole words.
 	selectedText: string
+	// Every sentence those words fall in, which is what gives the model enough to
+	// disambiguate. Empty when the selection covers no words.
 	contextText: string
 	wordCount: number
+	// Where the selection was when it was made — snapshotted, since the live Range
+	// collapses as soon as focus moves into the panel.
 	rect: DOMRect
 }
 
@@ -31,8 +36,8 @@ export function readSelection(): SelectionContext | null {
 	}
 
 	return {
-		selectedText: normalize(words.map(text).join(' ')) || selectedText,
-		contextText: normalize(sentenceWords(words).map(text).join(' ')),
+		selectedText: normalize(words.map(originalForm).join(' ')) || selectedText,
+		contextText: normalize(sentenceWords(words).map(originalForm).join(' ')),
 		wordCount: words.length,
 		rect: range.getBoundingClientRect()
 	}
@@ -66,10 +71,11 @@ function sentenceWords(words: WordElement[]): WordElement[] {
 	return found.length > 0 ? found : words
 }
 
-// When the breathings toggle is off, `toggleSmoothBreathing` has rewritten
-// textContent and kept the original in `form`. Sending stripped Greek to the
-// model would quietly degrade exactly the readings this feature exists for.
-function text(w: WordElement): string {
+// A word as the corpus spells it, which is not always as the page displays it:
+// with the breathings toggle off, `toggleSmoothBreathing` has rewritten
+// textContent and kept the original in `form`. Sending the model stripped Greek
+// would degrade exactly the readings it is being asked about.
+function originalForm(w: WordElement): string {
 	return w.form ?? w.textContent ?? ''
 }
 

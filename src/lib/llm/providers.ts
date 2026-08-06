@@ -42,7 +42,7 @@ const MAX_TOKENS = 1024
 
 // Everything other than Anthropic speaks the OpenAI wire format, so Gemini (via
 // its OpenAI-compatible endpoint) and custom endpoints reuse these.
-const openaiShape = {
+const openaiCompatible = {
 	endpoint: '/chat/completions',
 	headers: (apiKey: string) => ({
 		'content-type': 'application/json',
@@ -91,7 +91,7 @@ export const providers: Record<ProviderId, Provider> = {
 		defaultBaseUrl: 'https://api.openai.com/v1',
 		defaultModel: 'gpt-5.6-terra',
 		models: ['gpt-5.6-luna', 'gpt-5.6-terra', 'gpt-5.6-sol'],
-		...openaiShape
+		...openaiCompatible
 	},
 
 	gemini: {
@@ -101,7 +101,7 @@ export const providers: Record<ProviderId, Provider> = {
 		defaultBaseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
 		defaultModel: 'gemini-3.6-flash',
 		models: ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-3.5-flash'],
-		...openaiShape
+		...openaiCompatible
 	},
 
 	deepseek: {
@@ -111,7 +111,7 @@ export const providers: Record<ProviderId, Provider> = {
 		defaultBaseUrl: 'https://api.deepseek.com',
 		defaultModel: 'deepseek-v4-flash',
 		models: ['deepseek-v4-flash', 'deepseek-v4-pro'],
-		...openaiShape
+		...openaiCompatible
 	},
 
 	// Anything else that speaks the OpenAI format: OpenRouter, Groq, a local
@@ -122,7 +122,7 @@ export const providers: Record<ProviderId, Provider> = {
 		defaultBaseUrl: '',
 		defaultModel: '',
 		models: [],
-		...openaiShape
+		...openaiCompatible
 	}
 }
 

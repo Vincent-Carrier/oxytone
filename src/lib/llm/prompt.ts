@@ -38,25 +38,26 @@ export function askPrompt(ctx: SelectionContext, question: string): ChatMessage[
 function build(ctx: SelectionContext, task: string): ChatMessage[] {
 	return [
 		{ role: 'system', content: SYSTEM },
-		{ role: 'user', content: `${blocks(ctx)}\n\n${task}` }
+		{ role: 'user', content: `${passage(ctx)}\n\n${task}` }
 	]
 }
 
+// The Greek the task is about, as a <selection> and the surrounding <context>.
 // Tags are safe delimiters here in a way that punctuation is not: Greek text can
 // contain almost any punctuation mark, but never angle-bracketed tags.
-function blocks(ctx: SelectionContext): string {
+function passage(ctx: SelectionContext): string {
 	const selection = `<selection>\n${ctx.selectedText}\n</selection>`
 
 	// When the reader selected a whole sentence the two are identical, and
 	// repeating it invites the model to translate the passage twice.
 	if (!ctx.contextText || ctx.contextText === ctx.selectedText) return selection
 
-	return `<context>\n${clamp(ctx.contextText)}\n</context>\n\n${selection}`
+	return `<context>\n${truncate(ctx.contextText)}\n</context>\n\n${selection}`
 }
 
-// A long period plus its neighbours can grow unexpectedly large. Trim the
-// context only — the selection itself is never truncated.
-function clamp(text: string): string {
+// A long period plus its neighbours can grow unexpectedly large. Cuts on a word
+// boundary, and only ever the context — the selection is never truncated.
+function truncate(text: string): string {
 	if (text.length <= MAX_CONTEXT) return text
 	return text.slice(0, MAX_CONTEXT).replace(/\S+$/, '').trim() + ' …'
 }

@@ -5,6 +5,12 @@ import module namespace urn = "urn";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
+(: The same normalized tree as /read, rendered for reading as text rather than for
+   the app: plain spans carrying every morphology attribute, section markers spelled
+   out as #section-ref[1.1.1], and finite verbs marked with *asterisks*. Nothing in
+   src/ calls this — it exists for inspecting normalization output and for pasting a
+   passage into an LLM. Deliberately uncached, so it always reflects the current
+   XQuery. :)
 declare variable $pl:xslt := xsm:stylesheet({
   "/treebank":
     <body>

@@ -2,6 +2,15 @@ module namespace xsm = "xsm";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
+(: Builds an XSLT stylesheet out of a map of match pattern -> output, so the
+   webapp modules can write their templates as a table instead of a wall of
+   xsl:template boilerplate. The oxy: functions declared below come with it, and
+   are available to every template.
+
+   Because a template body is XQuery-constructed XML, an attribute whose value is
+   an XPath expression cannot be written literally (it would be taken as text);
+   use xsm:attr for those. Curly braces inside a literal attribute have to be
+   doubled, as they mean interpolation to XQuery too. :)
 declare function xsm:stylesheet(
   $templates as map(xs:string, element()*),
   $body as element()* := (),
@@ -33,17 +42,17 @@ declare function xsm:stylesheet(
       <xsl:param name="text"/>
       <xsl:value-of select="$text => replace('^([αεηιυοω]{{1,2}})&#x0313;', '$1', 'i') => normalize-unicode('NFC')" />
     </xsl:function>
-    <!-- Dictionary sources indent their markup, so the whitespace between two
-         inline elements lives in the indentation and is lost to
-         normalize-space. Rather than pad each template with literal spaces,
-         synthesize the gap: true when something precedes this node, and
-         neither this node opens with punctuation nor the previous one ends
-         with an opening bracket. -->
-    <!-- preceding:: is a reverse axis, so [1] is the *nearest* preceding text
-         node and the walk stops there. Wrapping the step in parentheses first,
-         as ($node/preceding::text()[...])[last()], forces the whole axis to be
-         materialised on every call — O(n^2) over the entry, and 93% of the cost
-         of rendering a long LSJ article (993ms -> 71ms for λόγος). -->
+    <!-- Whether a space belongs before $node. Dictionary sources indent their
+         markup, so the whitespace between two inline elements lives in that
+         indentation and is lost to normalize-space; rather than pad every template
+         with literal spaces, the gap is synthesized here — true when something
+         precedes this node, and neither this node opens with punctuation nor the
+         previous one ends with an opening bracket.
+
+         Keep the predicate on the step itself. preceding:: is a reverse axis, so
+         [1] is the nearest preceding node and the walk stops there; parenthesizing
+         first, as ($node/preceding::text()[...])[last()], materialises the whole
+         axis on every call and makes rendering a long entry quadratic. -->
     <xsl:function name="oxy:gap">
       <xsl:param name="node"/>
       <xsl:variable name="prev" select="$node/preceding::text()[normalize-space()][1]"/>
@@ -130,12 +139,17 @@ declare function xsm:stylesheet(
   </xsl:stylesheet>
 };
 
+(: An attribute whose value is computed: $value is an XPath expression, evaluated
+   against the matched node. A literal attribute in a template body cannot do this,
+   since XQuery would take the expression as text. :)
 declare function xsm:attr($name as xs:string, $value as xs:string) as element() {
     <xsl:attribute name="{$name}">
       <xsl:value-of select="{$value}" />
     </xsl:attribute>
 };
 
+(: Copies the matched element through unchanged, recursing into $select. For
+   elements that are already valid HTML and need no transformation. :)
 declare function xsm:keep($select as xs:string := "@*|node()") as element() {
   <xsl:copy>
     <xsl:apply-templates select="{$select}" />

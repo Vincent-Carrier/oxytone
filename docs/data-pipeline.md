@@ -66,13 +66,13 @@ indexing options:
   switches on `tlg0012`, using the TEI `<q>` and `<milestone>` markup to add
   quotation blocks the treebank does not carry. Seeding all 91 authors made this
   216 MB instead of 5 MB, with 811 of 814 documents never queried. Speaker labels
-  for the tragedians and Plato do *not* come from here — they come from
+  for the tragedians and Plato do _not_ come from here — they come from
   `@speaker` on the GLAUx treebank.
 - **`index`** — the browse/search index (`seed/index.xq`).
 - **`divisions`** — picks the page division for works that paginate
   automatically, extending the metadata `index` writes (`seed/divisions.xq`).
 - **`pagers`** — stores the hand-curated per-work book lists that
-  `p:cased-pager` reads, under `books/` keys (`seed/pagers.xq`).
+  `p:curated-pager` reads, under `books/` keys (`seed/pagers.xq`).
 - **`normalized`** — starts empty; a **write-through cache** of rendered pages.
   `seed/normalize.xq` warms it offline; `webapp/read.xqm` fills it lazily.
 

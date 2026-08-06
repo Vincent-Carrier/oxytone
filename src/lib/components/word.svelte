@@ -32,8 +32,13 @@
 	const qq = <T extends HTMLElement = WordElement>(sel: string) => tb!.querySelectorAll<T>(sel)
 	const { children } = $props()
 	const self = $host<WordElement>()
+	// Undo callbacks for the analysis markings this word painted onto others, run
+	// when it stops being the selected word. The markings live on sibling elements,
+	// so nothing else knows what to take back off.
 	self.clear = []
 
+	// Selects this word, or deselects it if it was already selected. Selection both
+	// opens the definition panel and, in flashcard mode, adds the word to the deck.
 	self.onclick = () => {
 		// A drag across words ends with a click on whichever word the pointer was
 		// released over. Without this guard every text selection would also select
@@ -66,6 +71,9 @@
 		}
 	}
 
+	// The words immediately depending on `root` in the treebank, optionally only
+	// those whose relation starts with `rel` (relations carry suffixes, so
+	// "OBJ" also matches "OBJ_CO").
 	function* directDependencies({
 		root = self,
 		rel = undefined
@@ -80,6 +88,7 @@
 		}
 	}
 
+	// The whole dependency subtree under `root`, depth-first.
 	function* dependencies(root: WordElement = self): Iterable<WordElement> {
 		for (let d of directDependencies({ root })) {
 			yield d
@@ -87,7 +96,10 @@
 		}
 	}
 
-	function getBounds() {
+	// The first and last word of this word's subtree in reading order, which is
+	// the span the bracket markers get drawn around. A leading punctuation mark
+	// belongs to the previous clause, so the bracket starts after it.
+	function subtreeBounds() {
 		let deps = [...dependencies(), self]
 		let start = minBy(deps, w => w.id)
 		if (start?.pos === 'punct.') {
@@ -100,12 +112,14 @@
 	}
 
 	function highlightBounds() {
-		let bounds = getBounds()
+		let bounds = subtreeBounds()
 		let cmap = new ClassMap([bounds.start, 'left-bound'], [bounds.end, 'right-bound'])
 		cmap.addClasses()
 		self.clear.push(() => cmap.removeClasses())
 	}
 
+	// This word's complements bearing `rel`, reaching through coordination so that
+	// both halves of "he saw X and Y" count as objects.
 	function* complement(rel: string): Iterable<WordElement> {
 		yield* directDependencies({ rel })
 		for (let coord of directDependencies({ rel: 'COORD' })) {
@@ -117,6 +131,8 @@
 		return q(`ox-w[id="${self.head}"]`)
 	}
 
+	// Underlines this word's syntactic head. Coordinators and auxiliaries are
+	// skipped: they are structural nodes, not the word this one really depends on.
 	function highlightHead() {
 		let h = head()
 		if (h && !(h.relation?.startsWith('COORD') || h.relation?.startsWith('Aux'))) {
@@ -125,6 +141,8 @@
 		}
 	}
 
+	// Tints a verb's objects, object complements and subject, each subtree in the
+	// colour of its own case.
 	function highlightComplements() {
 		// Indexed by w.case, which is a free-form string from the treebank, so the
 		// map is typed to accept any key rather than just the three listed.
@@ -145,6 +163,9 @@
 		self.clear.push(() => cmap.removeClasses())
 	}
 
+	// Shows or hides this word's smooth breathing mark. The original spelling is
+	// kept in `form` on the way out, since the mark cannot be recovered from the
+	// stripped text — and `form` is what gets sent to the LLM either way.
 	self.toggleSmoothBreathing = function (this: WordElement, val: boolean) {
 		if (!val) {
 			let stripped = this.textContent!.normalize('NFD')
@@ -156,24 +177,6 @@
 			this.textContent = this.form!
 		}
 	}
-
-	// function* sentenceWords() {
-	// 	yield* qq(`[sentence="${self.sentence}"]`)
-	// }
-
-	// function highlightHyperbatons() {
-	// 	if (
-	// 		!['verb', 'punct.'].includes(w.pos!) &&
-	// 		!w.relation?.startsWith('COORD') &&
-	// 		!w.relation?.startsWith('Aux')
-	// 	) {
-	// 		let dist = Math.abs(w.head - w.id)
-	// 		if (dist > 2) {
-	// 			if (dist < 5) w.classList.add('bg-gray-100')
-	// 			else if (dist < 9) w.classList.add('bg-gray-200')
-	// 		}
-	// 	}
-	// }
 </script>
 
 {children}

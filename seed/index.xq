@@ -6,11 +6,11 @@
 let $_ := store:read('lsj_shortdefs')
 let $f := file:read-text('seed/glaux.tsv', 'utf-8', true())
 let $index := csv:parse($f, {'header': true(), 'separator': 'tab', 'format': 'xquery'})
+(: Columns are read positionally; glaux.tsv's header names them. :)
 for $text in $index?records
+    (: The TSV writes the URN as "0012-001"; the store keys it as "tlg0012/tlg001". :)
     let $urn := $text?2 => tokenize('-')
     let $tlg := `tlg{$urn[1]}/tlg{$urn[2]}`
-    let $author := $text?5
-    let $title := $text?6
     let $_ := message(`{$tlg}, {$text?14}, {$text?15}`)
     return store:put(`{$tlg}`, {
       'tlg': $tlg,

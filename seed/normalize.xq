@@ -3,9 +3,9 @@
    lazily on each cold request, so this is optional — but running it after a
    reseed means nobody hits an empty cache.
 
-   Caches the default (first) page of each work; other pages are cached as they
-   are requested. db:put is updating, so it has to be the return expression: as
-   a `let` it raised XUST0001 and this script never ran. :)
+   Caches the default (first) page of each work; other pages are cached as they are
+   requested. db:put is an updating expression, so it must be the return expression
+   rather than a `let` binding, which raises XUST0001. :)
 import module namespace urn = 'urn';
 import module namespace n = 'normalize';
 

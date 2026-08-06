@@ -1,13 +1,12 @@
 (: Curated book lists, keyed by URN. Written into the store under a "books/"
    prefix, where p:book-list reads them.
 
-   These were extracted from the ~320-line switch that used to live in
-   repo/paginate.xqm. Most are plain ranges, but a good number are not — books
-   are missing (Diodorus jumps 1-8 then 11-20), labelled ("praef", "priora",
-   "17/18"), zero-based, or deliberately out of order (Manetho) — so the list is
-   kept verbatim rather than regenerated from the corpus. Adding a work here is
-   what gives it hand-tuned pagination; anything not listed falls back to
-   p:auto-pager and the division picked by seed/divisions.xq. :)
+   Kept verbatim rather than regenerated from the corpus, because a good number of
+   these are not plain ranges: books are missing (Diodorus jumps 1-8 then 11-20),
+   labelled ("praef", "priora", "17/18"), zero-based, or deliberately out of order
+   (Manetho). Adding a work here is what gives it hand-tuned pagination; anything
+   not listed falls back to p:auto-pager and the division picked by
+   seed/divisions.xq. :)
 declare variable $BOOKS := {
   'tlg0001/tlg001': array { 1, 2, 3, 4 },
   'tlg0002/tlg001': array { 1, 2 },
@@ -168,8 +167,8 @@ declare variable $BOOKS := {
 };
 
 let $_ := store:read('glaux')
-(: Clear stale entries so a URN dropped from the list above stops paginating by
-   book rather than keeping its old pages forever. :)
+(: Cleared first, so a URN dropped from the list above stops paginating by book
+   rather than keeping its old pages. :)
 let $_ := store:keys()[starts-with(., 'books/')] ! store:remove(.)
 let $_ := message(`{map:size($BOOKS)} book lists stored`)
 return (

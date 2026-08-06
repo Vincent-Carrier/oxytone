@@ -2,7 +2,8 @@ import { LlmError, extractMessage } from './errors'
 import { providers, type ChatMessage, type SseEvent } from './providers'
 import type { Settings } from './types'
 
-// The only network call in the LLM path.
+// Yields text deltas as the provider produces them. The only network call in the
+// LLM path.
 //
 // Raw fetch rather than the `ky` client used for BaseX: ky exposes no streaming
 // affordance, and two of its defaults are actively wrong here — `retry` would
@@ -68,6 +69,8 @@ export async function* streamChat(
 	}
 }
 
+// Parses one server-sent event out of the text between two blank lines: the
+// `event:` name if present, and every `data:` line joined back together.
 function parseEvent(chunk: string): SseEvent | null {
 	let event: string | undefined
 	const data: string[] = []

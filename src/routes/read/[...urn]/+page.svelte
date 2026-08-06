@@ -16,35 +16,30 @@
 	let lemma = $derived(g.selected?.lemma)
 	let popover = $state<AskPopover>()
 
-	// Below lg the aside is a bottom sheet that slides up when it appears and back
-	// down when it goes; at lg it is the static sidebar and must not animate at
-	// all. `transition:` can't be applied conditionally, so the desktop branch
-	// passes `duration: 0`.
+	// `fly` parameters for the aside: below lg it is a bottom sheet that slides in
+	// and out, at lg the static sidebar, which must not animate. `transition:`
+	// can't be applied conditionally, so desktop gets `duration: 0` instead.
 	//
-	// It must also pass `opacity: 1` there. fly's opacity parameter is where the
-	// fade *starts*, and with fill: forwards it holds the element at that value
-	// for the whole (zero-length) animation — so `opacity: 0` at `duration: 0`
-	// pins the desktop sidebar at invisible forever rather than being a no-op.
+	// `opacity: 1` matters on that branch. fly's opacity is where the fade
+	// *starts*, and `fill: forwards` holds the element there for the whole
+	// zero-length animation — `opacity: 0` would pin the sidebar invisible.
 	//
-	// matchMedia is read here, inside a function, rather than through Svelte's
-	// MediaQuery: that is a lazily-subscribed ReactiveValue, so the first read
-	// returns its fallback, and the first read is exactly when the transition
-	// params are evaluated. It reported false on a phone-width viewport and every
-	// slide was built with duration 0 — created, pinned at the start offset, and
-	// never run. A function is re-evaluated per transition, so it cannot go stale.
+	// A function, and plain matchMedia rather than Svelte's MediaQuery: transition
+	// params are evaluated once per transition, and a lazily-subscribed
+	// ReactiveValue returns its fallback on that first read.
 	function sheetParams() {
 		return matchMedia('(width < 64rem)').matches
 			? { y: '100%', duration: 250, opacity: 0 }
 			: { y: 0, duration: 0, opacity: 1 }
 	}
 
-	// The sheet is fixed, so it covers the lower half of the text rather than
-	// displacing it — selecting a word down there hides the very word you tapped.
-	// Scroll the article by exactly the overlap so it clears the sheet's top edge.
+	// Keeps the tapped word visible on mobile. The sheet is fixed, so it covers the
+	// lower half of the text rather than displacing it, and a word down there is
+	// hidden by the very panel describing it. Scrolling the article by the overlap
+	// brings it back above the sheet's top edge.
 	//
-	// Reads the sheet's own rect rather than assuming 50vh: it is the element that
-	// defines the obstruction, and this stays right if its height ever changes.
-	// Runs after a tick so the sheet is in the DOM on the selection that opens it.
+	// Measures the sheet instead of assuming 50vh, and waits a tick so the sheet is
+	// in the DOM on the selection that opens it.
 	$effect(() => {
 		let word = g.selected
 		if (!word || !matchMedia('(width < 64rem)').matches) return
@@ -88,7 +83,14 @@
 		setTimeout(() => popover?.show())
 	}
 
-	const onTbMount: Attachment = tb => {
+	// Wires up the server-rendered treebank once it is in the DOM: publishes its
+	// content element to the global state, takes the document title from its
+	// heading, honours an incoming hash, and picks the default analysis setting.
+	//
+	// Re-runs whenever the state in the article's class expression changes, and it
+	// writes `g.analysis` itself, so it must stay idempotent and clean up after
+	// itself — hence the single delegated listener below rather than one per anchor.
+	const setUpTreebank: Attachment = tb => {
 		const q = (sel: string) => tb.querySelector<HTMLElement>(sel)
 		let title = q('h1')?.textContent ?? 'Oxytone'
 		document.title = title
@@ -107,16 +109,8 @@
 		// whichever one they happen to open next.
 		if (!analysisChosen.current) g.analysis = !g.autoAnnotated
 
-		// Allow hash anchors to be toggled off, without pushing every line number
+		// Lets a hash anchor be toggled back off, without pushing every line number
 		// onto the history stack.
-		//
-		// Delegated to the container and cleaned up on teardown. This attachment
-		// re-runs whenever the state in the article's class expression changes,
-		// and it also writes g.analysis below, so it re-entered on its own. When
-		// it bound a listener per anchor with a no-op cleanup, every re-run added
-		// another: the first set the hash, the second saw `a.hash === l.hash`
-		// (l is live) and immediately cleared it, so clicking a line number left
-		// a bare "#".
 		const onAnchorClick = (ev: MouseEvent) => {
 			let a = (ev.target as Element).closest<HTMLAnchorElement>('a[href^="#"]')
 			if (!a || !content.contains(a)) return
@@ -146,35 +140,29 @@
 					'mem-mode': g.memMode
 				}
 			]}
-			{@attach onTbMount}>
+			{@attach setUpTreebank}>
 			{@html data.treebank}
 		</article>
-		<!-- The morphology bar sits at the top of this column rather than in a
-		full-width strip below: it describes the selected word, as does the
-		definition beneath it, so the two read as one panel. It is pinned while the
-		definition scrolls, since the lemma and parse are the fixed reference you
-		read the entry against.
+		<!-- The word's morphology and its definition describe the same thing, so they
+		read as one panel: the morphology bar sits at the top of this column rather
+		than in a strip of its own, and stays pinned while the definition scrolls —
+		the lemma and parse are the fixed reference you read the entry against.
 
-		Below lg this is a bottom sheet: near-full-width, anchored to the bottom
-		edge, sliding up on selection and down on dismissal. It is fixed rather
-		than absolute so it stays put while the text scrolls behind it, and takes
-		half the viewport so there is always readable context above.
+		At lg and up this element is the static right-hand sidebar. Below lg it is a
+		bottom sheet, fixed rather than absolute so the text scrolls behind it, and
+		half the viewport tall so there is always readable context above.
 
-		That height is fixed rather than capped: a content-sized sheet resizes
-		every time you select a different word, which reads as a flicker under the
-		slide. Holding it constant means switching lemmas only swaps the contents.
-		The definition area scrolls, so long entries still fit; short ones simply
-		leave space. The sheet hangs below the viewport by its own bottom padding so
-		its bottom border and rounded corners fall out of sight — it reads as
-		attached to the bottom edge rather than as a card floating near it — while
-		that padding still keeps the last line clear of the edge and of the iOS home
-		indicator. At lg and up the same element is the static right-hand
-		sidebar. -->
-		<!-- Keyed on the selection alone, not on `lemma`. `lemma` is a $derived that
-		the onlemma handler overwrites for cross-reference clicks, and an overwritten
-		$derived keeps its value instead of following g.selected back to undefined —
-		so including it here would hold the sheet open after a deselect and leave the
-		exit transition never running. -->
+		Its height is fixed rather than capped, so that switching lemmas only swaps
+		the contents; a content-sized sheet would resize on every selection, which
+		reads as a flicker under the slide. Long entries scroll in the definition
+		area, short ones leave space. It hangs below the viewport by its own bottom
+		padding, tucking the bottom border and rounded corners out of sight so it
+		reads as attached to the edge rather than floating near it, while that
+		padding keeps the last line clear of the iOS home indicator. -->
+		<!-- Keyed on the selection alone, not on `lemma`. The onlemma handler
+		overwrites `lemma` for cross-reference clicks, and an overwritten $derived
+		keeps its value rather than following g.selected back to undefined — so
+		including it here would hold the sheet open after a deselect. -->
 		{#if g.selected}
 			<!-- The slide belongs to this {#if}: the panel appearing and disappearing
 			is what it animates. The lemma-change fade lives on the {#key} inside, so
@@ -214,12 +202,11 @@
 				<!-- Keyed so picking another word while the panel is already open fades
 				the entry in rather than swapping it instantly.
 
-				The {#key} is outside the {#if}, not inside it, and the transitioning
-				element is the key block's direct child. With the nesting the other way
-				round the fade silently never fires — a Svelte bug where a transition
-				inside a {#key} that wraps another block is skipped
-				(sveltejs/svelte#11935). |global because the enclosing {#if g.selected}
-				already owns the mount, so a local intro would not run here either.
+				The {#key} must stay outside the {#if}, with the transitioning element as
+				its direct child: nested the other way round the fade silently never
+				fires (sveltejs/svelte#11935 — a transition inside a {#key} wrapping
+				another block is skipped). |global because the enclosing {#if g.selected}
+				owns the mount, so a local intro would not run here either.
 
 				min-h-0 lets this shrink below its content inside the flex column, so a
 				long entry scrolls here instead of pushing the sheet taller. -->

@@ -25,9 +25,11 @@ declare variable $pt:positions := (
   { 'name': 'degree', 'codes': { 'c': 'comparative', 's': 'superlative' } }
 );
 
-(: Attributes are emitted only when the code is recognised. Constructing them
-   unconditionally and filtering afterwards would need a trailing predicate:
-   attribute x { () } yields an attribute with an empty value, not nothing. :)
+(: Reads a positional tag against $positions — the nth character in the nth
+   vocabulary — and returns one named attribute per character that decodes.
+   Unrecognised and placeholder characters ('-') simply yield nothing, which is why
+   the `where` sits here rather than filtering afterwards: attribute x { () } is an
+   attribute with an empty value, not an absent one. :)
 declare function pt:attributes($tag as xs:string, $positions) {
   let $chars := characters($tag)
   for $p at $i in $positions
@@ -40,7 +42,10 @@ declare function pt:expand($tag as xs:string) {
   pt:attributes($tag, $pt:positions)
 };
 
-(: PROIEL omits the leading part-of-speech character; the rest lines up. :)
+(: PROIEL's tag dialect, whose part of speech is a two-character code in a field of
+   its own (see pt:proiel-pos) rather than the leading character; from there the
+   positions line up with AGLDT. Nothing in the corpus uses it today — GLAUx is
+   AGLDT throughout — so these two are here for the dialect, not for a caller. :)
 declare function pt:expand-proiel($tag as xs:string) {
   pt:attributes($tag, tail($pt:positions))
 };
