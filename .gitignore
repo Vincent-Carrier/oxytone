@@ -52,3 +52,6 @@ glaux/
 .ropeproject/
 .venv/
 *.pyc
+
+# Machine-local Claude notes
+CLAUDE.local.md
