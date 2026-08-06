@@ -55,3 +55,6 @@ glaux/
 
 # Machine-local Claude notes
 CLAUDE.local.md
+
+# Analysis output (seed/complexity.xq)
+out/

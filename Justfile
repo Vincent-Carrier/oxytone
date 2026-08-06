@@ -58,6 +58,13 @@ pagers:
   basex -Q seed/pagers.xq
 
 
+# Syntactic-complexity measures (MDD, MHD, non-projectivity) over a sample of the
+# treebank, written to out/*.tsv. Analysis, not seeding — reads the glaux DB and
+# the store, writes neither, so it can run any time after `just seed`.
+[group('db')]
+complexity:
+  basex -Q seed/complexity.xq
+
 [group('dev')]
 basex:
   basexhttp -d
