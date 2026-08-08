@@ -137,10 +137,11 @@ wiktionary:
 
 [group('install')]
 corpus:
-  wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.0/corpus.zip
+  wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.1/corpus.zip
   unzip corpus.zip
 
-# Rebuild glaux/ from the GLAUx source repo (corpus.zip ships without it).
+# Rebuild glaux/ from the GLAUx source repo, to pick up upstream changes or
+# before cutting a new release (corpus.zip already ships glaux/).
 # Set GLAUX_SRC to override the default ../glaux clone location.
 [group('install')]
 glaux-rebuild:
@@ -163,9 +164,9 @@ saxon:
 # Only Homer's TEI is shipped: m:merge is the sole consumer of tei/ and switches
 # on tlg0012, so the other 88 authors were 175 MB of the archive that nothing
 # ever read. Speaker labels come from @speaker on the treebank, not from TEI.
-release:
+release tag:
   zip -r corpus.zip glaux/ tei/tlg0012/ lsj/
-  gh release create corpus.zip
+  gh release create {{tag}} corpus.zip --title {{tag}} --notes "Corpus archive: glaux/, tei/tlg0012/, lsj/"
   rm -f corpus.zip
 
 # Build the SvelteKit adapter-node output for production. PUBLIC_BASEX_URL is a

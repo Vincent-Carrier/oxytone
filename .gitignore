@@ -20,6 +20,7 @@ Thumbs.db
 # Claude Code — shared config is tracked, machine-local state is not
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+.mcp.json
 
 # Env
 .env

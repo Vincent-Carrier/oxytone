@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Rebuild the glaux/ corpus dir from the GLAUx source repo.
 #
-# corpus.zip ships without glaux/, so we reconstruct it from a local clone of
-# https://github.com/alekkeersmaekers/glaux. Source files are named by their
+# corpus.zip ships glaux/, so this is only needed to rebuild it from a local
+# clone of https://github.com/alekkeersmaekers/glaux — to pick up upstream
+# changes, or before cutting a new release. Source files are named by their
 # TLG id (e.g. 0012-001.xml); the app expects them laid out to match tei/, i.e.
 # glaux/tlg<author>/tlg<work>/<id>.xml (path derived from the TLG column of
 # metadata.txt, matching the remap in seed/index.xq).
