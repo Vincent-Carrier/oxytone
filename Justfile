@@ -140,13 +140,6 @@ corpus:
   wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.1/corpus.zip
   unzip corpus.zip
 
-# Rebuild glaux/ from the GLAUx source repo, to pick up upstream changes or
-# before cutting a new release (corpus.zip already ships glaux/).
-# Set GLAUX_SRC to override the default ../glaux clone location.
-[group('install')]
-glaux-rebuild:
-  bash seed/glaux-rebuild.sh
-
 [group('install')]
 saxon:
   wget https://github.com/Saxonica/Saxon-HE/releases/download/SaxonHE12-5/SaxonHE12-5J.zip

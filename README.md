@@ -57,24 +57,10 @@ just saxon                    # install Saxon-HE into BaseX (one time)
 ### 2. Fetch the corpus
 
 ```bash
-just corpus                   # download and unzip corpus.zip (tei/, lsj/)
+just corpus                   # download and unzip corpus.zip (glaux/, tei/, lsj/)
 ```
 
-`corpus.zip` ships **without** the `glaux/` directory. Reconstruct it from a local
-clone of the [GLAUx source repo](https://github.com/alekkeersmaekers/glaux):
-
-```bash
-git clone https://github.com/alekkeersmaekers/glaux ../glaux
-just glaux-rebuild            # rebuilds glaux/ from ../glaux
-```
-
-`glaux-rebuild` reads `metadata.txt` from the GLAUx clone and copies each source
-file into `glaux/tlg<author>/tlg<work>/<id>.xml` so the layout matches `tei/`.
-Set `GLAUX_SRC` to point at a clone in a different location:
-
-```bash
-GLAUX_SRC=/path/to/glaux just glaux-rebuild
-```
+That is everything the app reads — no separate GLAUx clone is needed.
 
 ### 3. Seed the databases
 

@@ -32,22 +32,17 @@ gzipped dump, drops `character`/`symbol` entries and inflected-form stubs
 labels, and sorts for clean diffs. This covers 5.4k lemmas that have no LSJ
 entry at all — mostly Koine and Biblical proper nouns.
 
-### Rebuilding `glaux/`
+### The `glaux/` layout
 
-`corpus.zip` currently ships **without** `glaux/`, so it must be reconstructed
-from a local clone of the [GLAUx source repo](https://github.com/alekkeersmaekers/glaux):
+`corpus.zip` ships `glaux/` directly, so `just corpus` is the whole story — no
+clone of the [GLAUx source repo](https://github.com/alekkeersmaekers/glaux) is
+needed.
 
-```bash
-just glaux-rebuild            # expects ../glaux; override with GLAUX_SRC=…
-```
-
-The source files are named by their TLG id (`0012-001.xml`); the app expects
-them laid out to match `tei/`, i.e. `glaux/tlg<author>/tlg<work>/<id>.xml`. The
-script (`seed/glaux-rebuild.sh`) reads the authoritative TLG→path mapping from
-the source repo's `metadata.txt` (`TLG` column, e.g. `0012-001` →
-`tlg0012/tlg001`), the same remap used in `seed/index.xq`. Files are copied
-as-is — the GLAUx `<treebank>` XML is already the format `normalize.xqm`
-consumes. Only `metadata.txt` rows with a matching source file are copied.
+Upstream names its files by TLG id (`0012-001.xml`); in `glaux/` they are laid
+out to match `tei/`, i.e. `glaux/tlg<author>/tlg<work>/<id>.xml` (`0012-001` →
+`tlg0012/tlg001`), the same remap used in `seed/index.xq`. The files are
+otherwise unmodified — the GLAUx `<treebank>` XML is already the format
+`normalize.xqm` consumes.
 
 ## BaseX databases
 
