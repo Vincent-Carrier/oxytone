@@ -4,9 +4,11 @@ set script-interpreter := ["bash", "-euxo", "pipefail"]
 export BASEX_HOME := x"~/.basex"
 
 [group('db')]
+[doc('Build every BaseX database, in order')]
 seed: lsj glaux tei wiktionary-seed index divisions pagers normalized
 
 [group('db')]
+[doc('Build the lsj dictionary DB plus short-defs')]
 lsj:
   basex -Q seed/shortdefs.xq
   basex -O ATTRINCLUDE=id -O TEXTINDEX=false \
@@ -17,14 +19,17 @@ lsj:
 # after `lsj` (whose shortdefs.xq clears the store) and before `index` (which
 # writes the store out) — see the header comment in seed/wiktionary.xq.
 [group('db')]
+[doc('Load Wiktionary glosses into the shared store')]
 wiktionary-seed:
   basex -Q seed/wiktionary.xq
 
 [group('db')]
+[doc('Create the empty normalized write-through cache DB')]
 normalized:
   basex -c "CREATE DB normalized"
 
 [group('db')]
+[doc('Build the glaux treebank DB')]
 glaux:
   basex -O MAXCATS=10000 -O ATTRINCLUDE=id,head,form,lemma,relation,speaker,div_chapter,div_section,analysis \
         -c "CREATE DB glaux glaux/"
@@ -37,23 +42,27 @@ glaux:
 # Added under an explicit tlg0012 path rather than `CREATE DB tei tei/tlg0012`,
 # which would strip that segment and break the `{$author}/{$work}` lookup.
 [group('db')]
+[doc('Build the tei DB (Homer only)')]
 tei:
   basex -O STRIPNS=true -c "CREATE DB tei"
   basex -O STRIPNS=true -c "OPEN tei; ADD TO tlg0012 tei/tlg0012"
 
 [group('db')]
+[doc('Build the work-metadata index')]
 index:
   basex -Q seed/index.xq
 
 # Decide the page division for works that paginate automatically. Extends the
 # metadata `index` writes, so it has to run after it.
 [group('db')]
+[doc('Decide page divisions for auto-paginated works')]
 divisions:
   basex -Q seed/divisions.xq
 
 # Store the hand-curated per-work book lists that `p:curated-pager` reads. Writes
 # into the same store as `index`, so it has to run after it.
 [group('db')]
+[doc('Store the hand-curated per-work book lists')]
 pagers:
   basex -Q seed/pagers.xq
 
@@ -62,14 +71,17 @@ pagers:
 # treebank, written to out/*.tsv. Analysis, not seeding — reads the glaux DB and
 # the store, writes neither, so it can run any time after `just seed`.
 [group('db')]
+[doc('Syntactic-complexity measures over the treebank -> out/*.tsv')]
 complexity:
   basex -Q seed/complexity.xq
 
 [group('dev')]
+[doc('Start the BaseX HTTP server')]
 basex:
   basexhttp -d
 
 [group('dev')]
+[doc('Run SvelteKit alone on :5173 (no Caddy)')]
 svelte:
   pnpm dev
 
@@ -83,6 +95,7 @@ svelte:
 # BaseX is started only if it isn't already running, and is left running on exit;
 # Caddy and Vite are stopped with the recipe.
 [group('dev')]
+[doc('Run the whole stack behind Caddy on http://localhost:5000')]
 dev:
   #!/usr/bin/env bash
   set -euo pipefail
@@ -125,6 +138,7 @@ dev:
 
 
 [group('install')]
+[doc('Install JS dependencies with pnpm')]
 install:
   pnpm install
 
@@ -132,15 +146,18 @@ install:
 # Only needed to update the data: the TSV is tracked in git and `just seed` reads
 # it, not the dump. The upstream .jsonl is deprecated and may be removed.
 [group('install')]
+[doc('Refresh seed/wiktionary-defs.tsv from the kaikki.org dump')]
 wiktionary:
   python3 seed/wiktionary.py
 
 [group('install')]
+[doc('Download and unzip corpus.zip')]
 corpus:
   wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.1/corpus.zip
   unzip corpus.zip
 
 [group('install')]
+[doc('Install Saxon-HE into the BaseX custom lib dir')]
 saxon:
   wget https://github.com/Saxonica/Saxon-HE/releases/download/SaxonHE12-5/SaxonHE12-5J.zip
   unzip -o SaxonHE12-5J.zip -d saxon-he/
@@ -157,6 +174,8 @@ saxon:
 # Only Homer's TEI is shipped: m:merge is the sole consumer of tei/ and switches
 # on tlg0012, so the other 88 authors were 175 MB of the archive that nothing
 # ever read. Speaker labels come from @speaker on the treebank, not from TEI.
+[group('install')]
+[doc('Zip the corpus and publish it as a GitHub release')]
 release tag:
   zip -r corpus.zip glaux/ tei/tlg0012/ lsj/
   gh release create {{tag}} corpus.zip --title {{tag}} --notes "Corpus archive: glaux/, tei/tlg0012/, lsj/"
@@ -168,6 +187,7 @@ release tag:
 # a direct localhost call (see src/lib/api.ts). Produces a self-contained build/
 # (see ssr.noExternal in vite.config.ts).
 [group('deploy')]
+[doc('Build the production SvelteKit output into build/')]
 build-local:
   PUBLIC_BASEX_URL=/basex/ pnpm build
 
@@ -175,17 +195,21 @@ build-local:
 # runs the Ansible playbook (which rsyncs webapp/, repo/, the prebuilt data/ DBs,
 # and build/). See DEPLOYMENT.md for the pre-flight checklist.
 [group('deploy')]
+[doc('Build, then deploy to the droplet via Ansible')]
 deploy: build-local
   ansible-playbook -i deploy/inventory.ini deploy/oxytone.yml -e @deploy/vars.yml
 
 [group('deploy')]
+[doc('Tail the BaseX service log on the droplet')]
 logs-basex:
   ansible oxytone -i deploy/inventory.ini -a 'journalctl -u oxytone-basex -f -n 200'
 
 [group('deploy')]
+[doc('Tail the web service log on the droplet')]
 logs-web:
   ansible oxytone -i deploy/inventory.ini -a 'journalctl -u oxytone-web -f -n 200'
 
 [group('deploy')]
+[doc('Show systemd status for both services on the droplet')]
 status:
   ansible oxytone -i deploy/inventory.ini -a 'systemctl status oxytone-basex oxytone-web --no-pager'
