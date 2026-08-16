@@ -1,16 +1,23 @@
 @import 'tailwindcss' source('.');
 
 @theme {
-	/* Noto sits behind Alegreya rather than replacing it: fallback is per glyph, so
-	   Alegreya still sets everything it covers and Noto supplies only what it does
-	   not. That is the archaic letters the LSJ cites — digamma (ϝ, as in the ϝερύω
-	   heading of ἐρύω), koppa, sampi — which Alegreya has no glyphs for at all. The
-	   browser was already falling back on those, just to whatever system serif
-	   happened to be installed, which is why they came out mismatched. */
+	/* Noto sits behind Alegreya in every stack rather than replacing it: fallback is
+	   per glyph, so Alegreya still sets everything it covers and Noto supplies only
+	   what it does not. That is the archaic letters the LSJ cites — digamma (ϝ, as
+	   in the ϝερύω heading of ἐρύω), koppa, sampi — which no Alegreya family has a
+	   glyph for. The browser was already substituting them, just to whatever system
+	   face happened to be installed, which is why they came out mismatched.
+
+	   The sans stacks need it as much as the serif: the app's body font is Alegreya
+	   Sans, so the definition pane — where those headwords are actually read — is
+	   sans, and was the one place the mismatch showed. Noto Serif rather than Noto
+	   Sans because it is already a dependency and reads well enough beside Alegreya
+	   Sans at these sizes; adding a second Noto family for three glyphs is not
+	   worth the download. */
 	--font-serif: 'Alegreya Variable', 'Noto Serif Variable', serif;
-	--font-sans: 'Alegreya Sans', system-ui, sans-serif;
-	--font-sc: 'Alegreya SC', serif;
-	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
+	--font-sans: 'Alegreya Sans', 'Noto Serif Variable', system-ui, sans-serif;
+	--font-sc: 'Alegreya SC', 'Noto Serif Variable', serif;
+	--font-sans-sc: 'Alegreya Sans SC', 'Noto Serif Variable', system-ui, sans-serif;
 
 	--color-nom-50: oklch(0.982 0.018 155.826);
 	--color-nom-100: oklch(0.962 0.044 156.743);
