@@ -13,10 +13,21 @@ import module namespace urn = "urn";
    Most works have no translation: 128 of the 180 that paginate. That returns an
    empty <translation>, not an error, and the frontend hides the link. :)
 
-(: The lowest div that carries a citation, i.e. the blocks the reader actually
-   sees. A <div> holding only other divs is structure, not a passage. :)
+(: Whether a div is the edition wrapper, whose @n is the work's URN rather than a
+   citation ("urn:cts:greekLit:tlg0020.tlg001.perseus-eng2"). :)
+declare %private function tr:wrapper($div as element()) as xs:boolean {
+  lower-case(($div/@subtype, $div/@type)[1]) = ('edition', 'translation')
+};
+
+(: The blocks the reader actually sees, each carrying its own citation. A <div>
+   holding other divs is structure rather than a passage, so the lowest one wins.
+
+   Verse translations are the other shape: Hesiod hangs <l> straight off the
+   translation wrapper with no divs between, so without the <l> branch the wrapper
+   itself came out as the sole passage and rendered its URN as a citation. :)
 declare %private function tr:passages($tei as node()) as element()* {
-  $tei//*:div[@n][not(*:div)]
+  let $divs := $tei//*:div[@n][not(*:div)][not(tr:wrapper(.))]
+  return if (exists($divs)) then $divs else $tei//*:l[@n]
 };
 
 (: A passage's text, with the editorial apparatus left out. Two kinds of it sit
@@ -92,12 +103,15 @@ declare %private function tr:content($passage as element()) as node()* {
     )
 };
 
-(: The div chain a passage sits under, outermost first, skipping the edition
-   wrapper whose @n is the work's URN rather than a citation. :)
+(: The citation chain a passage sits under, outermost first: the enclosing divs
+   plus, for a verse line, its own @n. The edition wrapper is skipped — its @n is
+   the work's URN, not a citation. :)
 declare %private function tr:chain($passage as element()) as xs:string* {
-  $passage/ancestor-or-self::*:div[@n]
-    [not(lower-case((@subtype, @type)[1]) = ('edition', 'translation'))]
-    ! string(@n)
+  (
+    $passage/ancestor::*:div[@n][not(tr:wrapper(.))],
+    $passage[self::*:div][not(tr:wrapper(.))],
+    $passage[self::*:l]
+  ) ! string(@n)
 };
 
 (: A passage's full dotted citation, "2.35.1" rather than the "1" its own @n
@@ -109,9 +123,14 @@ declare %private function tr:cite($passage as element()) as xs:string {
 };
 
 (: The page a passage belongs to: the leading segment of its citation, so section
-   1.32.4 of Herodotus is on book 1. :)
-declare %private function tr:page-of($passage as element()) as xs:string {
-  head(tr:chain($passage))
+   1.32.4 of Herodotus is on book 1.
+
+   Empty when a translation is undivided — Hesiod's Theogony is one run of <l> with
+   no book above them — in which case no passage belongs to any particular page and
+   the caller falls back to showing the work whole. :)
+declare %private function tr:page-of($passage as element()) as xs:string? {
+  let $chain := tr:chain($passage)
+  return if (count($chain) gt 1) then head($chain) else ()
 };
 
 declare
@@ -130,10 +149,12 @@ declare
       if (empty($tei)) then <div data-empty="yes" />
       else
         let $passages := tr:passages($tei)
-        (: Unpaginated works are read whole, so every passage belongs. :)
-        let $on-page :=
-          if (empty($page)) then $passages
-          else $passages[tr:page-of(.) = string($page)]
+        (: Unpaginated works are read whole, so every passage belongs. So is a
+           translation with no division of its own: the Greek side may page the
+           Theogony by book while the translation is one undivided run of lines,
+           and showing all of it beats showing none. :)
+        let $matching := $passages[tr:page-of(.) = string($page)]
+        let $on-page := if (empty($page) or empty($matching)) then $passages else $matching
         (: <hgroup> and <main> as siblings rather than inside a wrapper:
            treebank.css styles the heading with `& > hgroup` on .treebank, so a
            wrapping div here would put it a level too deep and drop the styles. :)
