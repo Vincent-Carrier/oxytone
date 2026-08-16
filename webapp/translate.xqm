@@ -28,14 +28,26 @@ declare %private function tr:text($passage as element()) as xs:string {
   normalize-space(string-join($passage//text()[not(ancestor::*:reg)]))
 };
 
-(: The page a passage belongs to, which is the leading segment of its citation
-   under the page division: section 1.32.4 of Herodotus is on book 1. Cards
-   number from the line they start at, so a card's own @n is its position within
-   the book, not the book — hence the walk up to the enclosing book div. :)
-declare %private function tr:page-of($passage as element(), $depth as xs:integer) as xs:string {
-  let $chain := ($passage/ancestor-or-self::*:div[@n]
-                   [not(lower-case((@subtype, @type)[1]) = ('edition', 'translation'))])
-  return string(($chain[$depth], $chain[last()])[1]/@n)
+(: The div chain a passage sits under, outermost first, skipping the edition
+   wrapper whose @n is the work's URN rather than a citation. :)
+declare %private function tr:chain($passage as element()) as xs:string* {
+  $passage/ancestor-or-self::*:div[@n]
+    [not(lower-case((@subtype, @type)[1]) = ('edition', 'translation'))]
+    ! string(@n)
+};
+
+(: A passage's full dotted citation, "2.35.1" rather than the "1" its own @n
+   carries. Chapter and section numbering restarts in every book, so the local
+   number alone repeats across the work — it would collide as an id, and it is the
+   dotted form that GLAUx's @div_section holds and repo/cite.xqm joins on. :)
+declare %private function tr:cite($passage as element()) as xs:string {
+  string-join(tr:chain($passage), '.')
+};
+
+(: The page a passage belongs to: the leading segment of its citation, so section
+   1.32.4 of Herodotus is on book 1. :)
+declare %private function tr:page-of($passage as element()) as xs:string {
+  head(tr:chain($passage))
 };
 
 declare
@@ -54,7 +66,7 @@ declare
         (: Unpaginated works are read whole, so every passage belongs. :)
         let $on-page :=
           if (empty($page)) then $passages
-          else $passages[tr:page-of(., 1) = string($page)]
+          else $passages[tr:page-of(.) = string($page)]
         return
           <div class="translation" lang="en">
             <hgroup>
@@ -63,8 +75,12 @@ declare
             </hgroup>
             <main class="body">{
               for $passage in $on-page
-              return <p id="{$passage/@n}">
-                <a class="nbr section-nbr" href="#{$passage/@n}">{string($passage/@n)}</a>
+              let $cite := tr:cite($passage)
+              return <p id="{$cite}">
+                (: Labelled with the local number, as the Greek side is: the page
+                   is already one book, so repeating it on every paragraph is
+                   noise. The id keeps the full citation for linking. :)
+                <a class="nbr section-nbr" href="#{$cite}">{string($passage/@n)}</a>
                 {tr:text($passage)}
               </p>
             }</main>

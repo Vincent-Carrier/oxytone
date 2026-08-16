@@ -16,6 +16,11 @@
 	let lemma = $derived(g.selected?.lemma)
 	let popover = $state<AskPopover>()
 
+	// Read off the markup rather than waiting for the attachment to publish it, so
+	// the nav renders the translation link server-side with everything else. The
+	// attachment still sets it for the client, and agrees.
+	let translated = $derived(data.treebank.includes('data-translated="yes"'))
+
 	// `fly` parameters for the aside: below lg it is a bottom sheet that slides in
 	// and out, at lg the static sidebar, which must not animate. `transition:`
 	// can't be applied conditionally, so desktop gets `duration: 0` instead.
@@ -128,7 +133,7 @@
 <AskPopover bind:this={popover} />
 
 <div class="flex h-screen flex-col print:h-auto" onlemma={ev => (lemma = ev.detail.lemma)}>
-	<Nav />
+	<Nav {translated} />
 	<div class="flex overflow-y-auto">
 		<article
 			id="treebank"

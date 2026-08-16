@@ -5,7 +5,7 @@ export BASEX_HOME := x"~/.basex"
 
 [group('db')]
 [doc('Build every BaseX database, in order')]
-seed: lsj glaux tei translations-db wiktionary-seed index divisions pagers normalized
+seed: lsj glaux tei translations-db wiktionary-seed index divisions translated pagers normalized
 
 [group('db')]
 [doc('Build the lsj dictionary DB plus short-defs')]
@@ -71,6 +71,12 @@ index:
 [doc('Decide page divisions for auto-paginated works')]
 divisions:
   basex -Q seed/divisions.xq
+
+# Extends the metadata `index` writes, so it has to run after it.
+[group('db')]
+[doc('Flag which works have an English translation')]
+translated:
+  basex -Q seed/translated.xq
 
 # Store the hand-curated per-work book lists that `p:curated-pager` reads. Writes
 # into the same store as `index`, so it has to run after it.

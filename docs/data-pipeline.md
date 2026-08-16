@@ -13,11 +13,12 @@ Downloaded via `just corpus` (unzips `corpus.zip`) into:
   sole consumer of the Greek editions and it switches on `tlg0012`, so the other
   88 authors were 175 MB that nothing read.
 
-  English translations are a separate opt-in fetch (`just translations`, 118 MB):
-  770 `*-eng*.xml` files covering 634 of the works in `glaux/`. Upstream names
-  them `tlg0003.tlg001.perseus-eng1.xml`; the author and work live in the
-  directory path here, so `seed/translations.py` strips that prefix to match the
-  Greek editions alongside them.
+    English translations are a separate opt-in fetch (`just translations`, 118 MB):
+    770 `*-eng*.xml` files covering 634 of the works in `glaux/`. Upstream names
+    them `tlg0003.tlg001.perseus-eng1.xml`; the author and work live in the
+    directory path here, so `seed/translations.py` strips that prefix to match the
+    Greek editions alongside them.
+
 - `lsj/` — LSJ dictionary ([Celano's Unicode version](https://github.com/gcelano/LSJ_GreekUnicode)).
 
 `just release` re-zips `glaux/ tei/tlg0012/ lsj/` and publishes a GitHub release.
@@ -53,9 +54,9 @@ otherwise unmodified — the GLAUx `<treebank>` XML is already the format
 
 ## BaseX databases
 
-`just seed` runs, in order: `lsj glaux tei wiktionary-seed index divisions pagers
-normalized`. Each recipe in the `Justfile` creates one database with specific
-indexing options:
+`just seed` runs, in order: `lsj glaux tei translations-db wiktionary-seed index
+divisions translated pagers normalized`. Each recipe in the `Justfile` creates one
+database with specific indexing options:
 
 - **`lsj`** — the dictionary, plus short-defs (`seed/shortdefs.xq`, `seed/lsj.xq`).
 - **`wiktionary-seed`** — not a database: it appends Wiktionary glosses to the
@@ -70,9 +71,16 @@ indexing options:
   216 MB instead of 5 MB, with 811 of 814 documents never queried. Speaker labels
   for the tragedians and Plato do _not_ come from here — they come from
   `@speaker` on the GLAUx treebank.
+- **`translations-db`** — the Perseus English translations (`seed/translations.xq`),
+  stored under `{author}/{work}` so `db:get('translations', …)` reaches them the
+  way `m:merge` reaches the Greek ones. Created empty when `just translations` was
+  never run, which `webapp/translate.xqm` reads as "no translation for this work".
 - **`index`** — the browse/search index (`seed/index.xq`).
 - **`divisions`** — picks the page division for works that paginate
   automatically, extending the metadata `index` writes (`seed/divisions.xq`).
+- **`translated`** — flags which works have a translation, on the same metadata
+  (`seed/translated.xq`), so the reader can offer the link without a lookup per
+  work. Runs after `index` for the same reason `divisions` does.
 - **`pagers`** — stores the hand-curated per-work book lists that
   `p:curated-pager` reads, under `books/` keys (`seed/pagers.xq`).
 - **`normalized`** — starts empty; a **write-through cache** of rendered pages.

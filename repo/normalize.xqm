@@ -206,6 +206,9 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
         </books>}
       <style>{$style}</style>
       <analysis>{$analysis/string()}</analysis>
+      (: Seeded by seed/translated.xq. Carried here so the reader knows whether to
+         offer the translation without a second round-trip to find out. :)
+      {if ($meta?translated) then <translated />}
     </head>
     {$normalized}
   </treebank>

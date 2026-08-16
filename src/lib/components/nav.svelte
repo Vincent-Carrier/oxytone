@@ -3,7 +3,20 @@
 	import FlashcardsButton from './flashcards-button.svelte'
 	import SettingsMenu from './settings-menu.svelte'
 	import Tooltip from './tooltip.svelte'
+	import Button from './button.svelte'
 	import g from '$lib/global-state.svelte'
+	import { page } from '$app/state'
+	import TranslationIcon from '~icons/heroicons/language-16-solid'
+
+	// Passed in rather than derived here so the link server-renders with the rest of
+	// the nav, and so the translation route — which renders this same nav and has no
+	// second translation to offer — simply leaves it off.
+	let { translated = false }: { translated?: boolean } = $props()
+
+	// The read and translation routes share the {author}/{work}/{page} tail, so
+	// each links to the other by swapping the prefix — which keeps the reader on
+	// the same passage rather than dropping them at the top of the work.
+	let urn = $derived(page.url.pathname.replace(/^\/(read|translation)\//, ''))
 
 	function toggleSmoothBreathings(val: boolean) {
 		for (let w of g.content?.querySelectorAll<WordElement>('ox-w') ?? []) {
@@ -46,6 +59,15 @@
 			</p>
 		{/snippet}
 	</Tooltip>
+	<!-- Only where there is one to read: 128 of the 180 works that paginate have no
+	translation, so offering the link everywhere would mostly lead to a dead end.
+	Hidden on the translation route itself, which carries its own way back. -->
+	{#if translated}
+		<Button href={`/translation/${urn}`}>
+			<TranslationIcon />
+			<span class="max-sm:sr-only">translation</span>
+		</Button>
+	{/if}
 	<DisplayMenu />
 	<SettingsMenu />
 </nav>

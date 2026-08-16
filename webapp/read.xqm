@@ -10,6 +10,7 @@ declare variable $r:xslt := xsm:stylesheet({
     <div id="tb-content">
       {xsm:attr('class', "concat('treebank ', head/style)")}
       {xsm:attr('data-analysis', 'head/analysis')}
+      {xsm:attr('data-translated', "if (head/translated) then 'yes' else 'no'")}
       <hgroup>
         <h1>
           <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />

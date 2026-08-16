@@ -37,6 +37,10 @@ fastest way to check server output — much cheaper than driving a browser:
   `*verb*` emphasis. Nothing in `src/` calls it: it exists for reading a text as
   text — inspecting normalization output, or pasting a passage into an LLM.
   Never cached, so it always reflects the current XQuery.
+- `/translate/{author}/{work}/{page}` — the Perseus English translation of that
+  page, each passage a `<p>` whose `@id` is its full dotted citation, so the ids
+  match the Greek side's section anchors. Returns `data-empty` rather than a 404
+  for the 128 of 180 paginated works that have no translation.
 - `/define/lsj/{lemma}` — dictionary fragment. `/flashcards?author=&work=&w=` — Anki CSV.
 
 Page labels are usually numbers, but not always (`praef`, `priora`, `17/18`).
