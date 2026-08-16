@@ -58,8 +58,9 @@ The route takes everything after the work as the page, so slashed labels work:
 - `webapp/` — BaseX RESTXQ endpoints (`.xqm`)
 - `repo/` — shared XQuery modules (normalize, paginate, postag, urn, …)
 - `seed/` — XQuery scripts that build the databases, plus the tracked `wiktionary-defs.tsv` and the Python script that regenerates it
-- `glaux/`, `tei/`, `lsj/` — source corpus files (from `corpus.zip`). `tei/` is
-  Homer only: `m:merge` is its sole consumer, for quotation markup.
+- `glaux/`, `tei/`, `lsj/` — source corpus files (from `corpus.zip`). `corpus.zip`
+  ships only Homer's Greek TEI, the sole input to `m:merge`'s quotation markup.
+  `just translations` adds Perseus English translations (770 files, 634 works).
 
 ## Details
 

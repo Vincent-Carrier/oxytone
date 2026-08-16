@@ -5,7 +5,7 @@ export BASEX_HOME := x"~/.basex"
 
 [group('db')]
 [doc('Build every BaseX database, in order')]
-seed: lsj glaux tei wiktionary-seed index divisions pagers normalized
+seed: lsj glaux tei translations-db wiktionary-seed index divisions pagers normalized
 
 [group('db')]
 [doc('Build the lsj dictionary DB plus short-defs')]
@@ -46,6 +46,19 @@ glaux:
 tei:
   basex -O STRIPNS=true -c "CREATE DB tei"
   basex -O STRIPNS=true -c "OPEN tei; ADD TO tlg0012 tei/tlg0012"
+
+# Every *-eng*.xml under tei/, which `just translations` puts there. Created empty
+# when that has not been run: the DB is what webapp/translate.xqm queries, and an
+# absent one is an error rather than the "no translation for this work" it should
+# read as.
+#
+# Added under an explicit {author}/{work} path for the same reason as `tei`, so
+# db:get('translations', '{$author}/{$work}') finds them.
+[group('db')]
+[doc('Build the English translations DB')]
+translations-db:
+  basex -O STRIPNS=true -c "CREATE DB translations"
+  basex -O STRIPNS=true -Q seed/translations.xq
 
 [group('db')]
 [doc('Build the work-metadata index')]
@@ -155,6 +168,16 @@ wiktionary:
 corpus:
   wget https://github.com/Vincent-Carrier/oxytone/releases/download/1.1/corpus.zip
   unzip corpus.zip
+
+# Kept out of `corpus` and out of corpus.zip: 770 files, 118 MB, against a 5 MB
+# archive. Covers 634 of the works in glaux/.
+[group('install')]
+[doc('Download Perseus English translations into tei/')]
+translations:
+  wget -O canonical-greekLit.tar.gz \
+    https://codeload.github.com/PerseusDL/canonical-greekLit/tar.gz/refs/heads/master
+  python3 seed/translations.py canonical-greekLit.tar.gz
+  rm -f canonical-greekLit.tar.gz
 
 [group('install')]
 [doc('Install Saxon-HE into the BaseX custom lib dir')]

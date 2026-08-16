@@ -9,8 +9,15 @@ Downloaded via `just corpus` (unzips `corpus.zip`) into:
   ([Keersmaekers 2021](https://aclanthology.org/2021.lchange-1.6/)); accuracy
   varies. Built on Perseus/Perseids data.
 - `tei/` — TEI XML texts, laid out `tlg<author>/tlg<work>/…` (e.g.
-  `tlg0012/tlg001/`). **Homer only.** `m:merge` is the sole consumer and it
-  switches on `tlg0012`, so the other 88 authors were 175 MB that nothing read.
+  `tlg0012/tlg001/`). `corpus.zip` ships **Homer's Greek only**: `m:merge` is the
+  sole consumer of the Greek editions and it switches on `tlg0012`, so the other
+  88 authors were 175 MB that nothing read.
+
+  English translations are a separate opt-in fetch (`just translations`, 118 MB):
+  770 `*-eng*.xml` files covering 634 of the works in `glaux/`. Upstream names
+  them `tlg0003.tlg001.perseus-eng1.xml`; the author and work live in the
+  directory path here, so `seed/translations.py` strips that prefix to match the
+  Greek editions alongside them.
 - `lsj/` — LSJ dictionary ([Celano's Unicode version](https://github.com/gcelano/LSJ_GreekUnicode)).
 
 `just release` re-zips `glaux/ tei/tlg0012/ lsj/` and publishes a GitHub release.
