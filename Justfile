@@ -132,6 +132,20 @@ dev:
   caddy_pid=$!
   PUBLIC_BASEX_URL=/basex/ pnpm dev --port 5173 --strictPort &
   vite_pid=$!
+  # :5000, never Vite's :5173 — PUBLIC_BASEX_URL is the relative /basex/, which
+  # only resolves through Caddy. Opening :5173 directly 404s every BaseX fetch and
+  # leaves the catalogue empty, which reads as a broken app rather than a wrong
+  # URL. Asking rather than just opening, since a browser may already be on it.
+  if [ -t 0 ] && command -v xdg-open >/dev/null; then
+    # Bounded: if Caddy or Vite failed to come up, their own errors are the useful
+    # output, and blocking here would hide them behind a hung prompt.
+    for _ in $(seq 40); do
+      curl -sf -o /dev/null http://localhost:5000/ && break
+      sleep 0.5
+    done
+    read -rp "open http://localhost:5000/ ? [Y/n] " reply
+    case "$reply" in [Nn]*) ;; *) xdg-open http://localhost:5000/ >/dev/null 2>&1 & ;; esac
+  fi
   # Kill each child's whole process group: pnpm spawns vite as a grandchild, so
   # signalling pnpm alone would strand the dev server holding port 5173.
   cleanup() {
