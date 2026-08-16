@@ -1,7 +1,13 @@
 @import 'tailwindcss' source('.');
 
 @theme {
-	--font-serif: 'Alegreya Variable', serif;
+	/* Noto sits behind Alegreya rather than replacing it: fallback is per glyph, so
+	   Alegreya still sets everything it covers and Noto supplies only what it does
+	   not. That is the archaic letters the LSJ cites — digamma (ϝ, as in the ϝερύω
+	   heading of ἐρύω), koppa, sampi — which Alegreya has no glyphs for at all. The
+	   browser was already falling back on those, just to whatever system serif
+	   happened to be installed, which is why they came out mismatched. */
+	--font-serif: 'Alegreya Variable', 'Noto Serif Variable', serif;
 	--font-sans: 'Alegreya Sans', system-ui, sans-serif;
 	--font-sc: 'Alegreya SC', serif;
 	--font-sans-sc: 'Alegreya Sans SC', system-ui, sans-serif;
