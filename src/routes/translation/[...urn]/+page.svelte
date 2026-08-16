@@ -23,26 +23,28 @@
 <div class="flex h-screen flex-col print:h-auto">
 	<Nav />
 	<div class="flex overflow-y-auto">
+		<!-- `treebank prose` on the article itself rather than on a wrapper inside it:
+		treebank.css reaches the heading with `& > hgroup`, so the endpoint's <hgroup>
+		has to be a direct child. The endpoint returns it and <main> as siblings for
+		the same reason. -->
 		<article
 			id="treebank"
-			class="translation flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed">
-			<div class="treebank prose">
-				<p class="mb-4 ml-[var(--padded-margin-w)]">
-					<a
-						href={readHref}
-						class="font-sans-sc inline-flex items-baseline gap-x-1 text-blue-600">
-						<BackIcon />
-						back to the Greek
-					</a>
+			class="treebank prose flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed xl:mx-auto">
+			<p class="mb-4 ml-[var(--padded-margin-w)]">
+				<a
+					href={readHref}
+					class="font-sans-sc inline-flex items-baseline gap-x-1 text-blue-600">
+					<BackIcon />
+					back to the Greek
+				</a>
+			</p>
+			{#if empty}
+				<p class="ml-[var(--padded-margin-w)] text-gray-600">
+					No English translation is available for this work.
 				</p>
-				{#if empty}
-					<p class="ml-[var(--padded-margin-w)] text-gray-600">
-						No English translation is available for this work.
-					</p>
-				{:else}
-					{@html data.translation}
-				{/if}
-			</div>
+			{:else}
+				{@html data.translation}
+			{/if}
 		</article>
 	</div>
 </div>
@@ -51,13 +53,15 @@
 	/* treebank.css sets `.body p { display: inline }`, which is right for running
 	   Greek broken up by section numbers but runs the English together into one
 	   block. Here each passage is its own paragraph. */
-	.translation :global(.body p) {
+	#treebank :global(.body p) {
 		display: block;
 		margin-bottom: 0.75rem;
 	}
 
-	/* Reads as English rather than as the justified Greek column. */
-	.translation :global(.body) {
+	/* Reads as English rather than as the justified Greek column: `.prose .body`
+	   in treebank.css justifies it, which suits Greek set without hyphenation but
+	   opens rivers in an English paragraph. */
+	#treebank :global(.body) {
 		text-align: left;
 	}
 </style>

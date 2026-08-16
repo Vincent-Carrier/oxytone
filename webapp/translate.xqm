@@ -19,13 +19,33 @@ declare %private function tr:passages($tei as node()) as element()* {
   $tei//*:div[@n][not(*:div)]
 };
 
-(: A passage's text. Perseus regularizes place names against the Getty thesaurus
-   and keeps both forms — <reg>Bodrum [27.466,37.5] (inhabited place), Mugla
-   Ili…</reg> beside <placeName>Halicarnassus</placeName> — so taking the string
-   value whole splices a gazetteer entry into the middle of the sentence. The
-   <reg> is apparatus; the reading text is what is left. :)
+(: A passage's text, with the editorial apparatus left out. Two kinds of it sit
+   inline and splice into the sentence if the string value is taken whole:
+
+   <reg> holds a Getty-thesaurus regularization beside the reading text, so
+   Herodotus is "of Bodrum [27.466,37.5] (inhabited place), Mugla Ili…
+   Halicarnassus" rather than "of Halicarnassus".
+
+   <note> holds a footnote whose body is usually its marker digit, so the Loeb
+   Odyssey reads "flashing-eyed1 Athena". Dropping it loses the note itself, which
+   this view does not show anyway.
+
+   A <milestone/> line marker carries no text of its own, and the edition leans on
+   it for the break, so the text nodes on either side run together as "upon the
+   sea,seeking to win". It contributes a space; joining every node on one instead
+   would space the punctuation off its word ("citadel of Troy ."), since
+   <placeName>Troy</placeName> and the period that follows are separate nodes.
+
+   Dropping an inline element leaves the whitespace that surrounded it, which then
+   sits in front of the following punctuation — "of Halicarnassus , so that". The
+   final replace closes that gap up. :)
 declare %private function tr:text($passage as element()) as xs:string {
-  normalize-space(string-join($passage//text()[not(ancestor::*:reg)]))
+  let $text := normalize-space(string-join(
+    $passage//node()[self::text() or self::*:milestone]
+      [not(ancestor::*:reg or ancestor::*:note)]
+      ! (if (self::*:milestone) then ' ' else string(.))
+  ))
+  return replace($text, '\s+([,.;:!?’”)])', '$1')
 };
 
 (: The div chain a passage sits under, outermost first, skipping the edition
@@ -67,22 +87,23 @@ declare
         let $on-page :=
           if (empty($page)) then $passages
           else $passages[tr:page-of(.) = string($page)]
-        return
-          <div class="translation" lang="en">
+        (: <hgroup> and <main> as siblings rather than inside a wrapper:
+           treebank.css styles the heading with `& > hgroup` on .treebank, so a
+           wrapping div here would put it a level too deep and drop the styles. :)
+        return (
             <hgroup>
               <h1>{normalize-space(string(($tei//*:titleStmt/*:title)[1]))}</h1>
               <p class="author">{normalize-space(string(($tei//*:titleStmt/*:author)[1]))}</p>
-            </hgroup>
-            <main class="body">{
+            </hgroup>,
+            <main class="body" lang="en">{
+              (: The marker shows the local number, as the Greek side does: the
+                 page is already one book, so repeating it on every paragraph is
+                 noise. The id keeps the full citation, which is what links. :)
               for $passage in $on-page
               let $cite := tr:cite($passage)
-              return <p id="{$cite}">
-                (: Labelled with the local number, as the Greek side is: the page
-                   is already one book, so repeating it on every paragraph is
-                   noise. The id keeps the full citation for linking. :)
-                <a class="nbr section-nbr" href="#{$cite}">{string($passage/@n)}</a>
-                {tr:text($passage)}
-              </p>
+              return <p id="{$cite}"><a class="nbr section-nbr" href="#{$cite}">{
+                string($passage/@n)
+              }</a>{tr:text($passage)}</p>
             }</main>
-          </div>
+          )
 };
