@@ -1,22 +1,25 @@
 @import 'tailwindcss' source('.');
 
 @theme {
-	/* Noto sits behind Alegreya in every stack rather than replacing it: fallback is
-	   per glyph, so Alegreya still sets everything it covers and Noto supplies only
+	/* Cardo sits behind Alegreya in every stack rather than replacing it: fallback is
+	   per glyph, so Alegreya still sets everything it covers and Cardo supplies only
 	   what it does not. That is the archaic letters the LSJ cites — digamma (ϝ, as
 	   in the ϝερύω heading of ἐρύω), koppa, sampi — which no Alegreya family has a
 	   glyph for. The browser was already substituting them, just to whatever system
 	   face happened to be installed, which is why they came out mismatched.
 
-	   Matched by kind, sans behind sans: the app's body font is Alegreya Sans, so
-	   the LSJ pane where those headwords are read is sans, and it is very nearly the
-	   only place they appear — the treebank itself carries four digammas in four
-	   hundred files. The serif stack keeps a Noto entry for those few, and because a
-	   quotation in a definition can inherit it. */
-	--font-serif: 'Alegreya Variable', 'Noto Serif Variable', serif;
-	--font-sans: 'Alegreya Sans', 'Noto Sans Variable', system-ui, sans-serif;
-	--font-sc: 'Alegreya SC', 'Noto Serif Variable', serif;
-	--font-sans-sc: 'Alegreya Sans SC', 'Noto Sans Variable', system-ui, sans-serif;
+	   Cardo rather than Noto because of how the glyph is drawn: Noto's digamma is a
+	   squared slab with a heavy top bar that reads as a different typeface mid-word,
+	   in the sans and the serif alike. Cardo is cut for classical texts, and its
+	   archaic letters carry the weight of the ones beside them — which matters more
+	   here than matching serif to serif, since the pane these appear in is sans.
+
+	   Not GFS Neohellenic or GFS Didot, despite being Greek specialists: their
+	   subsets stop short of the archaic block and have no digamma at all. */
+	--font-serif: 'Alegreya Variable', 'Cardo', serif;
+	--font-sans: 'Alegreya Sans', 'Cardo', system-ui, sans-serif;
+	--font-sc: 'Alegreya SC', 'Cardo', serif;
+	--font-sans-sc: 'Alegreya Sans SC', 'Cardo', system-ui, sans-serif;
 
 	--color-nom-50: oklch(0.982 0.018 155.826);
 	--color-nom-100: oklch(0.962 0.044 156.743);
@@ -77,6 +80,31 @@
 	--color-voc-800: oklch(0.459 0.187 3.815);
 	--color-voc-900: oklch(0.408 0.153 2.432);
 	--color-voc-950: oklch(0.284 0.109 3.907);
+}
+
+/* Cardo's Greek subset, declared here rather than imported from
+   @fontsource/cardo/greek-400.css because those stylesheets carry no
+   unicode-range: without one the browser downloads 25 KB on every page, for
+   glyphs almost none of them contain. The range is the Greek and Coptic block
+   from koppa up, which is where the archaic letters live (digamma U+03DD, koppa
+   U+03D9, sampi U+03E1) — narrow enough that Cardo is fetched only for a page
+   that shows one, and never for ordinary Greek, which Alegreya covers. */
+@font-face {
+	font-family: 'Cardo';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('@fontsource/cardo/files/cardo-greek-400-normal.woff2') format('woff2');
+	unicode-range: U+03D8-03FF;
+}
+
+@font-face {
+	font-family: 'Cardo';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('@fontsource/cardo/files/cardo-greek-700-normal.woff2') format('woff2');
+	unicode-range: U+03D8-03FF;
 }
 
 @utility list-dash {

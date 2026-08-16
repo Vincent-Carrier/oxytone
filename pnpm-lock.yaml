@@ -11,12 +11,6 @@ importers:
       '@fontsource-variable/alegreya':
         specifier: ^5.2.5
         version: 5.2.5
-      '@fontsource-variable/noto-sans':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource-variable/noto-serif':
-        specifier: ^5.3.0
-        version: 5.3.0
       '@fontsource/alegreya':
         specifier: ^5.2.5
         version: 5.2.5
@@ -29,6 +23,9 @@ importers:
       '@fontsource/alegreya-sc':
         specifier: ^5.2.5
         version: 5.2.5
+      '@fontsource/cardo':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -170,12 +167,6 @@ packages:
   '@fontsource-variable/alegreya@5.2.5':
     resolution: {integrity: sha512-j3gDsSJmjWPwtuDxa0TBi0YULttywpB7BzKxdm585LtSbfzYkGb7Th1gX/hzmIack96H9tnFAQjeJL1Ubessgw==}
 
-  '@fontsource-variable/noto-sans@5.3.0':
-    resolution: {integrity: sha512-e3ZuxzY9AL2psXPZlhwhnYrHUHv6PMoyK9MQ7croF0CUgURLqu9EMjW7q2FgVLwij1tjLsIHQrnwQ8aUcg4BiA==}
-
-  '@fontsource-variable/noto-serif@5.3.0':
-    resolution: {integrity: sha512-GxGAScLRifXH02gDoJGroO/NIX83It7m1TYPPp1bhNPaii6/+GBYKxl/uL5GabFe0PBfiUV92wA4MdMdEDUu6A==}
-
   '@fontsource/alegreya-sans-sc@5.2.5':
     resolution: {integrity: sha512-oqpW0rkC4oEp51I2xu88JkZqsIHqtVXeElrtTtku9FbhSH0AG5snP1b1laIpCQ5yJKMIxiSf3jHarw3tUKjOkw==}
 
@@ -187,6 +178,9 @@ packages:
 
   '@fontsource/alegreya@5.2.5':
     resolution: {integrity: sha512-Gl5VZCFHNrZsrNBws2imyZZEwp5L8rwdlfykEKDlIV3Gnn+YcRKi5M2lZDkfNlKB+NzE0EUhXqELrZlooiKf1Q==}
+
+  '@fontsource/cardo@5.3.0':
+    resolution: {integrity: sha512-4G7oLxQRcYyOIoJH0CpZ1Tkc5iLHQPaJoThmp/f8Vz7NFFfn5fspCWkrqhlO6mVAXFruMoOwivyXrvaISJm7uA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1875,10 +1869,6 @@ snapshots:
 
   '@fontsource-variable/alegreya@5.2.5': {}
 
-  '@fontsource-variable/noto-sans@5.3.0': {}
-
-  '@fontsource-variable/noto-serif@5.3.0': {}
-
   '@fontsource/alegreya-sans-sc@5.2.5': {}
 
   '@fontsource/alegreya-sans@5.2.5': {}
@@ -1886,6 +1876,8 @@ snapshots:
   '@fontsource/alegreya-sc@5.2.5': {}
 
   '@fontsource/alegreya@5.2.5': {}
+
+  '@fontsource/cardo@5.3.0': {}
 
   '@humanfs/core@0.19.1': {}
 

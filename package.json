@@ -36,12 +36,11 @@
 	},
 	"dependencies": {
 		"@fontsource-variable/alegreya": "^5.2.5",
-		"@fontsource-variable/noto-sans": "^5.3.0",
-		"@fontsource-variable/noto-serif": "^5.3.0",
 		"@fontsource/alegreya": "^5.2.5",
 		"@fontsource/alegreya-sans": "^5.2.5",
 		"@fontsource/alegreya-sans-sc": "^5.2.5",
 		"@fontsource/alegreya-sc": "^5.2.5",
+		"@fontsource/cardo": "^5.3.0",
 		"@types/lodash-es": "^4.17.12",
 		"bits-ui": "^2.4.1",
 		"ky": "^1.8.1",
