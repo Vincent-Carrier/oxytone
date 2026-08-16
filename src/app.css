@@ -8,16 +8,15 @@
 	   glyph for. The browser was already substituting them, just to whatever system
 	   face happened to be installed, which is why they came out mismatched.
 
-	   The sans stacks need it as much as the serif: the app's body font is Alegreya
-	   Sans, so the definition pane — where those headwords are actually read — is
-	   sans, and was the one place the mismatch showed. Noto Serif rather than Noto
-	   Sans because it is already a dependency and reads well enough beside Alegreya
-	   Sans at these sizes; adding a second Noto family for three glyphs is not
-	   worth the download. */
+	   Matched by kind, sans behind sans: the app's body font is Alegreya Sans, so
+	   the LSJ pane where those headwords are read is sans, and it is very nearly the
+	   only place they appear — the treebank itself carries four digammas in four
+	   hundred files. The serif stack keeps a Noto entry for those few, and because a
+	   quotation in a definition can inherit it. */
 	--font-serif: 'Alegreya Variable', 'Noto Serif Variable', serif;
-	--font-sans: 'Alegreya Sans', 'Noto Serif Variable', system-ui, sans-serif;
+	--font-sans: 'Alegreya Sans', 'Noto Sans Variable', system-ui, sans-serif;
 	--font-sc: 'Alegreya SC', 'Noto Serif Variable', serif;
-	--font-sans-sc: 'Alegreya Sans SC', 'Noto Serif Variable', system-ui, sans-serif;
+	--font-sans-sc: 'Alegreya Sans SC', 'Noto Sans Variable', system-ui, sans-serif;
 
 	--color-nom-50: oklch(0.982 0.018 155.826);
 	--color-nom-100: oklch(0.962 0.044 156.743);

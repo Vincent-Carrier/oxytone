@@ -11,6 +11,9 @@ importers:
       '@fontsource-variable/alegreya':
         specifier: ^5.2.5
         version: 5.2.5
+      '@fontsource-variable/noto-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource-variable/noto-serif':
         specifier: ^5.3.0
         version: 5.3.0
@@ -166,6 +169,9 @@ packages:
 
   '@fontsource-variable/alegreya@5.2.5':
     resolution: {integrity: sha512-j3gDsSJmjWPwtuDxa0TBi0YULttywpB7BzKxdm585LtSbfzYkGb7Th1gX/hzmIack96H9tnFAQjeJL1Ubessgw==}
+
+  '@fontsource-variable/noto-sans@5.3.0':
+    resolution: {integrity: sha512-e3ZuxzY9AL2psXPZlhwhnYrHUHv6PMoyK9MQ7croF0CUgURLqu9EMjW7q2FgVLwij1tjLsIHQrnwQ8aUcg4BiA==}
 
   '@fontsource-variable/noto-serif@5.3.0':
     resolution: {integrity: sha512-GxGAScLRifXH02gDoJGroO/NIX83It7m1TYPPp1bhNPaii6/+GBYKxl/uL5GabFe0PBfiUV92wA4MdMdEDUu6A==}
@@ -1868,6 +1874,8 @@ snapshots:
   '@floating-ui/utils@0.2.9': {}
 
   '@fontsource-variable/alegreya@5.2.5': {}
+
+  '@fontsource-variable/noto-sans@5.3.0': {}
 
   '@fontsource-variable/noto-serif@5.3.0': {}
 
