@@ -52,6 +52,28 @@
 		}
 	}
 
+	/* Footnote markers. The prose runs either side of a marker are trimmed when
+	   they are assembled, so the spacing belongs here rather than in the markup. */
+	& .note {
+		@apply mx-[0.15em] cursor-pointer align-super font-sans text-[0.7em] text-blue-600;
+		/* The marker is a lone glyph with no word shape to catch the eye, so it
+		   carries its own weight rather than relying on colour alone. */
+		@apply font-bold;
+
+		&:hover {
+			@apply text-blue-800 underline;
+		}
+	}
+
+	/* The note itself. `position: fixed` because a popover sits in the top layer,
+	   where the article's own scrolling and stacking no longer reach it; the
+	   attachment sets left/top from the button's viewport rect. `margin: 0`
+	   overrides the UA stylesheet, which centres a popover in the viewport. */
+	& .note-popover {
+		@apply elevated fixed m-0 max-w-72 bg-white px-3 py-2;
+		@apply font-sans text-xs leading-normal text-gray-800;
+	}
+
 	/* The citation marker, in the margin at width and inline below it — the same
 	   place the Greek keeps its section numbers, so a passage sits at the same
 	   height on both sides. */

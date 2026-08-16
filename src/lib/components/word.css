@@ -55,12 +55,14 @@ ox-w {
 		@apply bg-blue-50 outline-1 outline-blue-700;
 	}
 
+	/* One weight for every verb. Participles and infinitives used to be font-medium
+	   against the finite forms' bold, which asked the variable font for a third
+	   weight to draw a distinction the reader can already get from the morphology
+	   panel — and at this size medium barely separated from the body text anyway.
+	   Colour is not the place to put it back: case and relation colouring own that
+	   channel, and would override anything set here. */
 	.verbs &[pos='verb'] {
-		@apply font-medium text-gray-950;
-
-		&[person] {
-			@apply font-bold text-gray-800;
-		}
+		@apply font-bold text-gray-950;
 	}
 
 	.syntax &[case='nom.'] {

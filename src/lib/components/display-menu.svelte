@@ -74,7 +74,7 @@
 					{@render row(
 						'verbs',
 						checked,
-						'Shows each verb in bold; finite verbs bolder than infinitives and participles.'
+						'Shows each verb in bold, including infinitives and participles.'
 					)}
 				{/snippet}
 			</DropdownMenu.CheckboxItem>
