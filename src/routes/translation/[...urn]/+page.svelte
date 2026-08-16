@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../../read/[...urn]/treebank.css'
+	import './translation.css'
 	import type { PageProps } from './$types'
 	import Nav from '$lib/components/nav.svelte'
 	import BackIcon from '~icons/heroicons/arrow-left-16-solid'
@@ -21,19 +21,20 @@
 </svelte:head>
 
 <div class="flex h-screen flex-col print:h-auto">
-	<Nav />
+	<!-- No reading tools: they all act on <ox-w> words this page does not have. -->
+	<Nav tools={false} />
 	<div class="flex overflow-y-auto">
-		<!-- `treebank prose` on the article itself rather than on a wrapper inside it:
-		treebank.css reaches the heading with `& > hgroup`, so the endpoint's <hgroup>
-		has to be a direct child. The endpoint returns it and <main> as siblings for
-		the same reason. -->
+		<!-- `.translation` is a direct child so its `& > hgroup` rule reaches the
+		heading the endpoint emits; the endpoint returns <hgroup> and <main> as
+		siblings for the same reason. -->
 		<article
-			id="treebank"
-			class="treebank prose flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4 leading-relaxed xl:mx-auto">
+			class="translation flow-root h-full grow-1 overflow-y-auto scroll-smooth pt-4 pr-4">
 			<p class="mb-4 ml-[var(--padded-margin-w)]">
+				<!-- items-center, not items-baseline: an SVG icon has no text baseline of
+				its own, so aligning on one leaves the arrow sitting low. -->
 				<a
 					href={readHref}
-					class="font-sans-sc inline-flex items-baseline gap-x-1 text-blue-600">
+					class="font-sans-sc inline-flex items-center gap-x-1 text-blue-600">
 					<BackIcon />
 					back to the Greek
 				</a>
@@ -48,20 +49,3 @@
 		</article>
 	</div>
 </div>
-
-<style>
-	/* treebank.css sets `.body p { display: inline }`, which is right for running
-	   Greek broken up by section numbers but runs the English together into one
-	   block. Here each passage is its own paragraph. */
-	#treebank :global(.body p) {
-		display: block;
-		margin-bottom: 0.75rem;
-	}
-
-	/* Reads as English rather than as the justified Greek column: `.prose .body`
-	   in treebank.css justifies it, which suits Greek set without hyphenation but
-	   opens rivers in an English paragraph. */
-	#treebank :global(.body) {
-		text-align: left;
-	}
-</style>

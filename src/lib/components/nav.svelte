@@ -8,10 +8,16 @@
 	import { page } from '$app/state'
 	import TranslationIcon from '~icons/heroicons/language-16-solid'
 
-	// Passed in rather than derived here so the link server-renders with the rest of
-	// the nav, and so the translation route — which renders this same nav and has no
-	// second translation to offer — simply leaves it off.
-	let { translated = false }: { translated?: boolean } = $props()
+	// `translated` is passed in rather than derived here so the link server-renders
+	// with the rest of the nav.
+	//
+	// `tools` turns off the reading aids, for a page that has no treebank to apply
+	// them to: flashcards builds a deck out of selected <ox-w> words, and the
+	// display menu toggles verb marking, syntax colouring and breathings on them.
+	// On the translation route there are no such words, so every one of those
+	// controls is inert. Settings stays — it holds the LLM API key, which is the
+	// app's, not the text's.
+	let { translated = false, tools = true }: { translated?: boolean; tools?: boolean } = $props()
 
 	// The read and translation routes share the {author}/{work}/{page} tail, so
 	// each links to the other by swapping the prefix — which keeps the reader on
@@ -43,22 +49,24 @@
 	]}>
 	<a href="/" class="text-gray-800">oxytone</a>
 	<div class="grow"></div>
-	<Tooltip>
-		<!-- FlashcardsButton renders buttons of its own, so the tooltip anchors to a
-		wrapping element rather than its default <button>. -->
-		{#snippet child({ props })}
-			<div {...props}>
-				<FlashcardsButton />
-			</div>
-		{/snippet}
-		{#snippet tooltip()}
-			<p class="w-64">
-				Create a deck of flashcards from the words you select. Each card will have the lemma
-				on the front side and a full LSJ definition on its back side. The deck can be
-				imported into Anki or any other software compatible with the Anki format.
-			</p>
-		{/snippet}
-	</Tooltip>
+	{#if tools}
+		<Tooltip>
+			<!-- FlashcardsButton renders buttons of its own, so the tooltip anchors to a
+			wrapping element rather than its default <button>. -->
+			{#snippet child({ props })}
+				<div {...props}>
+					<FlashcardsButton />
+				</div>
+			{/snippet}
+			{#snippet tooltip()}
+				<p class="w-64">
+					Create a deck of flashcards from the words you select. Each card will have the
+					lemma on the front side and a full LSJ definition on its back side. The deck can
+					be imported into Anki or any other software compatible with the Anki format.
+				</p>
+			{/snippet}
+		</Tooltip>
+	{/if}
 	<!-- Only where there is one to read: 128 of the 180 works that paginate have no
 	translation, so offering the link everywhere would mostly lead to a dead end.
 	Hidden on the translation route itself, which carries its own way back. -->
@@ -68,6 +76,8 @@
 			<span class="max-sm:sr-only">translation</span>
 		</Button>
 	{/if}
-	<DisplayMenu />
+	{#if tools}
+		<DisplayMenu />
+	{/if}
 	<SettingsMenu />
 </nav>

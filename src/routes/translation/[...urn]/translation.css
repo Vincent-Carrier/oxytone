@@ -1,0 +1,66 @@
+@reference '$/app.css';
+
+/* The translation is English prose, not a treebank: no words to click, no
+   morphology, no syntax colouring. It keeps the reading column's proportions so
+   the two sides line up when you switch between them, and owns everything else
+   itself.
+
+   Kept apart rather than layered over `.treebank` because almost every rule
+   there is about Greek: justified setting, inline paragraphs broken by section
+   numbers, line-number margins that hide every label not ending in 0 or 5. Each
+   one had to be undone here, which is the sign it was the wrong base. */
+
+/* Same values as treebank.css, repeated rather than imported so this page does
+   not pull in a stylesheet of Greek rules for two custom properties. They are
+   what keeps the citation gutter the same width on both sides. */
+:root {
+	--margin-w: calc(var(--spacing) * 10);
+	--padded-margin-w: calc(var(--spacing) * 14);
+
+	@variant max-sm {
+		--margin-w: 0;
+		--padded-margin-w: calc(var(--spacing) * 4);
+	}
+}
+
+.translation {
+	@apply max-w-prose font-serif xl:mx-auto;
+
+	& > hgroup {
+		@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
+
+		& h1 {
+			@apply text-3xl text-gray-800;
+		}
+
+		& .author {
+			@apply text-gray-800;
+		}
+	}
+
+	& .body {
+		/* Left-ranged, not justified: the Greek is set without hyphenation where
+		   justification reads well, but an English paragraph at this measure opens
+		   rivers instead. */
+		@apply mb-[40vh] ml-[var(--padded-margin-w)] text-left leading-relaxed;
+
+		/* One passage per paragraph. The Greek runs continuously with section
+		   numbers punctuating it, so there `p` is inline; here the paragraph is the
+		   unit the reader scans. */
+		& p {
+			@apply mb-3 block;
+		}
+	}
+
+	/* The citation marker, in the margin at width and inline below it — the same
+	   place the Greek keeps its section numbers, so a passage sits at the same
+	   height on both sides. */
+	& .section-nbr {
+		@apply font-sans text-xs tracking-tighter text-gray-400 select-none;
+		@apply mr-2 inline-block border-r-1 border-gray-200 px-1;
+
+		&:target {
+			@apply bg-blue-100 font-medium text-blue-700 outline;
+		}
+	}
+}

@@ -80,7 +80,10 @@ declare
     let $pager := p:pager(`{$author}/{$work}`)
     let $page := if (exists($pager)) then ($wp?page otherwise head($pager?list)) else $wp?page
     return
-      if (empty($tei)) then <div class="translation" data-empty="yes" />
+      (: A marker rather than a 404: having no translation is the ordinary case for
+         128 of the 180 works that paginate, and the reader says so in its own words
+         rather than rendering this. :)
+      if (empty($tei)) then <div data-empty="yes" />
       else
         let $passages := tr:passages($tei)
         (: Unpaginated works are read whole, so every passage belongs. :)
