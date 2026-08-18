@@ -113,7 +113,7 @@ declare function n:normalize($tb, $style := "prose") as element() {
   }</body>
 };
 
-(: One <w>, carrying everything the frontend's ox-w element reads: the dependency
+(: One <w>, carrying everything the frontend's word element reads: the dependency
    links, the sentence it belongs to, and the positional tag expanded into named
    morphology attributes. A leading or trailing hyphen marks an elided part of a
    crasis — the hyphen is dropped from the text, and a word that is only a trailing

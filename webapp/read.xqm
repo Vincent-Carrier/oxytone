@@ -133,11 +133,16 @@ declare variable $r:xslt := xsm:stylesheet({
           <xsl:value-of select="concat(substring(oxy:strip-diacritics(normalize-unicode(., 'NFD')), 1, 2), '.')"/>
       </div>
     </xsl:sequence>,
+  (: A span rather than an <ox-w>: the words stopped being custom elements when a
+     page of 33,000 of them made registering a component apiece cost half a second
+     of upgrade, and a tag that looks bespoke invites the reader to expect one.
+     The class is what the CSS and the click handler match on — `span` alone would
+     also catch the sentence wrapper above. :)
   "w":
-    <ox-w>
+    <span class="w">
       <xsl:copy-of select="@*" />
       <xsl:value-of select="normalize-unicode(., 'NFC')" />
-    </ox-w>,
+    </span>,
   "blockquote|p": xsm:keep("node()")
 });
 

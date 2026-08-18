@@ -47,13 +47,13 @@ export function readSelection(): SelectionContext | null {
 
 function coveredWords(range: Range): WordElement[] {
 	// Scope to the common ancestor before querying: a page holds thousands of
-	// `ox-w` elements and this runs on every completed selection. The ancestor is
+	// word elements and this runs on every completed selection. The ancestor is
 	// often a text node when the selection sits inside a single word.
 	const node = range.commonAncestorContainer
 	const scope = node.nodeType === Node.ELEMENT_NODE ? (node as Element) : node.parentElement
 	if (!scope) return []
 
-	return [...scope.querySelectorAll<WordElement>('ox-w')].filter(w => range.intersectsNode(w))
+	return [...scope.querySelectorAll<WordElement>('span.w')].filter(w => range.intersectsNode(w))
 }
 
 // Expands a set of words to every word sharing their sentence. Re-queries from

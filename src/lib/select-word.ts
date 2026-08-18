@@ -7,7 +7,7 @@ import { pos, relation, wordCase, wordId } from '$lib/word'
 // Selecting a word: the definition panel, the flashcard deck, and the analysis
 // markings painted onto the words around it.
 //
-// A module rather than the `ox-w` component this used to live in. The markings
+// A module rather than the per-word component this used to live in. The markings
 // were always applied to *other* elements, so nothing here needed a component
 // per word — and paying for 33,000 of them cost half a second of upgrade on a
 // long page before a word could be clicked at all.

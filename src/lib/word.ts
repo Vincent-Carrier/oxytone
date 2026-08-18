@@ -1,6 +1,6 @@
 // Reading a word out of the treebank markup.
 //
-// Words are plain `<ox-w>` elements carrying their analysis as attributes, not
+// Words are plain `<span class="w">` elements carrying their analysis as attributes, not
 // custom elements: a page of Herodotus holds 33,000 of them, and registering a
 // component for each cost ~550ms of upgrade before the text could be read. So
 // nothing turns those attributes into properties, and this is where they are

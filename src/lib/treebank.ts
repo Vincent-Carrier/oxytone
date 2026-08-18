@@ -38,7 +38,7 @@ export function treebankFor(body: HTMLElement): Treebank {
 }
 
 export function indexTreebank(body: HTMLElement): Treebank {
-	const words = [...body.querySelectorAll<WordElement>('ox-w')]
+	const words = [...body.querySelectorAll<WordElement>('span.w')]
 	const byId = new Map<number, WordElement>()
 	const childrenOf = new Map<number, WordElement[]>()
 	const bySentence = new Map<string, WordElement[]>()

@@ -128,7 +128,7 @@
 		// One listener for every word on the page. Binding per element meant 33,000
 		// handlers on a long text, and a component apiece to own them.
 		const onWordClick = (ev: MouseEvent) => {
-			const w = (ev.target as Element).closest<WordElement>('ox-w')
+			const w = (ev.target as Element).closest<WordElement>('span.w')
 			if (!w || !body?.contains(w)) return
 			// A drag across words ends with a click on whichever word the pointer was
 			// released over. Without this guard every text selection would also select

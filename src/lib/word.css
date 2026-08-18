@@ -1,16 +1,16 @@
 @reference '$/app.css';
 
 .mem-mode {
-	.line ox-w:first-child {
+	.line .w:first-child {
 		@apply inline-block first-letter:text-black;
 	}
 
-	ox-w {
+	.w {
 		@apply !text-white;
 	}
 }
 
-ox-w {
+.w {
 	@apply cursor-pointer text-gray-800;
 
 	&.head {

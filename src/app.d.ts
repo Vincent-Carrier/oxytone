@@ -15,7 +15,7 @@ declare global {
 	}
 	type Nullish<T> = T | null | undefined
 
-	// One `<ox-w>` in the treebank. A plain element: its analysis — lemma, part of
+	// One `<span class="w">` in the treebank. A plain element: its analysis — lemma, part of
 	// speech, case, its head and sentence in the dependency tree — lives in
 	// attributes, and `$lib/word` is what reads them. It was a custom element with
 	// all of that as typed properties, until a page of 33,000 of them made the

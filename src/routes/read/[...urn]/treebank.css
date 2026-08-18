@@ -201,7 +201,7 @@
 		& .line {
 			@apply italic;
 
-			&:first-of-type ox-w:first-of-type {
+			&:first-of-type .w:first-of-type {
 				@apply relative;
 
 				&::before {
@@ -210,7 +210,7 @@
 				}
 			}
 
-			&:last-of-type ox-w:last-of-type {
+			&:last-of-type .w:last-of-type {
 				@apply relative;
 
 				&::after {

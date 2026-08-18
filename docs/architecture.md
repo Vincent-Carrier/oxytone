@@ -16,18 +16,20 @@ Two services behind a Caddy reverse proxy (`Caddyfile`):
 3. BaseX `webapp/read.xqm` (`r:get-page`) resolves the normalized treebank
    (from the `normalized` DB cache, or builds it on demand via `normalize.xqm`)
    and runs an XSLT transform producing HTML.
-4. The page injects that HTML; each word becomes an `<ox-w>` custom element.
+4. The page injects that HTML; each word is a `<span class="w">` carrying its
+   analysis as attributes. Deliberately not a custom element — see below.
 
 The XSLT lives in `read.xqm` as `$r:xslt`, built with the `xsm` helper module
-(`repo/xsm.xqm`). It maps `<w>` → `<ox-w>` (copying all attributes), lines to
-`.line` divs, chapters/sections/speakers to their containers, etc.
+(`repo/xsm.xqm`). It maps `<w>` → `<span class="w">` (copying all attributes),
+lines to `.line` divs, chapters/sections/speakers to their containers, etc.
 
 ## Treebank markup
 
 A rendered word carries its full morphology and dependency info as attributes:
 
 ```html
-<ox-w
+<span
+	class="w"
 	id="100004224"
 	head="100004219"
 	relation="ATR"
@@ -37,16 +39,24 @@ A rendered word carries its full morphology and dependency info as attributes:
 	number="sg."
 	gender="fem."
 	case="acc."
-	>οὐλομένην</ox-w
+	>οὐλομένην</span
 >
 ```
 
 `id`/`head` encode the dependency tree; `sentence` groups words; the rest is
 expanded morphology (see `repo/postag.xqm` for postag → attribute expansion).
 
+Words were `<ox-w>` custom elements until a page of 33,000 of them — a book of
+Herodotus — made registering a Svelte component apiece cost about half a second
+of upgrade before the text could be read. They are plain spans now: nothing
+turns those attributes into properties, so `$lib/word` reads them, `$lib/treebank`
+indexes them, and one delegated listener handles every click.
+
 ## Frontend components (`src/lib/`)
 
-- `word.svelte` — the `ox-w` custom element; interactivity per word.
+- `word.ts` — reads a word's attributes (lemma, morphology, form).
+- `treebank.ts` — indexes a page's words by id, head and sentence.
+- `select-word.ts` — selecting a word and painting the analysis markings.
 - `definition.svelte` — LSJ definition lookup (via `webapp/define.xqm`).
 - `morphology.svelte` — displays a word's parsed morphology.
 - `flashcards-button.svelte` — links selected lemmas to the BaseX `/flashcards`

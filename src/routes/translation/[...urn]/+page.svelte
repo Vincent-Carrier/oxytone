@@ -63,7 +63,7 @@
 </svelte:head>
 
 <div class="flex h-screen flex-col print:h-auto">
-	<!-- No reading tools: they all act on <ox-w> words this page does not have. -->
+	<!-- No reading tools: they all act on treebank words this page does not have. -->
 	<Nav tools={false} />
 	<div class="flex overflow-y-auto">
 		<!-- `.translation` is a direct child so its `& > hgroup` rule reaches the

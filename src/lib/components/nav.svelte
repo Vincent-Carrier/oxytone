@@ -8,7 +8,7 @@
 	import { toggleSmoothBreathing } from '$lib/word'
 
 	// `tools` turns off the reading aids, for a page that has no treebank to apply
-	// them to: flashcards builds a deck out of selected <ox-w> words, and the
+	// them to: flashcards builds a deck out of selected words, and the
 	// display menu toggles verb marking, syntax colouring and breathings on them.
 	// On the translation route there are no such words, so every one of those
 	// controls is inert. Settings stays — it holds the LLM API key, which is the

@@ -85,7 +85,7 @@ database with specific indexing options:
   `p:curated-pager` reads, under `books/` keys (`seed/pagers.xq`).
 - **`normalized`** — starts empty; a **write-through cache** of rendered pages.
   `seed/normalize.xq` warms it offline; `webapp/read.xqm` fills it lazily. It
-  holds the *rendered* `#tb-content` markup, not the `<treebank>` tree it came
+  holds the _rendered_ `#tb-content` markup, not the `<treebank>` tree it came
   from, so a hit is a read with no XSLT — which on a 33,000-word page was about
   two seconds. That keys the cache to the stylesheet as well as to normalization:
   after editing either, reset it with `just normalized`.
@@ -115,7 +115,7 @@ rebuild, reset the `normalized` DB (`just normalized`).
 ## Intermediate representation
 
 The normalized `<treebank>` (with `<head>`, `<ln>`/`<sentence>`, `<w>` elements)
-is what the `read.xqm` XSLT transforms into `<ox-w>`-based HTML.
+is what the `read.xqm` XSLT transforms into `<span class="w">`-based HTML.
 
 ## Samples
 
@@ -172,12 +172,15 @@ and a `sentence` attribute. The XSLT in `webapp/read.xqm` turns this into the
 
 ### 3. Rendered frontend HTML
 
-The `read.xqm` XSLT maps each `<w>` to an `<ox-w>` custom element (copying every
-attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
+The `read.xqm` XSLT maps each `<w>` to a `<span class="w">` (copying every
+attribute) inside a `.line` div. Plain elements, not custom ones: `$lib/word`
+reads the attributes, `$lib/treebank` indexes them, and the read route attaches
+one delegated click listener for the whole page.
 
 ```html
 <div class="line">
-	<ox-w
+	<span
+		class="w"
 		id="100004224"
 		head="100004219"
 		relation="ATR"
@@ -187,11 +190,19 @@ attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
 		number="sg."
 		gender="fem."
 		case="acc."
-		>οὐλομένην</ox-w
-	><ox-w id="100004225" head="100004241" relation="AuxX" sentence="1" lemma="," pos="punct."
-		>,</ox-w
+		>οὐλομένην</span
+	><span
+		class="w"
+		id="100004225"
+		head="100004241"
+		relation="AuxX"
+		sentence="1"
+		lemma=","
+		pos="punct."
+		>,</span
 	>
-	<ox-w
+	<span
+		class="w"
 		id="100004226"
 		head="100004241"
 		relation="SBJ"
@@ -201,9 +212,10 @@ attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
 		number="sg."
 		gender="fem."
 		case="nom."
-		>ἣ</ox-w
+		>ἣ</span
 	>
-	<ox-w
+	<span
+		class="w"
 		id="100004227"
 		head="100004229"
 		relation="ATR"
@@ -213,7 +225,7 @@ attribute) inside a `.line` div. `word.svelte` upgrades these on the client.
 		number="pl."
 		gender="neut."
 		case="acc."
-		>μυρί’</ox-w
+		>μυρί’</span
 	><!-- … -->
 </div>
 ```

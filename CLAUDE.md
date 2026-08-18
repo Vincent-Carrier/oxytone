@@ -6,7 +6,7 @@ treebank corpus with LSJ and Wiktionary definitions, and Anki flashcard export.
 
 ## Stack
 
-- **Frontend**: SvelteKit 5 + TypeScript + Tailwind 4 (`adapter-node`). Words render as `ox-w` custom elements.
+- **Frontend**: SvelteKit 5 + TypeScript + Tailwind 4 (`adapter-node`). Words render as plain `<span class="w">` elements carrying their analysis as attributes.
 - **XML backend**: BaseX RESTXQ endpoints (XQuery) serve normalized treebank HTML, dictionary definitions (LSJ + Wiktionary), and the Anki flashcard CSV.
 - **Reverse proxy**: Caddy routes `/basex/*` → BaseX (8080), else → SvelteKit (3000).
 - **LLM**: browser-direct streaming calls to a user-supplied API key (`src/lib/llm/`). No accounts, no server involvement — the key stays in `localStorage`.
@@ -29,10 +29,10 @@ treebank corpus with LSJ and Wiktionary definitions, and Anki flashcard export.
 fastest way to check server output — much cheaper than driving a browser:
 
 - `/read/{author}/{work}/{page}` — what the frontend consumes: `#tb-content`
-  with `<ox-w>` elements. Served from the `normalized` write-through cache, so a
+  with `<span class="w">` word elements. Served from the `normalized` write-through cache, so a
   second request does not re-normalize. Set the `debug` option to bypass it.
 - **`/plain/{author}/{work}/{page}`** — the same normalized tree rendered as
-  plain `<span>`s instead of `<ox-w>`, carrying every morphology attribute
+  bare `<span>`s without the `w` class or the reading UI, carrying every morphology attribute
   (`lemma`, `pos`, `case`, `relation`, …), with `#section-ref[1.1.1]` markers and
   `*verb*` emphasis. Nothing in `src/` calls it: it exists for reading a text as
   text — inspecting normalization output, or pasting a passage into an LLM.
