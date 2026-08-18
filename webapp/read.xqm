@@ -10,7 +10,6 @@ declare variable $r:xslt := xsm:stylesheet({
     <div id="tb-content">
       {xsm:attr('class', "concat('treebank ', head/style)")}
       {xsm:attr('data-analysis', 'head/analysis')}
-      {xsm:attr('data-translated', "if (head/translated) then 'yes' else 'no'")}
       <hgroup>
         <h1>
           <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />
@@ -18,12 +17,42 @@ declare variable $r:xslt := xsm:stylesheet({
         <p class="author">
           <xsl:value-of select="head/author" />
         </p>
+        <xsl:apply-templates select="head/translations" />
         <xsl:apply-templates select="head/books" />
       </hgroup>
       <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
     </div>,
+  (: The English translations of this work, each named by its translator so the
+     choice is between people rather than between opaque edition ids. Above the
+     page list because it is a choice about the whole work, where that is a
+     choice within it.
+
+     data-single marks the ordinary case — 507 of the 634 translated works have
+     exactly one edition — which treebank.css renders as a plain credited link
+     rather than a list of one. :)
+  "translations":
+    <ul class="translations">
+      {xsm:attr("data-single", "if (count(translation) = 1) then 'yes' else 'no'")}
+      <xsl:apply-templates select="translation" />
+    </ul>,
+  (: The date earns its place by telling apart translations of the same text a
+     century apart; the series only sometimes appears, so it trails. :)
+  "translation":
+    <li>
+      <a>
+        {xsm:attr("href",
+          "concat('/translation/', ../@urn, '?ed=', encode-for-uri(@edition))")}
+        <xsl:value-of select="." />
+      </a>
+      <xsl:if test="@date != ''">
+        <span class="date"><xsl:value-of select="@date" /></span>
+      </xsl:if>
+      <xsl:if test="@series != ''">
+        <span class="series"><xsl:value-of select="@series" /></span>
+      </xsl:if>
+    </li>,
   (: data-terse drives the dense numeral grid in treebank.css. :)
   "books":
     <ol class="books">

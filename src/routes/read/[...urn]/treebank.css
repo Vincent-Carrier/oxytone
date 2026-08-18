@@ -37,6 +37,38 @@
 			@apply text-gray-800;
 		}
 
+		/* Not lowercased with the rest of the hgroup: these are people's names, and
+		   "a. d. godley" reads as a typo where the title above it reads as a style. */
+		& .translations {
+			@apply mb-4 text-sm normal-case print:hidden;
+
+			& li {
+				@apply list-dash -mb-1;
+			}
+
+			& a {
+				@apply font-sans-sc text-blue-600;
+			}
+
+			/* The date and series are about the edition, not links into it, so they
+			   sit back from the name that is. */
+			& .date,
+			& .series {
+				@apply ml-2 text-gray-600;
+			}
+
+			/* 507 of the 634 translated works have exactly one edition. A bulleted
+			   list of one item reads as a menu with a single choice, so the marker
+			   comes off and the entry stands as a plain credit line. */
+			&[data-single='yes'] li {
+				@apply mb-0 list-none;
+
+				&::before {
+					content: none;
+				}
+			}
+		}
+
 		/* Texts divided by fable or psalm run to hundreds of pages, and at full
 		   height that list pushed the text itself off the screen. Cap it and let
 		   the list scroll; works with a dozen books are unaffected. */

@@ -37,10 +37,13 @@ fastest way to check server output — much cheaper than driving a browser:
   `*verb*` emphasis. Nothing in `src/` calls it: it exists for reading a text as
   text — inspecting normalization output, or pasting a passage into an LLM.
   Never cached, so it always reflects the current XQuery.
-- `/translate/{author}/{work}/{page}` — the Perseus English translation of that
-  page, each passage a `<p>` whose `@id` is its full dotted citation, so the ids
-  match the Greek side's section anchors. Returns `data-empty` rather than a 404
-  for the 128 of 180 paginated works that have no translation.
+- `/translate/{author}/{work}/{page}?ed=` — the Perseus English translation of
+  that page, each passage a `<p>` whose `@id` is its full dotted citation, so the
+  ids match the Greek side's section anchors. Returns `data-empty` rather than a
+  404 for the 128 of 180 paginated works that have no translation. `ed` picks
+  among the editions a work has (127 of 634 have 2–5); absent or unknown, the
+  oldest wins. `repo/translations.xqm` reads translator and date out of the TEI
+  headers, and the read page lists them above its page list.
 - `/define/lsj/{lemma}` — dictionary fragment. `/flashcards?author=&work=&w=` — Anki CSV.
 
 Page labels are usually numbers, but not always (`praef`, `priora`, `17/18`).
@@ -60,7 +63,7 @@ The route takes everything after the work as the page, so slashed labels work:
 - `src/` — SvelteKit frontend ([docs/architecture.md](docs/architecture.md))
 - `src/lib/llm/` — provider adapters, SSE streaming, prompts. `providers.ts` is pure (describes requests); `stream.ts` holds the only fetch.
 - `webapp/` — BaseX RESTXQ endpoints (`.xqm`)
-- `repo/` — shared XQuery modules (normalize, paginate, postag, urn, …)
+- `repo/` — shared XQuery modules (normalize, paginate, postag, translations, urn, …)
 - `seed/` — XQuery scripts that build the databases, plus the tracked `wiktionary-defs.tsv` and the Python script that regenerates it
 - `glaux/`, `tei/`, `lsj/` — source corpus files (from `corpus.zip`). `corpus.zip`
   ships only Homer's Greek TEI, the sole input to `m:merge`'s quotation markup.

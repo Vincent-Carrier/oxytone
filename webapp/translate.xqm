@@ -1,5 +1,6 @@
 module namespace tr = "oxytone/translate";
 import module namespace p = "paginate";
+import module namespace t = "translations";
 import module namespace urn = "urn";
 
 (: The English translation of one page of a work, from the Perseus editions
@@ -135,11 +136,15 @@ declare %private function tr:page-of($passage as element()) as xs:string? {
 
 declare
   %rest:path("/translate/{$author}/{$work-page=.+}")
+  (: Which edition to read, as a query parameter rather than a path segment: the
+     path already ends in {$work-page=.+}, which swallows everything after the
+     work, so an edition segment could not be told from a page label. :)
+  %rest:query-param("ed", "{$ed}")
   %output:method("html")
-  function tr:get-page($author, $work-page) {
+  function tr:get-page($author, $work-page, $ed) {
     let $wp := urn:work-page($work-page)
     let $work := $wp?work
-    let $tei := db:get('translations', `{$author}/{$work}`)[1]
+    let $tei := t:edition(`{$author}/{$work}`, $ed)
     let $pager := p:pager(`{$author}/{$work}`)
     let $page := if (exists($pager)) then ($wp?page otherwise head($pager?list)) else $wp?page
     return
@@ -158,10 +163,21 @@ declare
         (: <hgroup> and <main> as siblings rather than inside a wrapper:
            treebank.css styles the heading with `& > hgroup` on .treebank, so a
            wrapping div here would put it a level too deep and drop the styles. :)
+        let $header := ($tei//*:teiHeader)[1]
+        let $translator := t:translator($header)
+        let $date := t:date($header)
+        (: Which of the work's translations this is. Silent before, so a work with
+           four of them read the same whichever one you were given. :)
+        let $credit :=
+          if ($translator ne '') then
+            <p class="translator">{
+              'translated by ' || $translator || (if ($date ne '') then ` ({$date})` else '')
+            }</p>
         return (
             <hgroup>
               <h1>{normalize-space(string(($tei//*:titleStmt/*:title)[1]))}</h1>
               <p class="author">{normalize-space(string(($tei//*:titleStmt/*:author)[1]))}</p>
+              {$credit}
             </hgroup>,
             <main class="body" lang="en">{
               (: The marker shows the local number, as the Greek side does: the

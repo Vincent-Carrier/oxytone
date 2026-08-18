@@ -3,26 +3,15 @@
 	import FlashcardsButton from './flashcards-button.svelte'
 	import SettingsMenu from './settings-menu.svelte'
 	import Tooltip from './tooltip.svelte'
-	import Button from './button.svelte'
 	import g from '$lib/global-state.svelte'
-	import { page } from '$app/state'
-	import TranslationIcon from '~icons/heroicons/language-16-solid'
 
-	// `translated` is passed in rather than derived here so the link server-renders
-	// with the rest of the nav.
-	//
 	// `tools` turns off the reading aids, for a page that has no treebank to apply
 	// them to: flashcards builds a deck out of selected <ox-w> words, and the
 	// display menu toggles verb marking, syntax colouring and breathings on them.
 	// On the translation route there are no such words, so every one of those
 	// controls is inert. Settings stays — it holds the LLM API key, which is the
 	// app's, not the text's.
-	let { translated = false, tools = true }: { translated?: boolean; tools?: boolean } = $props()
-
-	// The read and translation routes share the {author}/{work}/{page} tail, so
-	// each links to the other by swapping the prefix — which keeps the reader on
-	// the same passage rather than dropping them at the top of the work.
-	let urn = $derived(page.url.pathname.replace(/^\/(read|translation)\//, ''))
+	let { tools = true }: { tools?: boolean } = $props()
 
 	function toggleSmoothBreathings(val: boolean) {
 		for (let w of g.content?.querySelectorAll<WordElement>('ox-w') ?? []) {
@@ -66,15 +55,6 @@
 				</p>
 			{/snippet}
 		</Tooltip>
-	{/if}
-	<!-- Only where there is one to read: 128 of the 180 works that paginate have no
-	translation, so offering the link everywhere would mostly lead to a dead end.
-	Hidden on the translation route itself, which carries its own way back. -->
-	{#if translated}
-		<Button href={`/translation/${urn}`}>
-			<TranslationIcon />
-			<span class="max-sm:sr-only">translation</span>
-		</Button>
 	{/if}
 	{#if tools}
 		<DisplayMenu />

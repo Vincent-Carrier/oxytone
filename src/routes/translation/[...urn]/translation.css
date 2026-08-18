@@ -36,6 +36,13 @@
 		& .author {
 			@apply text-gray-800;
 		}
+
+		/* Not lowercased with the heading above it: a translator's name is a name.
+		   Set smaller and greyer than the author, being about this edition of the
+		   text rather than about the text. */
+		& .translator {
+			@apply mt-1 text-sm text-gray-600 normal-case;
+		}
 	}
 
 	& .body {

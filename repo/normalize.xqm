@@ -2,6 +2,7 @@ module namespace n = "normalize";
 import module namespace pt = "postag";
 import module namespace p = 'paginate';
 import module namespace m = 'merge';
+import module namespace t = 'translations';
 
 (: Normalization turns a GLAUx treebank — a flat stream of <sentence>/<word> with
    the structure carried on attributes — into a nested document the stylesheets in
@@ -209,6 +210,16 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
       (: Seeded by seed/translated.xq. Carried here so the reader knows whether to
          offer the translation without a second round-trip to find out. :)
       {if ($meta?translated) then <translated />}
+      (: The editions behind that flag, named so the reader can pick one rather
+         than being handed whichever the database returns first. The work URN
+         rides along because the stylesheet builds links out of it and, being a
+         module-level variable, cannot see the request's own parameters. :)
+      {if ($meta?translated) then
+        <translations urn="{$author}/{$work}">
+          {for $edition in t:editions(`{$author}/{$work}`)
+            return <translation edition="{$edition?edition}" date="{$edition?date}"
+                                series="{$edition?series}">{$edition?translator}</translation>}
+        </translations>}
     </head>
     {$normalized}
   </treebank>
