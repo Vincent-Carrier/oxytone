@@ -197,6 +197,20 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
   let $normalized := $fixed => n:normalize($style) => m:merge($author, $work, $page)
   let $_ := store:read('glaux')
   let $meta := store:get(`{$author}/{$work}`)
+  (: Seeded by seed/translated.xq. Carried here so the reader knows whether to
+     offer the translation without a second round-trip to find out. :)
+  let $translated := if ($meta?translated) then <translated />
+  (: The editions behind that flag, named so the reader can pick one rather than
+     being handed whichever the database returns first. The work URN rides along
+     because the stylesheet builds links out of it and, being a module-level
+     variable, cannot see the request's own parameters. :)
+  let $translations :=
+    if ($meta?translated) then
+      <translations urn="{$author}/{$work}">
+        {for $edition in t:editions(`{$author}/{$work}`)
+          return <translation edition="{$edition?edition}" date="{$edition?date}"
+                              series="{$edition?series}">{$edition?translator}</translation>}
+      </translations>
   return <treebank>
      <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
@@ -207,19 +221,8 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
         </books>}
       <style>{$style}</style>
       <analysis>{$analysis/string()}</analysis>
-      (: Seeded by seed/translated.xq. Carried here so the reader knows whether to
-         offer the translation without a second round-trip to find out. :)
-      {if ($meta?translated) then <translated />}
-      (: The editions behind that flag, named so the reader can pick one rather
-         than being handed whichever the database returns first. The work URN
-         rides along because the stylesheet builds links out of it and, being a
-         module-level variable, cannot see the request's own parameters. :)
-      {if ($meta?translated) then
-        <translations urn="{$author}/{$work}">
-          {for $edition in t:editions(`{$author}/{$work}`)
-            return <translation edition="{$edition?edition}" date="{$edition?date}"
-                                series="{$edition?series}">{$edition?translator}</translation>}
-        </translations>}
+      {$translated}
+      {$translations}
     </head>
     {$normalized}
   </treebank>

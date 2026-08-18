@@ -58,6 +58,47 @@ The route takes everything after the work as the page, so slashed labels work:
 - `$` is aliased to `src/` (see `svelte.config.js`).
 - camelCase for vars/functions, PascalCase for components.
 
+### XQuery: never put `(: … :)` inside an element constructor
+
+Inside a direct element constructor, everything between the tags is element
+_content_. `(: … :)` is comment syntax in query context only, so there it is
+literal text and is copied into the output:
+
+```xquery
+(: WRONG — the comment renders into the page :)
+<hgroup>
+  <h1>{$title}</h1>
+  (: which edition this is :)
+  {$credit}
+</hgroup>
+```
+
+It is easy to miss, because the damage is often invisible where you look
+first: an XSLT that pulls named children (`head/title`, `head/books`) skips
+stray text, so a leaked comment sits in the output — and in the `normalized`
+cache — while the rendered page looks correct.
+
+Bind the value in a `let` above and interpolate it, keeping the comment in
+query context:
+
+```xquery
+(: which edition this is :)
+let $credit := <p class="translator">{$who}</p>
+return <hgroup>
+  <h1>{$title}</h1>
+  {$credit}
+</hgroup>
+```
+
+A comment is also fine _between_ the map entries of an `xsm:stylesheet`, which
+is query context — that is where the `"books"` / `"translation"` template notes
+in `webapp/read.xqm` live.
+
+To check, grep for a `(:` whose preceding line ends in `>` or `}`, and confirm
+with `curl … | grep -c '(:.*:)'` — the count should be 0 on every endpoint.
+Match the closing `:)` too: a bare `(:` also hits Tailwind's `:not(…)` selectors
+in the served CSS.
+
 ## Layout
 
 - `src/` — SvelteKit frontend ([docs/architecture.md](docs/architecture.md))
