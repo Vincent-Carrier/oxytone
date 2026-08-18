@@ -141,11 +141,21 @@ declare variable $r:xslt := xsm:stylesheet({
   "blockquote|p": xsm:keep("node()")
 });
 
-(: One page of a text, as the #tb-content markup the frontend hydrates into ox-w
-   elements. Normalizing is the expensive half, so it is cached in the `normalized`
-   database write-through: the first request for a page pays for it and every later
-   one is a lookup plus the XSLT. Set the `debug` option to bypass the cache while
-   working on the XQuery. :)
+(: One page of a text, as the #tb-content markup the frontend renders as words.
+   Cached in the `normalized` database write-through: the first request for a page
+   pays for it and every later one is a lookup.
+
+   The *rendered* markup is what is stored, not the normalized tree it came from.
+   Both halves are expensive at the sizes this corpus reaches — normalizing a book
+   of Herodotus, and then transforming its 33,000 words through the stylesheet,
+   which alone took about two seconds and used to run on every request, cache hit
+   or not. Storing the output makes a hit a read and nothing else.
+
+   The cost of that is a cache keyed to the stylesheet as well as to the
+   normalization: edit either and the entries are stale, where before a stylesheet
+   change took effect immediately. `just normalized` recreates the database empty,
+   which is the fix, and the `debug` option bypasses the cache while working on
+   the XQuery. :)
 declare
   %updating
   %rest:path("/read/{$author}/{$work-page=.+}")
@@ -158,14 +168,14 @@ declare
       if (db:option('debug'))
         then update:output(r:render(n:get-normalized($author, $wp?work, $wp?page)))
       else if (exists($cached))
-        then update:output(r:render($cached))
+        then update:output($cached)
       else
         (: db:put and update:output are both updating expressions, so the whole
            function is %updating and needs no MIXUPDATES. :)
-        let $normalized := n:get-normalized($author, $wp?work, $wp?page)
+        let $rendered := r:render(n:get-normalized($author, $wp?work, $wp?page))
         return (
-          db:put('normalized', $normalized, $path),
-          update:output(r:render($normalized))
+          db:put('normalized', $rendered, $path),
+          update:output($rendered)
         )
 };
 

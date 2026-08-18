@@ -84,7 +84,11 @@ database with specific indexing options:
 - **`pagers`** — stores the hand-curated per-work book lists that
   `p:curated-pager` reads, under `books/` keys (`seed/pagers.xq`).
 - **`normalized`** — starts empty; a **write-through cache** of rendered pages.
-  `seed/normalize.xq` warms it offline; `webapp/read.xqm` fills it lazily.
+  `seed/normalize.xq` warms it offline; `webapp/read.xqm` fills it lazily. It
+  holds the *rendered* `#tb-content` markup, not the `<treebank>` tree it came
+  from, so a hit is a read with no XSLT — which on a 33,000-word page was about
+  two seconds. That keys the cache to the stylesheet as well as to normalization:
+  after editing either, reset it with `just normalized`.
 
 ## Normalization (`repo/normalize.xqm`)
 
@@ -141,7 +145,9 @@ Raw dependency treebank. `postag` is a positional morphology string; `line` /
 Output of `n:get-normalized` (`repo/normalize.xqm`): a `<head>` with English
 metadata + book list, and a `<body>` split into `<ln>` lines whose `<w>`
 elements carry expanded morphology (`postag` → `pos`/`number`/`gender`/`case`/…)
-and a `sentence` attribute. This is what gets cached in the `normalized` DB.
+and a `sentence` attribute. The XSLT in `webapp/read.xqm` turns this into the
+`#tb-content` markup, and it is that output — not this tree — which the
+`normalized` DB caches.
 
 ```xml
 <treebank>
