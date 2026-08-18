@@ -161,8 +161,8 @@ declare
         let $matching := $passages[tr:page-of(.) = string($page)]
         let $on-page := if (empty($page) or empty($matching)) then $passages else $matching
         (: <hgroup> and <main> as siblings rather than inside a wrapper:
-           treebank.css styles the heading with `& > hgroup` on .treebank, so a
-           wrapping div here would put it a level too deep and drop the styles. :)
+           translation.css styles the heading with `& > hgroup` on .translation, so
+           a wrapping div here would put it a level too deep and drop the styles. :)
         let $header := ($tei//*:teiHeader)[1]
         let $translator := t:translator($header)
         let $date := t:date($header)

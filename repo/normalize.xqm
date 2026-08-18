@@ -215,7 +215,8 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
      <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
       <author>{$meta?english-author}</author>
-      {if (exists($pager)) then <books terse="{if ($pager?terse) then 'yes' else 'no'}">
+      {if (exists($pager)) then <books terse="{if ($pager?terse) then 'yes' else 'no'}"
+                                      heading="{$pager?heading}">
         {for $n in $pager?list
           return <book id="{$n}">{$pager?label($n)}</book>}
         </books>}

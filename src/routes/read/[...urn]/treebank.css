@@ -26,21 +26,33 @@
 .treebank {
 	@apply max-w-prose font-serif;
 
-	& > hgroup {
+	/* The work's front matter: author, title, and the two lists of links into it.
+	   Ruled off from the text so the reader can see where the apparatus stops and
+	   the Greek starts — which is what the run-together version could not show. */
+	& > header.work {
 		@apply font-sc mb-8 ml-[var(--padded-margin-w)] text-balance lowercase;
+		@apply border-b border-gray-300 pb-6;
+
+		/* Author first and small, title beneath it and large, as a title page sets
+		   them: the title is what identifies the page, so it takes the weight. */
+		& .author {
+			@apply text-sm text-gray-600;
+		}
 
 		& h1 {
-			@apply text-3xl text-gray-800;
+			@apply mb-4 text-3xl text-gray-800;
 		}
 
-		& .author {
-			@apply text-gray-800;
-		}
+		& .nav-group {
+			@apply mt-4 text-sm print:hidden;
 
-		/* Not lowercased with the rest of the hgroup: these are people's names, and
-		   "a. d. godley" reads as a typo where the title above it reads as a style. */
-		& .translations {
-			@apply mb-4 text-sm normal-case print:hidden;
+			/* Set apart from the entries it labels rather than just smaller than
+			   them: the list is small caps too, so size alone left the heading
+			   reading as one more item. Uppercase and letterspaced, and lighter than
+			   the links, marks it as the label of a group. */
+			& h2 {
+				@apply font-sans-sc mb-1 text-xs tracking-wider text-gray-400 uppercase;
+			}
 
 			& li {
 				@apply list-dash -mb-1;
@@ -49,12 +61,28 @@
 			& a {
 				@apply font-sans-sc text-blue-600;
 			}
+		}
 
-			/* 507 of the 634 translated works have exactly one edition. A bulleted
-			   list of one item reads as a menu with a single choice, so the marker
-			   comes off and the entry stands as a plain credit line. */
-			&[data-single='yes'] li {
-				@apply mb-0 list-none;
+		/* Not lowercased with the rest of the header: these are people's names, and
+		   "a. d. godley" reads as a typo where the title above it reads as a style. */
+		& .translations {
+			@apply normal-case;
+		}
+
+		/* Texts divided by fable or psalm run to hundreds of pages, and at full
+		   height that list pushed the text itself off the screen. Cap it and let
+		   the list scroll; works with a dozen books are unaffected. */
+		& .books ol {
+			@apply max-h-[40vh] columns-3 overflow-y-auto lg:columns-4;
+		}
+
+		/* Hundreds of bare numerals pack into a grid instead: the dash and the
+		   column width were sized for "Fable 137", not "137". */
+		& .books[data-terse='yes'] ol {
+			@apply grid columns-auto grid-cols-[repeat(auto-fill,minmax(2.5rem,1fr))] gap-x-1;
+
+			& li {
+				@apply mb-0 list-none text-right tabular-nums;
 
 				&::before {
 					content: none;
@@ -62,32 +90,14 @@
 			}
 		}
 
-		/* Texts divided by fable or psalm run to hundreds of pages, and at full
-		   height that list pushed the text itself off the screen. Cap it and let
-		   the list scroll; works with a dozen books are unaffected. */
-		& .books {
-			@apply max-h-[40vh] columns-3 overflow-y-auto text-sm lg:columns-4 print:hidden;
+		/* 507 of the 634 translated works have exactly one edition. A bulleted list
+		   of one item reads as a menu with a single choice, so the marker comes off
+		   and the entry stands as a plain credit line. */
+		& .translations[data-single='yes'] li {
+			@apply mb-0 list-none;
 
-			& li {
-				@apply list-dash -mb-1;
-
-				& a {
-					@apply font-sans-sc text-blue-600;
-				}
-			}
-
-			/* Hundreds of bare numerals pack into a grid instead: the dash and the
-			   column width were sized for "Fable 137", not "137". */
-			&[data-terse='yes'] {
-				@apply grid columns-auto grid-cols-[repeat(auto-fill,minmax(2.5rem,1fr))] gap-x-1;
-
-				& li {
-					@apply mb-0 list-none text-right tabular-nums;
-
-					&::before {
-						content: none;
-					}
-				}
+			&::before {
+				content: none;
 			}
 		}
 	}

@@ -5,21 +5,25 @@ import module namespace urn = "urn";
 
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
+(: Author over title, the way a title page reads, and each navigation list under
+   a heading of its own. The <hgroup> that used to wrap them is gone: it exists to
+   tie a heading to its own subheading, and what follows the title here is two
+   lists of links, not a tagline. :)
 declare variable $r:xslt := xsm:stylesheet({
   "/treebank":
     <div id="tb-content">
       {xsm:attr('class', "concat('treebank ', head/style)")}
       {xsm:attr('data-analysis', 'head/analysis')}
-      <hgroup>
-        <h1>
-          <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />
-        </h1>
+      <header class="work">
         <p class="author">
           <xsl:value-of select="head/author" />
         </p>
+        <h1>
+          <xsl:value-of select="oxy:strip-diacritics(normalize-unicode(head/title, 'NFD'))" />
+        </h1>
         <xsl:apply-templates select="head/translations" />
         <xsl:apply-templates select="head/books" />
-      </hgroup>
+      </header>
       <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
@@ -33,10 +37,13 @@ declare variable $r:xslt := xsm:stylesheet({
      exactly one edition — which treebank.css renders as a plain credited link
      rather than a list of one. :)
   "translations":
-    <ul class="translations">
+    <nav class="nav-group translations">
       {xsm:attr("data-single", "if (count(translation) = 1) then 'yes' else 'no'")}
-      <xsl:apply-templates select="translation" />
-    </ul>,
+      <h2>Translations</h2>
+      <ul>
+        <xsl:apply-templates select="translation" />
+      </ul>
+    </nav>,
   (: "Translator (year)", the whole of it the link. The date earns its place by
      telling apart translations of the same text a century apart, and belongs
      inside the link because it names the same thing the translator does.
@@ -56,12 +63,17 @@ declare variable $r:xslt := xsm:stylesheet({
         </xsl:if>
       </a>
     </li>,
-  (: data-terse drives the dense numeral grid in treebank.css. :)
+  (: data-terse drives the dense numeral grid in treebank.css. The heading is the
+     division's own plural — "Books", "Fables", "Psalms" — rather than a fixed
+     word, so it agrees with the entries beneath it. :)
   "books":
-    <ol class="books">
+    <nav class="nav-group books">
       {xsm:attr("data-terse", "@terse")}
-      <xsl:apply-templates select="book" />
-    </ol>,
+      <h2><xsl:value-of select="@heading" /></h2>
+      <ol>
+        <xsl:apply-templates select="book" />
+      </ol>
+    </nav>,
   "book":
     <li>
       <a>

@@ -28,9 +28,10 @@ declare function p:auto-pager($urn as xs:string) {
 
 (: How to page a work, or empty for one that is read whole. A pager is a map of
    `get` (a treebank and a page label -> that page's sentences), `list` (every page
-   label, in reading order), `format` (a label -> its heading, "Book 3") and
-   `label` (a label -> its shorter form in the nav). Curated lists win over the
-   division picked automatically. :)
+   label, in reading order), `format` (a label -> its heading, "Book 3"),
+   `label` (a label -> its shorter form in the nav) and `heading` (the plural noun
+   naming the whole list, "Books"). Curated lists win over the division picked
+   automatically. :)
 declare function p:pager($urn as xs:string) {
   p:curated-pager($urn) otherwise p:auto-pager($urn)
 };
@@ -57,6 +58,7 @@ declare function p:homer-pager($list) {
       }
     },
     'list': $list,
+    'heading': 'Books',
     'format': $format,
     'label': $format
   }
@@ -81,6 +83,15 @@ declare function p:div-pager($div as xs:string, $list) {
     },
     'list': $list,
     'terse': $terse,
+    (: Plural for the heading over the list. A consonant before a final "y" takes
+       "-ies", which is what "homily" needs; everything else the corpus divides by
+       — book, chapter, oration, psalm, fable, letter — takes a plain "s".
+       "Fabula" is the one Latin label and would want "fabulae", but it names a
+       single work and an English "s" is the lesser wrong. :)
+    'heading':
+      if (matches($name, '[^aeiouAEIOU]y$'))
+      then replace($name, 'y$', 'ies')
+      else `{$name}s`,
     (: The heading always spells the division out ("Fables, Fable 7"); only the
        nav list goes terse, where the noun is repeated hundreds of times. :)
     'format': fn($n) { `{$name} {$n}` },
@@ -107,6 +118,7 @@ declare function p:book-pager($list) {
       }
     },
     'list': $list,
+    'heading': 'Books',
     'format': $format,
     'label': $format
   }
