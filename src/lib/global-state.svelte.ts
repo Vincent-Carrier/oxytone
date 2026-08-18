@@ -5,6 +5,10 @@ const g = $state({
 	// The treebank's #tb-content element, published by the read route once the
 	// server-rendered HTML is mounted.
 	content: null as HTMLElement | null,
+	// The `main.body` inside it: the Greek alone, without the heading, the
+	// translations list or the page list that share the treebank div. Anything
+	// acting on the *text* wants this rather than `content`.
+	body: null as HTMLElement | null,
 	// The word whose definition is showing. One at a time, unlike `selection`.
 	selected: null as WordElement | null,
 	// Whether flashcard mode is on, in which clicking words accumulates a deck.

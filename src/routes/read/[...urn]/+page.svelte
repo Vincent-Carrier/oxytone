@@ -74,8 +74,12 @@
 		// The listener is on the document, so it also sees clicks inside the
 		// popover itself — which would re-run show(), wiping the answer on every
 		// button press and reopening the popover the moment it's dismissed.
+		//
+		// Scoped to the body rather than the whole treebank: the heading, the
+		// translations list and the page list are all inside #tb-content, and
+		// selecting a title or a translator's name is not a request to translate it.
 		const target = event.target as Node | null
-		if (target && !g.content?.contains(target)) return
+		if (target && !g.body?.contains(target)) return
 
 		// Both events fire before the browser finalises the selection, so read it a
 		// tick later. A timeout rather than requestAnimationFrame: rAF is throttled
@@ -96,6 +100,7 @@
 		document.title = title
 		let content = q('#tb-content')
 		g.content = content
+		g.body = q('#tb-content main.body')
 
 		if (!content) return
 		let l = location

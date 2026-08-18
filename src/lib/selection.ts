@@ -21,9 +21,9 @@ export function readSelection(): SelectionContext | null {
 
 	const range = sel.getRangeAt(0)
 
-	// Ignore selections in the nav, the definition aside, or anywhere else
-	// outside the text itself.
-	if (!g.content?.contains(range.commonAncestorContainer)) return null
+	// Ignore selections in the nav, the definition aside, the treebank's own
+	// heading and page list, or anywhere else outside the Greek itself.
+	if (!g.body?.contains(range.commonAncestorContainer)) return null
 
 	const selectedText = normalize(sel.toString())
 	if (!selectedText) return null
@@ -67,7 +67,7 @@ function sentenceWords(words: WordElement[]): WordElement[] {
 	if (ids.length === 0) return words
 
 	const selector = ids.map(id => `ox-w[sentence="${id}"]`).join(',')
-	const found = [...(g.content?.querySelectorAll<WordElement>(selector) ?? [])]
+	const found = [...(g.body?.querySelectorAll<WordElement>(selector) ?? [])]
 	return found.length > 0 ? found : words
 }
 
