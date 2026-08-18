@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Button from '$/lib/components/button.svelte'
-	import '$lib/components/word.svelte'
 	import type { PageProps } from './$types'
 	import './styles.css'
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './treebank.css'
 	import type { PageProps } from './$types'
-	import '$lib/components/word.svelte'
+	import '$lib/word.css'
 	import Morphology from '$lib/components/morphology.svelte'
 	import Definition from '$lib/components/definition.svelte'
 	import Nav from '$lib/components/nav.svelte'
@@ -9,11 +9,13 @@
 	import Button from '$lib/components/button.svelte'
 	import CloseIcon from '~icons/heroicons/x-mark-16-solid'
 	import g, { analysisChosen } from '$lib/global-state.svelte'
+	import { clearMarkings, selectWord } from '$lib/select-word'
+	import { lemma as wordLemma } from '$lib/word'
 	import type { Attachment } from 'svelte/attachments'
 	import { fade, fly } from 'svelte/transition'
 
 	let { data }: PageProps = $props()
-	let lemma = $derived(g.selected?.lemma)
+	let lemma = $derived(g.selected ? wordLemma(g.selected) : undefined)
 	let popover = $state<AskPopover>()
 
 	// `fly` parameters for the aside: below lg it is a bottom sheet that slides in
@@ -63,7 +65,7 @@
 	// The button gives it an explicit affordance, and a reachable one: on a phone
 	// the word that opened the sheet may well be underneath it.
 	function closeSheet() {
-		for (let clear of g.selected?.clear ?? []) clear()
+		clearMarkings()
 		g.selected?.removeAttribute('defined')
 		g.selected = null
 	}
@@ -100,7 +102,8 @@
 		document.title = title
 		let content = q('#tb-content')
 		g.content = content
-		g.body = q('#tb-content main.body')
+		let body = q('#tb-content main.body')
+		g.body = body
 
 		if (!content) return
 		let l = location
@@ -122,9 +125,25 @@
 			ev.preventDefault()
 			l.replace(a.hash === l.hash ? '#' : a.hash)
 		}
+		// One listener for every word on the page. Binding per element meant 33,000
+		// handlers on a long text, and a component apiece to own them.
+		const onWordClick = (ev: MouseEvent) => {
+			const w = (ev.target as Element).closest<WordElement>('ox-w')
+			if (!w || !body?.contains(w)) return
+			// A drag across words ends with a click on whichever word the pointer was
+			// released over. Without this guard every text selection would also select
+			// that word, opening the definition aside and repainting the tree.
+			const sel = getSelection()
+			if (sel && !sel.isCollapsed) return
+			selectWord(w)
+		}
 		content.addEventListener('click', onAnchorClick)
+		content.addEventListener('click', onWordClick)
 
-		return () => content.removeEventListener('click', onAnchorClick)
+		return () => {
+			content.removeEventListener('click', onAnchorClick)
+			content.removeEventListener('click', onWordClick)
+		}
 	}
 </script>
 

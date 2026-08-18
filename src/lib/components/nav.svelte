@@ -4,6 +4,8 @@
 	import SettingsMenu from './settings-menu.svelte'
 	import Tooltip from './tooltip.svelte'
 	import g from '$lib/global-state.svelte'
+	import { treebankFor } from '$lib/treebank'
+	import { toggleSmoothBreathing } from '$lib/word'
 
 	// `tools` turns off the reading aids, for a page that has no treebank to apply
 	// them to: flashcards builds a deck out of selected <ox-w> words, and the
@@ -14,12 +16,10 @@
 	let { tools = true }: { tools?: boolean } = $props()
 
 	function toggleSmoothBreathings(val: boolean) {
-		for (let w of g.content?.querySelectorAll<WordElement>('ox-w') ?? []) {
-			// The treebank HTML is injected before the `ox-w` custom elements are
-			// upgraded, so this can run against elements that don't yet have the
-			// method. Throwing here aborts the whole effect flush.
-			w.toggleSmoothBreathing?.(val)
-		}
+		// From the index, so a long text is not re-queried on every toggle. The
+		// effect also runs before the treebank is mounted, hence the guard.
+		if (!g.body) return
+		for (let w of treebankFor(g.body).words) toggleSmoothBreathing(w, val)
 	}
 
 	$effect(() => toggleSmoothBreathings(g.smoothBreathings))

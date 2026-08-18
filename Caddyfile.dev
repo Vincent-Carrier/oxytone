@@ -16,6 +16,12 @@
 		reverse_proxy localhost:5173
 	}
 
+	# As in production. A page of a long text is 4.9 MB of very repetitive markup —
+	# 33k <ox-w> elements each carrying the same attribute names — which gzip takes
+	# to under 600 KB. Without this, dev serves it raw and reads far slower than
+	# what it is meant to be previewing.
+	encode zstd gzip
+
 	# Per-request access logging would bury Vite's output; errors still surface.
 	log {
 		output stdout

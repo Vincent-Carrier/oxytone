@@ -1,4 +1,6 @@
 import g from '$lib/global-state.svelte'
+import { treebankFor } from '$lib/treebank'
+import { form as originalForm, sentenceId } from '$lib/word'
 
 export type SelectionContext = {
 	// The Greek the reader actually selected, snapped out to whole words.
@@ -58,25 +60,14 @@ function coveredWords(range: Range): WordElement[] {
 // the whole page rather than the original scope, which frequently holds only
 // part of the sentence.
 function sentenceWords(words: WordElement[]): WordElement[] {
-	const ids = [...new Set(words.map(w => w.getAttribute('sentence')))]
-		// The attribute, not the `.sentence` property, which the custom element
-		// declares as a Number. Values are machine-generated, but they are being
-		// interpolated into a selector, so verify their shape first.
-		.filter((id): id is string => Boolean(id) && /^\d+$/.test(id!))
-
+	const ids = [...new Set(words.map(sentenceId))].filter((id): id is string => Boolean(id))
 	if (ids.length === 0) return words
 
-	const selector = ids.map(id => `ox-w[sentence="${id}"]`).join(',')
-	const found = [...(g.body?.querySelectorAll<WordElement>(selector) ?? [])]
+	// From the index rather than a selector over the whole page: on a long text
+	// that query was the expensive half of reading a selection.
+	const tb = g.body ? treebankFor(g.body) : null
+	const found = ids.flatMap(id => tb?.bySentence.get(id) ?? [])
 	return found.length > 0 ? found : words
-}
-
-// A word as the corpus spells it, which is not always as the page displays it:
-// with the breathings toggle off, `toggleSmoothBreathing` has rewritten
-// textContent and kept the original in `form`. Sending the model stripped Greek
-// would degrade exactly the readings it is being asked about.
-function originalForm(w: WordElement): string {
-	return w.form ?? w.textContent ?? ''
 }
 
 function normalize(text: string): string {

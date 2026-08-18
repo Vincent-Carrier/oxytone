@@ -15,26 +15,15 @@ declare global {
 	}
 	type Nullish<T> = T | null | undefined
 
-	type WordElement = HTMLElement & {
-		id: number
-		head: number
-		sentence: number
-		form?: string
-		lemma?: string
-		relation?: string
-		pos?: string
-		person?: string
-		tense?: string
-		mood?: string
-		voice?: string
-		number?: string
-		gender?: string
-		case?: string
-		degree?: string
-		children: string
-		clear: (() => void)[]
-		toggleSmoothBreathing: (boolean) => void
-	}
+	// One `<ox-w>` in the treebank. A plain element: its analysis — lemma, part of
+	// speech, case, its head and sentence in the dependency tree — lives in
+	// attributes, and `$lib/word` is what reads them. It was a custom element with
+	// all of that as typed properties, until a page of 33,000 of them made the
+	// upgrade cost half a second before the text could be read.
+	//
+	// Aliased rather than declared, so that reaching for `w.lemma` is a type error
+	// pointing at the accessors instead of silently reading undefined.
+	type WordElement = HTMLElement
 }
 
 declare module 'svelte/elements' {

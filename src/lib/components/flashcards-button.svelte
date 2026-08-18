@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { lemma } from '$lib/word'
 	import { page } from '$app/state'
 	import { PUBLIC_BASEX_URL } from '$env/static/public'
 	import Button from '$lib/components/button.svelte'
@@ -15,7 +16,7 @@
 			['author', segments[2]],
 			['work', segments[3]],
 			...Array.from(g.selection ?? [])
-				.map(w => w.lemma!)
+				.map(w => lemma(w))
 				.filter(Boolean)
 				.map(w => ['w', w])
 		])
