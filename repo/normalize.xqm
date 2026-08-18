@@ -208,8 +208,8 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
     if ($meta?translated) then
       <translations urn="{$author}/{$work}">
         {for $edition in t:editions(`{$author}/{$work}`)
-          return <translation edition="{$edition?edition}" date="{$edition?date}"
-                              series="{$edition?series}">{$edition?translator}</translation>}
+          return <translation edition="{$edition?edition}"
+                              date="{$edition?date}">{$edition?translator}</translation>}
       </translations>
   return <treebank>
      <head>

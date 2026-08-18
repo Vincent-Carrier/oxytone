@@ -37,21 +37,24 @@ declare variable $r:xslt := xsm:stylesheet({
       {xsm:attr("data-single", "if (count(translation) = 1) then 'yes' else 'no'")}
       <xsl:apply-templates select="translation" />
     </ul>,
-  (: The date earns its place by telling apart translations of the same text a
-     century apart; the series only sometimes appears, so it trails. :)
+  (: "Translator (year)", the whole of it the link. The date earns its place by
+     telling apart translations of the same text a century apart, and belongs
+     inside the link because it names the same thing the translator does.
+
+     Parenthesised only when there is a year: 11 of the 770 editions have no
+     usable imprint date, and an empty "()" after a name reads as broken. :)
   "translation":
     <li>
       <a>
         {xsm:attr("href",
           "concat('/translation/', ../@urn, '?ed=', encode-for-uri(@edition))")}
         <xsl:value-of select="." />
+        <xsl:if test="@date != ''">
+          <xsl:text> (</xsl:text>
+          <xsl:value-of select="@date" />
+          <xsl:text>)</xsl:text>
+        </xsl:if>
       </a>
-      <xsl:if test="@date != ''">
-        <span class="date"><xsl:value-of select="@date" /></span>
-      </xsl:if>
-      <xsl:if test="@series != ''">
-        <span class="series"><xsl:value-of select="@series" /></span>
-      </xsl:if>
     </li>,
   (: data-terse drives the dense numeral grid in treebank.css. :)
   "books":

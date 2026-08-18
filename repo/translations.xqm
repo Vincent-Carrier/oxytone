@@ -80,7 +80,9 @@ declare function t:editions($work as xs:string) as map(*)* {
     'edition': $edition,
     'translator': t:translator($header),
     'date': $date,
-    (: 261 of 770 name a series, nearly always the Loeb. :)
+    (: 261 of 770 name a series, nearly always the Loeb. Not rendered — the list
+       shows "Translator (year)" and nothing else — but read here because it is
+       free alongside the rest and is the obvious thing to want next. :)
     'series': normalize-space(string(($header//*:sourceDesc//*:series/*:title)[1]))
   }
 };

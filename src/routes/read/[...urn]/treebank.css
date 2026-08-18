@@ -50,13 +50,6 @@
 				@apply font-sans-sc text-blue-600;
 			}
 
-			/* The date and series are about the edition, not links into it, so they
-			   sit back from the name that is. */
-			& .date,
-			& .series {
-				@apply ml-2 text-gray-600;
-			}
-
 			/* 507 of the 634 translated works have exactly one edition. A bulleted
 			   list of one item reads as a menu with a single choice, so the marker
 			   comes off and the entry stands as a plain credit line. */
