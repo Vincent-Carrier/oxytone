@@ -49,11 +49,16 @@ declare function t:translator($header as element()) as xs:string {
    "1935-37") and pass through as written. :)
 declare function t:date($header as element()) as xs:string {
   let $dates := $header//*:sourceDesc//*:imprint/*:date[normalize-space(.) ne '']
-  return normalize-space(string((
+  let $date := normalize-space(string((
     $dates[@type = 'first_printing'],
     $dates[@type = 'printing'],
     $dates
   )[1]))
+  (: Perseus marks a year it is unsure of with a parenthetical — Butler's Odyssey
+     is "1900 (?)" — which is a cataloguing note rather than something a reader
+     picking a translation needs, and reads as a typo in a one-line credit. The
+     year itself is still the useful thing, so only the mark comes off. :)
+  return normalize-space(replace($date, '\s*\(\?\)', ''))
 };
 
 (: Every English edition of a work, oldest first.
