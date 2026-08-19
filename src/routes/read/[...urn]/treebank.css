@@ -102,6 +102,52 @@
 		}
 	}
 
+	/* Step to the next or previous page, above the text and again below it. A
+	   sibling of the header rather than inside it, so the .nav-group rules there
+	   do not reach these; they are a pair of controls, not a labelled list.
+
+	   space-between puts each against its own margin, so "previous" sits left and
+	   "next" right, and either reads as the direction it moves in even when it is
+	   the only one there. */
+	& > .pages {
+		@apply mx-[var(--padded-margin-w)] flex items-center justify-between gap-4;
+		@apply font-sans-sc text-sm print:hidden;
+
+		/* The one above the text is pulled up under the header's rule, close enough
+		   to read as part of the apparatus; the one below is set off from the last
+		   line so it is not mistaken for more text. */
+		&:first-of-type {
+			@apply -mt-4 mb-8;
+		}
+
+		/* Carries the scroll runway the body gives up when page steps follow it, so
+		   the last line still comes up the screen rather than sitting at the foot
+		   of it. */
+		&:last-of-type {
+			@apply mt-10 mb-[40vh] border-t border-gray-300 pt-4;
+		}
+
+		& .page-step {
+			@apply inline-flex items-center gap-x-1 text-blue-600;
+
+			&:hover .label {
+				@apply underline;
+			}
+		}
+
+		/* When only one end exists the flex row would centre it; this keeps a lone
+		   "next" against the right margin where it belongs. */
+		& .next:only-child {
+			@apply ml-auto;
+		}
+
+		/* Slightly larger than the label beside it: at the body's small-caps size a
+		   text-sm arrow reads as a hyphen. */
+		& .arrow {
+			@apply text-base;
+		}
+	}
+
 	&.dialogue .body,
 	&.prose .body {
 		@apply text-justify;
@@ -109,7 +155,14 @@
 }
 
 .body {
-	@apply mb-[40vh] ml-[var(--padded-margin-w)] leading-relaxed;
+	@apply ml-[var(--padded-margin-w)] leading-relaxed;
+
+	/* The scroll runway that lets the last line come up the screen. On the body
+	   only when nothing follows it: with page steps below, they end the page and
+	   carry it instead, so the text does not sit a screen above them. */
+	&:last-child {
+		@apply mb-[40vh];
+	}
 
 	& ::selection {
 		@apply bg-blue-50;

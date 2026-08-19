@@ -124,6 +124,36 @@ declare function p:book-pager($list) {
   }
 };
 
+(: The pages either side of the current one, as a map of `prev` and `next`, each
+   a map of `id` and `label` or absent at the ends of the work. Empty for a work
+   that does not paginate.
+
+   Here rather than in the frontend because the order lives here: `list` is the
+   reading order, which for the curated lists is neither numeric nor sortable —
+   "praef" precedes book 1, and "17/18" is one page, not two. Comparing labels in
+   TypeScript would have to reconstruct that. :)
+declare function p:neighbours($urn as xs:string, $page) {
+  let $pager := p:pager($urn)
+  where exists($pager)
+  let $list := $pager?list
+  (: The same fallback the renderers apply: a paginated work requested with no
+     page shows its first, so the neighbours are that page's. :)
+  let $current := $page otherwise head($list)
+  let $i := index-of($list ! string(.), string($current))[1]
+  where exists($i)
+  return map {
+    'prev': if ($i > 1) then p:page-ref($pager, $list[$i - 1]),
+    'next': if ($i < count($list)) then p:page-ref($pager, $list[$i + 1])
+  }
+};
+
+(: A page as the nav needs it: the id that builds the href, and the spelled-out
+   label. `format` rather than `label` because a terse list gives a bare numeral,
+   which reads as a page number in the grid it sits in but not on a button. :)
+declare %private function p:page-ref($pager, $n) {
+  map { 'id': string($n), 'label': $pager?format($n) }
+};
+
 (: The nth capital Greek letter, as Homer's books are traditionally numbered.
    Counting from Α at U+0391, book 18 onward shifts by one to step over final
    sigma (U+03A2 is unassigned, and ς is not used as a numeral). :)

@@ -45,11 +45,50 @@
 		}
 	}
 
+	/* Step to the next or previous page, above the text and again below it, the
+	   same pair the Greek side carries. space-between puts each against its own
+	   margin, so either reads as the direction it moves in. */
+	& > .pages {
+		@apply mx-[var(--padded-margin-w)] flex items-center justify-between gap-4;
+		@apply font-sans-sc text-sm print:hidden;
+
+		&:first-of-type {
+			@apply mb-8;
+		}
+
+		&:last-of-type {
+			@apply mt-10 mb-[40vh] border-t border-gray-300 pt-4;
+		}
+
+		& .page-step {
+			@apply inline-flex items-center gap-x-1 text-blue-600;
+
+			&:hover .label {
+				@apply underline;
+			}
+		}
+
+		& .next:only-child {
+			@apply ml-auto;
+		}
+
+		& .arrow {
+			@apply text-base;
+		}
+	}
+
 	& .body {
 		/* Left-ranged, not justified: the Greek is set without hyphenation where
 		   justification reads well, but an English paragraph at this measure opens
 		   rivers instead. */
-		@apply mb-[40vh] ml-[var(--padded-margin-w)] text-left leading-relaxed;
+		@apply ml-[var(--padded-margin-w)] text-left leading-relaxed;
+
+		/* The scroll runway that lets the last passage come up the screen. On the
+		   body only when nothing follows it: with page steps below, they end the
+		   page and carry it instead, so the text does not sit a screen above them. */
+		&:last-child {
+			@apply mb-[40vh];
+		}
 
 		/* One passage per paragraph. The Greek runs continuously with section
 		   numbers punctuating it, so there `p` is inline; here the paragraph is the

@@ -211,6 +211,22 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
           return <translation edition="{$edition?edition}"
                               date="{$edition?date}">{$edition?translator}</translation>}
       </translations>
+  (: The pages either side of this one, so the reader can step through a work
+     without going back to the list. Built here rather than in the stylesheet,
+     which has no access to the pager. :)
+  let $nav :=
+    let $n := p:neighbours(`{$author}/{$work}`, $page)
+    where exists($n)
+    (: The work URN rides along so the links can be absolute. A relative "./3"
+       resolves against the current path, which breaks in both directions: a
+       paginated work read with no page segment (/read/tlg0012/tlg001) would
+       drop the work, and a slashed label (.../17/18) would keep the "17". :)
+    return <pages urn="{$author}/{$work}">{
+      for $rel in ('prev', 'next')
+      let $ref := $n?($rel)
+      where exists($ref)
+      return element {$rel} {attribute id {$ref?id}, $ref?label}
+    }</pages>
   return <treebank>
      <head>
       <title>{$meta?english-title}{if (exists($pager)) then `, {$pager?format($page)}`}</title>
@@ -224,6 +240,7 @@ declare %public function n:get-normalized($author, $work, $page := ()) {
       <analysis>{$analysis/string()}</analysis>
       {$translated}
       {$translations}
+      {$nav}
     </head>
     {$normalized}
   </treebank>

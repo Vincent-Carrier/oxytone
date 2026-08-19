@@ -173,12 +173,40 @@ declare
             <p class="translator">{
               'translated by ' || $translator || (if ($date ne '') then ` ({$date})` else '')
             }</p>
+        (: The same step-through the Greek side has. Built here rather than shared
+           with read.xqm because that one renders through the stylesheet and this
+           one returns markup directly, but both read p:neighbours, so the order
+           is decided in one place.
+
+           The href is absolute for the reason the read side's is: a relative
+           "./3" resolves against the current path, which drops the work when the
+           page segment is absent and keeps the leading half of a slashed label.
+
+           The edition rides along in it too: dropping that would send a reader
+           who picked a translator back to the default one on the next page. :)
+        let $nbr := p:neighbours(`{$author}/{$work}`, $page)
+        let $qs := if ($ed and $ed ne '') then `?ed={encode-for-uri($ed)}` else ''
+        let $steps :=
+          if (exists($nbr)) then
+            <nav class="nav-group pages">{
+              for $rel in ('prev', 'next')
+              let $ref := $nbr?($rel)
+              where exists($ref)
+              let $arrow := <span class="arrow" aria-hidden="true">{
+                if ($rel eq 'prev') then '&#8592;' else '&#8594;'}</span>
+              let $label := <span class="label">{$ref?label}</span>
+              return <a class="page-step {$rel}" rel="{$rel}"
+                        href="/translation/{$author}/{$work}/{$ref?id}{$qs}">{
+                if ($rel eq 'prev') then ($arrow, $label) else ($label, $arrow)
+              }</a>
+            }</nav>
         return (
             <hgroup>
               <h1>{normalize-space(string(($tei//*:titleStmt/*:title)[1]))}</h1>
               <p class="author">{normalize-space(string(($tei//*:titleStmt/*:author)[1]))}</p>
               {$credit}
             </hgroup>,
+            $steps,
             <main class="body" lang="en">{
               (: The marker shows the local number, as the Greek side does: the
                  page is already one book, so repeating it on every paragraph is
@@ -188,6 +216,7 @@ declare
               return <p id="{$cite}"><a class="nbr section-nbr" href="#{$cite}">{
                 string($passage/@n)
               }</a>{tr:content($passage)}</p>
-            }</main>
+            }</main>,
+            $steps
           )
 };

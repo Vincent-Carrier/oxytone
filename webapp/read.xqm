@@ -24,9 +24,11 @@ declare variable $r:xslt := xsm:stylesheet({
         <xsl:apply-templates select="head/translations" />
         <xsl:apply-templates select="head/books" />
       </header>
+      <xsl:apply-templates select="head/pages" />
       <main class="body" lang="grc">
         <xsl:apply-templates select="body" />
       </main>
+      <xsl:apply-templates select="head/pages" />
     </div>,
   (: The English translations of this work, each named by its translator so the
      choice is between people rather than between opaque edition ids. Above the
@@ -63,6 +65,32 @@ declare variable $r:xslt := xsm:stylesheet({
         </xsl:if>
       </a>
     </li>,
+  (: Step to the page either side of this one, above and below the text, so a
+     reader who has finished a book is not sent back to the page list to start
+     the next. Rendered from the same <pages> element in both places.
+
+     The ends of a work leave one side absent rather than disabled: a control
+     that cannot act is still a target, and "Book 1" has no previous.
+
+     rel=prev/next is what the markup is for, and Firefox and Safari prefetch on
+     it; the class carries the position so the CSS can space the two apart. :)
+  "pages":
+    <nav class="nav-group pages">
+      <xsl:apply-templates select="prev" />
+      <xsl:apply-templates select="next" />
+    </nav>,
+  "prev":
+    <a class="page-step prev" rel="prev">
+      {xsm:attr("href", "concat('/read/', ../@urn, '/', @id)")}
+      <span class="arrow" aria-hidden="true">&#8592;</span>
+      <span class="label"><xsl:value-of select="." /></span>
+    </a>,
+  "next":
+    <a class="page-step next" rel="next">
+      {xsm:attr("href", "concat('/read/', ../@urn, '/', @id)")}
+      <span class="label"><xsl:value-of select="." /></span>
+      <span class="arrow" aria-hidden="true">&#8594;</span>
+    </a>,
   (: data-terse drives the dense numeral grid in treebank.css. The heading is the
      division's own plural — "Books", "Fables", "Psalms" — rather than a fixed
      word, so it agrees with the entries beneath it. :)
