@@ -54,7 +54,7 @@ declare function p:homer-pager($list) {
     'get': fn($tb, $n) {
       let $page := $n otherwise head($list)
       return $tb transform with {
-        delete nodes .//sentence[./word[1]/@div_book != $page]
+        delete nodes .//sentence[string(./word[1]/@div_book) != string($page)]
       }
     },
     'list': $list,
@@ -78,7 +78,7 @@ declare function p:div-pager($div as xs:string, $list) {
     'get': fn($tb, $n) {
       let $page := $n otherwise head($list)
       return $tb transform with {
-        delete nodes .//sentence[(./word/@*[name() = $div])[1] != $page]
+        delete nodes .//sentence[string((./word/@*[name() = $div])[1]) != string($page)]
       }
     },
     'list': $list,
@@ -99,6 +99,15 @@ declare function p:div-pager($div as xs:string, $list) {
   }
 };
 
+(: Both sides of the page comparisons below are wrapped in string(). @div_book is
+   untyped, so comparing it against the integer a book list holds promotes both to
+   xs:double, and a label like "17/18" — one page covering two books — is not a
+   number. That raised FORG0001 and 500ed tlg0081/tlg001 on every page.
+
+   It bit that one work because its list is integers with a single string among
+   them: the promotion is what the integer side forces. A list that is strings
+   throughout ("praef", "priora") compares as strings already and was unaffected,
+   but it is the same latent bug, so all three sites compare as strings. :)
 declare function p:book-pager($list) {
   let $format := fn($n) {
     typeswitch ($n) {
@@ -114,7 +123,7 @@ declare function p:book-pager($list) {
     'get': fn($tb, $n) {
       let $page := $n otherwise head($list)
       return $tb transform with {
-        delete nodes .//sentence[./word[1]/@div_book != $page]
+        delete nodes .//sentence[string(./word[1]/@div_book) != string($page)]
       }
     },
     'list': $list,
