@@ -21,15 +21,19 @@
 
 <img
 	class="mx-auto w-full max-w-4xl px-4 grayscale"
-	srcset="/greek_heroes@0.5x.webp 1x, /greek_heroes.webp 2x"
-	src="/greek_heroes.webp"
+	srcset="/greek_heroes@0.5x.webp 864w, /greek_heroes.webp 1728w"
+	sizes="(min-width: 896px) 864px, 100vw"
+	src="/greek_heroes@0.5x.webp"
+	width="864"
+	height="434"
+	fetchpriority="high"
+	decoding="async"
 	alt="" />
 <hgroup class="font-sc -mt-16 text-center">
 	<h1
 		class="relative mx-auto bg-linear-to-t from-white from-50% to-transparent text-6xl text-gray-900">
 		oxy<span class="tracking-tighter">tone</span>
 	</h1>
-	<p class="text-xl text-gray-800">the bleeding edge of ancient language</p>
 </hgroup>
 <main class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-gray-800">
 	<div
@@ -43,6 +47,10 @@
 				href="https://github.com/Vincent-Carrier/oxytone"
 				target="_blank"
 				class="text-blue-700 underline decoration-2">GitHub</a
+			>. The project is currently <a
+				href="https://github.com/sponsors/Vincent-Carrier"
+				target="_blank"
+				class="text-blue-700 underline decoration-2">looking for sponsors</a
 			>.
 		</p>
 	</div>
