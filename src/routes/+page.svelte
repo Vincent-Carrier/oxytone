@@ -58,68 +58,6 @@
 				class="text-blue-700 underline decoration-2">looking for sponsors</a
 			>.
 		</p>
-
-		<h2 class="font-sans-sc mt-4 font-bold lowercase">Sources</h2>
-		<p>
-			Oxytone is built entirely on freely licensed scholarship, and is grateful for it. Each
-			dataset below is used under its own terms; follow a link for the full license.
-		</p>
-		<dl class="mt-2 space-y-2">
-			<div>
-				<dt class="font-bold">
-					<a href="https://github.com/alekkeersmaekers/glaux" target="_blank" class={link}
-						>GLAUx</a>
-				</dt>
-				<dd>
-					The treebank corpus, by Alek Keersmaekers and others &mdash; see
-					<a
-						href="https://aclanthology.org/2021.lchange-1.6/"
-						target="_blank"
-						class={link}>Keersmaekers (2021)</a
-					>. It compiles several treebanks whose licenses differ, most under
-					<a href={ccbysa} target="_blank" class={link}>CC BY-SA</a>, some under
-					<a href={ccbyncsa} target="_blank" class={link}>CC BY-NC-SA</a>; the corpus
-					metadata records the license of each source text.
-				</dd>
-			</div>
-			<div>
-				<dt class="font-bold">
-					<a
-						href="https://github.com/gcelano/LSJ_GreekUnicode"
-						target="_blank"
-						class={link}>LSJ</a>
-				</dt>
-				<dd>
-					Liddell &amp; Scott&rsquo;s <i>Greek&ndash;English Lexicon</i> in Giuseppe
-					Celano&rsquo;s Unicode edition, under
-					<a href={ccbyncsa} target="_blank" class={link}>CC BY-NC-SA</a>.
-				</dd>
-			</div>
-			<div>
-				<dt class="font-bold">
-					<a href="https://www.perseus.tufts.edu/" target="_blank" class={link}
-						>Perseus Digital Library</a>
-				</dt>
-				<dd>
-					The Greek texts and English translations, under
-					<a href={ccbysa} target="_blank" class={link}>CC BY-SA 4.0</a>.
-				</dd>
-			</div>
-			<div>
-				<dt class="font-bold">
-					<a
-						href="https://kaikki.org/dictionary/Ancient%20Greek/"
-						target="_blank"
-						class={link}>Wiktionary</a>
-				</dt>
-				<dd>
-					Short definitions, extracted by
-					<a href="https://kaikki.org/" target="_blank" class={link}>Kaikki.org</a> from
-					English Wiktionary, under
-					<a href={ccbysa} target="_blank" class={link}>CC BY-SA 4.0</a>.
-				</dd>
-			</div>
-		</dl>
 	</div>
 
 	<div class="ml-24 flex items-baseline">
@@ -132,3 +70,72 @@
 	</div>
 	{@html data.body}
 </main>
+
+<footer class="mx-auto mt-4 mb-12 max-w-4xl px-8 text-sm text-gray-700 lg:max-w-[60ch]">
+	<h2 class="font-sans-sc font-bold lowercase">Sources</h2>
+	<p>
+		Oxytone is built entirely on freely licensed scholarship, and is grateful for it. Each
+		dataset below is used under its own terms; follow a link for the full license.
+	</p>
+	<dl class="mt-2 space-y-2">
+		<div>
+			<dt class="font-bold">
+				<a href="https://github.com/alekkeersmaekers/glaux" target="_blank" class={link}
+					>GLAUx</a>
+			</dt>
+			<dd>
+				The treebank corpus, by Alek Keersmaekers and others &mdash; see
+				<a href="https://aclanthology.org/2021.lchange-1.6/" target="_blank" class={link}
+					>Keersmaekers (2021)</a
+				>. It compiles several treebanks whose licenses differ, most under
+				<a href={ccbysa} target="_blank" class={link}>CC BY-SA</a>, some under
+				<a href={ccbyncsa} target="_blank" class={link}>CC BY-NC-SA</a>; the corpus metadata
+				records the license of each source text.
+			</dd>
+		</div>
+		<div>
+			<dt class="font-bold">
+				<a href="https://github.com/gcelano/LSJ_GreekUnicode" target="_blank" class={link}
+					>LSJ</a>
+			</dt>
+			<dd>
+				Liddell &amp; Scott&rsquo;s <i>Greek&ndash;English Lexicon</i> in Giuseppe
+				Celano&rsquo;s Unicode edition, under
+				<a href={ccbyncsa} target="_blank" class={link}>CC BY-NC-SA</a>.
+			</dd>
+		</div>
+		<div>
+			<dt class="font-bold">
+				<a href="https://www.perseus.tufts.edu/" target="_blank" class={link}
+					>Perseus Digital Library</a>
+			</dt>
+			<dd>
+				The Greek texts and English translations, under
+				<a href={ccbysa} target="_blank" class={link}>CC BY-SA 4.0</a>.
+			</dd>
+		</div>
+		<div>
+			<dt class="font-bold">
+				<a
+					href="https://kaikki.org/dictionary/Ancient%20Greek/"
+					target="_blank"
+					class={link}>Wiktionary</a>
+			</dt>
+			<dd>
+				Short definitions, extracted by
+				<a href="https://kaikki.org/" target="_blank" class={link}>Kaikki.org</a> from
+				English Wiktionary, under
+				<a href={ccbysa} target="_blank" class={link}>CC BY-SA 4.0</a>.
+			</dd>
+		</div>
+	</dl>
+	<p class="mt-4 border-t border-gray-300 pt-2">
+		Oxytone itself is free software, licensed under
+		<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" class={link}
+			>AGPL&#8209;3.0</a
+		>; the
+		<a href="https://github.com/Vincent-Carrier/oxytone" target="_blank" class={link}
+			>source is on GitHub</a
+		>.
+	</p>
+</footer>

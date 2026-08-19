@@ -133,3 +133,28 @@ be instantiated`.** Saxon can't start because its `xmlresolver` dependency is
   with only shortdefs). Re-seed — see the note under step 3.
 
 See [CLAUDE.md](./CLAUDE.md) for more detailed development guidelines.
+
+## License
+
+The Oxytone source code is licensed under the [GNU Affero General Public License
+v3.0](./LICENSE). Oxytone is a web application, and AGPL section 13 is the reason
+for that choice: anyone who runs a modified version as a network service has to
+offer its users the source.
+
+The corpora are **not** covered by that license, and most are not in this
+repository — `just corpus` downloads them at build time into the gitignored
+`glaux/`, `tei/`, and `lsj/`. Each carries its own terms:
+
+| Data                                           | Source                                                                  | License                                                                                                            |
+| ---------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Treebank corpus                                | [GLAUx](https://github.com/alekkeersmaekers/glaux)                      | Mixed: mostly CC BY-SA, some CC BY-NC-SA, at 3.0 and 4.0. The corpus metadata records the license per source text. |
+| LSJ lexicon                                    | [Celano's Unicode edition](https://github.com/gcelano/LSJ_GreekUnicode) | CC BY-NC-SA                                                                                                        |
+| Greek texts and translations                   | [Perseus Digital Library](https://www.perseus.tufts.edu/)               | CC BY-SA 4.0                                                                                                       |
+| Short definitions (`seed/wiktionary-defs.tsv`) | [Kaikki.org](https://kaikki.org/) extract of English Wiktionary         | CC BY-SA 4.0                                                                                                       |
+
+`seed/wiktionary-defs.tsv` is the one dataset tracked here; it stays under CC
+BY-SA 4.0 rather than the AGPL.
+
+Because several GLAUx components and the LSJ edition are NonCommercial, a
+deployment serving that data cannot be commercial. That restriction comes from
+the data, not from the code license.
