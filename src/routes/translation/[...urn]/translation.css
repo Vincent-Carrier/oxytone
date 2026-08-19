@@ -49,7 +49,7 @@
 	   same pair the Greek side carries. space-between puts each against its own
 	   margin, so either reads as the direction it moves in. */
 	& > .pages {
-		@apply mx-[var(--padded-margin-w)] flex items-center justify-between gap-4;
+		@apply ml-[var(--padded-margin-w)] flex items-center justify-between gap-4;
 		@apply font-sans-sc text-sm print:hidden;
 
 		&:first-of-type {

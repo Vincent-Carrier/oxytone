@@ -110,7 +110,7 @@
 	   "next" right, and either reads as the direction it moves in even when it is
 	   the only one there. */
 	& > .pages {
-		@apply mx-[var(--padded-margin-w)] flex items-center justify-between gap-4;
+		@apply ml-[var(--padded-margin-w)] flex items-center justify-between gap-4;
 		@apply font-sans-sc text-sm print:hidden;
 
 		/* The one above the text is pulled up under the header's rule, close enough
